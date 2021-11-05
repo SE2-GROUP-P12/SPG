@@ -1,3 +1,6 @@
 # SPG
 SPG SE2_Project
-test
+
+
+Database design sprint 1
+![DB design](./Documentation/DBdesign.jpeg)
