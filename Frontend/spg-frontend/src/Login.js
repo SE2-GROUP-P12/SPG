@@ -1,52 +1,49 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { useFormik } from 'formik';
+import {Formik, Form, Field} from 'formik';
+import {Row, Col, Container} from 'react-bootstrap'
 import * as Yup from 'yup';
 
 function Login() {
-    const formik = useFormik({
-        initialValues: {
-            email: '',
-            password: ''
-        },
-        validationSchema: Yup.object({
-            email: Yup.string().email('Invalid email address').required('Email is required'),
-            password: Yup.string().required('Password is required').min(6, "Password is too short")
-        }),
-        onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
-        },
-    });
-
     return (
-        <div><h1>Login</h1><form>
-        <label>Email Address</label>
-        <input
-            id="email"
-            name="email"
-            type="email"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.email}
-        />
-        {formik.touched.email && formik.errors.email ? (
-            <div>{formik.errors.email}</div>
-        ) : null}
-        <label>Password</label>
-            <input
-            id="password"
-            name="password"
-            type="password"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.password}
-            />
-            {formik.touched.password && formik.errors.password ? (
-                <div>{formik.errors.password}</div>
-            ) : null}
-        <button type="submit">Submit</button>
-    </form></div>
-    );
+        <div className="justify-content-center">
+            <Formik
+                initialValues={{
+                    email: "",
+                    password: "",
+                }}
+                validationSchema={Yup.object({
+                    email: Yup.string().email('Invalid email address').required('Email is required'),
+                    password: Yup.string().required('Password is required').min(6, "Password is too short")
+                })}
+                onSubmit={async (values) => {
+                    alert(JSON.stringify(values, null, 2));
+                }}
+                validateOnChange={false}
+                validateOnBlur={false}>
+                {({values, isValid}) =>
+                    <Form>
+                            <Container>
+                                <Row>
+                                    <Field name="email" label="Email"/>
+                                </Row>
+                                <Row>
+                                    <Field name="password" label="Password" type="password"/>
+                                </Row>
+                                <Row>
+                                    <button type="submit">Login</button>
+                                </Row>
+                                <Row>
+                                    {(isValid ? (<></>) : (<div>
+                                        Something's wrong
+                                    </div>))}
+                                </Row>
+                            </Container>
+                    </Form>
+                }
+            </Formik>
+        </div>
+    )
 }
 
 export {Login}
