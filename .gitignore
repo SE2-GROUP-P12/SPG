@@ -1,0 +1,40 @@
+
+
+
+### SERVER MAVEN + INTELLIJ IDEA ###
+.idea/
+
+server/SPG/HELP.md
+server/SPG/target/
+server/SPG/.mvn/
+!server/SPG/.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+server/SPG/.apt_generated
+server/SPG/.classpath
+server/SPG/.factorypath
+server/SPG/.project
+server/SPG/.settings
+server/SPG/.springBeans
+server/SPG/.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+server/SPG/nbproject/private/
+server/SPG/nbbuild/
+server/SPG/dist/
+server/SPG/nbdist/
+server/SPG/.nb-gradle/
+server/SPG/build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
