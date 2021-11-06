@@ -22,6 +22,7 @@ function Homepage() {
                         <li>Biella</li>
                         <li>Napoli</li>
                         <li>Torino</li>
+                        <li>Catania</li>
                     </ul></h4>
                 </Col>
             </Row>
