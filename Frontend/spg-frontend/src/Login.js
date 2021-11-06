@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import {Formik, Form, Field} from 'formik';
-import {Row, Col, Container} from 'react-bootstrap'
+import {Row, Container} from 'react-bootstrap'
 import * as Yup from 'yup';
 
 function Login() {
