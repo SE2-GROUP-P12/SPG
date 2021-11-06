@@ -1,8 +1,9 @@
-
-
+### VS Code ###
+.vscode/
+=======
+.idea/
 
 ### SERVER MAVEN + INTELLIJ IDEA ###
-.idea/
 
 server/SPG/HELP.md
 server/SPG/target/
@@ -36,5 +37,26 @@ server/SPG/build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/Frontend/spg-frontend/node_modules
+/Frontend/spg-frontend/.pnp
+/Frontend/spg-frontend/.pnp.js
+
+# testing
+/Frontend/spg-frontend/coverage
+
+# production
+/Frontend/spg-frontend/build
+
+# misc
+/Frontend/spg-frontend/.DS_Store
+/Frontend/spg-frontend/.env.local
+/Frontend/spg-frontend/.env.development.local
+/Frontend/spg-frontend/.env.test.local
+/Frontend/spg-frontend/.env.production.local
+
+/Frontend/spg-frontend/npm-debug.log*
+/Frontend/spg-frontend/yarn-debug.log*
+/Frontend/spg-frontend/yarn-error.log*
