@@ -36,3 +36,25 @@
     transform: rotate(360deg);
   }
 }
+
+.header {
+  padding: 0px;
+}
+
+.logo {
+  height: 50px;
+}
+
+.farmer {
+  width: 100%;
+  padding: 0px;
+}
+
+.italymap {
+  width: 75%;
+}
+
+.findus {
+  padding: 15px;
+  text-align: left;
+}
