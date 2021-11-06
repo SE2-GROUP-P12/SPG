@@ -25,7 +25,7 @@ Class Porduct{
     Name: String
     Quantity: Integer
     Price: Float
-    Misura: String
+    Unit: String
 }
 Class Wallet{
     User_id(PK): Integer
