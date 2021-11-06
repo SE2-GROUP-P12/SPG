@@ -8,18 +8,19 @@ import Col from "react-bootstrap/Col";
 function ShopEmployee()
 {
     return(
+        <>
+        <h1>Shop Employee</h1>
         <Container className="dashboard">
-            <h1>Shop Employee</h1>
             <Row>
-            <Col xs={4}><Button variant="outline-success"> <h1>New Customer</h1> </Button></Col>
-            <Col xs={4}><Button variant="outline-success"> Browse Products </Button></Col>
-            <Col xs={4}><Button variant="outline-success"> Top Up</Button></Col>
+            <Col xs={4}><Button className="dashButton" variant="outline-success"> <h1>New Customer</h1> </Button></Col>
+                <Col xs={4}><Button className="dashButton" variant="outline-success"> <h1>Browse Products</h1> </Button></Col>
+            <Col xs={4}><Button className="dashButton" variant="outline-success"> <h1>Top Up</h1> </Button></Col>
         </Row>
         <Row>
-            <Col xs={6}><Button variant="outline-success"> Place Order </Button></Col>
-            <Col xs={6}><Button variant="outline-success"> Deliver Order </Button></Col>
+            <Col xs={6}><Button className="dashButton" variant="outline-success"> <h1>Place Order</h1> </Button></Col>
+            <Col xs={6}><Button className="dashButton" variant="outline-success"> <h1>Deliver Order</h1> </Button></Col>
         </Row>
-    </Container>);
+    </Container></>);
 }
 
 export {ShopEmployee}
