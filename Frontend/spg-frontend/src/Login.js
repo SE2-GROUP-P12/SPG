@@ -21,7 +21,7 @@ function Login() {
                 }}
                 validateOnChange={false}
                 validateOnBlur={false}>
-                {({values, isValid}) =>
+                {({values, errors, touched}) =>
                     <Form>
                             <Container>
                                 <Row>
@@ -34,9 +34,10 @@ function Login() {
                                     <button type="submit">Login</button>
                                 </Row>
                                 <Row>
-                                    {(isValid ? (<></>) : (<div>
-                                        Something's wrong
-                                    </div>))}
+                                    {errors.email && touched.email ? (
+                                        <div>{errors.email}</div>) : null}
+                                    {errors.password && touched.password ? (
+                                        <div>{errors.password}</div>) : null}
                                 </Row>
                             </Container>
                     </Form>
