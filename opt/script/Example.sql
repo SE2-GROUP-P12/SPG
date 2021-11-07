@@ -80,7 +80,7 @@ INSERT INTO `spg`.`product`
 `name`,
 `quantity`,
 `price`,
-`unit`)
+`unit_of_measurement`)
 VALUES
 (2,
 "Farina",
@@ -93,7 +93,7 @@ INSERT INTO `spg`.`product`
 `name`,
 `quantity`,
 `price`,
-`unit`)
+`unit_of_measurement`)
 VALUES
 (3,
 "Uova",
