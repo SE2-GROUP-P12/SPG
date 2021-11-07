@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import {Link} from "react-router-dom";
 
 function ShopEmployee()
 {
@@ -13,7 +14,7 @@ function ShopEmployee()
         <Container className="dashboard">
             <Row>
             <Col xs={4}><Button className="dashButton" variant="outline-success"> <h1>New Customer</h1> </Button></Col>
-                <Col xs={4}><Button className="dashButton" variant="outline-success"> <h1>Browse Products</h1> </Button></Col>
+                <Col xs={4}><Link to="/BrowseProducts"><Button className="dashButton" variant="outline-success"> <h1>Browse Products</h1> </Button></Link></Col>
             <Col xs={4}><Button className="dashButton" variant="outline-success"> <h1>Top Up</h1> </Button></Col>
         </Row>
         <Row>

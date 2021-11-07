@@ -5,8 +5,8 @@ import {Navbar} from "./Navbar";
 import {Homepage} from "./Homepage";
 import {Login} from "./Login";
 import {ShopEmployee} from "./ShopEmployee";
-import {Switch, Route} from "react-router-dom";
-import {BrowserRouter as Router } from 'react-router-dom';
+import {BrowseProducts} from "./BrowseProducts";
+import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
 
 function App() {
 
@@ -16,6 +16,9 @@ function App() {
             <Router>
                 <Navbar/>
            <Switch>
+               <Route exact path="/BrowseProducts">
+                   <BrowseProducts/>
+               </Route>
                <Route exact path="/ShopEmployee">
                    <ShopEmployee/>
                </Route>

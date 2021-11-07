@@ -106,6 +106,22 @@
       }
       ```
     - 404 NOT FOUND
+    - POST `/api/product/addToCart` //add product to cart
+      - request body content:
+        ```json
+        {
+          "productId":"1",
+          "name": "Apples",
+          "producer" : "Tonio Cartonio s.p.a.",
+          "unit":"kg",
+          "unit price" : "1.99",
+          "amount" : "1" //amount i wish to order
+        }
+        ```
+      - response body content
+        - 200 OK
+        - 500 SERVER ERROR
+        
 - GET `/api/customer/getWallet` //get customer's wallet
   - request body content:
     ```json
