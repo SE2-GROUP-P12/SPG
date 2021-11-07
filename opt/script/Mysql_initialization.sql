@@ -1,11 +1,10 @@
-BEGIN
 
 CREATE TABLE `basket` (
   `user_id` int NOT NULL,
   `product_id` int NOT NULL,
   `quantity` float DEFAULT NULL,
   PRIMARY KEY (`user_id`,`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) CHARSET=utf8;
 
 CREATE TABLE `product` (
   `product_id` int NOT NULL AUTO_INCREMENT,
@@ -14,7 +13,7 @@ CREATE TABLE `product` (
   `price` float DEFAULT NULL,
   `unit_of_measurement` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) CHARSET=utf8;
 
 CREATE TABLE `user` (
   `user_id` int NOT NULL AUTO_INCREMENT,
@@ -26,12 +25,10 @@ CREATE TABLE `user` (
   `password` varchar(45) DEFAULT NULL,
   `role` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) CHARSET=utf8;
 
 CREATE TABLE `wallet` (
   `user_id` int NOT NULL,
   `value` float DEFAULT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-COMMIT
+) CHARSET=utf8;
