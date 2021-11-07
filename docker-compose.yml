@@ -1,0 +1,33 @@
+---
+version: "2"
+services:
+  # To test with MariaDB, set FLEET_MYSQL_IMAGE to mariadb:10.6 or the like.
+  mysql:
+    image: mysql:5.7
+    container_name: db
+    environment:
+      MYSQL_DATABASE: spg_database
+# TODO: command to popolate the db
+    environment: &mysql-default-environment
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: spg
+      MYSQL_USER: asparago
+      MYSQL_PASSWORD: asparago
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-persistent-volume:/var/lib/mysql
+      - ./opt:/opt
+    
+  mysql_test:
+    image: mysql:5.7
+    container_name: test_db
+# TODO: command to popolate the db
+    environment: *mysql-default-environment
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./opt:/opt
+
+volumes:
+  mysql-persistent-volume:
