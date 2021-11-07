@@ -1,35 +1,37 @@
 # SPG
+
 SPG SE2_Project
 
 
-Database design sprint 1
+# Database design sprint 1
+
 ```plantuml
 @startuml
 Class User{
-    User_id (PK): Integer
-    Name: String
-    Surname: Integer
-    SSN: String
-    Phone number: Integer
-    Email: Integer
-    Password: String
-    Role: String
+    user_id (PK): Integer
+    name: String
+    surname: Integer
+    ssn: String
+    phone_number: Integer
+    email: Integer
+    password: String
+    role: String
 }
 Class Basket{
-    User_id(PK): Integer
-    Product_id(PK): Integer
-    Quantity: Float
+    user_id(PK): Integer
+    product_id(PK): Integer
+    quantity: Float
 }
 Class Porduct{
-    Product_id(PK): Integer
-    Name: String
-    Quantity: Integer
-    Price: Float
-    Unit: String
+    product_id(PK): Integer
+    name: String
+    price: Float
+    unit_of_measurement: String
+    quantity: Integer
 }
 Class Wallet{
-    User_id(PK): Integer
-    Value: Float
+    user_id(PK): Integer
+    value: Float
 }
 User--Basket
 Basket - Porduct

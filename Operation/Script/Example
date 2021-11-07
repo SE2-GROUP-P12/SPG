@@ -1,12 +1,12 @@
 INSERT INTO `spg_database`.`user`
 (`user_id`,
-`Name`,
-`Surname`,
-`SSN`,
-`Phone_number`,
-`Email`,
-`Password`,
-`Role`)
+`name`,
+`surname`,
+`ssn`,
+`phone_number`,
+`email`,
+`password`,
+`role`)
 VALUES
 (1,
 "Mario",
@@ -19,13 +19,13 @@ null,
 
 INSERT INTO `spg_database`.`user`
 (`user_id`,
-`Name`,
-`Surname`,
-`SSN`,
-`Phone_number`,
-`Email`,
-`Password`,
-`Role`)
+`name`,
+`surname`,
+`ssn`,
+`phone_number`,
+`email`,
+`password`,
+`role`)
 VALUES
 (2,
 "Paolo",
@@ -38,13 +38,13 @@ null,
 
 INSERT INTO `spg_database`.`user`
 (`user_id`,
-`Name`,
-`Surname`,
-`SSN`,
-`Phone_number`,
-`Email`,
-`Password`,
-`Role`)
+`name`,
+`surname`,
+`ssn`,
+`phone_number`,
+`email`,
+`password`,
+`role`)
 VALUES
 (3,
 "Francesco",
@@ -56,18 +56,18 @@ null,
 "employee");
 
 INSERT INTO `spg_database`.`wallet`
-(`User_id`,
-`Value`)
+(`user_id`,
+`value`)
 VALUES
 (2,
 50.0);
 
 INSERT INTO `spg_database`.`product`
 (`product_id`,
-`Name`,
-`Quantity`,
-`Price`,
-`Unit`)
+`name`,
+`quantity`,
+`price`,
+`unit_of_measurement`)
 VALUES
 (1,
 "Mele",
@@ -77,10 +77,10 @@ VALUES
 
 INSERT INTO `spg_database`.`product`
 (`product_id`,
-`Name`,
-`Quantity`,
-`Price`,
-`Unit`)
+`name`,
+`quantity`,
+`price`,
+`unit`)
 VALUES
 (2,
 "Farina",
@@ -90,10 +90,10 @@ VALUES
 
 INSERT INTO `spg_database`.`product`
 (`product_id`,
-`Name`,
-`Quantity`,
-`Price`,
-`Unit`)
+`name`,
+`quantity`,
+`price`,
+`unit`)
 VALUES
 (3,
 "Uova",
@@ -102,9 +102,9 @@ VALUES
 "Unità");
 
 INSERT INTO `spg_database`.`basket`
-(`User_id`,
-`Product_id`,
-`Quantity`)
+(`user_id`,
+`product_id`,
+`quantity`)
 VALUES
 (1,
 1,
