@@ -23,7 +23,7 @@ public class SpgController {
         this.service = service;
     }
 
-    @GetMapping(API.HOME)
+    @GetMapping("/")
     public ResponseEntity home(){
         return ResponseEntity.ok().build();
     }
