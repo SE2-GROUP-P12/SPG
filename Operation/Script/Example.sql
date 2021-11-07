@@ -1,4 +1,4 @@
-INSERT INTO `spg_database`.`user`
+INSERT INTO `spg`.`user`
 (`user_id`,
 `name`,
 `surname`,
@@ -17,7 +17,7 @@ VALUES
 null,
 "client");
 
-INSERT INTO `spg_database`.`user`
+INSERT INTO `spg`.`user`
 (`user_id`,
 `name`,
 `surname`,
@@ -36,7 +36,7 @@ VALUES
 null,
 "client");
 
-INSERT INTO `spg_database`.`user`
+INSERT INTO `spg`.`user`
 (`user_id`,
 `name`,
 `surname`,
@@ -55,14 +55,14 @@ VALUES
 null,
 "employee");
 
-INSERT INTO `spg_database`.`wallet`
+INSERT INTO `spg`.`wallet`
 (`user_id`,
 `value`)
 VALUES
 (2,
 50.0);
 
-INSERT INTO `spg_database`.`product`
+INSERT INTO `spg`.`product`
 (`product_id`,
 `name`,
 `quantity`,
@@ -75,7 +75,7 @@ VALUES
 2.50,
 "Kg");
 
-INSERT INTO `spg_database`.`product`
+INSERT INTO `spg`.`product`
 (`product_id`,
 `name`,
 `quantity`,
@@ -88,7 +88,7 @@ VALUES
 5.00,
 "Kg");
 
-INSERT INTO `spg_database`.`product`
+INSERT INTO `spg`.`product`
 (`product_id`,
 `name`,
 `quantity`,
@@ -101,7 +101,7 @@ VALUES
 6.25,
 "Unità");
 
-INSERT INTO `spg_database`.`basket`
+INSERT INTO `spg`.`basket`
 (`user_id`,
 `product_id`,
 `quantity`)
