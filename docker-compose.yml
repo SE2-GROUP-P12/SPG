@@ -17,7 +17,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql-persistent-volume:/var/lib/mysql
-      - /opt:/
+      - ./opt:/opt
     
   mysql_test:
     image: mysql:5.7
@@ -27,7 +27,7 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - /opt:/
+      - ./opt:/opt
 
 volumes:
   mysql-persistent-volume:
