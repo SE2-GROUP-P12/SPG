@@ -6,6 +6,7 @@ import {Homepage} from "./Homepage";
 import {Login} from "./Login";
 import {ShopEmployee} from "./ShopEmployee";
 import {BrowseProducts} from "./BrowseProducts";
+import {NewCustomer} from "./NewCustomer";
 import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
 
 function App() {
@@ -21,6 +22,9 @@ function App() {
                </Route>
                <Route exact path="/ShopEmployee">
                    <ShopEmployee/>
+               </Route>
+               <Route exact path="/NewCustomer">
+                    <NewCustomer/>
                </Route>
                <Route exact path="/Login">
                    <Login/>

@@ -3,7 +3,7 @@ import './App.css';
 import Container from "react-bootstrap/Container";
 import {useState, useEffect} from "react";
 import {API} from "./API";
-import fruit from "./resources/fruits.png";
+import fruit from "./resources/fruits.jpg" //Recheck the original filename
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
