@@ -54,7 +54,7 @@ function NewCustomer()
                     <Row>Phone Number: <Field type="text" name="phoneNumber" label="Phone Number"/></Row>
                     <Row style={{padding : "20px" }}>
                         <Col xs={6}><Button type="submit" variant="success">Submit</Button></Col>
-                        <Col xs={6}><Link to="/ShopEmployee"><Button variant="secondary">Home</Button></Link></Col>
+                        <Col xs={6}><Link to="/ShopEmployee"><Button variant="secondary">Back</Button></Link></Col>
                     </Row>
                     {errors.name && touched.name ? errors.name : null}
                     {errors.surname && touched.surname ? errors.surname : null}

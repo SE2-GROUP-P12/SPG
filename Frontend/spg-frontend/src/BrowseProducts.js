@@ -27,8 +27,9 @@ function BrowseProducts()
         <h1>Products List</h1>
         <div id="container" className="pagecontent">
             {products===null ? <h2>Loading, please wait </h2> : <ul className="list-group">{printProducts(products)}</ul> }
-            <Link to='/ShopEmployee'><Button style={{position: "absolute", right: "50px", bottom: "50px"}} variant='success'>Home</Button></Link>
-        </div></>
+        </div>
+        <Link to='/ShopEmployee'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
+        </>
     );
 }
 

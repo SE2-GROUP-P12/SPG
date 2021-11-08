@@ -100,4 +100,4 @@ function OrderEntry(props)
 }
 
 
-export {PlaceOrder}
+export {PlaceOrder, printOrder}

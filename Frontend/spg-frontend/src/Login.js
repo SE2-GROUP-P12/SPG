@@ -37,7 +37,7 @@ function Login() {
                                 </Row>
                                 <Row style={{padding : "20px" }}>
                         <Col xs={6}><Button type="submit" variant="success">Login</Button></Col>
-                        <Col xs={6}><Link to="/"><Button variant="secondary">Home</Button></Link></Col>
+                        <Col xs={6}><Link to="/"><Button variant="secondary">Back</Button></Link></Col>
                     </Row>
                                 <Row>
                                     {errors.email && touched.email ? (

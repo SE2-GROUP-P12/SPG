@@ -61,7 +61,7 @@ function TopUp()
             <Col ><Button onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Gift Card</h1> </Button></Col>
             </Row>}
     </div>
-    <Link to='/ShopEmployee'><Button style={{position: "absolute", right: "50px", bottom: "50px"}} variant='success'>Home</Button></Link>
+    <Link to='/ShopEmployee'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
     <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Top Up</Modal.Title>
