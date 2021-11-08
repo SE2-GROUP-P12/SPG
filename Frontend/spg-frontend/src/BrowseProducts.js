@@ -15,13 +15,11 @@ function BrowseProducts()
 {
     const [products, setProducts] = useState([0]);
 
-    /*useEffect(()=>{
+    useEffect(()=>{
         let getProductsInfo = async () => {
             API.browseProducts().then(prod => setProducts(prod));
         };
-        getProductsInfo();}, [] );*/
-
-    console.log("CHECKEPOINT:"+ JSON.stringify(products));
+        getProductsInfo();}, [] );
 
     return(
         <Container>
