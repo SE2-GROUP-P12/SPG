@@ -5,8 +5,12 @@ import {Navbar} from "./Navbar";
 import {Homepage} from "./Homepage";
 import {Login} from "./Login";
 import {ShopEmployee} from "./ShopEmployee";
-import {Switch, Route} from "react-router-dom";
-import {BrowserRouter as Router } from 'react-router-dom';
+import {BrowseProducts} from "./BrowseProducts";
+import { NewCustomer } from './NewCustomer';
+import {TopUp} from "./TopUp";
+import {PlaceOrder} from './PlaceOrder';
+import { DeliverOrder } from './DeliverOrder';
+import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
 
 function App() {
 
@@ -16,6 +20,21 @@ function App() {
             <Router>
                 <Navbar/>
            <Switch>
+           <Route exact path="/DeliverOrder">
+                   <DeliverOrder/>
+                </Route>
+           <Route exact path="/PlaceOrder">
+                   <PlaceOrder/>
+                </Route>
+           <Route exact path="/TopUp">
+                   <TopUp/>
+                </Route>
+                <Route exact path="/NewCustomer">
+                   <NewCustomer/>
+                </Route>
+               <Route exact path="/BrowseProducts">
+                   <BrowseProducts/>
+               </Route>
                <Route exact path="/ShopEmployee">
                    <ShopEmployee/>
                </Route>

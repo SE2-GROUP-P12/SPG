@@ -1,15 +1,19 @@
 package it.polito.SE2.P12.SPG.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.Product;
+import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.service.SpgService;
+import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -17,10 +21,12 @@ import java.util.List;
 public class SpgController {
 
     private final SpgService service;
+    private final SpgUserService userService;
 
     @Autowired
-    public SpgController(SpgService service) {
+    public SpgController(SpgService service, SpgUserService userService) {
         this.service = service;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -31,5 +37,23 @@ public class SpgController {
     @GetMapping(API.ALL_PRODUCT)
     public ResponseEntity<List<Product>> getAllProduct(){
         return ResponseEntity.ok(service.getAllProduct());
+    }
+
+    @PostMapping(API.EXIST_CUSTOMER)
+    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMail(@RequestBody String email){
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> requestMap = null;
+        try {
+             requestMap = mapper.readValue(email, Map.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Controller: " + requestMap.get("email"));
+        return ResponseEntity.ok(userService.checkPresenceOfMail(requestMap.get("email")));
+    }
+
+    @PostMapping(API.CREATE_CUSTOMER)
+    public ResponseEntity createCustomer(@RequestBody User user){
+        return ResponseEntity.ok(userService.addNewClient(user));
     }
 }
