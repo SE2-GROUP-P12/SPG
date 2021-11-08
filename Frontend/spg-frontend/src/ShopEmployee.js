@@ -18,7 +18,7 @@ function ShopEmployee()
             <Col xs={4}><Link to="/TopUp"><Button className="dashButton" variant="outline-success"> <h1>Top Up</h1> </Button></Link></Col>
         </Row>
         <Row>
-            <Col xs={6}><Button className="dashButton" variant="outline-success"> <h1>Place Order</h1> </Button></Col>
+            <Col xs={6}><Link to='/PlaceOrder'><Button className="dashButton" variant="outline-success"> <h1>Place Order</h1> </Button></Link></Col>
             <Col xs={6}><Button className="dashButton" variant="outline-success"> <h1>Deliver Order</h1> </Button></Col>
         </Row>
     </div></>);

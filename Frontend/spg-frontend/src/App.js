@@ -8,6 +8,7 @@ import {ShopEmployee} from "./ShopEmployee";
 import {BrowseProducts} from "./BrowseProducts";
 import { NewCustomer } from './NewCustomer';
 import {TopUp} from "./TopUp";
+import {PlaceOrder} from './PlaceOrder';
 import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
 
 function App() {
@@ -18,6 +19,9 @@ function App() {
             <Router>
                 <Navbar/>
            <Switch>
+           <Route exact path="/PlaceOrder">
+                   <PlaceOrder/>
+                </Route>
            <Route exact path="/TopUp">
                    <TopUp/>
                 </Route>
