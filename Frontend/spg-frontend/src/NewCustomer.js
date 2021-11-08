@@ -3,7 +3,6 @@ import './App.css';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
 import {Link} from "react-router-dom";
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
@@ -42,7 +41,7 @@ function NewCustomer()
             validateOnBlur={false}
         >
             {({values, errors, touched})=>
-            <Container className="pagecontent">
+            <div id="container" className="pagecontent">
                 <Form>
                     <Row>
                         <Col>Name: <Field type="text" name="name" label="Name"/></Col>
@@ -65,7 +64,7 @@ function NewCustomer()
                     {errors.address && touched.address ? errors.address : null}
                     {errors.phoneNumber && touched.phoneNumber ? errors.phoneNumber : null}
                 </Form>
-            </Container>
+            </div>
             }
         </Formik>
         </>

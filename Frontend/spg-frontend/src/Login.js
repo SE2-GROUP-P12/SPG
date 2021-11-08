@@ -1,12 +1,17 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import Button from "react-bootstrap/Button";
+import {Link} from "react-router-dom";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import {Formik, Form, Field} from 'formik';
-import {Row, Container} from 'react-bootstrap'
+import Container from 'react-bootstrap/Container';
 import * as Yup from 'yup';
 
 function Login() {
     return (
-        <div className="justify-content-center">
+        <>
+        <h1>Login</h1>
             <Formik
                 initialValues={{
                     email: "",
@@ -22,28 +27,29 @@ function Login() {
                 validateOnChange={false}
                 validateOnBlur={false}>
                 {({values, errors, touched}) =>
+                    <div id="container" className="pagecontent">
                     <Form>
-                            <Container>
                                 <Row>
-                                    <Field name="email" label="Email"/>
+                                    Email: <Field name="email" label="Email"/>
                                 </Row>
                                 <Row>
-                                    <Field name="password" label="Password" type="password"/>
+                                    Password: <Field name="password" label="Password" type="password"/>
                                 </Row>
-                                <Row>
-                                    <button type="submit">Login</button>
-                                </Row>
+                                <Row style={{padding : "20px" }}>
+                        <Col xs={6}><Button type="submit" variant="success">Login</Button></Col>
+                        <Col xs={6}><Link to="/"><Button variant="secondary">Home</Button></Link></Col>
+                    </Row>
                                 <Row>
                                     {errors.email && touched.email ? (
                                         <div>{errors.email}</div>) : null}
                                     {errors.password && touched.password ? (
                                         <div>{errors.password}</div>) : null}
                                 </Row>
-                            </Container>
                     </Form>
+                    </div>
                 }
             </Formik>
-        </div>
+        </>
     )
 }
 

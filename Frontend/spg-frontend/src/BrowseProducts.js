@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import {Modal} from "react-bootstrap";
+import {Link} from "react-router-dom";
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 
@@ -15,17 +16,19 @@ function BrowseProducts()
 {
     const [products, setProducts] = useState([0]);
 
-    useEffect(()=>{
+    /*useEffect(()=>{
         let getProductsInfo = async () => {
             API.browseProducts().then(prod => setProducts(prod));
         };
-        getProductsInfo();}, [] );
+        getProductsInfo();}, [] );*/
 
     return(
-        <Container>
-            <h1>Products List</h1>
+        <>
+        <h1>Products List</h1>
+        <div id="container" className="pagecontent">
             {products===null ? <h2>Loading, please wait </h2> : <ul className="list-group">{printProducts(products)}</ul> }
-        </Container>
+            <Link to='/ShopEmployee'><Button style={{position: "absolute", right: "50px", bottom: "50px"}} variant='success'>Home</Button></Link>
+        </div></>
     );
 }
 
@@ -61,6 +64,7 @@ function ProductEntry(props)
                 <Modal.Title>Add product to cart</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                <div id="container" className="pagecontent">
                 <img src={fruit} alt="fruit" style={{width :'150px', height : '150px'}}/>
                 <Row> {props.product.name} by {props.product.producer} : {props.product.amount}{props.product.unit} available, {props.product.unitPrice}€/{props.product.unit}</Row>
                 <Row>
@@ -75,15 +79,14 @@ function ProductEntry(props)
                     >
                         {({values, errors, touched})=>
                             <Form>
-                                <Row><Field type="number" id="amount" name="amount"/>{props.product.unit}</Row>
-                                <Button type="submit" variant="success">
-                                    Add to cart
-                                </Button>
+                                Amount: <Field type="number" id="amount" name="amount"/> {props.product.unit} <br/>
+                                <Button style={{margin : '20px'}} type="submit" variant="success">Add to cart</Button>
                                 {errors.amount && touched.amount ? errors.amount : null}
                             </Form>
                         }
                     </Formik>
                 </Row>
+                </div>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
