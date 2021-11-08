@@ -79,6 +79,7 @@
   - response body content:
     - 200 OK
     - 500 SERVER ERROR
+
 - GET `/api/product/browseProducts` //list sellable products
   - response body content: 
     - 200 OK
@@ -106,6 +107,7 @@
       }
       ```
     - 404 NOT FOUND
+
     - POST `/api/product/addToCart` //add product to cart
       - request body content:
         ```json
@@ -121,7 +123,32 @@
       - response body content
         - 200 OK
         - 500 SERVER ERROR
-        
+
+- GET `/api/customer/getCart` //list products inside current cart
+  - response body content:
+    - 200 OK
+      ```json
+      {"products":[
+        {
+          "productId":"1",
+          "name": "Apples",
+          "producer" : "Tonio Cartonio s.p.a.",
+          "unit":"kg",
+          "unit price" : "1.99",
+          "amount" : "10" //ordered amount 
+        },
+        {
+          "productId":"2",
+          "name": "Eggs",
+          "producer" : "KFC farms", 
+          "unit":"unit",
+          "unit price" : "0.10",
+          "amount" : "6" 
+        }
+      ]}
+      ```
+    - 404 NOT FOUND
+
 - GET `/api/customer/getWallet` //get customer's wallet
   - request body content:
     ```json
@@ -196,8 +223,7 @@
                   "amount" : "6" 
                 }
               ] 
-          },
-          {//...}
+          }
         ]
       }
       ```
