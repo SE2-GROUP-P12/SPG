@@ -1,17 +1,20 @@
 async function browseProducts(){
     try{
         let listProducts;
-        const response = await fetch ("/api/product/browseProducts");
-        if (response==="")
-            listProducts="";
-        else
-            listProducts = await response.json();
+        console.log("CHECKPOINT 1");
+        const response = await fetch ("/api/product/all");
+        console.log("CHECKPOINT 2");
+        listProducts = await response.json();
+        console.log("CHECKPOINT 3");
         if(response.ok)
             return listProducts;
         else
             return undefined;
     }
-    catch (err) {return undefined;}
+    catch (err) {
+        console.log("Some error occourred");
+        return undefined;
+    }
 }
 
 async function addToCart(product)
@@ -27,7 +30,10 @@ async function addToCart(product)
         else
             return undefined;
     }
-    catch(err) {return undefined;}
+    catch(err) {
+        console.log("Some error occourred");
+        return undefined;
+    }
 }
 
 const API = {browseProducts, addToCart};
