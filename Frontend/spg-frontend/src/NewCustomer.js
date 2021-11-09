@@ -310,8 +310,15 @@ function NewCustomer() {
                                 </Form.Group>
                         }
                     </Row>
-                    {/*BUTTON COMPONENT*/}
+                    {/*BUTTONs COMPONENT*/}
                     <Row>
+                        <Col className="mt-4" >
+                            <Link to = "/ShopEmployee">
+                                <Button variant="danger" size="lg" className="mt-4">
+                                    BACK
+                                </Button>
+                            </Link>
+                        </Col>
                         <Col className="mt-4">
                             {
                                 !(emailValidator === true && passwordValidator === true &&
