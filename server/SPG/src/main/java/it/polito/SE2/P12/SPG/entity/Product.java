@@ -26,4 +26,6 @@ public class Product {
     private Integer quantity;
     @Column(name = "price", nullable = false)
     private Float price;
+    @Column(name="producer", nullable = false) //TODO: try to use many-to-one annotation(?)
+    private String producer; // It's like 'ragione sociale' (it's unique) -> Tonio Cartonio SPA
 }
