@@ -25,7 +25,7 @@ public class SpgService {
         return productRepo.findAll();
     }
 
-    
+
 
 
 }

@@ -139,7 +139,7 @@ function NewCustomer() {
         }).then(response => {
             if (response.ok)
                 response.json().then(content => {
-                    if (content.exist === false){
+                    if (content.exist === false) {
                         console.log(content);
                         fetch("/api/customer/addCustomer", {
                             method: 'POST',
@@ -149,10 +149,9 @@ function NewCustomer() {
                             },
                             body: jsonObj
                         }).then(() => console.log("done!"));
-                    setModalMessage(okModalMessage);
-                    }
-                else
-                    setModalMessage(conflictModalMessage);
+                        setModalMessage(okModalMessage);
+                    } else
+                        setModalMessage(conflictModalMessage);
                 })
             else
                 setModalMessage(errorModalMessage);
@@ -181,7 +180,13 @@ function NewCustomer() {
                 <Modal.Footer>
                     {
                         modalMessage.id === 3 ?
-                            <Button variant="danger" onClick={() => setModalShow(false)}>
+                            <Button variant="danger" onClick={() => {
+                                setModalShow(false);
+                                setEmail("");
+                                setPassword("");
+                                setEmailValidator(false);
+                                setPasswordValidator(false);
+                            }}>
                                 {modalMessage.messageFooterButton}
                             </Button>
                             :
@@ -312,8 +317,8 @@ function NewCustomer() {
                     </Row>
                     {/*BUTTONs COMPONENT*/}
                     <Row>
-                        <Col className="mt-4" >
-                            <Link to = "/ShopEmployee">
+                        <Col className="mt-4">
+                            <Link to="/ShopEmployee">
                                 <Button variant="danger" size="lg" className="mt-4">
                                     BACK
                                 </Button>
@@ -342,17 +347,17 @@ function NewCustomer() {
 }
 
 /**
-=======
-import './App.css';
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import {Link} from "react-router-dom";
-import {Formik, Form, Field} from 'formik';
-import * as Yup from 'yup';
+ =======
+ import './App.css';
+ import Row from "react-bootstrap/Row";
+ import Col from "react-bootstrap/Col";
+ import Button from "react-bootstrap/Button";
+ import {Link} from "react-router-dom";
+ import {Formik, Form, Field} from 'formik';
+ import * as Yup from 'yup';
 
-function NewCustomer()
-{
+ function NewCustomer()
+ {
     return(
         <>
         <h1>Welcome!</h1>
@@ -415,6 +420,7 @@ function NewCustomer()
     );
 }
 
->>>>>>> origin/be_db_link
+ >>>>>>> origin/be_db_link
  */
+
 export {NewCustomer}
