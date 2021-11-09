@@ -12,10 +12,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Product {
 
+    /*
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "product_id_generator"
     )
+    */
     @Id
     private Integer product_id;
     @Column(name = "name", nullable = false)

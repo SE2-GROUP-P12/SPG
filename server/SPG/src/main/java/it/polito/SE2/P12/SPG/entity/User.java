@@ -17,10 +17,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class User {
     @Id
+    /*
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "user_id_generator"
-    )
+    )*/
     private Long userId;
     @Column(name = "name", nullable = false)
     private String name;

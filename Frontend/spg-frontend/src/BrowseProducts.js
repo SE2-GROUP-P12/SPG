@@ -3,7 +3,7 @@ import './App.css';
 import Container from "react-bootstrap/Container";
 import {useState, useEffect} from "react";
 import {API} from "./API";
-import fruit from "./resources/fruits.jpg" //Recheck the original filename
+import fruit from "./resources/fruits.png" //Recheck the original filename
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -48,7 +48,7 @@ function BrowseProducts() {
                             <Row>
                                 <Formik
                                     initialValues={{amount: 0}}
-                                    validationSchema={Yup.object({amount: Yup.number().min(0).max(props.product.amount).required('Amount required!')})}
+                                    validationSchema={Yup.object({amount: Yup.number().min(0).max(props.product.quantity).required('Amount required!')})}
                                     onSubmit={async (values) => {
                                         console.log("SUBMITTED: " + values.amount);
                                     }}
@@ -57,7 +57,7 @@ function BrowseProducts() {
                                 >
                                     {({values, errors, touched}) =>
                                         <Form>
-                                            Amount: <Field type="number" id="amount" name="amount"/> {props.product.unitOfMeasurement}
+                                            Amount: <Field type="number" id="amount" name="amount" max={props.product.quantity} min={0}/> {props.product.unitOfMeasurement}
                                             <br/>
                                             <Button style={{margin: '20px'}} type="submit" variant="success">Add to
                                                 cart</Button>
