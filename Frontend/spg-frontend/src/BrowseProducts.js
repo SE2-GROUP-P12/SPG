@@ -44,7 +44,7 @@ function BrowseProducts() {
                     <Modal.Body>
                         <div id="container" className="pagecontent">
                             <img src={fruit} alt="fruit" style={{width: '150px', height: '150px'}}/>
-                            <Row> {props.product.name} by {props.product.producer} : {props.product.quantity}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Row>
+                            <Row> {props.product.name} : {props.product.quantity}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Row>
                             <Row>
                                 <Formik
                                     initialValues={{amount: 0}}
@@ -78,7 +78,7 @@ function BrowseProducts() {
                     <Row>
                         <Col xs={2}> <img src={fruit} alt="fruit" style={{width: '50px', heigth: '50px'}}/> </Col>
                         <Col
-                            xs={8}>{props.product.name} by {props.product.producer} : {props.product.quantity}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Col>
+                            xs={8}>{props.product.name} : {props.product.quantity}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Col>
                         <Col xs={2}><Button variant="success" onClick={handleShow}> Add to cart </Button> </Col>
                     </Row>
                 </li>
@@ -106,15 +106,6 @@ function BrowseProducts() {
 function printProducts(prod) {
     let output = [];
     for (let p of prod) {
-        p = {
-            "productId": "1",
-            "name": "Apples",
-            "producer": "Tonio Cartonio s.p.a.",
-            "unit": "kg",
-            "unitPrice": "1.99",
-            "amount": "100"
-        }
-
         output.push(<ProductEntry product={p}/>)
     }
     return output;
