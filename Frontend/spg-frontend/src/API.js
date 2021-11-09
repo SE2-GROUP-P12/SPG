@@ -1,11 +1,10 @@
+/* QUESTA L'HA GIA' FATTA RICK
+
 async function browseProducts(){
     try{
         let listProducts;
-        console.log("CHECKPOINT 1");
         const response = await fetch ("/api/product/all");
-        console.log("CHECKPOINT 2");
         listProducts = await response.json();
-        console.log("CHECKPOINT 3");
         if(response.ok)
             return listProducts;
         else
@@ -15,7 +14,7 @@ async function browseProducts(){
         console.log("Some error occourred");
         return undefined;
     }
-}
+}*/
 
 async function addToCart(product)
 {
@@ -28,7 +27,7 @@ async function addToCart(product)
         if(response.ok)
             return true;
         else
-            return undefined;
+            return false;
     }
     catch(err) {
         console.log("Some error occourred");
@@ -36,5 +35,7 @@ async function addToCart(product)
     }
 }
 
-const API = {browseProducts, addToCart};
+
+
+const API = {/*browseProducts,*/ addToCart};
 export {API}

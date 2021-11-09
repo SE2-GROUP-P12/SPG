@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
+import Alert from "react-bootstrap/Alert";
 import {Modal} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {Formik, Form, Field} from 'formik';
@@ -32,6 +33,8 @@ function BrowseProducts() {
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
+        const [showSuccess, setShowSuccess] = useState(null);
+        const [showError, setShowError] = useState(null)
 
         //TODO: addToCart on submit
 
@@ -50,7 +53,12 @@ function BrowseProducts() {
                                     initialValues={{amount: 0}}
                                     validationSchema={Yup.object({amount: Yup.number().min(0).max(props.product.quantity).required('Amount required!')})}
                                     onSubmit={async (values) => {
-                                        console.log("SUBMITTED: " + values.amount);
+                                        props.product.amount=values.amount;
+                                        let outcome = await API.addToCart(JSON.stringify(props.product));
+                                        if(outcome===true)
+                                            setShowSuccess("Product added successfully");
+                                        else    
+                                            setShowError("Something went wrong");
                                     }}
                                     validateOnChange={false}
                                     validateOnBlur={false}
@@ -62,6 +70,8 @@ function BrowseProducts() {
                                             <Button style={{margin: '20px'}} type="submit" variant="success">Add to
                                                 cart</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
+                                            {showSuccess !== null ? <Alert variant='success'>{showSuccess}</Alert> : null}
+                                            {showError !== null ? <Alert variant='danger'>{showError}</Alert> : null}
                                         </Form>
                                     }
                                 </Formik>
