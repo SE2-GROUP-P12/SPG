@@ -23,8 +23,9 @@ public class SpgService {
 
     public List<Product> getAllProduct(){
         return productRepo.findAll();
-
     }
+
+    
 
 
 }
