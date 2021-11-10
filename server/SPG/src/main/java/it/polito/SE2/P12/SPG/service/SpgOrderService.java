@@ -1,19 +1,26 @@
 package it.polito.SE2.P12.SPG.service;
 
+import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Order;
+import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class SpgOrderService {
 
     private OrderRepo orderRepo;
+
 
     @Autowired
     public SpgOrderService(OrderRepo orderRepo) {
@@ -26,4 +33,11 @@ public class SpgOrderService {
         response.put("responseStatus", "200-OK");
         return response;
     }
-}
+    public Map<String, String> addNewOrderFromBasket(Basket basket){
+
+        Order order = new Order(basket.getCust(), LocalDateTime.now(),  basket.getProds());
+        return addNewOrder(order);
+
+        }
+    }
+

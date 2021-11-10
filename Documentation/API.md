@@ -107,7 +107,7 @@
       }
       ```
     - 404 NOT FOUND
-
+//TODO add customer id to request body
     - POST `/api/product/addToCart` //add product to cart
       - request body content:
         ```json
@@ -123,7 +123,7 @@
       - response body content
         - 200 OK
         - 500 SERVER ERROR
-
+          //TODO add customer id to request body
 - GET `/api/customer/getCart` //list products inside current cart
   - response body content:
     - 200 OK

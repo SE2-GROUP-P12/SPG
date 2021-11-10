@@ -1,14 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 
-function PlaceOrder()
+function PlaceOrder(props)
 {
     const [user, setUser]=useState(null);
     const [products, setProducts] = useState([0,1,2,4]);
@@ -20,10 +21,25 @@ function PlaceOrder()
         getCartInfo();}, [] );*/
 
         const dropCart = () => setProducts(null);
-    
+
+    /*TIME MACHINE MANAGEMENT*/  
+    const [itsTime, setItsTime] = useState(false)  
+    useEffect(()=>{
+        let checkTime = (time, date) =>
+        {
+            console.log("CHECKTIME PLACEORDER: "+time+" "+date)
+            if((date==='Sat' && time>='09:00')||(date==='Sun' && time<'23:00'))
+                setItsTime(true);
+            else
+                setItsTime(false);
+        }
+        checkTime(props.time, props.date);
+    }, [props.date, props.time])
+
     return(
         <>
         <h1>Place Order</h1>
+            {itsTime ? null : <Alert variant='warning'> It's possible to place orders only from Saturday at 9am to Sunday at 11pm</Alert>}
             {products===null ? 
             <div id="container" className="pagecontent">
                 <h2>The cart is empty </h2>
@@ -57,7 +73,7 @@ function PlaceOrder()
             </div>
             </>}
             <Row>
-                <Col xs={4}><Button disabled={products===null || user===null ? true : false} variant='success'>Send order</Button></Col>
+                <Col xs={4}><Button disabled={(!itsTime&&(products===null||user===null)) ? true : false} variant='success'>Send order</Button></Col>
                 <Col xs={4}><Button disabled={products===null? true : false} variant='danger' onClick={dropCart}>Delete order</Button></Col>
                 <Col xs={4}><Link to='/ShopEmployee'><Button variant='secondary'>Back</Button></Link></Col>
             </Row>

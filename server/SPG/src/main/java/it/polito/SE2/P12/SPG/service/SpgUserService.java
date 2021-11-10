@@ -17,6 +17,13 @@ public class SpgUserService {
         this.userRepo = userRepo;
     }
 
+    public Long getUserByEmail(String email){
+        return userRepo.findUserByEmail(email).getUserId();
+    }
+    public  User getUserByUserId(Long userId){
+        return userRepo.findUserByUserId(userId);
+    }
+
     public Map<String, Boolean> checkPresenceOfUser(String email, String ssn){
         Map<String, Boolean> response = new HashMap<>();
         if (checkPresenceOfMail(email) && checkPresenceOfSSN(ssn))
@@ -32,7 +39,7 @@ public class SpgUserService {
     }
 
     private Boolean checkPresenceOfSSN(String ssn){
-        User tmp = userRepo.findUserBySSN(ssn);
+        User tmp = userRepo.findUserBySsn(ssn);
         return tmp == null;
     }
 

@@ -6,6 +6,14 @@ CREATE TABLE `basket` (
   PRIMARY KEY (`user_id`,`product_id`)
 ) CHARSET=utf8;
 
+CREATE TABLE `order_tab` (
+                          `user_id` int NOT NULL,
+                          `product_id` int NOT NULL,
+                          `quantity` float DEFAULT NULL,
+                          `order_id` int NOT NULL,
+                          PRIMARY KEY (`user_id`,`product_id`,`order_id`)
+) CHARSET=utf8;
+
 CREATE TABLE `product` (
   `product_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
@@ -32,6 +40,8 @@ CREATE TABLE `wallet` (
   `value` float DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 ) CHARSET=utf8;
+
+
 
 INSERT INTO `user`
 (`user_id`,

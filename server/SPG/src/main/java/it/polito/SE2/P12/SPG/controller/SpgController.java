@@ -4,8 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
+import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
-import it.polito.SE2.P12.SPG.service.SpgService;
+import it.polito.SE2.P12.SPG.service.SpgProductService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.API;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +21,18 @@ import java.util.Map;
 @RequestMapping(API.HOME)
 public class SpgController {
 
-    private final SpgService service;
+    private final SpgProductService productService;
     private final SpgUserService userService;
     private final SpgOrderService orderService;
+    private final SpgBasketService basketService;
+
 
     @Autowired
-    public SpgController(SpgService service, SpgUserService userService, SpgOrderService orderService) {
-        this.service = service;
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService) {
+        this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
+        this.basketService = basketService;
     }
 
     @GetMapping("/")
@@ -38,7 +42,7 @@ public class SpgController {
 
     @GetMapping(API.ALL_PRODUCT)
     public ResponseEntity<List<Product>> getAllProduct(){
-        return ResponseEntity.ok(service.getAllProduct());
+        return ResponseEntity.ok(productService.getAllProduct());
     }
 
     @PostMapping(API.EXIST_CUSTOMER)
@@ -64,9 +68,23 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(userService.addNewClient(user));
     }
+    @PostMapping(API.PLACE_ORDER)
+    public ResponseEntity placeOrder(@RequestBody String email){
+        return ResponseEntity.ok(orderService.addNewOrderFromBasket(basketService.emptyBasket(userService.getUserByEmail(email))));
+    }
+    @PostMapping(API.ADD_TO_BASKET)
+    public ResponseEntity addToBasket(@RequestBody Long productId, Long customerId, Integer quantity) {
+        return ResponseEntity.ok(basketService.addProductToCart(productService.getProductById(productId),quantity, userService.getUserByUserId(customerId) ));
+    }
 
+    @PostMapping(API.GET_CART)
+    public ResponseEntity<List<Product>> getCart(@RequestBody  Long customerId) {
+        return ResponseEntity.ok(basketService.getProductsInBasket(userService.getUserByUserId(customerId) ));
+    }
     @GetMapping(API.TEST)
     public ResponseEntity test(){
-        return ResponseEntity.ok(service.test());
+        return ResponseEntity.ok(productService.test());
     }
+
+
 }

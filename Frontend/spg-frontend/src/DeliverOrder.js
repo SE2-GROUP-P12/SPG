@@ -1,13 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import { useState, useEffect } from 'react';
 import {Formik, Form, Field} from 'formik';
 import { printOrder} from './PlaceOrder';
 import * as Yup from 'yup';
 import {Link} from 'react-router-dom';
 
-function DeliverOrder()
+function DeliverOrder(props)
 {
     const [user, setUser]=useState(null);
     const [orders, setOrders] = useState([1,2,3]);
@@ -18,9 +19,24 @@ function DeliverOrder()
         };
         getOrdersInfo();}, [user] );*/
 
+    /*TIME MACHINE MANAGEMENT*/  
+    const [itsTime, setItsTime] = useState(false)  
+    useEffect(()=>{
+        let checkTime = (time, date) =>
+        {
+            console.log("CHECKTIME DELIVERORDER: "+time+" "+date);
+            if((date==='Wed' && time>='09:00')||(date==='Fri' && time<'23:00')||(date==='Thu'))
+                setItsTime(true);
+            else
+                setItsTime(false);
+        }
+        checkTime(props.time, props.date);
+    }, [props.date, props.time])
+
     return(
         <>
         <h1>Deliver Order</h1>
+        {itsTime ? null : <Alert variant='warning'> It's possible to deliver orders only from Wednesday at 9am to Friday at 11pm</Alert>}
         <div id="container" className="pagecontent">
         <Formik
             initialValues={{
@@ -36,11 +52,11 @@ function DeliverOrder()
         {({values, errors, touched})=>
             <Form>
             Email:<Field style={{margin: '20px'}} name="email" type="text"/>
-            <Button style={{margin: '20px'}} type="submit" variant="success">Submit customer</Button>
+            <Button style={{margin: '20px'}} type="submit" variant="success" disabled={itsTime ? false : true} >Submit customer</Button>
             {errors.email && touched.email ? errors.email : null}                
             </Form>}
         </Formik>
-        {user===null ? <h2>Select a user</h2> : <Orders orderList={orders}/>}
+        {user===null ? null : <Orders itsTime={itsTime} orderList={orders}/>}
         </div>
         <Link to='/ShopEmployee'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
         </>
@@ -77,7 +93,7 @@ function Orders(props)
         output.push(
         <li className="list-group-item">  
             {printOrder(o.productList)}
-            User: {o.email}<Button style={{margin: '20px'}} type='submit' variant='success'>Deliver</Button> 
+            User: {o.email}<Button style={{margin: '20px'}} type='submit' variant='success' disabled={props.itsTime ? false : true} >Deliver</Button> 
         </li>
         )
     }

@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import logo from "./resources/logo.png";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
-//import {useState} from "react";
+
 
 function doLogOut()
 {}
@@ -12,6 +12,7 @@ function doLogOut()
 function Navbar ()
 {
     //const [logged, setLogged]=useState(null);
+
     const logged=null;
     return (
         <Nav className="navbar bg-success navbar-dark">
