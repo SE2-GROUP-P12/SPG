@@ -40,16 +40,17 @@ public class SpgController {
     }
 
     @PostMapping(API.EXIST_CUSTOMER)
-    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMail(@RequestBody String email){
+    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMail(@RequestBody String jsonData){
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> requestMap = null;
         try {
-             requestMap = mapper.readValue(email, Map.class);
+             requestMap = mapper.readValue(jsonData, Map.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        System.out.println("Controller: " + requestMap.get("email"));
-        return ResponseEntity.ok(userService.checkPresenceOfMail(requestMap.get("email")));
+        //System.out.println("Controller: " + requestMap.get("email"));
+        //System.out.println("Controller: " + requestMap.get("ssn"));
+        return ResponseEntity.ok(userService.checkPresenceOfUser(requestMap.get("email"), requestMap.get("ssn")));
     }
 
     @PostMapping(API.CREATE_CUSTOMER)
