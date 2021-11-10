@@ -20,13 +20,13 @@ public class Order {
     )
     private Long order_id;
     @OneToOne
-    private Customer cust;
+    private User cust;
     @Column(name="date")
     private LocalDateTime date;
     @OneToMany
     private List<Product> prods;
 
-    public Order(Customer cust, LocalDateTime d, List<Product> prods) {
+    public Order(User cust, LocalDateTime d, List<Product> prods) {
         this.cust=cust;
         this.date = date;
         this.prods = prods;
