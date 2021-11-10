@@ -18,7 +18,7 @@ public class Order {
     @GeneratedValue(
             strategy = GenerationType.AUTO
     )
-    private String order_id;
+    private Long order_id;
     @OneToOne
     private Customer cust;
     @Column(name="date")

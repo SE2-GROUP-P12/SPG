@@ -17,7 +17,7 @@ public class Product {
             strategy = GenerationType.AUTO
     )
     @Column(name = "product_id")
-    private Integer productId;
+    private Long productId;
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "unit_of_measurement", nullable = false)

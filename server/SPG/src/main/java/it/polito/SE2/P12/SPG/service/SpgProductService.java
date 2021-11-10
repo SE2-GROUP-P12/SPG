@@ -12,18 +12,22 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class SpgService {
+public class SpgProductService {
 
     private ProductRepo productRepo;
 
     @Autowired
-    public SpgService(ProductRepo productRepo) {
+    public SpgProductService(ProductRepo productRepo) {
         this.productRepo = productRepo;
     }
 
     public List<Product> getAllProduct(){
         return productRepo.findAll();
     }
+    public Product getProductById(Long productId){
+        return productRepo.findProductByProductId(productId);
+    }
+
 
     public Product test(){
         System.out.println("Test activated");
@@ -31,6 +35,7 @@ public class SpgService {
         productRepo.save(p);
         return p;
     }
+
 
 
 

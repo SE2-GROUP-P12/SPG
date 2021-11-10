@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "basket")
@@ -15,15 +16,19 @@ public class Basket {
     @GeneratedValue(
             strategy = GenerationType.AUTO
     )
-    @Column(name = "basket_id")
-    private Integer basketId;
+    @Column(name = "basketId")
+    private Long basketId;
     @OneToOne
-    private Customer cust;
+    private User cust;
     @OneToMany
-    private List<Product> prods;
+    private List<BasketItem > prods;
 
-    public Basket(Customer cust, List<Product> prods) {
+    public Basket(User cust, List<BasketItem> prods) {
         this.cust = cust;
         this.prods = prods;
+    }
+    public Basket addProductToBasket(Product product, Integer quantity, User cust){
+        prods.add(new BasketItem(this.basketId, cust,product,quantity ));
+        return  this;
     }
 }

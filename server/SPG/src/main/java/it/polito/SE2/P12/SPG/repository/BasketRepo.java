@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
     @Repository
     public interface BasketRepo
             extends JpaRepository<Basket, Long> {
-        void deleteBasketByBasketId();
+        public Basket findBasketByCust_UserId(Long userId);
     }
 
 

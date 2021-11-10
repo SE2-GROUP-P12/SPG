@@ -21,6 +21,9 @@ public class SpgUserService {
     public Long getUserByEmail(String email){
         return userRepo.findUserByEmail(email).getUserId();
     }
+    public  User getUserByUserId(Long userId){
+        return userRepo.findUserByUserId(userId);
+    }
 
     public Map<String, Boolean> checkPresenceOfUser(String email, String ssn){
         Map<String, Boolean> response = new HashMap<>();
