@@ -14,7 +14,7 @@ services:
     ports:
       - "3305:3306"
     volumes:
-      - ./opt/script/data/initialization/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      #- ./opt/script/data/initialization/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
       - mysql-persistent-volume:/var/lib/mysql
   mysql_test:
     image: mysql:5.7
@@ -22,8 +22,8 @@ services:
     environment: *mysql-default-environment
     ports:
       - "3307:3306"
-    volumes:
-      - ./opt/script/data/initialization/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    #volumes:
+      #- ./opt/script/data/initialization/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
 
 volumes:
   mysql-persistent-volume:

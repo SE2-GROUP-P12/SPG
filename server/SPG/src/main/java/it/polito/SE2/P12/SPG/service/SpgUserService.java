@@ -18,6 +18,10 @@ public class SpgUserService {
         this.userRepo = userRepo;
     }
 
+    public Long getUserByEmail(String email){
+        return userRepo.findUserByEmail(email).getUserId();
+    }
+
     public Map<String, Boolean> checkPresenceOfUser(String email, String ssn){
         Map<String, Boolean> response = new HashMap<>();
         if (checkPresenceOfMail(email) && checkPresenceOfSSN(ssn))

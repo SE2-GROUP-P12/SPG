@@ -2,8 +2,10 @@ package it.polito.SE2.P12.SPG.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
+import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
@@ -24,12 +26,15 @@ public class SpgController {
     private final SpgService service;
     private final SpgUserService userService;
     private final SpgOrderService orderService;
+    private final SpgBasketService basketService;
+
 
     @Autowired
-    public SpgController(SpgService service, SpgUserService userService, SpgOrderService orderService) {
+    public SpgController(SpgService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService) {
         this.service = service;
         this.userService = userService;
         this.orderService = orderService;
+        this.basketService = basketService;
     }
 
     @GetMapping("/")
@@ -60,9 +65,15 @@ public class SpgController {
     public ResponseEntity createCustomer(@RequestBody User user){
         return ResponseEntity.ok(userService.addNewClient(user));
     }
+    @PostMapping(API.PLACE_ORDER)
+    public ResponseEntity emptyBasket(@RequestBody String email){
+        return ResponseEntity.ok(orderService.addNewOrderFromBasket(basketService.emptyBasket(userService.getUserByEmail(email))));
+    }
 
     @GetMapping(API.TEST)
     public ResponseEntity test(){
         return ResponseEntity.ok(service.test());
     }
+
+
 }

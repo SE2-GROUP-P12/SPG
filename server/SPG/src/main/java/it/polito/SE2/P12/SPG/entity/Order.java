@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -17,15 +18,15 @@ public class Order {
     @GeneratedValue(
             strategy = GenerationType.AUTO
     )
-    String order_id;
+    private String order_id;
     @OneToOne
-    Customer cust;
+    private Customer cust;
     @Column(name="date")
-    Date date;
+    private LocalDateTime date;
     @OneToMany
-    List<Product> prods;
+    private List<Product> prods;
 
-    public Order(Customer cust, Date d, List<Product> prods) {
+    public Order(Customer cust, LocalDateTime d, List<Product> prods) {
         this.cust=cust;
         this.date = date;
         this.prods = prods;

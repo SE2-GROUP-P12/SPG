@@ -16,11 +16,11 @@ public class Basket {
             strategy = GenerationType.AUTO
     )
     @Column(name = "basket_id")
-    Integer basket_id;
+    private Integer basketId;
     @OneToOne
-    Customer cust;
+    private Customer cust;
     @OneToMany
-    List<Product> prods;
+    private List<Product> prods;
 
     public Basket(Customer cust, List<Product> prods) {
         this.cust = cust;
