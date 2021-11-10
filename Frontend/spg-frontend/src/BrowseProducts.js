@@ -36,8 +36,6 @@ function BrowseProducts() {
         const [showSuccess, setShowSuccess] = useState(null);
         const [showError, setShowError] = useState(null)
 
-        //TODO: addToCart on submit
-
         return (
             <>
                 <Modal show={show} onHide={handleClose}>
