@@ -33,7 +33,7 @@ public class SpgUserService {
     }
 
     private Boolean checkPresenceOfSSN(String ssn){
-        User tmp = userRepo.findUserBySSN(ssn);
+        User tmp = userRepo.findUserBySsn(ssn);
         return tmp == null;
     }
 
