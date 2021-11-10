@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepo
         extends JpaRepository<Product, Integer> {
 
-    @Query(value = "SELECT p FROM Product p WHERE p.product_id= ?1")
+    @Query(value = "FROM Product WHERE productId= ?1")
     Product findProductById(Integer id);
 
 

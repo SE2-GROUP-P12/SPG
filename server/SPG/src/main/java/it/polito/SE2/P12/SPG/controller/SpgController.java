@@ -56,4 +56,9 @@ public class SpgController {
     public ResponseEntity createCustomer(@RequestBody User user){
         return ResponseEntity.ok(userService.addNewClient(user));
     }
+
+    @GetMapping(API.TEST)
+    public ResponseEntity test(){
+        return ResponseEntity.ok(service.test());
+    }
 }

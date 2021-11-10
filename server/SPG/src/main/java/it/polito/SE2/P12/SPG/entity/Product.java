@@ -12,14 +12,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Product {
 
-    /*
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "product_id_generator"
-    )
-    */
     @Id
-    private Integer product_id;
+    @Column(name = "product_id")
+    private Integer productId;
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "unit_of_measurement", nullable = false)
@@ -28,6 +23,12 @@ public class Product {
     private Integer quantity;
     @Column(name = "price", nullable = false)
     private Float price;
-    @Column(name="producer", nullable = false) //TODO: try to use many-to-one annotation(?)
-    private String producer; // It's like 'ragione sociale' (it's unique) -> Tonio Cartonio SPA
+
+    public Product(Integer productId, String name, String unitOfMeasurement, Integer quantity, Float price) {
+        this.productId = productId;
+        this.name = name;
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.quantity = quantity;
+        this.price = price;
+    }
 }
