@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepo
         extends JpaRepository<Order, Long> {
+    public void deleteByCust_UserId(Long userId);
 }

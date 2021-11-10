@@ -5,6 +5,7 @@ import it.polito.SE2.P12.SPG.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.CodingErrorAction;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,16 @@ public class SpgUserService {
         return userRepo.findUserByUserId(userId);
     }
 
+    public double getWallet(String email){
+        return userRepo.findUserByEmail(email).getWallet();
+    }
+    public double topUp(String email, double value){
+        User tmp = userRepo.findUserByEmail(email);
+        tmp.setWallet(tmp.getWallet()+value);
+        userRepo.deleteById(tmp.getUserId());
+        userRepo.save(tmp);
+        return tmp.getWallet();
+    }
     public Map<String, Boolean> checkPresenceOfUser(String email, String ssn){
         Map<String, Boolean> response = new HashMap<>();
         if (checkPresenceOfMail(email) && checkPresenceOfSSN(ssn))

@@ -39,5 +39,9 @@ public class SpgOrderService {
         return addNewOrder(order);
 
         }
+        public boolean deliverOrder(Long userId){
+        orderRepo.deleteByCust_UserId(userId);
+        return true;
+        }
     }
 

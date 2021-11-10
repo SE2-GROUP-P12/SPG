@@ -81,6 +81,22 @@ public class SpgController {
     public ResponseEntity<List<Product>> getCart(@RequestBody  Long customerId) {
         return ResponseEntity.ok(basketService.getProductsInBasket(userService.getUserByUserId(customerId) ));
     }
+
+    @PostMapping(API.GET_WALLET)
+    public ResponseEntity<Double> getWallet(@RequestBody  String email) {
+        return ResponseEntity.ok(userService.getWallet(email ));
+    }
+
+    @PostMapping(API.TOP_UP)
+    public ResponseEntity topUp(@RequestBody  String email, double value) {
+        return ResponseEntity.ok(userService.topUp(email, value ));
+    }
+
+    @PostMapping(API.DELIVER_ORDER)
+    public ResponseEntity topUp(@RequestBody Long orderId) {
+        return ResponseEntity.ok(orderService.deliverOrder(orderId ));
+    }
+
     @GetMapping(API.TEST)
     public ResponseEntity test(){
         return ResponseEntity.ok(productService.test());

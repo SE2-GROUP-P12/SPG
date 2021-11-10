@@ -39,6 +39,7 @@ public class User {
     private String email;
     @Column(name = "password" /*, nullable = false*/)
     private String password;
+    private double wallet=0.00;
 
     public User(String name, String surname, String ssn,
                 String phoneNumber, String role,
