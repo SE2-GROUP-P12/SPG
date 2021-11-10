@@ -14,11 +14,20 @@ import java.util.List;
 @NoArgsConstructor
 public class Order {
     @Id
+    @GeneratedValue(
+            strategy = GenerationType.AUTO
+    )
     String order_id;
     @OneToOne
     Customer cust;
     @Column(name="date")
-    Date d;
+    Date date;
     @OneToMany
     List<Product> prods;
+
+    public Order(Customer cust, Date d, List<Product> prods) {
+        this.cust=cust;
+        this.date = date;
+        this.prods = prods;
+    }
 }
