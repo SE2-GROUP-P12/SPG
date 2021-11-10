@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
+import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.API;
@@ -22,11 +23,13 @@ public class SpgController {
 
     private final SpgService service;
     private final SpgUserService userService;
+    private final SpgOrderService orderService;
 
     @Autowired
-    public SpgController(SpgService service, SpgUserService userService) {
+    public SpgController(SpgService service, SpgUserService userService, SpgOrderService orderService) {
         this.service = service;
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/")

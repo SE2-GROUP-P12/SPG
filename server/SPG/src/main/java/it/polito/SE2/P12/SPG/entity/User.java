@@ -1,5 +1,6 @@
 package it.polito.SE2.P12.SPG.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import javax.persistence.*;
 )
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User {
     @Id
