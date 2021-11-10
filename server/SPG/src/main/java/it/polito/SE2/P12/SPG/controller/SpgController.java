@@ -62,6 +62,6 @@ public class SpgController {
 
     @GetMapping(API.TEST)
     public ResponseEntity test(){
-        return ResponseEntity.ok(userService.test());
+        return ResponseEntity.ok(service.test());
     }
 }
