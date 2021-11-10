@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class SpgUserService {
@@ -39,8 +38,12 @@ public class SpgUserService {
 
     public Map<String, String> addNewClient(User user) {
         Map<String, String> response = new HashMap<>();
+        if(!checkPresenceOfMail(user.getEmail()) || !checkPresenceOfSSN(user.getSsn())){
+            response.put("responseMessage", "200-OK-(Customer already present)");
+            return response;
+        }
         userRepo.save(user);
-        response.put("responseStatus", "200-OK");
+        response.put("responseMessage", "200-OK-(Customer added successfully)");
         return response;
     }
 }

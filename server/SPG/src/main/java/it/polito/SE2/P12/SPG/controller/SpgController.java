@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,21 +42,26 @@ public class SpgController {
     }
 
     @PostMapping(API.EXIST_CUSTOMER)
-    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMail(@RequestBody String jsonData){
+    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData){
+        if(jsonData == null)
+            return ResponseEntity.badRequest().build();
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> requestMap = null;
+        Map<String, String> requestMap;
         try {
              requestMap = mapper.readValue(jsonData, Map.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return ResponseEntity.badRequest().build();
         }
-        //System.out.println("Controller: " + requestMap.get("email"));
-        //System.out.println("Controller: " + requestMap.get("ssn"));
-        return ResponseEntity.ok(userService.checkPresenceOfUser(requestMap.get("email"), requestMap.get("ssn")));
+        if(requestMap.containsKey("email") && requestMap.containsKey("ssn"))
+            return ResponseEntity.ok(userService.checkPresenceOfUser(requestMap.get("email"), requestMap.get("ssn")));
+        return ResponseEntity.badRequest().build();
     }
 
     @PostMapping(API.CREATE_CUSTOMER)
     public ResponseEntity createCustomer(@RequestBody User user){
+        if(user == null)
+            return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(userService.addNewClient(user));
     }
 

@@ -49,4 +49,12 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+    public String getSsn() {
+        return ssn;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }
