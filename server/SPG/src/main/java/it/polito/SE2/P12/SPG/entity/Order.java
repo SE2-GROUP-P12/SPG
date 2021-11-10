@@ -11,14 +11,14 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name= "order_tab") //Se volessi chiamare la tabella corrispondente "order", hibernate la confonderebbe con un "order by"
+@Table(name= "order_tab") //Se volessi chiamare la tabella "order", hibernate la confonderebbe con un "order by"
 @NoArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(
             strategy = GenerationType.AUTO
     )
-    private Long order_id;
+    private Long orderId;
     @OneToOne
     private User cust;
     @Column(name="date")
@@ -26,7 +26,7 @@ public class Order {
     @OneToMany
     private List<Product> prods;
 
-    public Order(User cust, LocalDateTime d, List<Product> prods) {
+    public Order(User cust, LocalDateTime date, List<Product> prods) {
         this.cust=cust;
         this.date = date;
         this.prods = prods;

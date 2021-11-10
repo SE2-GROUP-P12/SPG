@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Map;
 @Entity
-@Table(name = "basketItem")
+@Table(name = "basket_item")
 @Data
 @NoArgsConstructor
 public class BasketItem {
@@ -14,7 +14,7 @@ public class BasketItem {
     @GeneratedValue(
             strategy = GenerationType.AUTO
     )
-    @Column(name = "basketId")
+    @Column(name = "basket_id")
     private Long basketId;
     @OneToOne
     private User cust;

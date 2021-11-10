@@ -73,7 +73,7 @@ public class SpgController {
         return ResponseEntity.ok(orderService.addNewOrderFromBasket(basketService.emptyBasket(userService.getUserByEmail(email))));
     }
     @PostMapping(API.ADD_TO_BASKET)
-    public ResponseEntity addToBasket(@RequestBody Long productId, Long customerId, Integer quantity) {
+    public ResponseEntity addToBasket(@RequestBody Long productId, Long customerId, Double quantity) {
         return ResponseEntity.ok(basketService.addProductToCart(productService.getProductById(productId),quantity, userService.getUserByUserId(customerId) ));
     }
 

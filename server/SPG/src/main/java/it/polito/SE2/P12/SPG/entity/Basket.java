@@ -17,27 +17,24 @@ public class Basket {
     @GeneratedValue(
             strategy = GenerationType.AUTO
     )
-    @Column(name = "basketId")
+    @Column(name = "basket_id")
     private Long basketId;
     @OneToOne
     private User cust;
-    @OneToMany
-    private List<BasketItem > prods;
+    @ElementCollection
+    @MapKeyColumn(name="product_id")
+    @Column(name="quantity")
+    private Map<Product, Double> prods;
 
-    public Basket(User cust, List<BasketItem> prods) {
+    public Basket(User cust, Map<Product,Double> prods) {
         this.cust = cust;
         this.prods = prods;
     }
-    public Basket addProductToBasket(Product product, Integer quantity, User cust){
-        prods.add(new BasketItem(this.basketId, cust,product,quantity ));
-        return  this;
+    public Basket addProductToBasket(Product product, Double quantity){
+        prods.put(product, quantity);
+        return this;
     }
-    public List <Product> getProducts(){
-        List<Product>output = new ArrayList<Product>();
-        for (BasketItem item: prods
-             ) {output.add(item.getProd());
-
-        }
-        return output;
+    public List<Product> getProductList(){
+        return new ArrayList<>(prods.keySet());
     }
 }

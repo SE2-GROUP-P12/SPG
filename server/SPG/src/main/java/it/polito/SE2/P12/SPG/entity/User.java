@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User {
     @Id
     @GeneratedValue(
@@ -51,13 +51,5 @@ public class User {
         this.role = role;
         this.email = email;
         this.password = password;
-    }
-
-    public String getSsn() {
-        return ssn;
-    }
-
-    public String getEmail() {
-        return email;
     }
 }
