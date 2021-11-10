@@ -27,7 +27,7 @@ public class SpgService {
 
     public Product test(){
         System.out.println("Test activated");
-        Product p = new Product(1,"Pompelmo", "quantità", 10, 12.30f);
+        Product p = new Product("Pompelmissimo", "quantità", 10, 12.30f);
         productRepo.save(p);
         return p;
     }

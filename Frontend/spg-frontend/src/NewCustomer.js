@@ -23,7 +23,7 @@ const okModalMessage = {
 };
 const conflictModalMessage = {
     id: 3,
-    messageTitle: "EMAIL ALREADY PRESENT",
+    messageTitle: "EMAIL AND/OR SSN ALREADY PRESENT",
     messageText: "The inserted email is already present in the system, use another one.",
     messageFooterButton: "modify data"
 };
@@ -135,7 +135,7 @@ function NewCustomer() {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({email: email})
+            body: JSON.stringify({email: email, ssn: ssn})
         }).then(response => {
             if (response.ok)
                 response.json().then(content => {
@@ -184,8 +184,10 @@ function NewCustomer() {
                                 setModalShow(false);
                                 setEmail("");
                                 setPassword("");
+                                setSsn("");
                                 setEmailValidator(false);
                                 setPasswordValidator(false);
+                                setSsnValidator(false);
                             }}>
                                 {modalMessage.messageFooterButton}
                             </Button>

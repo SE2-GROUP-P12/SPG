@@ -18,16 +18,23 @@ public class SpgUserService {
         this.userRepo = userRepo;
     }
 
-
-    public Map<String, Boolean> checkPresenceOfMail(String mail) {
+    public Map<String, Boolean> checkPresenceOfUser(String email, String ssn){
         Map<String, Boolean> response = new HashMap<>();
-        User tmp = userRepo.findUserByEmail(mail);
-        System.out.println("Here" + tmp);
-        if (tmp==null)
+        if (checkPresenceOfMail(email) && checkPresenceOfSSN(ssn))
             response.put("exist", false);
         else
             response.put("exist", true);
         return response;
+    }
+
+    private Boolean checkPresenceOfMail(String mail) {
+        User tmp = userRepo.findUserByEmail(mail);
+        return tmp == null;
+    }
+
+    private Boolean checkPresenceOfSSN(String ssn){
+        User tmp = userRepo.findUserBySSN(ssn);
+        return tmp == null;
     }
 
     public Map<String, String> addNewClient(User user) {

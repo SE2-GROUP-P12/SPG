@@ -7,14 +7,23 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="basket")
+@Table(name = "basket")
 @Data
 @NoArgsConstructor
 public class Basket {
     @Id
+    @GeneratedValue(
+            strategy = GenerationType.AUTO
+    )
+    @Column(name = "basket_id")
     Integer basket_id;
     @OneToOne
     Customer cust;
     @OneToMany
     List<Product> prods;
+
+    public Basket(Customer cust, List<Product> prods) {
+        this.cust = cust;
+        this.prods = prods;
+    }
 }

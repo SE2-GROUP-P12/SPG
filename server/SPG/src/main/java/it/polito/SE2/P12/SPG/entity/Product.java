@@ -13,6 +13,9 @@ import javax.persistence.*;
 public class Product {
 
     @Id
+    @GeneratedValue(
+            strategy = GenerationType.AUTO
+    )
     @Column(name = "product_id")
     private Integer productId;
     @Column(name = "name", nullable = false)
@@ -24,8 +27,7 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Float price;
 
-    public Product(Integer productId, String name, String unitOfMeasurement, Integer quantity, Float price) {
-        this.productId = productId;
+    public Product(String name, String unitOfMeasurement, Integer quantity, Float price) {
         this.name = name;
         this.unitOfMeasurement = unitOfMeasurement;
         this.quantity = quantity;
