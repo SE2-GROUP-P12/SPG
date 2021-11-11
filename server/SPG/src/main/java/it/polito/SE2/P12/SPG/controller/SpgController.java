@@ -119,8 +119,18 @@ public class SpgController {
     }
 
     @PostMapping(API.DELIVER_ORDER)
-    public ResponseEntity topUp(@RequestBody Long orderId) {
+    public ResponseEntity deliverOrder(@RequestBody Long orderId) {
         return ResponseEntity.ok(orderService.deliverOrder(orderId ));
+    }
+
+    @DeleteMapping(API.DROP_ORDER)
+    public ResponseEntity dropOrder( @RequestBody String email){
+        User user =userService.getUserByEmail(email);
+        if(user==null){
+            return ResponseEntity.badRequest().build();
+        }
+        basketService.emptyBasket(user.getUserId());
+        return  ResponseEntity.ok().build();
     }
 
     @GetMapping(API.TEST)
