@@ -18,6 +18,8 @@ function TopUp()
     const [show, setShow] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const [modalError, setModalError] = useState(null);
+    const [modalSuccess, setModalSuccess] = useState(null);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -36,6 +38,8 @@ function TopUp()
                 setWallet(0);
                 setSuccess(false);
                 setError(false);
+                setModalError(false);
+                setModalSuccess(false);
                 setUser(null);
                 let outcome = await API.getWallet({'email': values.email});
                 if (outcome===undefined)
@@ -59,6 +63,8 @@ function TopUp()
                 <Row>{errors.email && touched.email ? errors.email : null}</Row>
                 {error ? <Alert variant='danger'>User not found</Alert> : null}
                 {success ? <Alert variant='success'>User correctly found</Alert> : null}
+                {modalError ? <Alert variant='danger'>Something went wrong during the top up</Alert> : null}
+                {modalSuccess ? <Alert variant='success'>Top us correctly performed</Alert> : null}
                 </Form>
             </div>
             }
@@ -92,7 +98,21 @@ function TopUp()
                             amount: Yup.number().required()
                     })}
                     onSubmit={async(values)=>{
-                        setWallet(wallet+values.amount)
+                        setSuccess(false);
+                        setError(false);
+                        setModalError(false);
+                        setModalSuccess(false);
+                        let outcome = await API.topUp(
+                            {"email": user,
+                            "value" : values.amount
+                        });
+                        if(outcome == true)
+                        {
+                            setWallet(wallet+values.amount);
+                            setModalSuccess(true);
+                        }
+                        else
+                            setModalError(true);
                         handleClose();
                     }}
                     validateOnChange={false}

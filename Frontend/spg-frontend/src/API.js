@@ -53,6 +53,25 @@ async function getWallet(data)
     }
 }
 
+async function topUp(data)
+{
+    console.log("CHECKPOINT: "+JSON.stringify(data));
+    try{
+        const response = await fetch ("/api/customer/topUp", {
+            method: 'POST',
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify(data)
+        });
+        if(response.ok)
+            return true;
+        else
+            return false;
+    }
+    catch(err) {
+        console.log("Some error occourred");
+        return undefined;
+    }
+}
 
-const API = {/*browseProducts,*/ addToCart, getWallet};
+const API = {/*browseProducts,*/ addToCart, getWallet, topUp};
 export {API}
