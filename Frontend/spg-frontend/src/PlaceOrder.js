@@ -109,7 +109,7 @@ function printOrder(prod)
     for(let p of prod)
     {
         output.push(<OrderEntry product={p}/>);
-        total+=p.price*p.quantity;
+        total+=p.price*p.quantityAvailable;
     }
     output.push(
         <li className='list-group-item'>
@@ -123,8 +123,8 @@ function OrderEntry(props)
 {
     return (
         <li className="list-group-item">
-            {props.product.name} : {props.product.quantity}{props.product.unitOfMeasurement}<br/> 
-            SUBTOTAL: {props.product.price*props.product.quantity}€
+            {props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement}<br/>
+            SUBTOTAL: {props.product.price*props.product.quantityAvailable}€
         </li>
         );
 }

@@ -90,7 +90,7 @@ public class SpgController {
     }
 
     @GetMapping(API.GET_CART)
-    public ResponseEntity<List<Product>> getCart(@RequestParam  String email) {
+    public ResponseEntity<List<Product>> getCart(@RequestParam String email) {
         System.out.println("CHECKPOINT " +email);
         User user =userService.getUserByEmail(email);
         if(user==null){
