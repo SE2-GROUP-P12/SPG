@@ -74,14 +74,9 @@ public class SpgController {
         if(requestMap == null)
             return ResponseEntity.badRequest().build();
         if(requestMap.containsKey("productId") && requestMap.containsKey("email") && requestMap.containsKey("quantity")) {
-            /*System.out.println("productId " + requestMap.get("productId"));
-            System.out.println("quantity " + requestMap.get("quantity"));
-            System.out.println("email " + requestMap.get("email"));*/
             Product product  = productService.getProductById(Long.valueOf((Integer)requestMap.get("productId")));
             Double quantity = Double.valueOf((Integer)requestMap.get("quantity"));
             User user = userService.getUserByEmail((String)requestMap.get("email"));
-            /*System.out.println(product);
-            System.out.println(user);*/
             return ResponseEntity.ok(basketService.addProductToCart(product, quantity, user));
         }
         return ResponseEntity.badRequest().build();

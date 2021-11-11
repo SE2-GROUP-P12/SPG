@@ -41,7 +41,7 @@ public class User {
     private String password;
     @Column(name = "wallet")
     private double wallet=0.00;
-    @OneToOne
+    @OneToOne(mappedBy = "cust")
     private Basket basket;
 
     public User(String name, String surname, String ssn,
