@@ -27,8 +27,8 @@ public class Basket {
     @OneToOne
     private User cust;
     @ElementCollection
-    @MapKeyColumn(name="product_id")
-    @Column(name="quantity")
+    @MapKeyColumn(name = "product_id")
+    @Column(name = "quantity")
     private Map<Product, Double> prods;
 
     public Basket(User cust) {
@@ -36,14 +36,16 @@ public class Basket {
         this.prods = new HashMap<>();
     }
 
-    public Basket(User cust, Map<Product,Double> prods) {
+    public Basket(User cust, Map<Product, Double> prods) {
         this.cust = cust;
         this.prods = prods;
     }
-    public void addProduct(Product product, Double quantity){
+
+    public void addProduct(Product product, Double quantity) {
         prods.put(product, quantity);
     }
-    public List<Product> getProductList(){
+
+    public List<Product> getProductList() {
         return new ArrayList<>(prods.keySet());
     }
 
@@ -53,14 +55,15 @@ public class Basket {
 
     @Override
     public String toString() {
-        String prodString="";
-        for(Product p : this.prods.keySet()) {
-            prodString.concat("["+p.getProductId()+", " +prods.get(p)+"]");
+        StringBuilder prodString = new StringBuilder("");
+        for (Product p : this.prods.keySet()) {
+            prodString.append("[(id=" + p.getProductId() + ")" + p.getName() + ", " + prods.get(p) + "],");
         }
+        prodString.deleteCharAt(prodString.lastIndexOf(","));
         return "Basket{" +
                 "basketId= " + basketId +
-                ", cust= " + (cust==null?"null":cust.getUserId()) +
-                ", prods= " + prods +
+                ", cust= " + (cust == null ? "null" : cust.getUserId()) +
+                ", prods= " + prodString +
                 '}';
     }
 }
