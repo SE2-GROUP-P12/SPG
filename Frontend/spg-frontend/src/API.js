@@ -109,5 +109,26 @@ async function customerExistsByMail(data)
     }
 }
 
-const API = {/*browseProducts,*/ addToCart, getWallet, topUp, getCart, customerExistsByMail};
+async function dropOrder (data)
+{
+    console.log("CHECKPOINT API: "+JSON.stringify(data));
+    try{
+        const response = await fetch ("/api/customer/dropOrder", {
+            method: 'DELETE',
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify(data)
+        });
+        let success = await response.json();
+        if(response.ok)
+            return success;
+        else
+            return undefined;
+    }
+    catch(err) {
+        console.log(err);
+        return undefined;
+    }
+}
+
+const API = {/*browseProducts,*/ addToCart, getWallet, topUp, getCart, customerExistsByMail, dropOrder};
 export {API}

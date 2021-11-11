@@ -13,13 +13,16 @@ import {API} from './API';
 function PlaceOrder(props)
 {
     const [customer, setCustomer]=useState(null);
-    const [order, setOrder] = useState([]);
+    const [order, setOrder] = useState(null);
     const [error, setError] = useState(false);
     const [customerError, setCustomerError] = useState(false);
     const [customerSuccess, setCustomerSuccess] = useState(false);
 
+    /***************************************************************************/
+    let email = 'mario.rossi@gmail.com' //dovrebbe essere recuperata dalla sessione
+    /***************************************************************************/
+
     useEffect(()=>{
-        let email = 'mario.rossi@gmail.com' //dovrebbe essere recuperata dalla sessione
         let getCartInfo = async (email) => {
             let prod = await API.getCart({'email': email});
             if(prod===undefined)
@@ -33,7 +36,10 @@ function PlaceOrder(props)
         getCartInfo(email);}, []);
 
         const droporder = () =>{
-            setOrder([]);
+            let outcome= API.dropOrder({'email' : email});
+            console.log("CHECKPOINT: "+outcome);
+            if(outcome)
+                setOrder(null);
         }
 
     /*TIME MACHINE MANAGEMENT*/  
@@ -54,11 +60,6 @@ function PlaceOrder(props)
         <h1>Place Order</h1>
             {itsTime ? null : <Alert variant='warning'> It's possible to place orders only from Saturday at 9am to Sunday at 11pm</Alert>}
             {error ? <Alert variant='danger'>Something went wrong, couldn't retrieve order</Alert> : null}
-            {order===[] && !error ? 
-            <div id="container" className="pagecontent">
-                <h2>The cart is empty </h2>
-            </div>
-            : <>
             <div id="container" className="pagecontent">
                 <ul className="list-group">{printOrder(order)}</ul> 
             </div>
@@ -96,10 +97,9 @@ function PlaceOrder(props)
                 }
             </Formik>
             </div>
-            </>}
             <Row>
-                <Col xs={4}><Button disabled={(!itsTime||order===[]||order===undefined||customer===null) ? true : false} variant='success'>Send order</Button></Col>
-                <Col xs={4}><Button disabled={order===[]||order===undefined ? true : false} variant='danger' onClick={droporder}>Delete order</Button></Col>
+                <Col xs={4}><Button disabled={(!itsTime||order===null||customer===null) ? true : false} variant='success'>Send order</Button></Col>
+                <Col xs={4}><Button disabled={order===null ? true : false} variant='danger' onClick={droporder}>Delete order</Button></Col>
                 <Col xs={4}><Link to='/ShopEmployee'><Button variant='secondary'>Back</Button></Link></Col>
             </Row>
         </>
@@ -110,6 +110,8 @@ function printOrder(prod)
 {
     let output=[];
     let total=0;
+    if (prod===null)
+        return (<h2>The cart is empty </h2>);
     for(let p of prod)
     {
         output.push(<OrderEntry product={p}/>);
