@@ -51,8 +51,11 @@ function BrowseProducts() {
                                     initialValues={{amount: 0}}
                                     validationSchema={Yup.object({amount: Yup.number().min(0).max(props.product.quantity).required('Amount required!')})}
                                     onSubmit={async (values) => {
-                                        props.product.amount=values.amount;
-                                        let outcome = await API.addToCart(JSON.stringify(props.product));
+                                        let outcome = await API.addToCart({
+                                            "productId" : props.product.productId,
+                                            "email" : 'mario.rossi@gmail.com',
+                                            "quantity" : values.amount
+                                        });
                                         if(outcome===true)
                                             setShowSuccess("Product added successfully");
                                         else    
@@ -77,7 +80,7 @@ function BrowseProducts() {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="secondary" onClick={()=>{ handleClose(); setShowError(null); setShowSuccess(null); }}>
                             Close
                         </Button>
                     </Modal.Footer>
