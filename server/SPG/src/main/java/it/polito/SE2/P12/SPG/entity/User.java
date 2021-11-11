@@ -1,8 +1,6 @@
 package it.polito.SE2.P12.SPG.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -14,7 +12,8 @@ import javax.persistence.*;
                 @UniqueConstraint(name = "email_unique", columnNames = "email")
         }
 )
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 //@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -60,5 +59,21 @@ public class User {
         if(this.basket == null)
             this.basket = new Basket(this);
         return this.basket;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", ssn='" + ssn + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", role='" + role + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", wallet=" + wallet +
+                ", basket=" + (basket==null?"null":this.basket.getBasketId()) +
+                '}';
     }
 }

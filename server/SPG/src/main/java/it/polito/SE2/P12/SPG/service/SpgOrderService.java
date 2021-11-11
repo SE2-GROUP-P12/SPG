@@ -29,7 +29,7 @@ public class SpgOrderService {
     }
 
     public Map<String, String> addNewOrderFromBasket(Basket basket) {
-        Order order = new Order(basket.getCust(), LocalDateTime.now(), basket.getProductMap());
+        Order order = new Order(basket.getCust(), LocalDateTime.now(), basket.getProductQuantityMap());
         return addNewOrder(order);
     }
 

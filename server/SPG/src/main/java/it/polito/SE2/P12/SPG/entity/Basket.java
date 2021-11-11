@@ -1,8 +1,11 @@
 package it.polito.SE2.P12.SPG.entity;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.lang.model.element.ModuleElement;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +14,8 @@ import java.util.Map;
 
 @Entity
 @Table(name = "basket")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Basket {
     @Id
@@ -36,15 +40,27 @@ public class Basket {
         this.cust = cust;
         this.prods = prods;
     }
-    public Basket addProductToBasket(Product product, Double quantity){
+    public void addProduct(Product product, Double quantity){
         prods.put(product, quantity);
-        return this;
     }
     public List<Product> getProductList(){
         return new ArrayList<>(prods.keySet());
     }
 
-    public Map<Product, Double> getProductMap() {
+    public Map<Product, Double> getProductQuantityMap() {
         return this.prods;
+    }
+
+    @Override
+    public String toString() {
+        String prodString="";
+        for(Product p : this.prods.keySet()) {
+            prodString.concat("["+p.getProductId()+", " +prods.get(p)+"]");
+        }
+        return "Basket{" +
+                "basketId= " + basketId +
+                ", cust= " + (cust==null?"null":cust.getUserId()) +
+                ", prods= " + prods +
+                '}';
     }
 }

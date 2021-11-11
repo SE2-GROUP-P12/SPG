@@ -5,7 +5,6 @@ import it.polito.SE2.P12.SPG.entity.*;
 import org.springframework.stereotype.Service;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,7 @@ public class SpgBasketService {
         // before inserting the modified version
         Map<String, String> response = new HashMap<>();
         Basket basket = customer.getBasket();
-        basket.addProductToBasket(product, quantity);
+        basket.addProduct(product, quantity);
         basketRepo.save(basket);
         response.put("responseStatus", "200-OK");
         return response;
