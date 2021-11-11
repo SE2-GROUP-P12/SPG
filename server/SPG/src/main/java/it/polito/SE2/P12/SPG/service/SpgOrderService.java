@@ -27,15 +27,15 @@ public class SpgOrderService {
         response.put("responseStatus", "200-OK");
         return response;
     }
-    public Map<String, String> addNewOrderFromBasket(Basket basket){
 
-        Order order = new Order(basket.getCust(), LocalDateTime.now(),  basket.getProductList());
+    public Map<String, String> addNewOrderFromBasket(Basket basket) {
+        Order order = new Order(basket.getCust(), LocalDateTime.now(), basket.getProductMap());
         return addNewOrder(order);
+    }
 
-        }
-        public boolean deliverOrder(Long userId){
+    public boolean deliverOrder(Long userId) {
         orderRepo.deleteByCust_UserId(userId);
         return true;
-        }
     }
+}
 

@@ -69,6 +69,7 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(userService.addNewClient(user));
     }
+
     @PostMapping(API.PLACE_ORDER)
     public ResponseEntity placeOrder(@RequestBody String email){
         return ResponseEntity.ok(orderService.addNewOrderFromBasket(basketService.emptyBasket(userService.getUserIdByEmail(email))));

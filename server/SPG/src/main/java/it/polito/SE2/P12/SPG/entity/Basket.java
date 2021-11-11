@@ -37,4 +37,8 @@ public class Basket {
     public List<Product> getProductList(){
         return new ArrayList<>(prods.keySet());
     }
+
+    public Map<Product, Double> getProductMap() {
+        return this.prods;
+    }
 }
