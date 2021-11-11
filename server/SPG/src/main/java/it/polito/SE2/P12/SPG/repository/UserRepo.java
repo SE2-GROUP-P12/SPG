@@ -13,4 +13,6 @@ public interface UserRepo
     User findUserByEmail(String email);
     User findUserBySsn(String ssn);
     User findUserByUserId(Long userId);
+    Boolean existsByEmail(String email);
+    Boolean existsBySsn(String ssn);
 }

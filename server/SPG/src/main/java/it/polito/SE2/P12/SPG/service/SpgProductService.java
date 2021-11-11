@@ -22,9 +22,9 @@ public class SpgProductService {
     }
 
     public void populateDB(){
-        Product temp1 = new Product ("Mele","Kg",50,2.50);
-        Product temp2 = new Product ("Farina","Kg",10,5.00);
-        Product temp3 = new Product ("Uova","Units",36,6.25);
+        Product temp1 = new Product ("Mele","Kg",50.0,2.50);
+        Product temp2 = new Product ("Farina","Kg",10.0,5.00);
+        Product temp3 = new Product ("Uova","Units",36.0,6.25);
 
         if(productRepo.findProductByName("Mele")==null)productRepo.save(temp1);
         if(productRepo.findProductByName("Farina")==null)productRepo.save(temp2);
@@ -40,7 +40,7 @@ public class SpgProductService {
 
     public Product test(){
         System.out.println("Test activated");
-        Product p = new Product("Pompelmissimo", "quantità", 10, 12.30f);
+        Product p = new Product("Pompelmissimo", "quantità", 10.0, 12.30f);
         productRepo.save(p);
         return p;
     }
