@@ -58,7 +58,7 @@ public class SpgUserService {
         return response;
     }
 
-    private Boolean checkPresenceOfMail(String email) {
+    public Boolean checkPresenceOfMail(String email) {
         return userRepo.existsByEmail(email);
     }
 

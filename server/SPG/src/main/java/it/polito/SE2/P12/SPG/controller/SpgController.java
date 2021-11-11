@@ -57,6 +57,13 @@ public class SpgController {
         return ResponseEntity.badRequest().build();
     }
 
+    @GetMapping(API.EXIST_CUSTOMER_BY_MAIL)
+    public ResponseEntity checkExistCustomerMail(@RequestParam String email){
+        if(email == null)
+            return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(userService.checkPresenceOfMail(email));
+    }
+
     @PostMapping(API.CREATE_CUSTOMER)
     public ResponseEntity createCustomer(@RequestBody User user){
         if(user == null)
@@ -83,7 +90,8 @@ public class SpgController {
     }
 
     @GetMapping(API.GET_CART)
-    public ResponseEntity<List<Product>> getCart(@RequestBody  String email) {
+    public ResponseEntity<List<Product>> getCart(@RequestParam  String email) {
+        System.out.println("CHECKPOINT " +email);
         User user =userService.getUserByEmail(email);
         if(user==null){
             return ResponseEntity.badRequest().build();

@@ -56,7 +56,6 @@ async function getWallet(data)
 
 async function topUp(data)
 {
-    console.log("CHECKPOINT: "+JSON.stringify(data));
     try{
         const response = await fetch ("/api/customer/topUp", {
             method: 'POST',
@@ -74,5 +73,41 @@ async function topUp(data)
     }
 }
 
-const API = {/*browseProducts,*/ addToCart, getWallet, topUp};
+async function getCart(data)
+{
+    try{
+        const response = await fetch ("/api/customer/getCart?email="+data.email, {
+            method: 'GET',
+        });
+        let cart = await response.json();
+        if(response.ok)
+            return cart;
+        else
+            return undefined;
+    }
+    catch(err) {
+        console.log(err);
+        return undefined;
+    }
+}
+
+async function customerExistsByMail(data)
+{
+    try{
+        const response = await fetch ("/api/customer/customerExistsByMail?email="+data, {
+            method: 'GET',
+        });
+        let exists = await response.json();
+        if(response.ok)
+            return exists;
+        else
+            return undefined;
+    }
+    catch(err) {
+        console.log(err);
+        return undefined;
+    }
+}
+
+const API = {/*browseProducts,*/ addToCart, getWallet, topUp, getCart, customerExistsByMail};
 export {API}

@@ -8,26 +8,38 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
+import {API} from './API';
 
 function PlaceOrder(props)
 {
-    const [user, setUser]=useState(null);
-    const [products, setProducts] = useState([0,1,2,4]);
+    const [customer, setCustomer]=useState(null);
+    const [order, setOrder] = useState([]);
+    const [error, setError] = useState(false);
+    const [customerError, setCustomerError] = useState(false);
 
-    /*useEffect(()=>{
-        let getCartInfo = async () => {
-            API.getCart().then(prod => setCart(prod));
+    useEffect(()=>{
+        let email = 'mario.rossi@gmail.com' //dovrebbe essere recuperata dalla sessione
+        let getCartInfo = async (email) => {
+            let prod = await API.getCart({'email': email});
+            if(prod===undefined)
+            {    
+                setError(true);
+                setOrder([]);
+            }
+            else    
+                setOrder(prod);
         };
-        getCartInfo();}, [] );*/
+        getCartInfo(email);}, []);
 
-        const dropCart = () => setProducts(null);
+        const droporder = () =>{
+            setOrder([]);
+        }
 
     /*TIME MACHINE MANAGEMENT*/  
     const [itsTime, setItsTime] = useState(false)  
     useEffect(()=>{
         let checkTime = (time, date) =>
         {
-            console.log("CHECKTIME PLACEORDER: "+time+" "+date)
             if((date==='Sat' && time>='09:00')||(date==='Sun' && time<'23:00'))
                 setItsTime(true);
             else
@@ -40,13 +52,14 @@ function PlaceOrder(props)
         <>
         <h1>Place Order</h1>
             {itsTime ? null : <Alert variant='warning'> It's possible to place orders only from Saturday at 9am to Sunday at 11pm</Alert>}
-            {products===null ? 
+            {error ? <Alert variant='danger'>Something went wrong, couldn't retrieve order</Alert> : null}
+            {order===[] && !error ? 
             <div id="container" className="pagecontent">
                 <h2>The cart is empty </h2>
             </div>
             : <>
             <div id="container" className="pagecontent">
-                <ul className="list-group">{printOrder(products)}</ul> 
+                <ul className="list-group">{printOrder(order)}</ul> 
             </div>
             <div id="container" className="pagecontent">
             <h2>Whose order is this?</h2>    
@@ -56,7 +69,15 @@ function PlaceOrder(props)
                     email: Yup.string().email().required()
                 })}
                 onSubmit={async(values)=>{
-                    setUser(values.email);
+                    setCustomerError(false);
+                    setCustomer(null);
+                    let presentEmail = await API.customerExistsByMail(values.email).then(setCustomerError(!presentEmail));
+                    console.log("CHECKPOINT, EMAIL:"+values.email+" ORDER:"+JSON.stringify(order)+" itsTime:"+itsTime);
+                    if(presentEmail)
+                    {
+                        console.log("CHECKPOINT, EMAIL:"+values.email+" ORDER:"+JSON.stringify(order)+" itsTime:"+itsTime);
+                        setCustomer(values.email);
+                    }
                 }}
                 validateOnChange={false}
                 validateOnBlur={false}
@@ -66,15 +87,15 @@ function PlaceOrder(props)
                             Email:<Field style={{margin: '20px'}} name="email" type="text"/>
                             <Button style={{margin: '20px'}} type="submit" variant="success">Submit customer</Button>
                             {errors.email && touched.email ? errors.email : null}
-                            
+                            {customerError ? <Alert variant='danger'> User not found </Alert> : null}
                         </Form>
                 }
             </Formik>
             </div>
             </>}
             <Row>
-                <Col xs={4}><Button disabled={(!itsTime&&(products===null||user===null)) ? true : false} variant='success'>Send order</Button></Col>
-                <Col xs={4}><Button disabled={products===null? true : false} variant='danger' onClick={dropCart}>Delete order</Button></Col>
+                <Col xs={4}><Button disabled={(!itsTime||order===[]||order===undefined||customer===null) ? true : false} variant='success'>Send order</Button></Col>
+                <Col xs={4}><Button disabled={order===[]||order===undefined ? true : false} variant='danger' onClick={droporder}>Delete order</Button></Col>
                 <Col xs={4}><Link to='/ShopEmployee'><Button variant='secondary'>Back</Button></Link></Col>
             </Row>
         </>
@@ -87,15 +108,8 @@ function printOrder(prod)
     let total=0;
     for(let p of prod)
     {
-        p={"productId":"1",
-        "name": "Apples",
-        "producer" : "Tonio Cartonio s.p.a.",
-        "unit":"kg",
-        "unitPrice" : "1.99",
-        "amount" : "1"}
-
         output.push(<OrderEntry product={p}/>);
-        total+=p.unitPrice*p.amount;
+        total+=p.price*p.quantity;
     }
     output.push(
         <li className='list-group-item'>
@@ -109,8 +123,8 @@ function OrderEntry(props)
 {
     return (
         <li className="list-group-item">
-            {props.product.name} by {props.product.producer} : {props.product.amount}{props.product.unit}<br/> 
-            SUBTOTAL: {props.product.unitPrice*props.product.amount}€
+            {props.product.name} : {props.product.quantity}{props.product.unitOfMeasurement}<br/> 
+            SUBTOTAL: {props.product.price*props.product.quantity}€
         </li>
         );
 }
