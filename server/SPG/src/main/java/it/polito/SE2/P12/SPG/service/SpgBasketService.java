@@ -23,15 +23,13 @@ public class SpgBasketService {
         return  output;
     }
 
-    public void dropBasket(User  user) {
+    public void dropBasket(User user) {
         Basket output = user.getBasket();
         for (Product prod : output.getProds().keySet()) {
             prod.moveFromBasket(output.getProds().get(prod));
         }
         basketRepo.deleteById(output.getBasketId());
     }
-
-
 
     public Map<String, String> addProductToCart(Product product, Double quantity, User customer) {
         Map<String, String> response = new HashMap<>();

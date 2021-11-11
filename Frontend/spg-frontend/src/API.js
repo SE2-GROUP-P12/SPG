@@ -109,6 +109,25 @@ async function customerExistsByMail(data)
     }
 }
 
+async function placeOrder(data)
+{
+    try{
+        const response = await fetch ("/api/customer/placeOrder", {
+            method: 'POST',
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify({'email' : data.email})
+        });
+        if(response.ok)
+            return true;
+        else
+            return false;
+    }
+    catch(err) {
+        console.log(err);
+        return undefined;
+    }
+}
+
 async function dropOrder (data)
 {
     try{
@@ -165,5 +184,5 @@ async function deliverOrder(orderId){
 }
 
 
-const API = {/*browseProducts,*/ addToCart, getWallet, topUp, getCart, customerExistsByMail, dropOrder, getOrdersByEmail, deliverOrder};
+const API = {/*browseProducts,*/ placeOrder, addToCart, getWallet, topUp, getCart, customerExistsByMail, dropOrder, getOrdersByEmail, deliverOrder};
 export {API}

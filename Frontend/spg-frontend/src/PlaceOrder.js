@@ -46,10 +46,10 @@ function PlaceOrder(props)
                 setDeleteError(true);
         }
 
-        const sendOrder = async() =>{
+        const placeOrder = async() =>{
             setSendError(false);
             setSendSuccess(false);
-            let outcome= await API.dropOrder({'email' : email});
+            let outcome= await API.placeOrder({'email' : email});
             if(outcome)
             {
                 setOrder(null);
@@ -118,7 +118,7 @@ function PlaceOrder(props)
             </Formik>
             </div>
             <Row>
-                <Col xs={4}><Button disabled={(!itsTime||order===null||customer===null) ? true : false} variant='success' onClick={sendOrder}>Send order</Button></Col>
+                <Col xs={4}><Button disabled={(!itsTime||order===null||customer===null) ? true : false} variant='success' onClick={placeOrder}>Send order</Button></Col>
                 <Col xs={4}><Button disabled={order===null ? true : false} variant='danger' onClick={dropOrder}>Delete order</Button></Col>
                 <Col xs={4}><Link to='/ShopEmployee'><Button variant='secondary'>Back</Button></Link></Col>
             </Row>

@@ -40,52 +40,62 @@ public class SpgController {
     }
 
     @GetMapping("/")
-    public ResponseEntity home(){
+    public ResponseEntity home() {
         return ResponseEntity.ok().build();
     }
 
     @GetMapping(API.ALL_PRODUCT)
-    public ResponseEntity<List<Product>> getAllProduct(){
+    public ResponseEntity<List<Product>> getAllProduct() {
         return ResponseEntity.ok(productService.getAllProduct());
     }
 
     @PostMapping(API.EXIST_CUSTOMER)
-    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData){
+    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
-        if(requestMap == null)
+        if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if(requestMap.containsKey("email") && requestMap.containsKey("ssn"))
-            return ResponseEntity.ok(userService.checkPresenceOfUser((String)requestMap.get("email"), (String)requestMap.get("ssn")));
+        if (requestMap.containsKey("email") && requestMap.containsKey("ssn"))
+            return ResponseEntity.ok(userService.checkPresenceOfUser((String) requestMap.get("email"), (String) requestMap.get("ssn")));
         return ResponseEntity.badRequest().build();
     }
 
     @GetMapping(API.EXIST_CUSTOMER_BY_MAIL)
-    public ResponseEntity checkExistCustomerMail(@RequestParam String email){
-        if(email == null)
+    public ResponseEntity checkExistCustomerMail(@RequestParam String email) {
+        if (email == null)
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(userService.checkPresenceOfMail(email));
     }
 
     @PostMapping(API.CREATE_CUSTOMER)
-    public ResponseEntity createCustomer(@RequestBody User user){
-        if(user == null)
+    public ResponseEntity createCustomer(@RequestBody User user) {
+        if (user == null)
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(userService.addNewClient(user));
     }
 
     @PostMapping(API.PLACE_ORDER)
-    public ResponseEntity placeOrder(@RequestBody String email){
-        return ResponseEntity.ok(orderService.addNewOrderFromBasket(basketService.emptyBasket(userService.getUserByEmail(email))));
+    public ResponseEntity placeOrder(@RequestBody String jsonData) {
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if (requestMap == null)
+            return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("email")) {
+            User user = userService.getUserByEmail((String) requestMap.get("email"));
+            Basket basket = user.getBasket();
+            basketService.dropBasket(user);
+            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket));
+        }
+        return ResponseEntity.badRequest().build();
     }
+
     @PostMapping(API.ADD_TO_BASKET)
     public ResponseEntity addToBasket(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
-        if(requestMap == null)
+        if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if(requestMap.containsKey("productId") && requestMap.containsKey("email") && requestMap.containsKey("quantity")) {
-            Product product  = productService.getProductById(Long.valueOf((Integer)requestMap.get("productId")));
-            Double quantity = Double.valueOf((Integer)requestMap.get("quantity"));
-            User user = userService.getUserByEmail((String)requestMap.get("email"));
+        if (requestMap.containsKey("productId") && requestMap.containsKey("email") && requestMap.containsKey("quantity")) {
+            Product product = productService.getProductById(Long.valueOf((Integer) requestMap.get("productId")));
+            Double quantity = Double.valueOf((Integer) requestMap.get("quantity"));
+            User user = userService.getUserByEmail((String) requestMap.get("email"));
             return ResponseEntity.ok(basketService.addProductToCart(product, quantity, user));
         }
         return ResponseEntity.badRequest().build();
@@ -93,11 +103,11 @@ public class SpgController {
 
     @GetMapping(API.GET_CART)
     public ResponseEntity<List<Product>> getCart(@RequestParam String email) {
-        User user =userService.getUserByEmail(email);
-        if(user==null){
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(basketService.getProductsInBasket(user ));
+        return ResponseEntity.ok(basketService.getProductsInBasket(user));
     }
 
     @GetMapping(API.GET_WALLET)
@@ -106,14 +116,14 @@ public class SpgController {
     }
 
     @PostMapping(API.TOP_UP)
-    public ResponseEntity topUp(@RequestBody  String jsonData) {
+    public ResponseEntity topUp(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
-        if(requestMap == null)
+        if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if(requestMap.containsKey("email") && requestMap.containsKey("value") ) {
-            String email  = (String)requestMap.get("email");
-            Double value = Double.valueOf((Integer)requestMap.get("value"));
-            return ResponseEntity.ok(userService.topUp(email, value ));
+        if (requestMap.containsKey("email") && requestMap.containsKey("value")) {
+            String email = (String) requestMap.get("email");
+            Double value = Double.valueOf((Integer) requestMap.get("value"));
+            return ResponseEntity.ok(userService.topUp(email, value));
         }
         return ResponseEntity.badRequest().build();
 
@@ -121,28 +131,28 @@ public class SpgController {
 
     @PostMapping(API.DELIVER_ORDER)
     public ResponseEntity deliverOrder(@RequestBody Long orderId) {
-        return ResponseEntity.ok(orderService.deliverOrder(orderId ));
+        return ResponseEntity.ok(orderService.deliverOrder(orderId));
     }
 
     @DeleteMapping(API.DROP_ORDER)
-    public ResponseEntity dropOrder( @RequestBody String jsonData){
+    public ResponseEntity dropOrder(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
-        if(requestMap == null)
+        if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if(requestMap.containsKey("email")) {
-            String email  = (String)requestMap.get("email");
-            User user =userService.getUserByEmail(email);
-            if(user==null){
+        if (requestMap.containsKey("email")) {
+            String email = (String) requestMap.get("email");
+            User user = userService.getUserByEmail(email);
+            if (user == null) {
                 return ResponseEntity.badRequest().build();
             }
             basketService.dropBasket(user); //THAT'S HIM, OFFICER!
-            return  ResponseEntity.ok().build();
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
     }
 
     @GetMapping(API.TEST)
-    public ResponseEntity test(){
+    public ResponseEntity test() {
         return ResponseEntity.ok(productService.test());
     }
 
