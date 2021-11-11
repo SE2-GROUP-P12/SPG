@@ -38,7 +38,7 @@ function BrowseProducts() {
 
         return (
             <>
-                <Modal show={show} onHide={handleClose}>
+                <Modal show={show} onHide={()=>{handleClose(); setShowError(null); setShowSuccess(null);}}>
                     <Modal.Header closeButton>
                         <Modal.Title>Add product to cart</Modal.Title>
                     </Modal.Header>

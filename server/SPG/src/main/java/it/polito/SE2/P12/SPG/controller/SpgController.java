@@ -77,6 +77,7 @@ public class SpgController {
     }
     @PostMapping(API.ADD_TO_BASKET)
     public ResponseEntity addToBasket(@RequestBody Long productId, String email, Double quantity) {
+        System.out.println("CHECKPOINT: "+productId+" // "+email+" // "+quantity);
         return ResponseEntity.ok(basketService.addProductToCart(productService.getProductById(productId),quantity, userService.getUserByEmail(email) ));
     }
 

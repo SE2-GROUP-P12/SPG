@@ -8,8 +8,8 @@ public class API {
     public static final String PLACE_ORDER= "/customer/placeOrder";
     public static final String ADD_TO_BASKET= "/product/addToCart";
     public static final String GET_CART= "/customer/getCart";
-    public static final String GET_WALLET= "/custome/getWallet";
-    public static final String TOP_UP= "/custome/topUp";
-    public static final String DELIVER_ORDER= "/custome/deliverOrder";
+    public static final String GET_WALLET= "/customer/getWallet";
+    public static final String TOP_UP= "/customer/topUp";
+    public static final String DELIVER_ORDER= "/customer/deliverOrder";
     public static final String TEST = "test";
 }
