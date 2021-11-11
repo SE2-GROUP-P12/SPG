@@ -13,12 +13,13 @@ function DeliverOrder(props)
     const [user, setUser]=useState(null);
     const [orders, setOrders] = useState([1,2,3]);
 
-    /*useEffect(()=>{
+    useEffect(()=>{
         let getOrdersInfo = async () => {
             API.browseOrders().then(ord => setOrders(ord));
         };
-        getOrdersInfo();}, [user] );*/
-
+        getOrdersInfo();
+    }, [user] );
+    
     /*TIME MACHINE MANAGEMENT*/  
     const [itsTime, setItsTime] = useState(false)  
     useEffect(()=>{
