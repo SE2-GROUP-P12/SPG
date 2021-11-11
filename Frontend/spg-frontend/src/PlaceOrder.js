@@ -17,6 +17,9 @@ function PlaceOrder(props)
     const [error, setError] = useState(false);
     const [customerError, setCustomerError] = useState(false);
     const [customerSuccess, setCustomerSuccess] = useState(false);
+    const [deleteError, setDeleteError] = useState(false);
+    const [sendError, setSendError] = useState(false);
+    const [sendSuccess, setSendSuccess] = useState(false);
 
     /***************************************************************************/
     let email = 'mario.rossi@gmail.com' //dovrebbe essere recuperata dalla sessione
@@ -35,11 +38,25 @@ function PlaceOrder(props)
         };
         getCartInfo(email);}, []);
 
-        const droporder = () =>{
-            let outcome= API.dropOrder({'email' : email});
-            console.log("CHECKPOINT: "+outcome);
+        const dropOrder = async() =>{
+            let outcome= await API.dropOrder({'email' : email});
             if(outcome)
                 setOrder(null);
+            else
+                setDeleteError(true);
+        }
+
+        const sendOrder = async() =>{
+            setSendError(false);
+            setSendSuccess(false);
+            let outcome= await API.dropOrder({'email' : email});
+            if(outcome)
+            {
+                setOrder(null);
+                setSendSuccess(true);
+            }
+            else
+                setSendError(true);
         }
 
     /*TIME MACHINE MANAGEMENT*/  
@@ -93,13 +110,16 @@ function PlaceOrder(props)
                             {errors.email && touched.email ? errors.email : null}
                             {customerError ? <Alert variant='danger'> User not found </Alert> : null}
                             {customerSuccess ? <Alert variant='success'> User found, you can now place their order </Alert> : null}
+                            {deleteError ? <Alert variant='danger'> Something went wrong emptying your cart </Alert> : null}
+                            {sendError ? <Alert variant='danger'> Something went wrong sending your order </Alert> : null}
+                            {sendSuccess ? <Alert variant='success'> Order sent successfully </Alert> : null}
                         </Form>
                 }
             </Formik>
             </div>
             <Row>
-                <Col xs={4}><Button disabled={(!itsTime||order===null||customer===null) ? true : false} variant='success'>Send order</Button></Col>
-                <Col xs={4}><Button disabled={order===null ? true : false} variant='danger' onClick={droporder}>Delete order</Button></Col>
+                <Col xs={4}><Button disabled={(!itsTime||order===null||customer===null) ? true : false} variant='success' onClick={sendOrder}>Send order</Button></Col>
+                <Col xs={4}><Button disabled={order===null ? true : false} variant='danger' onClick={dropOrder}>Delete order</Button></Col>
                 <Col xs={4}><Link to='/ShopEmployee'><Button variant='secondary'>Back</Button></Link></Col>
             </Row>
         </>

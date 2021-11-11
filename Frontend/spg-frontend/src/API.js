@@ -111,18 +111,16 @@ async function customerExistsByMail(data)
 
 async function dropOrder (data)
 {
-    console.log("CHECKPOINT API: "+JSON.stringify(data));
     try{
         const response = await fetch ("/api/customer/dropOrder", {
             method: 'DELETE',
             headers: {'Content-Type' : 'application/json'},
-            body: JSON.stringify(data)
+            body: JSON.stringify({'email' : data.email})
         });
-        let success = await response.json();
         if(response.ok)
-            return success;
+            return true;
         else
-            return undefined;
+            return false;
     }
     catch(err) {
         console.log(err);
