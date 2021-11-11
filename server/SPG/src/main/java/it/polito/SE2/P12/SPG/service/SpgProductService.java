@@ -38,6 +38,7 @@ public class SpgProductService {
     }
 
 
+
     public Product test(){
         System.out.println("Test activated");
         Product p = new Product("Pompelmissimo", "quantità", 10.0, 12.30f);

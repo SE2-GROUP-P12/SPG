@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Console;
 import java.util.List;
 import java.util.Map;
 
@@ -73,7 +75,7 @@ public class SpgController {
 
     @PostMapping(API.PLACE_ORDER)
     public ResponseEntity placeOrder(@RequestBody String email){
-        return ResponseEntity.ok(orderService.addNewOrderFromBasket(basketService.emptyBasket(userService.getUserIdByEmail(email))));
+        return ResponseEntity.ok(orderService.addNewOrderFromBasket(basketService.emptyBasket(userService.getUserByEmail(email))));
     }
     @PostMapping(API.ADD_TO_BASKET)
     public ResponseEntity addToBasket(@RequestBody String jsonData) {
@@ -133,7 +135,7 @@ public class SpgController {
             if(user==null){
                 return ResponseEntity.badRequest().build();
             }
-            basketService.emptyBasket(user.getUserId()); //THAT'S HIM, OFFICER!
+            basketService.dropBasket(user); //THAT'S HIM, OFFICER!
             return  ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();

@@ -51,4 +51,12 @@ public class Product {
         }
         return false;
     }
+    public boolean moveFromBasket(Double quantity) {
+        if(this.quantityAvailable >quantity) {
+            this.quantityAvailable += quantity;
+            this.quantityBaskets -= quantity;
+            return true;
+        }
+        return false;
+    }
 }
