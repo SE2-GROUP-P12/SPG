@@ -94,7 +94,8 @@ async function customerExists(email, ssn) {
         console.log(err);
     }
 }
-async function addCustomer() {
+
+async function addCustomer(jsonObj) {
     try {
         const response = await fetch("/api/customer/addCustomer", {
             method: 'POST',
@@ -106,6 +107,7 @@ async function addCustomer() {
         });
         if (response.ok){ 
             console.log("done!");
+            return response.ok;
         }
     }
     catch (err) {
@@ -113,5 +115,5 @@ async function addCustomer() {
     }
 }
 
-const API = { browseProducts, getCart, addToCart, getWallet };
+const API = { browseProducts, getCart, addToCart, getWallet, customerExists, addCustomer };
 export { API }

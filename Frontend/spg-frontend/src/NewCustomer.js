@@ -5,8 +5,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container";
-import {useState} from "react";
-import {Link} from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 
 const errorModalMessage = {
@@ -126,6 +126,9 @@ function NewCustomer() {
         return JSON.stringify(requestBodyObject);
     }
 
+
+    /*
+    // Submission by RICK
     const buttonHandlerSubmission = () => {
         let jsonObj = jsonObjectBuilder();
         //FIRST: check is user is already registered based upon mail as ID(?)
@@ -158,194 +161,225 @@ function NewCustomer() {
             setModalShow(true);
         })
     }
+    // ------------------------------------------------------------
+    */
 
-    function ModalComponent() {
-        return (
-            <Modal show={modalShow}
-                   onHide={() => setModalShow(false)}>
-                <Modal.Header>
-                    <Modal.Title>
-                        <h2 className="text-center">
-                            {modalMessage.messageTitle}
-                        </h2>
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Container>
-                        <Row>
-                            {modalMessage.messageText}
-                        </Row>
-                    </Container>
-                </Modal.Body>
-                <Modal.Footer>
-                    {
-                        modalMessage.id === 3 ?
-                            <Button variant="danger" onClick={() => {
-                                setModalShow(false);
-                                setEmail("");
-                                setPassword("");
-                                setSsn("");
-                                setEmailValidator(false);
-                                setPasswordValidator(false);
-                                setSsnValidator(false);
-                            }}>
-                                {modalMessage.messageFooterButton}
-                            </Button>
-                            :
-                            <Link to="/ShopEmployee">
-                                <Button variant="danger">
-                                    {modalMessage.messageFooterButton}
-                                </Button>
-                            </Link>
-                    }
-                </Modal.Footer>
-            </Modal>
-        )
+    // Submission by PEPPE
+    async function checkCustomer () {
+        const content = await API.customerExists(email, ssn);
+        return content.exist;
     }
 
-    return (
-        <Container className="mt-2">
-            <Row>
-                <h1>CREATE A NEW CUSTOMER</h1>
-            </Row>
-            <Row clasName="mb-4">
-                <ModalComponent/>
-                <Form className="mt-4">
-                    <Row className="mb-3">
-                        {/*EMAIL FIELD*/}
-                        {
-                            email.length === 0 ?
-                                <Form.Group as={Col} controlId="email">
-                                    <Form.Label>Email*</Form.Label>
-                                    <Form.Control type="email" placeholder="Enter email"
-                                                  onChange={(event) => emailHandlerAndChecker(event.target.value)}
-                                                  value={email}/>
-                                </Form.Group>
-                                :
-                                <Form.Group as={Col} controlId="email" hasValidation>
-                                    <Form.Label>Email*</Form.Label>
-                                    <Form.Control type="email" placeholder="Enter email"
-                                                  onChange={(event) => emailHandlerAndChecker(event.target.value)}
-                                                  value={email} required isInvalid={!emailValidator}/>
-                                    <Form.Control.Feedback type="invalid">
-                                        Please enter a valid email.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                        }
-                        {/*PASSWORD FIELD*/}
-                        {
-                            password.length === 0 ?
-                                <Form.Group as={Col} controlId="password">
-                                    <Form.Label>Password*</Form.Label>
-                                    <Form.Control type="password" placeholder="Password" value={password}
-                                                  onChange={(event) => passwordHandlerAndChekcer(event.target.value)}/>
-                                </Form.Group>
-                                :
-                                <Form.Group as={Col} controlId="password">
-                                    <Form.Label>Password*</Form.Label>
-                                    <Form.Control type="password" placeholder="Password" value={password}
-                                                  onChange={(event) => passwordHandlerAndChekcer(event.target.value)}
-                                                  required isInvalid={!passwordValidator}/>
-                                    <Form.Control.Feedback type="invalid">
-                                        Please enter a password with at leat 10 chars.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
+    async function addCustomer(jsonObj) {
+        const okay = await API.addCustomer(jsonObj);
+        return okay;
+    }
 
-                        }
-                    </Row>
-                    <Row className="mb-3 mt-4 ">
-                        {/*NAME FIELD*/}
-                        <Form.Group as={Col} controlId="name">
-                            <Form.Label>Name*</Form.Label>
-                            <Form.Control type="text" placeholder="Enter name" value={name}
-                                          onChange={(event) => nameHandlerAndChecker(event.target.value)}/>
-                        </Form.Group>
-                        {/*SURNAME FIELD*/}
-                        <Form.Group as={Col} controlId="surname">
-                            <Form.Label>Surname*</Form.Label>
-                            <Form.Control type="text" placeholder="Enter surname" value={surname}
-                                          onChange={(event) => surnameHandlerandChecker(event.target.value)}/>
-                        </Form.Group>
-                        {/*ADDRESS FIELD*/}
-                        <Form.Group as={Col} controlId="address">
-                            <Form.Label>Address*</Form.Label>
-                            <Form.Control placeholder="1234 Main St" value={address}
-                                          onChange={(event) => addressValidatorAndChecker(event.target.value)}/>
-                        </Form.Group>
-                    </Row>
-                    {/*SSN FIELD*/}
-                    <Row className="mt-4">
-                        {
-                            ssn.length === 0 ?
-                                <Form.Group as={Col} controlId="SSN">
-                                    <Form.Label>SSN*</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter SSN string" value={ssn}
-                                                  onChange={(event) => ssnValidatorAndChecker(event.target.value)}/>
-                                </Form.Group>
-                                :
-                                <Form.Group as={Col} controlId="SSN">
-                                    <Form.Label>SSN*</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter SSN string" value={ssn}
-                                                  onChange={(event) => ssnValidatorAndChecker(event.target.value)}
-                                                  required isInvalid={!ssnValidator}/>
-                                    <Form.Control.Feedback type="invalid">
-                                        Please enter a valid ssn.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                        }
-                    </Row>
-                    {/*PHONE NUMBER FIELD*/}
-                    <Row className="mt-4">
-                        {
-                            phoneNumber.length === 0 ?
-                                <Form.Group as={Col} controlId="phoneNumber">
-                                    <Form.Label>Phone Number</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter phone number" value={phoneNumber}
-                                                  onChange={(event) =>
-                                                      phoneNumberValidatorAndChecker(event.target.value)
-                                                  }/>
-                                </Form.Group>
-                                :
-                                <Form.Group as={Col} controlId="phoneNumber">
-                                    <Form.Label>Phone Number</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter phone number" value={phoneNumber}
-                                                  onChange={(event) => phoneNumberValidatorAndChecker(event.target.value)}
-                                                  required isInvalid={!phoneNumberValidator}/>
-                                    <Form.Control.Feedback type="invalid">
-                                        Please enter a valid phone number.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                        }
-                    </Row>
-                    {/*BUTTONs COMPONENT*/}
+    const buttonHandlerSubmission = () => {
+        let jsonObj = jsonObjectBuilder();
+        //FIRST: check is user is already registered based upon mail as ID(?)
+        if (checkCustomer()) {
+            setModalMessage(errorModalMessage);
+        }
+        else {
+            const okay = addCustomer(jsonObj);
+            if (okay){
+                setModalMessage(okModalMessage);
+            }
+            else {
+                setModalMessage(conflictModalMessage);
+            }
+        }
+    }
+    // ------------------------------------------------------------
+
+function ModalComponent() {
+    return (
+        <Modal show={modalShow}
+            onHide={() => setModalShow(false)}>
+            <Modal.Header>
+                <Modal.Title>
+                    <h2 className="text-center">
+                        {modalMessage.messageTitle}
+                    </h2>
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Container>
                     <Row>
-                        <Col className="mt-4">
-                            <Link to="/ShopEmployee">
-                                <Button variant="danger" size="lg" className="mt-4">
-                                    BACK
-                                </Button>
-                            </Link>
-                        </Col>
-                        <Col className="mt-4">
-                            {
-                                !(emailValidator === true && passwordValidator === true &&
-                                    nameValidator === true && surnameValidator === true && addressValidator === true
-                                    && ssnValidator === true && phoneNumberValidator === true) ?
-                                    <Button variant="success" size="lg" className="mt-4" disabled>
-                                        SUBMIT
-                                    </Button>
-                                    :
-                                    <Button variant="success" size="lg" className="mt-4"
-                                            onClick={() => buttonHandlerSubmission()}>
-                                        SUBMIT
-                                    </Button>
-                            }
-                        </Col>
+                        {modalMessage.messageText}
                     </Row>
-                </Form>
-            </Row>
-        </Container>
+                </Container>
+            </Modal.Body>
+            <Modal.Footer>
+                {
+                    modalMessage.id === 3 ?
+                        <Button variant="danger" onClick={() => {
+                            setModalShow(false);
+                            setEmail("");
+                            setPassword("");
+                            setSsn("");
+                            setEmailValidator(false);
+                            setPasswordValidator(false);
+                            setSsnValidator(false);
+                        }}>
+                            {modalMessage.messageFooterButton}
+                        </Button>
+                        :
+                        <Link to="/ShopEmployee">
+                            <Button variant="danger">
+                                {modalMessage.messageFooterButton}
+                            </Button>
+                        </Link>
+                }
+            </Modal.Footer>
+        </Modal>
     )
+}
+
+return (
+    <Container className="mt-2">
+        <Row>
+            <h1>CREATE A NEW CUSTOMER</h1>
+        </Row>
+        <Row clasName="mb-4">
+            <ModalComponent />
+            <Form className="mt-4">
+                <Row className="mb-3">
+                    {/*EMAIL FIELD*/}
+                    {
+                        email.length === 0 ?
+                            <Form.Group as={Col} controlId="email">
+                                <Form.Label>Email*</Form.Label>
+                                <Form.Control type="email" placeholder="Enter email"
+                                    onChange={(event) => emailHandlerAndChecker(event.target.value)}
+                                    value={email} />
+                            </Form.Group>
+                            :
+                            <Form.Group as={Col} controlId="email" hasValidation>
+                                <Form.Label>Email*</Form.Label>
+                                <Form.Control type="email" placeholder="Enter email"
+                                    onChange={(event) => emailHandlerAndChecker(event.target.value)}
+                                    value={email} required isInvalid={!emailValidator} />
+                                <Form.Control.Feedback type="invalid">
+                                    Please enter a valid email.
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                    }
+                    {/*PASSWORD FIELD*/}
+                    {
+                        password.length === 0 ?
+                            <Form.Group as={Col} controlId="password">
+                                <Form.Label>Password*</Form.Label>
+                                <Form.Control type="password" placeholder="Password" value={password}
+                                    onChange={(event) => passwordHandlerAndChekcer(event.target.value)} />
+                            </Form.Group>
+                            :
+                            <Form.Group as={Col} controlId="password">
+                                <Form.Label>Password*</Form.Label>
+                                <Form.Control type="password" placeholder="Password" value={password}
+                                    onChange={(event) => passwordHandlerAndChekcer(event.target.value)}
+                                    required isInvalid={!passwordValidator} />
+                                <Form.Control.Feedback type="invalid">
+                                    Please enter a password with at leat 10 chars.
+                                </Form.Control.Feedback>
+                            </Form.Group>
+
+                    }
+                </Row>
+                <Row className="mb-3 mt-4 ">
+                    {/*NAME FIELD*/}
+                    <Form.Group as={Col} controlId="name">
+                        <Form.Label>Name*</Form.Label>
+                        <Form.Control type="text" placeholder="Enter name" value={name}
+                            onChange={(event) => nameHandlerAndChecker(event.target.value)} />
+                    </Form.Group>
+                    {/*SURNAME FIELD*/}
+                    <Form.Group as={Col} controlId="surname">
+                        <Form.Label>Surname*</Form.Label>
+                        <Form.Control type="text" placeholder="Enter surname" value={surname}
+                            onChange={(event) => surnameHandlerandChecker(event.target.value)} />
+                    </Form.Group>
+                    {/*ADDRESS FIELD*/}
+                    <Form.Group as={Col} controlId="address">
+                        <Form.Label>Address*</Form.Label>
+                        <Form.Control placeholder="1234 Main St" value={address}
+                            onChange={(event) => addressValidatorAndChecker(event.target.value)} />
+                    </Form.Group>
+                </Row>
+                {/*SSN FIELD*/}
+                <Row className="mt-4">
+                    {
+                        ssn.length === 0 ?
+                            <Form.Group as={Col} controlId="SSN">
+                                <Form.Label>SSN*</Form.Label>
+                                <Form.Control type="text" placeholder="Enter SSN string" value={ssn}
+                                    onChange={(event) => ssnValidatorAndChecker(event.target.value)} />
+                            </Form.Group>
+                            :
+                            <Form.Group as={Col} controlId="SSN">
+                                <Form.Label>SSN*</Form.Label>
+                                <Form.Control type="text" placeholder="Enter SSN string" value={ssn}
+                                    onChange={(event) => ssnValidatorAndChecker(event.target.value)}
+                                    required isInvalid={!ssnValidator} />
+                                <Form.Control.Feedback type="invalid">
+                                    Please enter a valid ssn.
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                    }
+                </Row>
+                {/*PHONE NUMBER FIELD*/}
+                <Row className="mt-4">
+                    {
+                        phoneNumber.length === 0 ?
+                            <Form.Group as={Col} controlId="phoneNumber">
+                                <Form.Label>Phone Number</Form.Label>
+                                <Form.Control type="text" placeholder="Enter phone number" value={phoneNumber}
+                                    onChange={(event) =>
+                                        phoneNumberValidatorAndChecker(event.target.value)
+                                    } />
+                            </Form.Group>
+                            :
+                            <Form.Group as={Col} controlId="phoneNumber">
+                                <Form.Label>Phone Number</Form.Label>
+                                <Form.Control type="text" placeholder="Enter phone number" value={phoneNumber}
+                                    onChange={(event) => phoneNumberValidatorAndChecker(event.target.value)}
+                                    required isInvalid={!phoneNumberValidator} />
+                                <Form.Control.Feedback type="invalid">
+                                    Please enter a valid phone number.
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                    }
+                </Row>
+                {/*BUTTONs COMPONENT*/}
+                <Row>
+                    <Col className="mt-4">
+                        <Link to="/ShopEmployee">
+                            <Button variant="danger" size="lg" className="mt-4">
+                                BACK
+                            </Button>
+                        </Link>
+                    </Col>
+                    <Col className="mt-4">
+                        {
+                            !(emailValidator === true && passwordValidator === true &&
+                                nameValidator === true && surnameValidator === true && addressValidator === true
+                                && ssnValidator === true && phoneNumberValidator === true) ?
+                                <Button variant="success" size="lg" className="mt-4" disabled>
+                                    SUBMIT
+                                </Button>
+                                :
+                                <Button variant="success" size="lg" className="mt-4"
+                                    onClick={() => buttonHandlerSubmission()}>
+                                    SUBMIT
+                                </Button>
+                        }
+                    </Col>
+                </Row>
+            </Form>
+        </Row>
+    </Container>
+)
 }
 
 /**
@@ -425,4 +459,4 @@ function NewCustomer() {
  >>>>>>> origin/be_db_link
  */
 
-export {NewCustomer}
+export { NewCustomer }
