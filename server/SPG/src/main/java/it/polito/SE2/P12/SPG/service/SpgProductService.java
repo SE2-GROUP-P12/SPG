@@ -21,6 +21,14 @@ public class SpgProductService {
         this.productRepo = productRepo;
     }
 
+    public void populateDB(){
+        Product temp1 = new Product ("Mele","Kg",50,2.50);
+        Product temp2 = new Product ("Farina","Kg",10,5.00);
+        Product temp3 = new Product ("Uova","Kg",36,6.25);
+        productRepo.save(temp1);
+        productRepo.save(temp2);
+        productRepo.save(temp3);
+    }
     public List<Product> getAllProduct(){
         return productRepo.findAll();
     }

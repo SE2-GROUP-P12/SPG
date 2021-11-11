@@ -18,6 +18,17 @@ public class SpgUserService {
         this.userRepo = userRepo;
     }
 
+    public void populateDB(){
+        User temp1 = new User ("Mario","Rossi","RSSMRA00D12N376V","01234567892",
+                "customer ","mario.rossi@gmail.com",null);
+        User temp2 = new User ("Paolo","Bianchi","BNCPLA00D12N376V","01234567892",
+                "customer ","paolo.bianchi@gmail.com",null);
+        User temp3 = new User ("Francesco","Conte","CNTFRN00D12N376V","01234567892",
+                "employee ","francesco.conte@gmail.com",null);
+        userRepo.save(temp1);
+        userRepo.save(temp2);
+        userRepo.save(temp3);
+    }
     public Long getUserIdByEmail(String email){
         return userRepo.findUserByEmail(email).getUserId();
     }

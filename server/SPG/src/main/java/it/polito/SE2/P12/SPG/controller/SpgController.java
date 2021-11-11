@@ -33,7 +33,8 @@ public class SpgController {
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
-
+        this.userService.populateDB();
+        this.productService.populateDB();
     }
 
     @GetMapping("/")

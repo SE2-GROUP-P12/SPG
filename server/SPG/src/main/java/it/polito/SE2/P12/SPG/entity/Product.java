@@ -25,9 +25,9 @@ public class Product {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
     @Column(name = "price", nullable = false)
-    private Float price;
+    private double price;
 
-    public Product(String name, String unitOfMeasurement, Integer quantity, Float price) {
+    public Product(String name, String unitOfMeasurement, Integer quantity, double price) {
         this.name = name;
         this.unitOfMeasurement = unitOfMeasurement;
         this.quantity = quantity;
