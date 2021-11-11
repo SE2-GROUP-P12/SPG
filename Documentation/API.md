@@ -194,6 +194,16 @@
   - response body content:
     - 200 OK
     - 404 NOT FOUND
+
+- DELETE `/api/customer/dropOrder`
+  - request body content: 
+    ```json 
+    {"email":"customer@gmail.com"}
+    ```
+  - response body content:
+    - 200 OK 
+    - 500 Internal server error
+
 - GET `/api/customer/browseOrders` //browse all orders to be delivered
   - response body content:
     - 200 OK:
