@@ -89,13 +89,21 @@ public class SpgController {
 
     @GetMapping(API.GET_WALLET)
     public ResponseEntity<Double> getWallet(@RequestParam String email) {
-        System.out.println("CHECKPOINT " +email);
         return ResponseEntity.ok(userService.getWallet(email));
     }
 
     @PostMapping(API.TOP_UP)
-    public ResponseEntity topUp(@RequestBody  String email, double value) {
-        return ResponseEntity.ok(userService.topUp(email, value ));
+    public ResponseEntity topUp(@RequestBody  String jsonData) {
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if(requestMap == null)
+            return ResponseEntity.badRequest().build();
+        if(requestMap.containsKey("email") && requestMap.containsKey("value") ) {
+            String email  = (String)requestMap.get("email");
+            Double value = Double.valueOf((Integer)requestMap.get("value"));
+            return ResponseEntity.ok(userService.topUp(email, value ));
+        }
+        return ResponseEntity.badRequest().build();
+
     }
 
     @PostMapping(API.DELIVER_ORDER)
