@@ -28,14 +28,9 @@ public class SpgBasketService {
         //the method modifies a basket, then the basket is saved in local and the old one gets removed,
         // before inserting the modified version
         Map<String, String> response = new HashMap<>();
-        Basket rewrite = basketRepo.findBasketByCust_UserId(customer.getUserId());
-        if(rewrite ==null){
-            Map<Product, Double> prods = new HashMap<Product, Double>();
-            rewrite = new Basket(customer, prods);
-        }
-        rewrite.addProductToBasket(product, quantity);
-        basketRepo.deleteById(rewrite.getBasketId());
-        basketRepo.save(rewrite);
+        Basket basket = customer.getBasket();
+        basket.addProductToBasket(product, quantity);
+        basketRepo.save(basket);
         response.put("responseStatus", "200-OK");
         return response;
     }

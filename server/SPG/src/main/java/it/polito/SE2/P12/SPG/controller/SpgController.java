@@ -49,18 +49,11 @@ public class SpgController {
 
     @PostMapping(API.EXIST_CUSTOMER)
     public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData){
-        if(jsonData == null)
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if(requestMap == null)
             return ResponseEntity.badRequest().build();
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> requestMap;
-        try {
-             requestMap = mapper.readValue(jsonData, Map.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
         if(requestMap.containsKey("email") && requestMap.containsKey("ssn"))
-            return ResponseEntity.ok(userService.checkPresenceOfUser(requestMap.get("email"), requestMap.get("ssn")));
+            return ResponseEntity.ok(userService.checkPresenceOfUser((String)requestMap.get("email"), (String)requestMap.get("ssn")));
         return ResponseEntity.badRequest().build();
     }
 
@@ -76,9 +69,22 @@ public class SpgController {
         return ResponseEntity.ok(orderService.addNewOrderFromBasket(basketService.emptyBasket(userService.getUserIdByEmail(email))));
     }
     @PostMapping(API.ADD_TO_BASKET)
-    public ResponseEntity addToBasket(@RequestBody Long productId, String email, Double quantity) {
-        System.out.println("CHECKPOINT: "+productId+" // "+email+" // "+quantity);
-        return ResponseEntity.ok(basketService.addProductToCart(productService.getProductById(productId),quantity, userService.getUserByEmail(email) ));
+    public ResponseEntity addToBasket(@RequestBody String jsonData) {
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if(requestMap == null)
+            return ResponseEntity.badRequest().build();
+        if(requestMap.containsKey("productId") && requestMap.containsKey("email") && requestMap.containsKey("quantity")) {
+            /*System.out.println("productId " + requestMap.get("productId"));
+            System.out.println("quantity " + requestMap.get("quantity"));
+            System.out.println("email " + requestMap.get("email"));*/
+            Product product  = productService.getProductById(Long.valueOf((Integer)requestMap.get("productId")));
+            Double quantity = Double.valueOf((Integer)requestMap.get("quantity"));
+            User user = userService.getUserByEmail((String)requestMap.get("email"));
+            /*System.out.println(product);
+            System.out.println(user);*/
+            return ResponseEntity.ok(basketService.addProductToCart(product, quantity, user));
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping(API.GET_CART)
@@ -107,5 +113,16 @@ public class SpgController {
         return ResponseEntity.ok(productService.test());
     }
 
+    public Map<String, Object> extractMapFromJsonString(String jsonData) {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> requestMap;
+        try {
+            requestMap = mapper.readValue(jsonData, Map.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return requestMap;
+    }
 
 }

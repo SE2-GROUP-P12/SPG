@@ -18,6 +18,7 @@ async function browseProducts(){
 
 async function addToCart(product)
 {
+    console.log(JSON.stringify(product))
     try{
         const response = await fetch ("/api/product/addToCart", {
             method: 'POST',

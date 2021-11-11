@@ -41,6 +41,8 @@ public class User {
     private String password;
     @Column(name = "wallet")
     private double wallet=0.00;
+    @OneToOne
+    private Basket basket;
 
     public User(String name, String surname, String ssn,
                 String phoneNumber, String role,
@@ -52,5 +54,11 @@ public class User {
         this.role = role;
         this.email = email;
         this.password = password;
+    }
+
+    public Basket getBasket(){
+        if(this.basket == null)
+            this.basket = new Basket(this);
+        return this.basket;
     }
 }

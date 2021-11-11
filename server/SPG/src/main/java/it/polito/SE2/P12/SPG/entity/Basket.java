@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,11 @@ public class Basket {
     @MapKeyColumn(name="product_id")
     @Column(name="quantity")
     private Map<Product, Double> prods;
+
+    public Basket(User cust) {
+        this.cust = cust;
+        this.prods = new HashMap<>();
+    }
 
     public Basket(User cust, Map<Product,Double> prods) {
         this.cust = cust;
