@@ -24,8 +24,6 @@ public class SpgBasketService {
     }
 
     public Map<String, String> addProductToCart(Product product, Double quantity, User customer) {
-        //the method modifies a basket, then the basket is saved in local and the old one gets removed,
-        // before inserting the modified version
         Map<String, String> response = new HashMap<>();
         Basket basket = customer.getBasket();
         basket.addProduct(product, quantity);
@@ -37,7 +35,7 @@ public class SpgBasketService {
     public List<Product> getProductsInBasket(User customer) {
         List <Product> list = basketRepo.findBasketByCust_UserId(customer.getUserId()).getProductList();
         for (Product basketItem: list) {
-            basketItem.setQuantity(basketRepo.findBasketByCust_UserId(customer.getUserId()).getProds().get(basketItem));
+            basketItem.setQuantityAvailable(basketRepo.findBasketByCust_UserId(customer.getUserId()).getProds().get(basketItem));
         }
         return  list;
     }

@@ -41,8 +41,13 @@ public class Basket {
         this.prods = prods;
     }
 
-    public void addProduct(Product product, Double quantity) {
-        prods.put(product, quantity);
+    //Returns false if quantity is not available
+    public Boolean addProduct(Product product, Double quantity) {
+        if(product.moveToBasket(quantity)) {
+            prods.put(product, quantity);
+            return true;
+        }
+        return false;
     }
 
     public List<Product> getProductList() {
