@@ -87,7 +87,7 @@ public class SpgController {
     }
 
     @GetMapping(API.GET_WALLET)
-    public ResponseEntity<Double> getWallet(@RequestBody  String email) {
+    public ResponseEntity<Double> getWallet(@PathVariable(value="email")String email) {
         return ResponseEntity.ok(userService.getWallet(email ));
     }
 
