@@ -34,7 +34,6 @@ public class UserControllerTest {
     @Test
     public void testNullCustomerCreation() {
         ResponseEntity response;
-        //test null user add
         response = spgController.createCustomer(null);
         Assertions.assertNull(response.getBody()); // Body is not present
         Assertions.assertTrue(response.getStatusCode().isError());
@@ -87,7 +86,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testNotJsonBodyRequest1() {
+    public void testNotJsonBodyRequest() {
         ResponseEntity response;
         String jsonData = "foo-data <> not-a-json-structure!";
         response = spgController.checkExistCustomerMailAndSsn(jsonData);
