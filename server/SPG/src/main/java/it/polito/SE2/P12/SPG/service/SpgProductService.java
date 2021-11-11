@@ -24,7 +24,7 @@ public class SpgProductService {
     public void populateDB(){
         Product temp1 = new Product ("Mele","Kg",50,2.50);
         Product temp2 = new Product ("Farina","Kg",10,5.00);
-        Product temp3 = new Product ("Uova","Kg",36,6.25);
+        Product temp3 = new Product ("Uova","Units",36,6.25);
 
         if(productRepo.findProductByName("Mele")==null)productRepo.save(temp1);
         if(productRepo.findProductByName("Farina")==null)productRepo.save(temp2);

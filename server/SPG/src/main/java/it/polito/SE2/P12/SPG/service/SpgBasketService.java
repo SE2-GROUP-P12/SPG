@@ -34,9 +34,9 @@ public class SpgBasketService {
         return response;
     }
 
-    public List<Product> getProductsInBasket(User customer) {
-        List <Product> list = basketRepo.findBasketByCust_UserId(customer.getUserId()).getProductList();
-        return  list;
+    public Map<Product,Double> getProductsInBasket(User customer) {
+        Map <Product,Double> map = basketRepo.findBasketByCust_UserId(customer.getUserId()).getProds();
+        return  map;
     }
 
 }

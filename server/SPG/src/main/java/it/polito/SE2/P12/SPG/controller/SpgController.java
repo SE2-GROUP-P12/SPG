@@ -83,8 +83,12 @@ public class SpgController {
     }
 
     @GetMapping(API.GET_CART)
-    public ResponseEntity<List<Product>> getCart(@RequestBody  String email) {
-        return ResponseEntity.ok(basketService.getProductsInBasket(userService.getUserByEmail(email) ));
+    public ResponseEntity<Map<Product,Double>> getCart(@RequestBody  String email) {
+        User user =userService.getUserByEmail(email);
+        if(user==null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(basketService.getProductsInBasket(user ));
     }
 
     @GetMapping(API.GET_WALLET)
