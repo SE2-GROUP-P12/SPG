@@ -16,6 +16,7 @@ function PlaceOrder(props)
     const [order, setOrder] = useState([]);
     const [error, setError] = useState(false);
     const [customerError, setCustomerError] = useState(false);
+    const [customerSuccess, setCustomerSuccess] = useState(false);
 
     useEffect(()=>{
         let email = 'mario.rossi@gmail.com' //dovrebbe essere recuperata dalla sessione
@@ -69,14 +70,16 @@ function PlaceOrder(props)
                     email: Yup.string().email().required()
                 })}
                 onSubmit={async(values)=>{
+                    setCustomerSuccess(false);
                     setCustomerError(false);
                     setCustomer(null);
-                    let presentEmail = await API.customerExistsByMail(values.email).then(setCustomerError(!presentEmail));
-                    console.log("CHECKPOINT, EMAIL:"+values.email+" ORDER:"+JSON.stringify(order)+" itsTime:"+itsTime);
+                    let presentEmail = await API.customerExistsByMail(values.email)
+                    setCustomerError(!presentEmail);
                     if(presentEmail)
                     {
                         console.log("CHECKPOINT, EMAIL:"+values.email+" ORDER:"+JSON.stringify(order)+" itsTime:"+itsTime);
                         setCustomer(values.email);
+                        setCustomerSuccess(true);
                     }
                 }}
                 validateOnChange={false}
@@ -88,6 +91,7 @@ function PlaceOrder(props)
                             <Button style={{margin: '20px'}} type="submit" variant="success">Submit customer</Button>
                             {errors.email && touched.email ? errors.email : null}
                             {customerError ? <Alert variant='danger'> User not found </Alert> : null}
+                            {customerSuccess ? <Alert variant='success'> User found, you can now place their order </Alert> : null}
                         </Form>
                 }
             </Formik>
