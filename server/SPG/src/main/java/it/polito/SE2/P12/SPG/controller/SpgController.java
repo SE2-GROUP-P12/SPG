@@ -91,7 +91,6 @@ public class SpgController {
 
     @GetMapping(API.GET_CART)
     public ResponseEntity<List<Product>> getCart(@RequestParam String email) {
-        System.out.println("CHECKPOINT " +email);
         User user =userService.getUserByEmail(email);
         if(user==null){
             return ResponseEntity.badRequest().build();
@@ -124,13 +123,20 @@ public class SpgController {
     }
 
     @DeleteMapping(API.DROP_ORDER)
-    public ResponseEntity dropOrder( @RequestBody String email){
-        User user =userService.getUserByEmail(email);
-        if(user==null){
+    public ResponseEntity dropOrder( @RequestBody String jsonData){
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if(requestMap == null)
             return ResponseEntity.badRequest().build();
+        if(requestMap.containsKey("email")) {
+            String email  = (String)requestMap.get("email");
+            User user =userService.getUserByEmail(email);
+            if(user==null){
+                return ResponseEntity.badRequest().build();
+            }
+            basketService.emptyBasket(user.getUserId()); //THAT'S HIM, OFFICER!
+            return  ResponseEntity.ok().build();
         }
-        basketService.emptyBasket(user.getUserId());
-        return  ResponseEntity.ok().build();
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping(API.TEST)
