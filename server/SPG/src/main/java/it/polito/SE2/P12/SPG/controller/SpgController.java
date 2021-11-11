@@ -33,6 +33,7 @@ public class SpgController {
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
+
     }
 
     @GetMapping("/")
@@ -70,16 +71,16 @@ public class SpgController {
     }
     @PostMapping(API.PLACE_ORDER)
     public ResponseEntity placeOrder(@RequestBody String email){
-        return ResponseEntity.ok(orderService.addNewOrderFromBasket(basketService.emptyBasket(userService.getUserByEmail(email))));
+        return ResponseEntity.ok(orderService.addNewOrderFromBasket(basketService.emptyBasket(userService.getUserIdByEmail(email))));
     }
     @PostMapping(API.ADD_TO_BASKET)
-    public ResponseEntity addToBasket(@RequestBody Long productId, Long customerId, Double quantity) {
-        return ResponseEntity.ok(basketService.addProductToCart(productService.getProductById(productId),quantity, userService.getUserByUserId(customerId) ));
+    public ResponseEntity addToBasket(@RequestBody Long productId, String email, Double quantity) {
+        return ResponseEntity.ok(basketService.addProductToCart(productService.getProductById(productId),quantity, userService.getUserByEmail(email) ));
     }
 
     @PostMapping(API.GET_CART)
-    public ResponseEntity<List<Product>> getCart(@RequestBody  Long customerId) {
-        return ResponseEntity.ok(basketService.getProductsInBasket(userService.getUserByUserId(customerId) ));
+    public ResponseEntity<List<Product>> getCart(@RequestBody  String email) {
+        return ResponseEntity.ok(basketService.getProductsInBasket(userService.getUserByEmail(email) ));
     }
 
     @PostMapping(API.GET_WALLET)

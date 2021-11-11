@@ -18,8 +18,11 @@ public class SpgUserService {
         this.userRepo = userRepo;
     }
 
-    public Long getUserByEmail(String email){
+    public Long getUserIdByEmail(String email){
         return userRepo.findUserByEmail(email).getUserId();
+    }
+    public User getUserByEmail(String email){
+        return userRepo.findUserByEmail(email);
     }
     public  User getUserByUserId(Long userId){
         return userRepo.findUserByUserId(userId);
@@ -64,4 +67,5 @@ public class SpgUserService {
         response.put("responseMessage", "200-OK-(Customer added successfully)");
         return response;
     }
+
 }
