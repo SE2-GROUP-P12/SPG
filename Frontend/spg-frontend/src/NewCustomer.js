@@ -93,7 +93,7 @@ function NewCustomer() {
 
     const ssnValidatorAndChecker = (ssn) => {
         setSsn(ssn);
-        if (ssn.length != 16)
+        if (ssn.length !== 16)
             setSsnValidator(false);
         else
             setSsnValidator(true);

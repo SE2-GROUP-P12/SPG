@@ -106,7 +106,7 @@ function TopUp()
                             {"email": user,
                             "value" : values.amount
                         });
-                        if(outcome == true)
+                        if(outcome === true)
                         {
                             setWallet(wallet+values.amount);
                             setModalSuccess(true);

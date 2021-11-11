@@ -238,6 +238,7 @@
       }
       ```
     - 404 NOT FOUND
+    
 - PUT `/api/customer/deliverOrder` //mark order as delivered
   - request body content:
     ```json
@@ -248,3 +249,9 @@
   - response body content:
     - 200 OK
     - 404 NOT FOUND
+
+- GET `/api/customer/getOrdersByEmail?email=mario.rossi@gmail.com` //get all the orders of a single customer using its email
+  - response body content:
+    - 200 OK
+    - 404 NOT FOUND
+

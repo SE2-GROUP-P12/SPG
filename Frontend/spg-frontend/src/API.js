@@ -128,14 +128,31 @@ async function dropOrder (data)
     }
 }
 
+async function getOrdersByEmail(email){
+    try {
+        const response = await fetch ("api/customer/getOrdersByEmail?email="+email, {
+            method: 'GET',
+        });
+        const data = await response.json();
+        if(response.ok){
+            return data;
+        }
+        else {
+            return null;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 async function deliverOrder(orderId){
     try {
         const response = await fetch ("/api/customer/deliverOrder", {
-            method: 'POST',
+            method: 'PUT',
             headers: {'Content-Type' : 'application/json'},
             body: JSON.stringify(orderId)
         });
-        const data = response.json();
+        const data = await response.json();
         if (response.ok){
             return data;
         }
@@ -148,5 +165,5 @@ async function deliverOrder(orderId){
 }
 
 
-const API = {/*browseProducts,*/ addToCart, getWallet, topUp, getCart, customerExistsByMail, dropOrder, deliverOrder};
+const API = {/*browseProducts,*/ addToCart, getWallet, topUp, getCart, customerExistsByMail, dropOrder, getOrdersByEmail, deliverOrder};
 export {API}
