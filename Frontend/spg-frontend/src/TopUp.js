@@ -8,12 +8,16 @@ import Modal from 'react-bootstrap/Modal';
 import {Formik, Form, Field} from "formik";
 import * as Yup from "yup";
 import {Link} from 'react-router-dom';
+import {API} from "./API";
+import Alert from 'react-bootstrap/Alert';
 
 function TopUp()
 {
     const [user, setUser]=useState(null);
     const [wallet, setWallet]=useState(0.00);
     const [show, setShow] = useState(false);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -29,9 +33,19 @@ function TopUp()
                     email: Yup.string().email().required()
                 })}
             onSubmit={async(values) => {
-                console.log("SUBMITTED: "+values.email);
-                setWallet(10.5);
-                setUser(values.email);
+                setWallet(0);
+                setSuccess(false);
+                setError(false);
+                setUser(null);
+                let outcome = await API.getWallet({'email': values.email});
+                if (outcome===undefined)
+                    setError(true);
+                else
+                {   
+                    setWallet(outcome);
+                    setUser(values.email);
+                    setSuccess(true);
+                }
             }}
             validateOnChange={false}
             validateOnBlur={false}
@@ -43,6 +57,8 @@ function TopUp()
                     <Button style={{margin : '20px'}} type='submit' variant='success'>Submit</Button>
                     
                 <Row>{errors.email && touched.email ? errors.email : null}</Row>
+                {error ? <Alert variant='danger'>User not found</Alert> : null}
+                {success ? <Alert variant='success'>User correctly found</Alert> : null}
                 </Form>
             </div>
             }

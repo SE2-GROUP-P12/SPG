@@ -35,7 +35,24 @@ async function addToCart(product)
     }
 }
 
+async function getWallet(data)
+{
+    try{
+        const response = await fetch ("/api/customer/getWallet?email="+data.email, {
+            method: 'GET',
+        });
+        let wallet = await response.json();
+        if(response.ok)
+            return wallet;
+        else
+            return undefined;
+    }
+    catch(err) {
+        console.log(err);
+        return undefined;
+    }
+}
 
 
-const API = {/*browseProducts,*/ addToCart};
+const API = {/*browseProducts,*/ addToCart, getWallet};
 export {API}
