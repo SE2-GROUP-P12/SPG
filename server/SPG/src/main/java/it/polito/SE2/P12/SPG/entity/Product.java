@@ -23,11 +23,11 @@ public class Product {
     @Column(name = "unit_of_measurement", nullable = false)
     private String unitOfMeasurement;
     @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    private Double quantity;
     @Column(name = "price", nullable = false)
     private double price;
 
-    public Product(String name, String unitOfMeasurement, Integer quantity, double price) {
+    public Product(String name, String unitOfMeasurement, Double quantity, double price) {
         this.name = name;
         this.unitOfMeasurement = unitOfMeasurement;
         this.quantity = quantity;

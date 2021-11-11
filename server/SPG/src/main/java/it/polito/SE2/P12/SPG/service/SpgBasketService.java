@@ -34,9 +34,12 @@ public class SpgBasketService {
         return response;
     }
 
-    public Map<Product,Double> getProductsInBasket(User customer) {
-        Map <Product,Double> map = basketRepo.findBasketByCust_UserId(customer.getUserId()).getProds();
-        return  map;
+    public List<Product> getProductsInBasket(User customer) {
+        List <Product> list = basketRepo.findBasketByCust_UserId(customer.getUserId()).getProductList();
+        for (Product basketItem: list) {
+            basketItem.setQuantity(basketRepo.findBasketByCust_UserId(customer.getUserId()).getProds().get(basketItem));
+        }
+        return  list;
     }
 
 }
