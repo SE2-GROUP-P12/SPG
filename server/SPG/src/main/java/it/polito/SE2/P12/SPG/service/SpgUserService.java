@@ -25,9 +25,9 @@ public class SpgUserService {
                 "customer ","paolo.bianchi@gmail.com",null);
         User temp3 = new User ("Francesco","Conte","CNTFRN00D12N376V","01234567892",
                 "employee ","francesco.conte@gmail.com",null);
-        userRepo.save(temp1);
-        userRepo.save(temp2);
-        userRepo.save(temp3);
+        if(userRepo.findUserByEmail("mario.rossi@gmail.com")==null)userRepo.save(temp1);
+        if(userRepo.findUserByEmail("paolo.bianchi@gmail.com")==null)userRepo.save(temp2);
+        if(userRepo.findUserByEmail("francesco.conte@gmail.com")==null)userRepo.save(temp3);
     }
     public Long getUserIdByEmail(String email){
         return userRepo.findUserByEmail(email).getUserId();
