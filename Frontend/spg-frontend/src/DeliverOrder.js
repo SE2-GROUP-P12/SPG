@@ -7,17 +7,18 @@ import {Formik, Form, Field} from 'formik';
 import { printOrder} from './PlaceOrder';
 import * as Yup from 'yup';
 import {Link} from 'react-router-dom';
+import {API} from './API.js'
 
 function DeliverOrder(props)
 {
-    const [user, setUser]=useState(null);
+    const [customer, setCustomer]=useState(null);
     const [orders, setOrders] = useState([1,2,3]);
 
     /*useEffect(()=>{
         let getOrdersInfo = async () => {
             API.browseOrders().then(ord => setOrders(ord));
         };
-        getOrdersInfo();}, [user] );*/
+        getOrdersInfo();}, [customer] );*/
 
     /*TIME MACHINE MANAGEMENT*/  
     const [itsTime, setItsTime] = useState(false)  
@@ -33,6 +34,24 @@ function DeliverOrder(props)
         checkTime(props.time, props.date);
     }, [props.date, props.time])
 
+    async function customerExistsByMail(email){
+        let outcome = await API.customerExistsByMail(email);
+        if(outcome){
+            setCustomer(email);
+        }
+        else{
+            setCustomer(null);
+        }
+    }
+    {/* TODO: */}
+    async function getOrdersByEmail(email){
+        
+    }
+
+    async function handleSubmit(email){
+        customerExistsByMail(email)
+
+    }
     return(
         <>
         <h1>Deliver Order</h1>
@@ -45,7 +64,7 @@ function DeliverOrder(props)
             validationSchema={Yup.object({
                 email: Yup.string().email().required()
             })}
-            onSubmit={(values)=>{setUser(values.email)}}
+            onSubmit={(values)=>{handleSubmit(values.email)}} 
             validateOnChange={false}
             validateOnBlur={false}
         >
@@ -56,7 +75,7 @@ function DeliverOrder(props)
             {errors.email && touched.email ? errors.email : null}                
             </Form>}
         </Formik>
-        {user===null ? null : <Orders itsTime={itsTime} orderList={orders}/>}
+        {customer===null ? null : <Orders itsTime={itsTime} orderList={orders}/>}
         </div>
         <Link to='/ShopEmployee'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
         </>
@@ -66,9 +85,12 @@ function DeliverOrder(props)
 function Orders(props)
 {
     let output=[];
+    async function deliverOrder(id){
+        const data = await API.deliverOrder(id);
+    }
     for(let o of props.orderList)
     {
-        o={"orderId":1,
+        /* o={"orderId":1,
             "email":"customer@gmail.com",
             "productList" : 
               [
@@ -90,10 +112,11 @@ function Orders(props)
                 }
               ] 
           };
+ */
         output.push(
         <li className="list-group-item">  
             {printOrder(o.productList)}
-            User: {o.email}<Button style={{margin: '20px'}} type='submit' variant='success' disabled={props.itsTime ? false : true} >Deliver</Button> 
+            Customer: {o.email}<Button style={{margin: '20px'}} onClick={deliverOrder(o.orderId)} variant='success' disabled={props.itsTime ? false : true} >Deliver</Button> 
         </li>
         )
     }

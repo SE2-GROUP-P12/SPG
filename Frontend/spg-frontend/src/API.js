@@ -128,5 +128,25 @@ async function dropOrder (data)
     }
 }
 
-const API = {/*browseProducts,*/ addToCart, getWallet, topUp, getCart, customerExistsByMail, dropOrder};
+async function deliverOrder(orderId){
+    try {
+        const response = await fetch ("/api/customer/deliverOrder", {
+            method: 'POST',
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify(orderId)
+        });
+        const data = response.json();
+        if (response.ok){
+            return data;
+        }
+        else{
+            return false;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+const API = {/*browseProducts,*/ addToCart, getWallet, topUp, getCart, customerExistsByMail, dropOrder, deliverOrder};
 export {API}
