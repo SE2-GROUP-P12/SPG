@@ -29,6 +29,10 @@ public class SpgBasketService {
         // before inserting the modified version
         Map<String, String> response = new HashMap<>();
         Basket rewrite = basketRepo.findBasketByCust_UserId(customer.getUserId());
+        if(rewrite ==null){
+            Map<Product, Double> prods = new HashMap<Product, Double>();
+            rewrite = new Basket(customer, prods);
+        }
         rewrite.addProductToBasket(product, quantity);
         basketRepo.deleteById(rewrite.getBasketId());
         basketRepo.save(rewrite);
