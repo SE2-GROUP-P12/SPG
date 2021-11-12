@@ -21,13 +21,13 @@ public class Order {
             strategy = GenerationType.AUTO
     )
     private Long orderId;
-    @OneToOne
+    @ManyToOne
     private User cust;
     @Column(name="date")
     private LocalDateTime date;
     @ElementCollection
-    @MapKeyColumn(name="product_id")
-    @Column(name="quantity")
+    @MapKeyColumn(name = "product_id")
+    @Column(name = "quantity")
     private Map<Product, Double> prods;
 
     public Order(User cust, LocalDateTime date, Map<Product, Double> prods) {
