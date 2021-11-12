@@ -13,7 +13,7 @@ function DeliverOrder(props) {
     const [customer, setCustomer] = useState(null);
     const [orders, setOrders] = useState(null);
 
-    /*useEffect(()=>{
+    useEffect(()=>{
         let getOrdersInfo = async () => {
             API.browseOrders().then(ord => setOrders(ord));
         };

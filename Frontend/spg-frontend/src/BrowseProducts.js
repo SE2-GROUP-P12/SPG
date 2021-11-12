@@ -17,16 +17,14 @@ import * as Yup from 'yup';
 function BrowseProducts() {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
+
+    const _browseProducts = async () => {
+        const data = await API.browseProducts();
+        setProducts(data);
+    }
+    
     useEffect(() => {
-        fetch('/api/product/all').then(response => {
-            if (response.ok) {
-                response.json().then((body) => {
-                    setProducts([...body]);
-                });
-            } else
-                console.log("Error orrcuored -> handle redirection") //TODO: to implement redirection in case of srver errors.
-            setLoadCompleted(true);
-        })
+        _browseProducts();
     }, []);
 
     function ProductEntry(props) {
