@@ -5,7 +5,6 @@ import it.polito.SE2.P12.SPG.entity.*;
 import org.springframework.stereotype.Service;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,30 +17,35 @@ public class SpgBasketService {
         this.basketRepo = basketRepo;
     }
 
-    public Basket emptyBasket(Long  userId){
-        Basket output = basketRepo.getById(userId);
-        basketRepo.deleteById(userId);
+    public Basket emptyBasket(User  user){
+        Basket output = user.getBasket();
+        basketRepo.deleteById(output.getBasketId());
         return  output;
     }
 
-    public Map<String, String> addProductToCart(Product product, Double quantity, User customer) {
-        //the method modifies a basket, then the basket is saved in local and the old one gets removed,
-        // before inserting the modified version
-        Map<String, String> response = new HashMap<>();
-        Basket rewrite = basketRepo.findBasketByCust_UserId(customer.getUserId());
-        if(rewrite ==null){
-            Map<Product, Double> prods = new HashMap<Product, Double>();
-            rewrite = new Basket(customer, prods);
+    public void dropBasket(User user) {
+        Basket output = user.getBasket();
+        for (Product prod : output.getProds().keySet()) {
+            prod.moveFromBasket(output.getProds().get(prod));
         }
-        rewrite.addProductToBasket(product, quantity);
-        basketRepo.deleteById(rewrite.getBasketId());
-        basketRepo.save(rewrite);
+        basketRepo.deleteById(output.getBasketId());
+    }
+
+    public Map<String, String> addProductToCart(Product product, Double quantity, User customer) {
+        Map<String, String> response = new HashMap<>();
+        Basket basket = customer.getBasket();
+        basket.addProduct(product, quantity);
+        basketRepo.save(basket);
         response.put("responseStatus", "200-OK");
         return response;
     }
 
     public List<Product> getProductsInBasket(User customer) {
-        List <Product> list = basketRepo.findBasketByCust_UserId(customer.getUserId()).getProductList();
+        Basket basket = customer.getBasket();
+        List <Product> list = basket.getProductList();
+        for (Product basketItem: list) {
+            basketItem.setQuantityAvailable(basketRepo.findBasketByCust_UserId(customer.getUserId()).getProds().get(basketItem));
+        }
         return  list;
     }
 

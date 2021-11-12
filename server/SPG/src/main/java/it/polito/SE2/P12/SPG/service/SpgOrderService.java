@@ -21,15 +21,13 @@ public class SpgOrderService {
         this.orderRepo = orderRepo;
     }
 
-    public Map<String, String> addNewOrder(Order order) {
-        Map<String, String> response = new HashMap<>();
+    public boolean addNewOrder(Order order) {
         orderRepo.save(order);
-        response.put("responseStatus", "200-OK");
-        return response;
+        return true;
     }
 
-    public Map<String, String> addNewOrderFromBasket(Basket basket) {
-        Order order = new Order(basket.getCust(), LocalDateTime.now(), basket.getProductMap());
+    public boolean addNewOrderFromBasket(Basket basket) {
+        Order order = new Order(basket.getCust(), LocalDateTime.now(), basket.getProductQuantityMap());
         return addNewOrder(order);
     }
 

@@ -59,19 +59,17 @@ public class SpgUserService {
         return response;
     }
 
-    private Boolean checkPresenceOfMail(String mail) {
-        User tmp = userRepo.findUserByEmail(mail);
-        return tmp == null;
+    public Boolean checkPresenceOfMail(String email) {
+        return userRepo.existsByEmail(email);
     }
 
     private Boolean checkPresenceOfSSN(String ssn){
-        User tmp = userRepo.findUserBySsn(ssn);
-        return tmp == null;
+        return userRepo.existsBySsn(ssn);
     }
 
     public Map<String, String> addNewClient(User user) {
         Map<String, String> response = new HashMap<>();
-        if(!checkPresenceOfMail(user.getEmail()) || !checkPresenceOfSSN(user.getSsn())){
+        if(!userRepo.existsByEmail(user.getEmail()) || !userRepo.existsBySsn(user.getSsn())){
             response.put("responseMessage", "200-OK-(Customer already present)");
             return response;
         }

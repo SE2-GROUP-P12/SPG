@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Console;
 import java.util.List;
 import java.util.Map;
 
@@ -38,73 +40,132 @@ public class SpgController {
     }
 
     @GetMapping("/")
-    public ResponseEntity home(){
+    public ResponseEntity home() {
         return ResponseEntity.ok().build();
     }
 
     @GetMapping(API.ALL_PRODUCT)
-    public ResponseEntity<List<Product>> getAllProduct(){
+    public ResponseEntity<List<Product>> getAllProduct() {
         return ResponseEntity.ok(productService.getAllProduct());
     }
 
     @PostMapping(API.EXIST_CUSTOMER)
-    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData){
-        if(jsonData == null)
+    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData) {
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> requestMap;
-        try {
-             requestMap = mapper.readValue(jsonData, Map.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
-        if(requestMap.containsKey("email") && requestMap.containsKey("ssn"))
-            return ResponseEntity.ok(userService.checkPresenceOfUser(requestMap.get("email"), requestMap.get("ssn")));
+        if (requestMap.containsKey("email") && requestMap.containsKey("ssn"))
+            return ResponseEntity.ok(userService.checkPresenceOfUser((String) requestMap.get("email"), (String) requestMap.get("ssn")));
         return ResponseEntity.badRequest().build();
     }
 
+    @GetMapping(API.EXIST_CUSTOMER_BY_MAIL)
+    public ResponseEntity checkExistCustomerMail(@RequestParam String email) {
+        if (email == null)
+            return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(userService.checkPresenceOfMail(email));
+    }
+
     @PostMapping(API.CREATE_CUSTOMER)
-    public ResponseEntity createCustomer(@RequestBody User user){
-        if(user == null)
+    public ResponseEntity createCustomer(@RequestBody User user) {
+        if (user == null)
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(userService.addNewClient(user));
     }
 
     @PostMapping(API.PLACE_ORDER)
-    public ResponseEntity placeOrder(@RequestBody String email){
-        return ResponseEntity.ok(orderService.addNewOrderFromBasket(basketService.emptyBasket(userService.getUserIdByEmail(email))));
+    public ResponseEntity placeOrder(@RequestBody String jsonData) {
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if (requestMap == null)
+            return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("email")) {
+            User user = userService.getUserByEmail((String) requestMap.get("email"));
+            Basket basket = user.getBasket();
+            basketService.dropBasket(user);
+            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket));
+        }
+        return ResponseEntity.badRequest().build();
     }
+
     @PostMapping(API.ADD_TO_BASKET)
-    public ResponseEntity addToBasket(@RequestBody Long productId, String email, Double quantity) {
-        System.out.println("CHECKPOINT: "+productId+" // "+email+" // "+quantity);
-        return ResponseEntity.ok(basketService.addProductToCart(productService.getProductById(productId),quantity, userService.getUserByEmail(email) ));
+    public ResponseEntity addToBasket(@RequestBody String jsonData) {
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if (requestMap == null)
+            return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("productId") && requestMap.containsKey("email") && requestMap.containsKey("quantity")) {
+            Product product = productService.getProductById(Long.valueOf((Integer) requestMap.get("productId")));
+            Double quantity = Double.valueOf((Integer) requestMap.get("quantity"));
+            User user = userService.getUserByEmail((String) requestMap.get("email"));
+            return ResponseEntity.ok(basketService.addProductToCart(product, quantity, user));
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping(API.GET_CART)
-    public ResponseEntity<List<Product>> getCart(@RequestBody  String email) {
-        return ResponseEntity.ok(basketService.getProductsInBasket(userService.getUserByEmail(email) ));
+    public ResponseEntity<List<Product>> getCart(@RequestParam String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(basketService.getProductsInBasket(user));
     }
 
     @GetMapping(API.GET_WALLET)
-    public ResponseEntity<Double> getWallet(@RequestBody  String email) {
-        return ResponseEntity.ok(userService.getWallet(email ));
+    public ResponseEntity<Double> getWallet(@RequestParam String email) {
+        return ResponseEntity.ok(userService.getWallet(email));
     }
 
     @PostMapping(API.TOP_UP)
-    public ResponseEntity topUp(@RequestBody  String email, double value) {
-        return ResponseEntity.ok(userService.topUp(email, value ));
+    public ResponseEntity topUp(@RequestBody String jsonData) {
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if (requestMap == null)
+            return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("email") && requestMap.containsKey("value")) {
+            String email = (String) requestMap.get("email");
+            Double value = Double.valueOf((Integer) requestMap.get("value"));
+            return ResponseEntity.ok(userService.topUp(email, value));
+        }
+        return ResponseEntity.badRequest().build();
+
     }
 
     @PostMapping(API.DELIVER_ORDER)
-    public ResponseEntity topUp(@RequestBody Long orderId) {
-        return ResponseEntity.ok(orderService.deliverOrder(orderId ));
+    public ResponseEntity deliverOrder(@RequestBody Long orderId) {
+        return ResponseEntity.ok(orderService.deliverOrder(orderId));
+    }
+
+    @DeleteMapping(API.DROP_ORDER)
+    public ResponseEntity dropOrder(@RequestBody String jsonData) {
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if (requestMap == null)
+            return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("email")) {
+            String email = (String) requestMap.get("email");
+            User user = userService.getUserByEmail(email);
+            if (user == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            basketService.dropBasket(user); //THAT'S HIM, OFFICER!
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping(API.TEST)
-    public ResponseEntity test(){
+    public ResponseEntity test() {
         return ResponseEntity.ok(productService.test());
     }
 
+    public Map<String, Object> extractMapFromJsonString(String jsonData) {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> requestMap;
+        try {
+            requestMap = mapper.readValue(jsonData, Map.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return requestMap;
+    }
 
 }

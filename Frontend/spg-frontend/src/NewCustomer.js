@@ -12,21 +12,21 @@ var pbkdf2 = require('pbkdf2');
 
 const errorModalMessage = {
     id: 1,
-    messageTitle: "500 INTERNAL SERVER ERROR",
+    messageTitle: "500 Internal server error",
     messageText: "Something went wrong during the server processment, please retry. (500 Internal Server Error)",
-    messageFooterButton: "exit"
+    messageFooterButton: "Exit"
 };
 const okModalMessage = {
     id: 2,
-    messageTitle: "CREATION SUCCESFULL",
+    messageTitle: "Creation successful",
     messageText: "Everything goes well, new client created.",
-    messageFooterButton: "back home"
+    messageFooterButton: "Home"
 };
 const conflictModalMessage = {
     id: 3,
-    messageTitle: "EMAIL AND/OR SSN ALREADY PRESENT",
+    messageTitle: "Email and/or SSN already present",
     messageText: "The inserted email is already present in the system, use another one.",
-    messageFooterButton: "modify data"
+    messageFooterButton: "Modify data"
 };
 
 function NewCustomer() {
@@ -94,7 +94,7 @@ function NewCustomer() {
 
     const ssnValidatorAndChecker = (ssn) => {
         setSsn(ssn);
-        if (ssn.length != 16)
+        if (ssn.length !== 16)
             setSsnValidator(false);
         else
             setSsnValidator(true);
@@ -120,7 +120,7 @@ function NewCustomer() {
             address: address,
             ssn: ssn,
             phoneNumber: phoneNumber,
-            role: "CUSTOMER",
+            role: "Customer",
             email: email,
             password: pbkdf2.pbkdf2Sync(password, crypto.getRandomValues(new Uint32Array(10)), 1, 32, 'sha512').toString('hex'),
         };
@@ -181,7 +181,7 @@ function NewCustomer() {
                 <Modal.Footer>
                     {
                         modalMessage.id === 3 ?
-                            <Button variant="danger" onClick={() => {
+                            <Button variant="secondary" onClick={() => {
                                 setModalShow(false);
                                 setEmail("");
                                 setPassword("");
@@ -194,7 +194,7 @@ function NewCustomer() {
                             </Button>
                             :
                             <Link to="/ShopEmployee">
-                                <Button variant="danger">
+                                <Button variant="secondary">
                                     {modalMessage.messageFooterButton}
                                 </Button>
                             </Link>
@@ -207,7 +207,7 @@ function NewCustomer() {
     return (
         <Container className="mt-2">
             <Row>
-                <h1>CREATE A NEW CUSTOMER</h1>
+                <h1>Create a new customer</h1>
             </Row>
             <Row clasName="mb-4">
                 <ModalComponent/>
@@ -248,7 +248,7 @@ function NewCustomer() {
                                                   onChange={(event) => passwordHandlerAndChekcer(event.target.value)}
                                                   required isInvalid={!passwordValidator}/>
                                     <Form.Control.Feedback type="invalid">
-                                        Please enter a password with at leat 10 chars.
+                                        Please enter a password with at leat 10 chars (1 lowercase, 1 uppercase and 1 number).
                                     </Form.Control.Feedback>
                                 </Form.Group>
 
@@ -321,26 +321,26 @@ function NewCustomer() {
                     {/*BUTTONs COMPONENT*/}
                     <Row>
                         <Col className="mt-4">
-                            <Link to="/ShopEmployee">
-                                <Button variant="danger" size="lg" className="mt-4">
-                                    BACK
-                                </Button>
-                            </Link>
-                        </Col>
-                        <Col className="mt-4">
                             {
                                 !(emailValidator === true && passwordValidator === true &&
                                     nameValidator === true && surnameValidator === true && addressValidator === true
                                     && ssnValidator === true && phoneNumberValidator === true) ?
                                     <Button variant="success" size="lg" className="mt-4" disabled>
-                                        SUBMIT
+                                        Submit
                                     </Button>
                                     :
                                     <Button variant="success" size="lg" className="mt-4"
                                             onClick={() => buttonHandlerSubmission()}>
-                                        SUBMIT
+                                        Submit
                                     </Button>
                             }
+                        </Col>
+                        <Col className="mt-4">
+                            <Link to="/ShopEmployee">
+                                <Button variant="secondary" size="lg" className="mt-4">
+                                    Back
+                                </Button>
+                            </Link>
                         </Col>
                     </Row>
                 </Form>
@@ -415,15 +415,8 @@ function NewCustomer() {
                     {errors.password && touched.password ? errors.password : null}
                     {errors.address && touched.address ? errors.address : null}
                     {errors.phoneNumber && touched.phoneNumber ? errors.phoneNumber : null}
-                </Form>
-            </div>
-            }
-        </Formik>
-        </>
-    );
-}
-
- >>>>>>> origin/be_db_link
- */
+                    </Form>
+                    </div>
+                    ... HAS BEEN TRUNCATED, RECOVER FROM PAST COMMITS **/
 
 export {NewCustomer}
