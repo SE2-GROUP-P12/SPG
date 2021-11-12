@@ -43,7 +43,7 @@ public class Product {
         this.price = price;
     }
 
-    public boolean moveToBasket(Double quantity) {
+    public Boolean moveFromAvailableToBasket(Double quantity) {
         if(this.quantityAvailable > quantity) {
             this.quantityAvailable -= quantity;
             this.quantityBaskets += quantity;
@@ -51,10 +51,28 @@ public class Product {
         }
         return false;
     }
-    public boolean moveFromBasket(Double quantity) {
-        if(this.quantityAvailable >quantity) {
+    public Boolean moveFromBasketToOrdered(Double quantity) {
+        if(this.quantityBaskets >quantity) {
+            this.quantityOrdered += quantity;
+            this.quantityBaskets -= quantity;
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean moveFromBasketToAvailable(Double quantity) {
+        if(this.quantityBaskets >quantity) {
             this.quantityAvailable += quantity;
             this.quantityBaskets -= quantity;
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean moveFromAvailableToOrdered(Double quantity) {
+        if(this.quantityAvailable >quantity) {
+            this.quantityAvailable -= quantity;
+            this.quantityOrdered += quantity;
             return true;
         }
         return false;

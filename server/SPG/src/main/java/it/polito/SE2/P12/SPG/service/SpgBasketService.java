@@ -24,11 +24,16 @@ public class SpgBasketService {
     }
 
     public void dropBasket(User user) {
-        Basket output = user.getBasket();
-        for (Product prod : output.getProds().keySet()) {
-            prod.moveFromBasket(output.getProds().get(prod));
+        this.dropBasket(user.getBasket());
+    }
+
+    public void dropBasket(Basket basket) {
+        for (Map.Entry<Product, Double> e : basket.getProductQuantityMap().entrySet()) {
+            Product p = e.getKey();
+            Double q = e.getValue();
+            p.moveFromBasketToAvailable(q);
         }
-        basketRepo.deleteById(output.getBasketId());
+        basketRepo.delete(basket);
     }
 
     public Map<String, String> addProductToCart(Product product, Double quantity, User customer) {

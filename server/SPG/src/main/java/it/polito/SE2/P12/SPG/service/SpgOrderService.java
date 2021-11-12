@@ -25,25 +25,32 @@ public class SpgOrderService {
         this.orderRepo = orderRepo;
     }
 
-    public boolean addNewOrder(Order order) {
+    public Boolean addNewOrder(Order order) {
         orderRepo.save(order);
         return true;
     }
 
-    public boolean addNewOrderFromBasket(Basket basket) {
+    public Boolean addNewOrderFromBasket(Basket basket) {
+        System.out.println(basket.getProductQuantityMap());
+        for (Map.Entry<Product, Double> e : basket.getProductQuantityMap().entrySet()) {
+            Product p = e.getKey();
+            Double q = e.getValue();
+            p.moveFromAvailableToOrdered(q);
+        }
         Order order = new Order(basket.getCust(), LocalDateTime.now(), basket.getProductQuantityMap());
         return addNewOrder(order);
     }
 
-    public boolean deliverOrder(Long userId) {
+    public Boolean deliverOrder(Long userId) {
         orderRepo.deleteByCust_UserId(userId);
         return true;
     }
-    public List<List<Product>> getOrdersProducts(Long userId){
-        List<List<Product>>output = new ArrayList<List<Product>>();
-        for (Order order : orderRepo.findAllByCust_UserId(userId)){
-            List <Product> list = order.getProductList();
-            for (Product orderItem: list) {
+
+    public List<List<Product>> getOrdersProducts(Long userId) {
+        List<List<Product>> output = new ArrayList<List<Product>>();
+        for (Order order : orderRepo.findAllByCust_UserId(userId)) {
+            List<Product> list = order.getProductList();
+            for (Product orderItem : list) {
                 orderItem.setQuantityAvailable(orderRepo.findByOrderId(order.getOrderId()).getProds().get(orderItem));
             }
             output.add(list);

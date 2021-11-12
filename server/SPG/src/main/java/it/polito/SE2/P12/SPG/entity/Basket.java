@@ -43,7 +43,7 @@ public class Basket {
 
     //Returns false if quantity is not available
     public Boolean addProduct(Product product, Double quantity) {
-        if(product.moveToBasket(quantity)) {
+        if(product.moveFromAvailableToBasket(quantity)) {
             prods.put(product, quantity);
             return true;
         }

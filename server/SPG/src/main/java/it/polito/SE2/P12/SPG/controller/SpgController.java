@@ -81,7 +81,7 @@ public class SpgController {
         if (requestMap.containsKey("email")) {
             User user = userService.getUserByEmail((String) requestMap.get("email"));
             Basket basket = user.getBasket();
-            basketService.dropBasket(user);
+            basketService.dropBasket(basket);
             return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket));
         }
         return ResponseEntity.badRequest().build();
