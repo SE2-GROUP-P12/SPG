@@ -151,6 +151,13 @@ public class SpgController {
         return ResponseEntity.badRequest().build();
     }
 
+    @GetMapping(API.GET_ORDERS)
+    public ResponseEntity<List<List<Product>>> getOrders(@RequestParam String email){
+        User user = userService.getUserByEmail(email);
+        if(user == null) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(orderService.getOrdersProducts(user.getUserId()));
+    }
+
     @GetMapping(API.TEST)
     public ResponseEntity test() {
         return ResponseEntity.ok(productService.test());

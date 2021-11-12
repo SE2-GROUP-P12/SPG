@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -33,5 +34,8 @@ public class Order {
         this.cust=cust;
         this.date = date;
         this.prods = prods;
+    }
+    public List<Product> getProductList() {
+        return new ArrayList<>(prods.keySet());
     }
 }
