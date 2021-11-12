@@ -30,16 +30,22 @@ async function browseProducts() {
     }
 }
 
-async function getCart() {
+
+async function getCart(data) {
     try {
-        const response = await fetch("/api/product/getCart");
-        const data = await response.json();
-        if (response.ok) {
-            return data;
-        }
+        const response = await fetch("/api/customer/getCart?email=" + data.email, {
+            method: 'GET',
+        });
+        let cart = await response.json();
+        if (response.ok)
+            return cart;
+
+        else
+            return undefined;
     }
     catch (err) {
         console.log(err);
+        return undefined;
     }
 }
 
@@ -61,24 +67,6 @@ async function addToCart(product) {
     }
 }
 
-async function getWallet(data)
-{
-    try{
-        const response = await fetch ("/api/customer/getWallet?email="+data.email, {
-            method: 'GET',
-        });
-        let wallet = await response.json();
-        if(response.ok)
-            return wallet;
-        else
-            return undefined;
-    }
-    catch(err) {
-        console.log(err);
-        return undefined;
-    }
-}
-
 async function topUp(data)
 {
     try{
@@ -94,24 +82,6 @@ async function topUp(data)
     }
     catch(err) {
         console.log("Some error occourred");
-        return undefined;
-    }
-}
-
-async function getCart(data)
-{
-    try{
-        const response = await fetch ("/api/customer/getCart?email="+data.email, {
-            method: 'GET',
-        });
-        let cart = await response.json();
-        if(response.ok)
-            return cart;
-        else
-            return undefined;
-    }
-    catch(err) {
-        console.log(err);
         return undefined;
     }
 }
@@ -233,7 +203,7 @@ async function customerExists(email, ssn) {
         })
         const data = await response.json();
         if (response.ok) {
-            return data;
+            return data.exist;
         }
     }
     catch (err) {
@@ -261,6 +231,6 @@ async function addCustomer(jsonObj) {
     }
 }
 
-const API = {browseProducts, placeOrder, addToCart, getWallet, topUp, getCart, customerExistsByMail, dropOrder, getOrdersByEmail, deliverOrder, addCustomer};
+const API = {browseProducts, placeOrder, addToCart, getWallet, topUp, getCart, customerExists, customerExistsByMail, dropOrder, getOrdersByEmail, deliverOrder, addCustomer};
 export {API}
 
