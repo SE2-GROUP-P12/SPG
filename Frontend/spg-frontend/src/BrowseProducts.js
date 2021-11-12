@@ -36,21 +36,24 @@ function BrowseProducts() {
 
         return (
             <>
-                <Modal show={show} onHide={handleClose}>
+                <Modal show={show} onHide={()=>{handleClose(); setShowError(null); setShowSuccess(null);}}>
                     <Modal.Header closeButton>
                         <Modal.Title>Add product to cart</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent">
                             <img src={fruit} alt="fruit" style={{width: '150px', height: '150px'}}/>
-                            <Row> {props.product.name} : {props.product.quantity}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Row>
+                            <Row> {props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Row>
                             <Row>
                                 <Formik
                                     initialValues={{amount: 0}}
-                                    validationSchema={Yup.object({amount: Yup.number().min(0).max(props.product.quantity).required('Amount required!')})}
+                                    validationSchema={Yup.object({amount: Yup.number().min(0).max(props.product.quantityAvailable).required('Amount required!')})}
                                     onSubmit={async (values) => {
-                                        props.product.amount=values.amount;
-                                        let outcome = await API.addToCart(JSON.stringify(props.product));
+                                        let outcome = await API.addToCart({
+                                            "productId" : props.product.productId,
+                                            "email" : 'mario.rossi@gmail.com',
+                                            "quantity" : values.amount
+                                        });
                                         if(outcome===true)
                                             setShowSuccess("Product added successfully");
                                         else    
@@ -61,7 +64,7 @@ function BrowseProducts() {
                                 >
                                     {({values, errors, touched}) =>
                                         <Form>
-                                            Amount: <Field type="number" id="amount" name="amount" max={props.product.quantity} min={0}/> {props.product.unitOfMeasurement}
+                                            Amount: <Field type="number" id="amount" name="amount" max={props.product.quantityAvailable} min={0}/> {props.product.unitOfMeasurement}
                                             <br/>
                                             <Button style={{margin: '20px'}} type="submit" variant="success">Add to
                                                 cart</Button>
@@ -75,7 +78,7 @@ function BrowseProducts() {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="secondary" onClick={()=>{ handleClose(); setShowError(null); setShowSuccess(null); }}>
                             Close
                         </Button>
                     </Modal.Footer>
@@ -84,7 +87,7 @@ function BrowseProducts() {
                     <Row>
                         <Col xs={2}> <img src={fruit} alt="fruit" style={{width: '50px', heigth: '50px'}}/> </Col>
                         <Col
-                            xs={8}>{props.product.name} : {props.product.quantity}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Col>
+                            xs={8}>{props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Col>
                         <Col xs={2}><Button variant="success" onClick={handleShow}> Add to cart </Button> </Col>
                     </Row>
                 </li>

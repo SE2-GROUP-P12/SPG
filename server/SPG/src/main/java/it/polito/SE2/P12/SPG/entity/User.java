@@ -1,8 +1,6 @@
 package it.polito.SE2.P12.SPG.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -14,7 +12,8 @@ import javax.persistence.*;
                 @UniqueConstraint(name = "email_unique", columnNames = "email")
         }
 )
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 //@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -39,7 +38,12 @@ public class User {
     private String email;
     @Column(name = "password" /*, nullable = false*/)
     private String password;
+    @Column(name = "wallet")
     private double wallet=0.00;
+    @Column(name = "active")
+    private Boolean active;
+    @OneToOne(mappedBy = "cust")
+    private Basket basket;
 
     public User(String name, String surname, String ssn,
                 String phoneNumber, String role,
@@ -51,5 +55,28 @@ public class User {
         this.role = role;
         this.email = email;
         this.password = password;
+        this.active = false;
+    }
+
+    public Basket getBasket(){
+        if(this.basket == null)
+            this.basket = new Basket(this);
+        return this.basket;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", ssn='" + ssn + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", role='" + role + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", wallet=" + wallet +
+                ", basket=" + (basket==null?"null":this.basket.getBasketId()) +
+                '}';
     }
 }

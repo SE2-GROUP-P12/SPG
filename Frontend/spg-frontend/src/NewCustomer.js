@@ -5,27 +5,28 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-
+import {useState} from "react";
+import {Link} from "react-router-dom";
+//pbkdf2 password handling
+var pbkdf2 = require('pbkdf2');
 
 const errorModalMessage = {
     id: 1,
-    messageTitle: "500 INTERNAL SERVER ERROR",
+    messageTitle: "500 Internal server error",
     messageText: "Something went wrong during the server processment, please retry. (500 Internal Server Error)",
-    messageFooterButton: "exit"
+    messageFooterButton: "Exit"
 };
 const okModalMessage = {
     id: 2,
-    messageTitle: "CREATION SUCCESFULL",
+    messageTitle: "Creation successful",
     messageText: "Everything goes well, new client created.",
-    messageFooterButton: "back home"
+    messageFooterButton: "Home"
 };
 const conflictModalMessage = {
     id: 3,
-    messageTitle: "EMAIL AND/OR SSN ALREADY PRESENT",
+    messageTitle: "Email and/or SSN already present",
     messageText: "The inserted email is already present in the system, use another one.",
-    messageFooterButton: "modify data"
+    messageFooterButton: "Modify data"
 };
 
 function NewCustomer() {
@@ -48,7 +49,7 @@ function NewCustomer() {
     //Modal operations state
     const [modalShow, setModalShow] = useState(false);
     const [modalMessage, setModalMessage] = useState({});
-    //Validators rarrow function for each field
+    //Validators arrow function for each field
     const emailHandlerAndChecker = (email) => {
         setEmail(email);
         if (email.includes("@") && email.includes("."))
@@ -93,7 +94,7 @@ function NewCustomer() {
 
     const ssnValidatorAndChecker = (ssn) => {
         setSsn(ssn);
-        if (ssn.length != 16)
+        if (ssn.length !== 16)
             setSsnValidator(false);
         else
             setSsnValidator(true);
@@ -119,9 +120,9 @@ function NewCustomer() {
             address: address,
             ssn: ssn,
             phoneNumber: phoneNumber,
-            role: "CUSTOMER",
+            role: "Customer",
             email: email,
-            password: password, //NOT IN CLEAR!!!!!
+            password: pbkdf2.pbkdf2Sync(password, crypto.getRandomValues(new Uint32Array(10)), 1, 32, 'sha512').toString('hex'),
         };
         return JSON.stringify(requestBodyObject);
     }
@@ -163,6 +164,7 @@ function NewCustomer() {
     }
     // ------------------------------------------------------------
     */
+
 
     // Submission by PEPPE
     async function checkCustomer () {
@@ -214,7 +216,7 @@ function ModalComponent() {
             <Modal.Footer>
                 {
                     modalMessage.id === 3 ?
-                        <Button variant="danger" onClick={() => {
+                        <Button variant="secondary" onClick={() => {
                             setModalShow(false);
                             setEmail("");
                             setPassword("");
@@ -237,54 +239,53 @@ function ModalComponent() {
     )
 }
 
-return (
-    <Container className="mt-2">
-        <Row>
-            <h1>CREATE A NEW CUSTOMER</h1>
-        </Row>
-        <Row clasName="mb-4">
-            <ModalComponent />
-            <Form className="mt-4">
-                <Row className="mb-3">
-                    {/*EMAIL FIELD*/}
-                    {
-                        email.length === 0 ?
-                            <Form.Group as={Col} controlId="email">
-                                <Form.Label>Email*</Form.Label>
-                                <Form.Control type="email" placeholder="Enter email"
-                                    onChange={(event) => emailHandlerAndChecker(event.target.value)}
-                                    value={email} />
-                            </Form.Group>
-                            :
-                            <Form.Group as={Col} controlId="email" hasValidation>
-                                <Form.Label>Email*</Form.Label>
-                                <Form.Control type="email" placeholder="Enter email"
-                                    onChange={(event) => emailHandlerAndChecker(event.target.value)}
-                                    value={email} required isInvalid={!emailValidator} />
-                                <Form.Control.Feedback type="invalid">
-                                    Please enter a valid email.
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                    }
-                    {/*PASSWORD FIELD*/}
-                    {
-                        password.length === 0 ?
-                            <Form.Group as={Col} controlId="password">
-                                <Form.Label>Password*</Form.Label>
-                                <Form.Control type="password" placeholder="Password" value={password}
-                                    onChange={(event) => passwordHandlerAndChekcer(event.target.value)} />
-                            </Form.Group>
-                            :
-                            <Form.Group as={Col} controlId="password">
-                                <Form.Label>Password*</Form.Label>
-                                <Form.Control type="password" placeholder="Password" value={password}
-                                    onChange={(event) => passwordHandlerAndChekcer(event.target.value)}
-                                    required isInvalid={!passwordValidator} />
-                                <Form.Control.Feedback type="invalid">
-                                    Please enter a password with at leat 10 chars.
-                                </Form.Control.Feedback>
-                            </Form.Group>
-
+    return (
+        <Container className="mt-2">
+            <Row>
+                <h1>Create a new customer</h1>
+            </Row>
+            <Row clasName="mb-4">
+                <ModalComponent/>
+                <Form className="mt-4">
+                    <Row className="mb-3">
+                        {/*EMAIL FIELD*/}
+                        {
+                            email.length === 0 ?
+                                <Form.Group as={Col} controlId="email">
+                                    <Form.Label>Email*</Form.Label>
+                                    <Form.Control type="email" placeholder="Enter email"
+                                                  onChange={(event) => emailHandlerAndChecker(event.target.value)}
+                                                  value={email}/>
+                                </Form.Group>
+                                :
+                                <Form.Group as={Col} controlId="email" hasValidation>
+                                    <Form.Label>Email*</Form.Label>
+                                    <Form.Control type="email" placeholder="Enter email"
+                                                  onChange={(event) => emailHandlerAndChecker(event.target.value)}
+                                                  value={email} required isInvalid={!emailValidator}/>
+                                    <Form.Control.Feedback type="invalid">
+                                        Please enter a valid email.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                        }
+                        {/*PASSWORD FIELD*/}
+                        {
+                            password.length === 0 ?
+                                <Form.Group as={Col} controlId="password">
+                                    <Form.Label>Password*</Form.Label>
+                                    <Form.Control type="password" placeholder="Password" value={password}
+                                                  onChange={(event) => passwordHandlerAndChekcer(event.target.value)}/>
+                                </Form.Group>
+                                :
+                                <Form.Group as={Col} controlId="password">
+                                    <Form.Label>Password*</Form.Label>
+                                    <Form.Control type="password" placeholder="Password" value={password}
+                                                  onChange={(event) => passwordHandlerAndChekcer(event.target.value)}
+                                                  required isInvalid={!passwordValidator}/>
+                                    <Form.Control.Feedback type="invalid">
+                                        Please enter a password with at leat 10 chars (1 lowercase, 1 uppercase and 1 number).
+                                    </Form.Control.Feedback>
+                                </Form.Group>
                     }
                 </Row>
                 <Row className="mb-3 mt-4 ">
@@ -369,17 +370,46 @@ return (
                                     SUBMIT
                                 </Button>
                                 :
-                                <Button variant="success" size="lg" className="mt-4"
-                                    onClick={() => buttonHandlerSubmission()}>
-                                    SUBMIT
-                                </Button>
+                                <Form.Group as={Col} controlId="phoneNumber">
+                                    <Form.Label>Phone Number</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter phone number" value={phoneNumber}
+                                                  onChange={(event) => phoneNumberValidatorAndChecker(event.target.value)}
+                                                  required isInvalid={!phoneNumberValidator}/>
+                                    <Form.Control.Feedback type="invalid">
+                                        Please enter a valid phone number.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
                         }
-                    </Col>
-                </Row>
-            </Form>
-        </Row>
-    </Container>
-)
+                    </Row>
+                    {/*BUTTONs COMPONENT*/}
+                    <Row>
+                        <Col className="mt-4">
+                            {
+                                !(emailValidator === true && passwordValidator === true &&
+                                    nameValidator === true && surnameValidator === true && addressValidator === true
+                                    && ssnValidator === true && phoneNumberValidator === true) ?
+                                    <Button variant="success" size="lg" className="mt-4" disabled>
+                                        Submit
+                                    </Button>
+                                    :
+                                    <Button variant="success" size="lg" className="mt-4"
+                                            onClick={() => buttonHandlerSubmission()}>
+                                        Submit
+                                    </Button>
+                            }
+                        </Col>
+                        <Col className="mt-4">
+                            <Link to="/ShopEmployee">
+                                <Button variant="secondary" size="lg" className="mt-4">
+                                    Back
+                                </Button>
+                            </Link>
+                        </Col>
+                    </Row>
+                </Form>
+            </Row>
+        </Container>
+    )
 }
 
 /**
@@ -448,15 +478,8 @@ return (
                     {errors.password && touched.password ? errors.password : null}
                     {errors.address && touched.address ? errors.address : null}
                     {errors.phoneNumber && touched.phoneNumber ? errors.phoneNumber : null}
-                </Form>
-            </div>
-            }
-        </Formik>
-        </>
-    );
-}
-
- >>>>>>> origin/be_db_link
- */
+                    </Form>
+                    </div>
+                    ... HAS BEEN TRUNCATED, RECOVER FROM PAST COMMITS **/
 
 export { NewCustomer }

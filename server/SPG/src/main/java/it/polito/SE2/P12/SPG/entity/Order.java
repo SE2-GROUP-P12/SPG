@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Data
@@ -23,10 +24,12 @@ public class Order {
     private User cust;
     @Column(name="date")
     private LocalDateTime date;
-    @OneToMany
-    private List<Product> prods;
+    @ElementCollection
+    @MapKeyColumn(name="product_id")
+    @Column(name="quantity")
+    private Map<Product, Double> prods;
 
-    public Order(User cust, LocalDateTime date, List<Product> prods) {
+    public Order(User cust, LocalDateTime date, Map<Product, Double> prods) {
         this.cust=cust;
         this.date = date;
         this.prods = prods;
