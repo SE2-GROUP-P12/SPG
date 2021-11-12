@@ -3,6 +3,7 @@ package it.polito.SE2.P12.SPG.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(
@@ -44,6 +45,8 @@ public class User {
     private Boolean active;
     @OneToOne(mappedBy = "cust")
     private Basket basket;
+    @OneToMany(mappedBy = "cust")
+    private List<Order> orderList;
 
     public User(String name, String surname, String ssn,
                 String phoneNumber, String role,

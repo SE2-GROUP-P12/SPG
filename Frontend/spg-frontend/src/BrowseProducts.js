@@ -20,12 +20,12 @@ function BrowseProducts() {
 
     const _browseProducts = async () => {
         const data = await API.browseProducts();
-        setProducts(data);
-        setLoadCompleted(true);
+        await setProducts(data);
     }
     
-    useEffect(async() => {
+    useEffect(async () => {
         await _browseProducts();
+        setLoadCompleted(true);
     }, []);
 
     function ProductEntry(props) {
