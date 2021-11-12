@@ -20,11 +20,11 @@ public class SpgUserService {
 
     public void populateDB(){
         User temp1 = new User ("Mario","Rossi","RSSMRA00D12N376V","01234567892",
-                "customer ","mario.rossi@gmail.com",null);
+                "customer ","mario.rossi@gmail.com","password");
         User temp2 = new User ("Paolo","Bianchi","BNCPLA00D12N376V","01234567892",
-                "customer ","paolo.bianchi@gmail.com",null);
+                "customer ","paolo.bianchi@gmail.com","password");
         User temp3 = new User ("Francesco","Conte","CNTFRN00D12N376V","01234567892",
-                "employee ","francesco.conte@gmail.com",null);
+                "employee ","francesco.conte@gmail.com", "password");
         if(userRepo.findUserByEmail("mario.rossi@gmail.com")==null)userRepo.save(temp1);
         if(userRepo.findUserByEmail("paolo.bianchi@gmail.com")==null)userRepo.save(temp2);
         if(userRepo.findUserByEmail("francesco.conte@gmail.com")==null)userRepo.save(temp3);
@@ -51,6 +51,7 @@ public class SpgUserService {
     }
     public Map<String, Boolean> checkPresenceOfUser(String email, String ssn){
         Map<String, Boolean> response = new HashMap<>();
+        System.out.println("Here, ssn: " + ssn + ", email : " + email);
         if (checkPresenceOfMail(email) && checkPresenceOfSSN(ssn))
             response.put("exist", false);
         else

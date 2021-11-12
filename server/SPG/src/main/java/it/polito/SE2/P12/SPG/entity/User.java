@@ -41,6 +41,8 @@ public class User {
     private String password;
     @Column(name = "wallet")
     private double wallet=0.00;
+    @Column(name = "active")
+    private Boolean active;
 
     public User(String name, String surname, String ssn,
                 String phoneNumber, String role,
@@ -52,5 +54,6 @@ public class User {
         this.role = role;
         this.email = email;
         this.password = password;
+        this.active = false;
     }
 }

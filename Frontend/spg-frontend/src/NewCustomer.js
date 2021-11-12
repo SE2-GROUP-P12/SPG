@@ -7,7 +7,8 @@ import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container";
 import {useState} from "react";
 import {Link} from "react-router-dom";
-
+//pbkdf2 password handling
+var pbkdf2 = require('pbkdf2');
 
 const errorModalMessage = {
     id: 1,
@@ -48,7 +49,7 @@ function NewCustomer() {
     //Modal operations state
     const [modalShow, setModalShow] = useState(false);
     const [modalMessage, setModalMessage] = useState({});
-    //Validators rarrow function for each field
+    //Validators arrow function for each field
     const emailHandlerAndChecker = (email) => {
         setEmail(email);
         if (email.includes("@") && email.includes("."))
@@ -121,7 +122,7 @@ function NewCustomer() {
             phoneNumber: phoneNumber,
             role: "CUSTOMER",
             email: email,
-            password: password, //NOT IN CLEAR!!!!!
+            password: pbkdf2.pbkdf2Sync(password, crypto.getRandomValues(new Uint32Array(10)), 1, 32, 'sha512').toString('hex'),
         };
         return JSON.stringify(requestBodyObject);
     }
