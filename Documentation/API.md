@@ -79,6 +79,7 @@
   - response body content:
     - 200 OK
     - 500 SERVER ERROR
+
 - GET `/api/product/browseProducts` //list sellable products
   - response body content: 
     - 200 OK
@@ -106,6 +107,48 @@
       }
       ```
     - 404 NOT FOUND
+//TODO add customer id to request body
+    - POST `/api/product/addToCart` //add product to cart
+      - request body content:
+        ```json
+        {
+          "productId":"1",
+          "name": "Apples",
+          "producer" : "Tonio Cartonio s.p.a.",
+          "unit":"kg",
+          "unit price" : "1.99",
+          "amount" : "1" //amount i wish to order
+        }
+        ```
+      - response body content
+        - 200 OK
+        - 500 SERVER ERROR
+          //TODO add customer id to request body
+- GET `/api/customer/getCart` //list products inside current cart
+  - response body content:
+    - 200 OK
+      ```json
+      {"products":[
+        {
+          "productId":"1",
+          "name": "Apples",
+          "producer" : "Tonio Cartonio s.p.a.",
+          "unit":"kg",
+          "unit price" : "1.99",
+          "amount" : "10" //ordered amount 
+        },
+        {
+          "productId":"2",
+          "name": "Eggs",
+          "producer" : "KFC farms", 
+          "unit":"unit",
+          "unit price" : "0.10",
+          "amount" : "6" 
+        }
+      ]}
+      ```
+    - 404 NOT FOUND
+
 - GET `/api/customer/getWallet` //get customer's wallet
   - request body content:
     ```json
@@ -151,6 +194,16 @@
   - response body content:
     - 200 OK
     - 404 NOT FOUND
+
+- DELETE `/api/customer/dropOrder`
+  - request body content: 
+    ```json 
+    {"email":"customer@gmail.com"}
+    ```
+  - response body content:
+    - 200 OK 
+    - 500 Internal server error
+
 - GET `/api/customer/browseOrders` //browse all orders to be delivered
   - response body content:
     - 200 OK:
@@ -180,12 +233,12 @@
                   "amount" : "6" 
                 }
               ] 
-          },
-          {//...}
+          }
         ]
       }
       ```
     - 404 NOT FOUND
+    
 - PUT `/api/customer/deliverOrder` //mark order as delivered
   - request body content:
     ```json
@@ -196,3 +249,9 @@
   - response body content:
     - 200 OK
     - 404 NOT FOUND
+
+- GET `/api/customer/getOrdersByEmail?email=mario.rossi@gmail.com` //get all the orders of a single customer using its email
+  - response body content:
+    - 200 OK
+    - 404 NOT FOUND
+
