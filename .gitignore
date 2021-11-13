@@ -7,8 +7,6 @@
 
 server/SPG/HELP.md
 server/SPG/target/
-server/SPG/.mvn/
-!server/SPG/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
