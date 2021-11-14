@@ -51,11 +51,11 @@ public class SpgUserService {
     }
     public Map<String, Boolean> checkPresenceOfUser(String email, String ssn){
         Map<String, Boolean> response = new HashMap<>();
-        System.out.println("Here, ssn: " + ssn + ", email : " + email);
-        if (checkPresenceOfMail(email) && checkPresenceOfSSN(ssn))
-            response.put("exist", false);
-        else
+        //System.out.println("Here, ssn: " + ssn + ", email : " + email);
+        if (checkPresenceOfMail(email) || checkPresenceOfSSN(ssn))
             response.put("exist", true);
+        else
+            response.put("exist", false);
         return response;
     }
 
@@ -69,7 +69,8 @@ public class SpgUserService {
 
     public Map<String, String> addNewClient(User user) {
         Map<String, String> response = new HashMap<>();
-        if(!userRepo.existsByEmail(user.getEmail()) || !userRepo.existsBySsn(user.getSsn())){
+        //Boolean tmp = userRepo.existsByEmail(user.getEmail());
+        if(userRepo.existsByEmail(user.getEmail()) || userRepo.existsBySsn(user.getSsn())){
             response.put("responseMessage", "200-OK-(Customer already present)");
             return response;
         }

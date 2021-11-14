@@ -15,6 +15,26 @@ import java.util.Map;
 
 @SpringBootTest
 public class UserControllerTest {
+    private static final String customerJsonFormat = "{" +
+            "  \"name\": \"fooName1\"," +
+            "  \"surname\": \"fooSurname1\"," +
+            "  \"ssn\": \"ssn_aaaaaaaaaaaa\"," +
+            "  \"phoneNumber\": \"\"," +
+            "  \"role\": \"ROLE_CUSTOMER\"," +
+            "  \"email\": \"foouser@foomail.com\"," +
+            "  \"password\": \"password\"" +
+            "}";
+
+    private static final String customerJsonFormat1 = "{" +
+            "  \"name\": \"fooName1\"," +
+            "  \"surname\": \"fooSurname1\"," +
+            "  \"ssn\": \"ssn_aaaaaaaaaabb\"," +
+            "  \"phoneNumber\": \"\"," +
+            "  \"role\": \"ROLE_CUSTOMER\"," +
+            "  \"email\": \"foouser1@foomail.com\"," +
+            "  \"password\": \"password\"" +
+            "}";
+
     @Autowired
     private SpgController spgController;
     @Autowired
@@ -23,7 +43,7 @@ public class UserControllerTest {
     @BeforeEach
     public void initContext() {
         userRepo.deleteAll();
-        User fooUser1 = new User("fooName1", "fooSurname1", "ssn_aaaaaaaaaaaa", "", "CUSTOMER", "foouser@foomail.com", "password1223ABC");
+        User fooUser1 = new User("fooName1", "fooSurname1", "ssn_aaaaaaaaaaaa", "", "ROLE_CUSTOMER", "foouser@foomail.com", "password");
         userRepo.save(fooUser1);
     }
 
@@ -42,9 +62,8 @@ public class UserControllerTest {
 
     @Test
     public void testValidCustomerCreation() {
-        User customer1 = new User("fooName1", "fooSurname1", "ssn_aaaaaaaaazzz", "", "CUSTOMER", "customer1@foomail.com", "password1223ABC");
         ResponseEntity response;
-        response = spgController.createCustomer(customer1);
+        response = spgController.createCustomer(customerJsonFormat1);
         Map<String, String> responseMap = (Map<String, String>) response.getBody();
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Assertions.assertEquals("200-OK-(Customer added successfully)", responseMap.get("responseMessage"));
@@ -52,9 +71,8 @@ public class UserControllerTest {
 
     @Test
     public void alreadyPresentCustomerMailHandling() {
-        User customer1 = new User("fooName1", "fooSurname1", "ssn_aaaaaaaaaaaa", "", "CUSTOMER", "customer1@foomail.com", "password1223ABC");
         ResponseEntity response;
-        response = spgController.createCustomer(customer1);
+        response = spgController.createCustomer(customerJsonFormat);
         Map<String, String> responseMap = (Map<String, String>) response.getBody();
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Assertions.assertEquals("200-OK-(Customer already present)", responseMap.get("responseMessage"));
@@ -62,18 +80,17 @@ public class UserControllerTest {
 
     @Test
     public void alreadyPresentCustomerSsnHandling() {
-        User customer1 = new User("fooName1", "fooSurname1", "ssn_aaaaaaaaaaaa", "", "CUSTOMER", "customer1@foomail.com", "password1223ABC");
         ResponseEntity response;
-        response = spgController.createCustomer(customer1);
+        response = spgController.createCustomer(customerJsonFormat);
         Map<String, String> responseMap = (Map<String, String>) response.getBody();
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Assertions.assertEquals("200-OK-(Customer already present)", responseMap.get("responseMessage"));
     }
 
     @Test
-    public void testNullCustomerCheck() {
+    public void testEmptyCustomerCheck() {
         ResponseEntity response;
-        response = spgController.checkExistCustomerMailAndSsn(null);
+        response = spgController.checkExistCustomerMailAndSsn("");
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -91,5 +108,13 @@ public class UserControllerTest {
         String jsonData = "foo-data <> not-a-json-structure!";
         response = spgController.checkExistCustomerMailAndSsn(jsonData);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void testCustomerExistsByEmail(){
+        String email = "admin";
+        ResponseEntity response;
+        response = spgController.checkExistCustomerMail(email);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
 }

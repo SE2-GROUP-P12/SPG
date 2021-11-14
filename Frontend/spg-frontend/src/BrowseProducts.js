@@ -14,11 +14,21 @@ import {Link} from "react-router-dom";
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 
+const base64 = require("base-64");
+
 function BrowseProducts() {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
+
     useEffect(() => {
-        fetch('/api/product/all').then(response => {
+        fetch('/api/product/all'/*, {
+            method : 'GET',
+            headers : {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + base64.encode('admin' + ":" + 'password')
+            }
+        }*/).then(response => {
             if (response.ok) {
                 response.json().then((body) => {
                     setProducts([...body]);
@@ -58,7 +68,7 @@ function BrowseProducts() {
                                         });
                                         if(outcome===true)
                                             setShowSuccess("Product added successfully");
-                                        else    
+                                        else
                                             setShowError("Something went wrong");
                                     }}
                                     validateOnChange={false}
