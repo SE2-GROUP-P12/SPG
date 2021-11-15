@@ -12,4 +12,6 @@ public class TemplateController {
     public String getLoginView(){
         return "loginSPG"; //As in template but without .html extension
     }
+
+
 }

@@ -20,6 +20,8 @@ public class Product {
     private Long productId;
     @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "producer", nullable = false)
+    private String producer;
     @Column(name = "unit_of_measurement", nullable = false)
     private String unitOfMeasurement;
     @Column(name = "total_quantity", nullable = false)
@@ -30,51 +32,67 @@ public class Product {
     private Double quantityBaskets;
     @Column(name = "quantity_ordered", nullable = false)
     private Double quantityOrdered;
+    @Column(name = "quantity_delivered", nullable = false)
+    private Double quantityDelivered;
     @Column(name = "price", nullable = false)
-    private double price;
+    private Double price;
 
-    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price) {
+    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price) {
         this.name = name;
+        this.producer = producer;
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
         this.price = price;
     }
 
     public Boolean moveFromAvailableToBasket(Double quantity) {
-        if(this.quantityAvailable > quantity) {
-            this.quantityAvailable -= quantity;
-            this.quantityBaskets += quantity;
-            return true;
-        }
-        return false;
+        if(this.quantityAvailable < quantity)
+            return false;
+        this.quantityAvailable -= quantity;
+        this.quantityBaskets += quantity;
+        return true;
     }
     public Boolean moveFromBasketToOrdered(Double quantity) {
-        if(this.quantityBaskets >quantity) {
-            this.quantityOrdered += quantity;
-            this.quantityBaskets -= quantity;
-            return true;
-        }
-        return false;
+        if(this.quantityBaskets < quantity)
+            return false;
+        this.quantityOrdered += quantity;
+        this.quantityBaskets -= quantity;
+        return true;
     }
 
     public Boolean moveFromBasketToAvailable(Double quantity) {
-        if(this.quantityBaskets >quantity) {
-            this.quantityAvailable += quantity;
-            this.quantityBaskets -= quantity;
-            return true;
-        }
-        return false;
+        if(this.quantityBaskets < quantity)
+            return false;
+        this.quantityAvailable += quantity;
+        this.quantityBaskets -= quantity;
+        return true;
     }
 
     public Boolean moveFromAvailableToOrdered(Double quantity) {
-        if(this.quantityAvailable >quantity) {
-            this.quantityAvailable -= quantity;
-            this.quantityOrdered += quantity;
-            return true;
-        }
-        return false;
+        if(this.quantityAvailable < quantity)
+            return false;
+        this.quantityAvailable -= quantity;
+        this.quantityOrdered += quantity;
+        return true;
+    }
+
+    public Boolean moveFromAvailableToDelivered(Double quantity) {
+        if(this.quantityAvailable < quantity)
+            return false;
+        this.quantityAvailable -= quantity;
+        this.quantityDelivered += quantity;
+        return true;
+    }
+
+    public Boolean moveFromOrderedToDelivered(Double quantity) {
+        if(this.quantityOrdered < quantity)
+            return false;
+        this.quantityOrdered -= quantity;
+        this.quantityDelivered += quantity;
+        return true;
     }
 }

@@ -3,6 +3,7 @@ package it.polito.SE2.P12.SPG.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.Basket;
+import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
@@ -15,10 +16,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Console;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * NOTE: in order to granted access to an api based on the user roles add roles into the 'PreAuthorization' annotation as follows:
+ * PreAuthorize("hasAnyRole('ROLE_<role1>', 'ROLE_<role2>, ...)"). Possible available roles are provided into /security/ApplicationUserRole enum.
+ */
 
 @RestController
 @RequestMapping(value = API.HOME,  produces = "application/json", consumes = "application/json")
@@ -28,7 +32,6 @@ public class SpgController {
     private final SpgUserService userService;
     private final SpgOrderService orderService;
     private final SpgBasketService basketService;
-
 
     @Autowired
     public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService) {
@@ -46,7 +49,7 @@ public class SpgController {
     }
 
     @GetMapping(API.ALL_PRODUCT)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<List<Product>> getAllProduct() {
         return ResponseEntity.ok(productService.getAllProduct());
     }
@@ -93,6 +96,7 @@ public class SpgController {
     }
 
     @PostMapping(API.PLACE_ORDER)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity placeOrder(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
@@ -107,6 +111,7 @@ public class SpgController {
     }
 
     @PostMapping(API.ADD_TO_BASKET)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity addToBasket(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
@@ -121,6 +126,7 @@ public class SpgController {
     }
 
     @GetMapping(API.GET_CART)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<List<Product>> getCart(@RequestParam String email) {
         User user = userService.getUserByEmail(email);
         if (user == null) {
@@ -130,11 +136,13 @@ public class SpgController {
     }
 
     @GetMapping(API.GET_WALLET)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<Double> getWallet(@RequestParam String email) {
         return ResponseEntity.ok(userService.getWallet(email));
     }
 
     @PostMapping(API.TOP_UP)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity topUp(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
@@ -148,11 +156,13 @@ public class SpgController {
     }
 
     @PostMapping(API.DELIVER_ORDER)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity deliverOrder(@RequestBody Long orderId) {
         return ResponseEntity.ok(orderService.deliverOrder(orderId));
     }
 
     @DeleteMapping(API.DROP_ORDER)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity dropOrder(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
@@ -170,10 +180,15 @@ public class SpgController {
     }
 
     @GetMapping(API.GET_ORDERS)
-    public ResponseEntity<List<List<Product>>> getOrders(@RequestParam String email){
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity getOrders(@RequestParam String email){
         User user = userService.getUserByEmail(email);
         if(user == null) return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(orderService.getOrdersProducts(user.getUserId()));
+        String response = orderService.getOrdersProductsJson(user.getUserId());
+        if(response == null)
+            return ResponseEntity.badRequest().build();
+        System.out.println(response);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(API.TEST)
