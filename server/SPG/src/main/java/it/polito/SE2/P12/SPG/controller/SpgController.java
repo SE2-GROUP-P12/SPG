@@ -193,7 +193,9 @@ public class SpgController {
 
     @GetMapping(API.TEST)
     public ResponseEntity test() {
-        return ResponseEntity.ok(productService.test());
+        double response = userService.topUp("mario.rossi@gmail.com", 12.70);
+        System.out.println("top up quantity is: "+response);
+        return ResponseEntity.ok(response);
     }
 
     public Map<String, Object> extractMapFromJsonString(String jsonData) {
