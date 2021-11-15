@@ -31,8 +31,9 @@ function BrowseProducts() {
                 response.json().then((body) => {
                     setProducts([...body]);
                 });
-            } else
-                console.log("Error orrcuored -> handle redirection") //TODO: to implement redirection in case of srver errors.
+            } else{
+                window.location.href = "http://localhost:3000/Unauthorized"
+            }
             setLoadCompleted(true);
         })
     }, []);

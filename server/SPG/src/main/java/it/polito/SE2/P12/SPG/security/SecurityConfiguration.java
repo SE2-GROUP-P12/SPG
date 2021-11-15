@@ -2,13 +2,17 @@ package it.polito.SE2.P12.SPG.security;
 
 import it.polito.SE2.P12.SPG.auth.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -28,11 +32,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                //.cors().disable()
+                .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
+                //.antMatchers("/api/product/all").permitAll()
                 .anyRequest()
                 .authenticated()
+                .and()
+                .exceptionHandling()//.accessDeniedHandler(restAccessDeniedHandler())
+                .authenticationEntryPoint(restAuthEntryPoint())
                 .and()
                 .formLogin()
                 .loginPage("/login").permitAll()
@@ -41,12 +49,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutSuccessUrl("http://localhost:3000/")
                 .deleteCookies("JSESSIONID").invalidateHttpSession(true);
+
+    }
+
+
+    @Bean
+    public RestAccessDeniedHandler restAccessDeniedHandler() {
+        return new RestAccessDeniedHandler();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsServiceImpl);
     }
+
+    @Bean
+    public RestAuthEntryPoint restAuthEntryPoint() {
+        return new RestAuthEntryPoint();
+    }
+
 
 
     /* HARDCODED USER */
