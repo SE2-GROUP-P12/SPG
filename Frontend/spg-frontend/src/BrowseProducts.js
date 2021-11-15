@@ -18,17 +18,26 @@ function BrowseProducts() {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
 
-    const _browseProducts = async () => {
-        const data = await API.browseProducts();
-        await setProducts(data);
-    }
-
-
-    
-    useEffect(async () => {
-        await _browseProducts();
-        setLoadCompleted(true);
+    useEffect(() => {
+        fetch('/api/product/all', {
+            method : 'GET',
+            headers : {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                //'Authorization': 'Basic ' + base64.encode('admin' + ":" + 'password')
+            }
+        }).then(response => {
+            if (response.ok) {
+                response.json().then((body) => {
+                    setProducts([...body]);
+                });
+            } else
+                console.log("Error orrcuored -> handle redirection") //TODO: to implement redirection in case of srver errors.
+            setLoadCompleted(true);
+        })
     }, []);
+
+
 
     function ProductEntry(props) {
         const [show, setShow] = useState(false);
