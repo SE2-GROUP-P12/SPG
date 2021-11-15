@@ -37,6 +37,18 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Double price;
 
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price) {
+        this.name = name;
+        this.producer = "default produces";
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.totalQuantity = totalQuantity;
+        this.quantityAvailable = totalQuantity;
+        this.quantityBaskets = 0.0;
+        this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
+        this.price = price;
+    }
+
     public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price) {
         this.name = name;
         this.producer = producer;
