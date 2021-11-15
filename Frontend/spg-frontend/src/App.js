@@ -20,6 +20,9 @@ import Button from 'react-bootstrap/Button';
 const DEBUG = true;
 
 function App() {
+    /*LOG IN AND SESSION MANAGEMENT*/
+    const [isLogged, setIsLogged] = useState(false);
+    const [loggedUserInfo, setLoggedUserInfo] = useState({});
 
     /*TIME MACHINE MANAGEMENT*/
     const [show, setShow] = useState(false);
@@ -29,6 +32,7 @@ function App() {
     let [date, setDate] = useState(days[new Date().getDay()]);
     let [time, setTime] = useState(()=>{
         let d= new Date();
+        return d.getHours()+":"+d.getMinutes();
         return d.getHours()+":"+d.getMinutes();
     });
     function printDays () 
@@ -43,7 +47,7 @@ function App() {
       <div className="App">
         <Container fluid className="header">
             <Router>
-                <Navbar/>
+                <Navbar isLogged = {isLogged} loggeduserInfo = {loggedUserInfo} setIsLogged={setIsLogged}/>
            <Switch>
            <Route exact path="/DeliverOrder">
                    <DeliverOrder time={time} date={date}/>
@@ -63,7 +67,7 @@ function App() {
                <Route exact path="/ShopEmployee">
                    <ShopEmployee/>
                </Route>
-               <Route exact path="/Login">
+               <Route exact path="/LoginComponent">
                    <Login/>
                </Route>
                <Route exact path="/">

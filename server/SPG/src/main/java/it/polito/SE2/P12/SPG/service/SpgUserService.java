@@ -51,7 +51,7 @@ public class SpgUserService {
     }
     public Map<String, Boolean> checkPresenceOfUser(String email, String ssn){
         Map<String, Boolean> response = new HashMap<>();
-        System.out.println("Here, ssn: " + ssn + ", email : " + email);
+        //System.out.println("Here, ssn: " + ssn + ", email : " + email);
         if (checkPresenceOfMail(email) || checkPresenceOfSSN(ssn))
             response.put("exist", true);
         else

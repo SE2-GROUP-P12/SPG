@@ -122,7 +122,7 @@ function NewCustomer() {
             address: address,
             ssn: ssn,
             phoneNumber: phoneNumber,
-            role: "Customer",
+            role: "CUSTOMER",
             email: email,
             password: pbkdf2.pbkdf2Sync(password, crypto.getRandomValues(new Uint32Array(10)), 1, 32, 'sha512').toString('hex'),
         };

@@ -12,6 +12,7 @@ import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Console;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(API.HOME)
+@RequestMapping(value = API.HOME,  produces = "application/json", consumes = "application/json")
 public class SpgController {
 
     private final SpgProductService productService;
@@ -45,11 +46,13 @@ public class SpgController {
     }
 
     @GetMapping(API.ALL_PRODUCT)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE')")
     public ResponseEntity<List<Product>> getAllProduct() {
         return ResponseEntity.ok(productService.getAllProduct());
     }
 
     @PostMapping(API.EXIST_CUSTOMER)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')")
     public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
@@ -60,6 +63,7 @@ public class SpgController {
     }
 
     @GetMapping(API.EXIST_CUSTOMER_BY_MAIL)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity checkExistCustomerMail(@RequestParam String email) {
         if (email == null)
             return ResponseEntity.badRequest().build();
@@ -67,10 +71,25 @@ public class SpgController {
     }
 
     @PostMapping(API.CREATE_CUSTOMER)
-    public ResponseEntity createCustomer(@RequestBody User user) {
-        if (user == null)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity createCustomer(@RequestBody String userJsonData) {
+        if (userJsonData == null || userJsonData.equals(""))
             return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(userService.addNewClient(user));
+        Map<String, Object> requestMap = extractMapFromJsonString(userJsonData);
+        if(requestMap == null)
+            return ResponseEntity.badRequest().build();
+        if(requestMap.containsKey("email") && requestMap.containsKey("ssn")
+                && requestMap.containsKey("name") && requestMap.containsKey("surname")
+                && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
+                && requestMap.containsKey("role")
+        )
+            return ResponseEntity.ok(userService.addNewClient(
+                    new User(requestMap.get("name").toString(), requestMap.get("surname").toString(),
+                            requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
+                            requestMap.get("role").toString(), requestMap.get("email").toString(),
+                            requestMap.get("password").toString())
+            ));
+        return ResponseEntity.badRequest().build();
     }
 
     @PostMapping(API.PLACE_ORDER)
@@ -126,7 +145,6 @@ public class SpgController {
             return ResponseEntity.ok(userService.topUp(email, value));
         }
         return ResponseEntity.badRequest().build();
-
     }
 
     @PostMapping(API.DELIVER_ORDER)

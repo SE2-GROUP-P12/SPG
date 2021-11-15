@@ -7,10 +7,18 @@ import Col from "react-bootstrap/Col";
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 
-function Login() {
+let base64 = require('base-64');
+
+
+function Login(props) {
+    function onClickSubmissionHandler() {
+
+    }
+
+
     return (
         <>
-        <h1>Login</h1>
+            <h1>Login</h1>
             <Formik
                 initialValues={{
                     email: "",
@@ -27,24 +35,25 @@ function Login() {
                 validateOnBlur={false}>
                 {({values, errors, touched}) =>
                     <div id="container" className="pagecontent">
-                    <Form>
-                                <Row>
-                                    Email: <Field name="email" label="Email"/>
-                                </Row>
-                                <Row>
-                                    Password: <Field name="password" label="Password" type="password"/>
-                                </Row>
-                                <Row style={{padding : "20px" }}>
-                        <Col xs={6}><Button type="submit" variant="success">Login</Button></Col>
-                        <Col xs={6}><Link to="/"><Button variant="secondary">Back</Button></Link></Col>
-                    </Row>
-                                <Row>
-                                    {errors.email && touched.email ? (
-                                        <div>{errors.email}</div>) : null}
-                                    {errors.password && touched.password ? (
-                                        <div>{errors.password}</div>) : null}
-                                </Row>
-                    </Form>
+                        <Form>
+                            <Row>
+                                Email: <Field name="email" label="Email"/>
+                            </Row>
+                            <Row>
+                                Password: <Field name="password" label="Password" type="password"/>
+                            </Row>
+                            <Row style={{padding: "20px"}}>
+                                <Col xs={6}><Button type="submit" variant="success"
+                                                    onClick={() => onClickSubmissionHandler()}>Login</Button></Col>
+                                <Col xs={6}><Link to="/"><Button variant="secondary">Back</Button></Link></Col>
+                            </Row>
+                            <Row>
+                                {errors.email && touched.email ? (
+                                    <div>{errors.email}</div>) : null}
+                                {errors.password && touched.password ? (
+                                    <div>{errors.password}</div>) : null}
+                            </Row>
+                        </Form>
                     </div>
                 }
             </Formik>

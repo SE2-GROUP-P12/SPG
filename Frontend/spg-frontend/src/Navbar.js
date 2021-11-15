@@ -5,21 +5,24 @@ import logo from "./resources/logo.png";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
 
+function Navbar(props) {
+    function doLogOut() {
+        window.location.href = "http://localhost:8080/logout";
+    }
 
-function doLogOut()
-{}
+    function doLogin() {
+        window.location.href = "http://localhost:8080/login";
+    }
 
-function Navbar ()
-{
-    //const [logged, setLogged]=useState(null);
 
-    const logged=null;
     return (
         <Nav className="navbar bg-success navbar-dark">
-            <img src={logo} alt="logo" className="logo" />
-            { logged!=null ?
-                <Button variant="outline-light" onClick={()=>doLogOut()}>Log out</Button> :
-                <Link to='/Login' ><Button className="btn btn-outline-light" variant="success"> Log in </Button></Link>
+            <img src={logo} alt="logo" className="logo"/>
+            {window.location != "http://localhost:3000/" ?
+                    <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
+                :
+                <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                //<Link to='/LoginComponent' ><Button className="btn btn-outline-light" variant="success"> Log in </Button></Link>
             }
         </Nav>
     );
