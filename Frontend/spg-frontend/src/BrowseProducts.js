@@ -22,6 +22,8 @@ function BrowseProducts() {
         const data = await API.browseProducts();
         await setProducts(data);
     }
+
+
     
     useEffect(async () => {
         await _browseProducts();

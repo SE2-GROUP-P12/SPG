@@ -130,7 +130,7 @@ function NewCustomer() {
     }
 
 
-    /*
+
     // Submission by RICK
     const buttonHandlerSubmission = () => {
         let jsonObj = jsonObjectBuilder();
@@ -165,7 +165,8 @@ function NewCustomer() {
         })
     }
     // ------------------------------------------------------------
-    */
+
+    /*
 
 
     // Submission by PEPPE
@@ -198,6 +199,8 @@ function NewCustomer() {
     }
     // ------------------------------------------------------------
 
+
+     */
     function ModalComponent() {
         return (
             <Modal show={modalShow}

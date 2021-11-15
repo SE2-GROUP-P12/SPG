@@ -19,15 +19,20 @@ public class SpgUserService {
     }
 
     public void populateDB(){
+        //ADMIN
+        User admin = new User ("admin","admin","ADMIN00000000000","0000000000",
+                "ADMIN","admin","password");
+        //Other users
         User temp1 = new User ("Mario","Rossi","RSSMRA00D12N376V","01234567892",
-                "customer ","mario.rossi@gmail.com","password");
+                "CUSTOMER","mario.rossi@gmail.com","password");
         User temp2 = new User ("Paolo","Bianchi","BNCPLA00D12N376V","01234567892",
-                "customer ","paolo.bianchi@gmail.com","password");
+                "CUSTOMER","paolo.bianchi@gmail.com","password");
         User temp3 = new User ("Francesco","Conte","CNTFRN00D12N376V","01234567892",
-                "employee ","francesco.conte@gmail.com", "password");
+                "EMPLOYEE","francesco.conte@gmail.com", "password");
         if(userRepo.findUserByEmail("mario.rossi@gmail.com")==null)userRepo.save(temp1);
         if(userRepo.findUserByEmail("paolo.bianchi@gmail.com")==null)userRepo.save(temp2);
         if(userRepo.findUserByEmail("francesco.conte@gmail.com")==null)userRepo.save(temp3);
+        if(userRepo.findUserByEmail("admin")==null)userRepo.save(admin);
     }
     public Long getUserIdByEmail(String email){
         return userRepo.findUserByEmail(email).getUserId();
@@ -69,7 +74,7 @@ public class SpgUserService {
 
     public Map<String, String> addNewClient(User user) {
         Map<String, String> response = new HashMap<>();
-        if(!userRepo.existsByEmail(user.getEmail()) || !userRepo.existsBySsn(user.getSsn())){
+        if(userRepo.existsByEmail(user.getEmail()) || userRepo.existsBySsn(user.getSsn())){
             response.put("responseMessage", "200-OK-(Customer already present)");
             return response;
         }
