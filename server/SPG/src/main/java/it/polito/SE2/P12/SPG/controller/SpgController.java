@@ -3,6 +3,7 @@ package it.polito.SE2.P12.SPG.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.Basket;
+import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Console;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +32,6 @@ public class SpgController {
     private final SpgUserService userService;
     private final SpgOrderService orderService;
     private final SpgBasketService basketService;
-
 
     @Autowired
     public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService) {
@@ -182,10 +181,14 @@ public class SpgController {
 
     @GetMapping(API.GET_ORDERS)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<List<List<Product>>> getOrders(@RequestParam String email){
+    public ResponseEntity getOrders(@RequestParam String email){
         User user = userService.getUserByEmail(email);
         if(user == null) return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(orderService.getOrdersProducts(user.getUserId()));
+        String response = orderService.getOrdersProductsJson(user.getUserId());
+        if(response == null)
+            return ResponseEntity.badRequest().build();
+        System.out.println(response);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(API.TEST)

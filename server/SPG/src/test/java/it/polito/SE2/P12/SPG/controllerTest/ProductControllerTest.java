@@ -26,9 +26,9 @@ public class ProductControllerTest {
         //Empty all the product
         productRepo.deleteAll();
         //Create some testing product
-        Product prod1 = new Product("Prod1", "KG", 1000.0, 10.50F);
-        Product prod2 = new Product("Prod2", "KG", 100.0, 5.50F);
-        Product prod3 = new Product("Prod3", "KG", 20.0, 8.00F);
+        Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F);
+        Product prod2 = new Product("Prod2", "Producer2","KG", 100.0, 5.50F);
+        Product prod3 = new Product("Prod3", "Producer3","KG", 20.0, 8.00F);
         productRepo.save(prod1);
         productRepo.save(prod2);
         productRepo.save(prod3);

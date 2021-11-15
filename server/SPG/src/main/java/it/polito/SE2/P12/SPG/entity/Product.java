@@ -20,6 +20,8 @@ public class Product {
     private Long productId;
     @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "producer", nullable = false)
+    private String producer;
     @Column(name = "unit_of_measurement", nullable = false)
     private String unitOfMeasurement;
     @Column(name = "total_quantity", nullable = false)
@@ -33,10 +35,11 @@ public class Product {
     @Column(name = "quantity_delivered", nullable = false)
     private Double quantityDelivered;
     @Column(name = "price", nullable = false)
-    private double price;
+    private Double price;
 
-    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price) {
+    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price) {
         this.name = name;
+        this.producer = producer;
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;

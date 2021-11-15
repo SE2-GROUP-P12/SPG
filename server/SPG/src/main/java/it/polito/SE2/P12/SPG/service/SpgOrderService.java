@@ -1,12 +1,19 @@
 package it.polito.SE2.P12.SPG.service;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -51,16 +58,22 @@ public class SpgOrderService {
         return true;
     }
 
-    public List<List<Product>> getOrdersProducts(Long userId) {
-        List<List<Product>> output = new ArrayList<List<Product>>();
-        for (Order order : orderRepo.findAllByCust_UserId(userId)) {
-            List<Product> list = order.getProductList();
-            for (Product orderItem : list) {
-                orderItem.setQuantityAvailable(orderRepo.findById(order.getOrderId()).get().getProds().get(orderItem));
-            }
-            output.add(list);
-        }
+    public List<Order> getOrdersProducts(Long userId) {
+        List<Order> output = orderRepo.findAllByCust_UserId(userId);
         return output;
+    }
+
+    public String getOrdersProductsJson(Long userId) {
+        List<Order> orders = orderRepo.findAllByCust_UserId(userId);
+        ObjectMapper mapper = new ObjectMapper();
+        String response = null;
+        try {
+            response = mapper.writeValueAsString(orders);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return response.toString();
     }
 }
 
