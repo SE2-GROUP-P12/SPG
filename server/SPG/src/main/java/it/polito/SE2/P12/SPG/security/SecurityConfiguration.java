@@ -53,11 +53,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
 
-    @Bean
-    public RestAccessDeniedHandler restAccessDeniedHandler() {
-        return new RestAccessDeniedHandler();
-    }
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsServiceImpl);
