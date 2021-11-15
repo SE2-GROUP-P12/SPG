@@ -10,6 +10,6 @@ public class TemplateController {
 
     @GetMapping("login")
     public String getLoginView(){
-        return "loginSPGsimilar"; //As in template but without .html extension
+        return "loginSPG"; //As in template but without .html extension
     }
 }
