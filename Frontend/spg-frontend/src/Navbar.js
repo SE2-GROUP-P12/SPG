@@ -3,7 +3,10 @@ import './App.css';
 import logo from "./resources/logo.png";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
+import {Link} from 'react-router-dom';
 import {useState} from "react";
+
+import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
 
 function Navbar(props) {
     const [location, setLocation] = useState(window.location);
@@ -16,22 +19,22 @@ function Navbar(props) {
         window.location.href = "http://localhost:8081/login";
     }
 
-    //Login presence button
-    if (location === "http://localhost:3000/")
+    /*Login presence button
+    // PARTE DI RICK
+    if (location == "http://localhost:3000/" || location == "http://localhost:3000/Unauthorized")
         return (
             <Nav className="navbar bg-success navbar-dark">
                 <img src={logo} alt="logo" className="logo"/>
+                <Link style={{color: 'white'}} to='/NewCustomer'>Sign in</Link>
                 <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log
                     in </Button>
             </Nav>
         );
 
-    else if (location === "http://localhost:3000/Unauthorized")
+    else if (location == "http://localhost:3000/NewCustomer")
         return (
             <Nav className="navbar bg-success navbar-dark">
                 <img src={logo} alt="logo" className="logo"/>
-                <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log
-                    in </Button>
             </Nav>
         );
 
@@ -42,6 +45,38 @@ function Navbar(props) {
                 <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
             </Nav>
         );
+        */
+
+    //PARTE DI MARTI
+    return(
+           <Switch>
+           <Route exact path="/">
+                <Nav className="navbar bg-success navbar-dark">
+                    <img src={logo} alt="logo" className="logo"/>
+                    <Link style={{color: 'white'}} to='/NewCustomer'>Sign in</Link>
+                    <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                </Nav>
+            </Route>
+           <Route exact path="/Unauthorized">
+                <Nav className="navbar bg-success navbar-dark">
+                    <img src={logo} alt="logo" className="logo"/>
+                    <Link style={{color: 'white'}} to='/NewCustomer'>Sign in</Link>
+                    <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                </Nav>
+            </Route>
+            <Route exact path="/NewCustomer">
+                <Nav className="navbar bg-success navbar-dark">
+                    <img src={logo} alt="logo" className="logo"/>
+                </Nav>
+            </Route>
+            <Route>
+                <Nav className="navbar bg-success navbar-dark">
+                    <img src={logo} alt="logo" className="logo"/>
+                    <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
+                </Nav>       
+            </Route>
+           </Switch>
+    );
 }
 
 export {Navbar}

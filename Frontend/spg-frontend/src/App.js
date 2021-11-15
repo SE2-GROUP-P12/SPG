@@ -34,7 +34,6 @@ function App() {
     let [time, setTime] = useState(()=>{
         let d= new Date();
         return d.getHours()+":"+d.getMinutes();
-        return d.getHours()+":"+d.getMinutes();
     });
     function printDays () 
     {

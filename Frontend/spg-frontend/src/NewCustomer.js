@@ -130,7 +130,7 @@ function NewCustomer() {
     }
 
 
-/* 
+ 
     // Submission by RICK
     const buttonHandlerSubmission = () => {
         let jsonObj = jsonObjectBuilder();
@@ -165,9 +165,9 @@ function NewCustomer() {
         })
     }
     // ------------------------------------------------------------
- */
+ 
 
-    // Submission by PEPPE
+    /* Submission by PEPPE
     async function checkCustomer() {
         const exists = await API.customerExists(email, ssn);
         console.log (exists);
@@ -197,6 +197,7 @@ function NewCustomer() {
         setModalShow(true);
     }
     // ------------------------------------------------------------
+    */
 
     function ModalComponent() {
         return (
@@ -218,7 +219,7 @@ function NewCustomer() {
                 </Modal.Body>
                 <Modal.Footer>
                     {
-                        modalMessage.id === 3 ?
+                        modalMessage.id !== 2 ?
                             <Button variant="secondary" onClick={() => {
                                 setModalShow(false);
                                 setEmail("");
@@ -231,11 +232,11 @@ function NewCustomer() {
                                 {modalMessage.messageFooterButton}
                             </Button>
                             :
-                            <Link to="/ShopEmployee">
+                                <Link to="/ShopEmployee">
                                 <Button variant="danger">
                                     {modalMessage.messageFooterButton}
                                 </Button>
-                            </Link>
+                                </Link>
                     }
                 </Modal.Footer>
             </Modal>

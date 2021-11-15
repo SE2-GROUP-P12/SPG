@@ -56,7 +56,7 @@ public class SpgController {
     }
 
     @PostMapping(API.EXIST_CUSTOMER)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')")
     public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
@@ -67,7 +67,7 @@ public class SpgController {
     }
 
     @GetMapping(API.EXIST_CUSTOMER_BY_MAIL)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity checkExistCustomerMail(@RequestParam String email) {
         if (email == null)
             return ResponseEntity.badRequest().build();
@@ -75,7 +75,7 @@ public class SpgController {
     }
 
     @PostMapping(API.CREATE_CUSTOMER)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity createCustomer(@RequestBody String userJsonData) {
         if (userJsonData == null || userJsonData.equals(""))
             return ResponseEntity.badRequest().build();
