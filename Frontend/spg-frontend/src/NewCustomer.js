@@ -130,7 +130,7 @@ function NewCustomer() {
     }
 
 
-
+/* 
     // Submission by RICK
     const buttonHandlerSubmission = () => {
         let jsonObj = jsonObjectBuilder();
@@ -165,9 +165,7 @@ function NewCustomer() {
         })
     }
     // ------------------------------------------------------------
-
-    /*
-
+ */
 
     // Submission by PEPPE
     async function checkCustomer() {
@@ -196,11 +194,10 @@ function NewCustomer() {
                 setModalMessage(conflictModalMessage);
             }
         }
+        setModalShow(true);
     }
     // ------------------------------------------------------------
 
-
-     */
     function ModalComponent() {
         return (
             <Modal show={modalShow}

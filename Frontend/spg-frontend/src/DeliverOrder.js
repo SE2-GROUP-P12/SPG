@@ -51,9 +51,12 @@ function DeliverOrder(props) {
     }
 
     async function handleSubmit(email) {
+        console.log(email);
         const okay = await customerExistsByMail(email);
+        console.log(okay);
         if (okay) {
             setOrders(getOrdersByEmail(email));
+            console.log(orders);
         }
         else {
             setOrders(null);

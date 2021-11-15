@@ -36,7 +36,7 @@ function PlaceOrder(props)
             else    
                 setOrder(prod);
         };
-        getCartInfo(email);}, []);
+        getCartInfo(email);}, [email]);
 
         const dropOrder = async() =>{
             let outcome= await API.dropOrder({'email' : email});

@@ -17,12 +17,18 @@ async function browseProducts() {
 async function browseProducts() {
     try {
         let listProducts;
-        const response = await fetch("/api/product/all");
+        const response = await fetch("/api/product/all", {
+            method: 'GET',
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' },
+        });
         listProducts = await response.json();
         if (response.ok)
             return listProducts;
-        else
-            return undefined;
+        else{
+            window.location.href = "http://localhost:3000/Unauthorized";
+        }
     }
     catch (err) {
         console.log("Some error occourred");
@@ -35,6 +41,9 @@ async function getCart(data) {
     try {
         const response = await fetch("/api/customer/getCart?email=" + data.email, {
             method: 'GET',
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' },
         });
         let cart = await response.json();
         if (response.ok)
@@ -53,7 +62,9 @@ async function addToCart(product) {
     try {
         const response = await fetch("/api/product/addToCart", {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' },
             body: JSON.stringify(product)
         });
         if (response.ok)
@@ -72,7 +83,9 @@ async function topUp(data)
     try{
         const response = await fetch ("/api/customer/topUp", {
             method: 'POST',
-            headers: {'Content-Type' : 'application/json'},
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
         if(response.ok)
@@ -91,6 +104,9 @@ async function customerExistsByMail(data)
     try{
         const response = await fetch ("/api/customer/customerExistsByMail?email="+data, {
             method: 'GET',
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' },
         });
         let exists = await response.json();
         if(response.ok)
@@ -109,7 +125,9 @@ async function placeOrder(data)
     try{
         const response = await fetch ("/api/customer/placeOrder", {
             method: 'POST',
-            headers: {'Content-Type' : 'application/json'},
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' },
             body: JSON.stringify({'email' : data.email})
         });
         if(response.ok)
@@ -128,7 +146,9 @@ async function dropOrder (data)
     try{
         const response = await fetch ("/api/customer/dropOrder", {
             method: 'DELETE',
-            headers: {'Content-Type' : 'application/json'},
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' },
             body: JSON.stringify({'email' : data.email})
         });
         if(response.ok)
@@ -146,9 +166,13 @@ async function getOrdersByEmail(email){
     try {
         const response = await fetch ("api/customer/getOrdersByEmail?email="+email, {
             method: 'GET',
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' },
         });
         const data = await response.json();
         if(response.ok){
+            console.log(data);
             return data;
         }
         else {
@@ -180,7 +204,12 @@ async function deliverOrder(orderId){
 
 async function getWallet() {
     try {
-        const response = await fetch("/api/product/getWallet");
+        const response = await fetch("/api/product/getWallet", {
+            method: 'GET',
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' },
+        });
         const data = await response.json();
         if (response.ok) {
             return data;
