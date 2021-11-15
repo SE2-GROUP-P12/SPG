@@ -202,15 +202,17 @@ async function deliverOrder(orderId){
     }
 }
 
-async function getWallet() {
+async function getWallet(email) {
+    
     try {
-        const response = await fetch("/api/product/getWallet", {
+        const response = await fetch("/api/customer/getWallet?email="+email, {
             method: 'GET',
             headers: { 
-                'Accept': 'application/json',
-                'Content-Type': 'application/json' },
+                'Content-Type': 'application/json', 
+                'Accept': 'application/json'}
         });
         const data = await response.json();
+        console.log(JSON.stringify(data));
         if (response.ok) {
             return data;
         }
