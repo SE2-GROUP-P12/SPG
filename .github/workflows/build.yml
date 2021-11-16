@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - Sprint1
-       -main
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
