@@ -150,7 +150,7 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("email") && requestMap.containsKey("value")) {
             String email = (String) requestMap.get("email");
-            Double value = Double.valueOf((Integer) requestMap.get("value"));
+            Double value = Double.valueOf((Double) requestMap.get("value"));
             return ResponseEntity.ok(userService.topUp(email, value));
         }
         return ResponseEntity.badRequest().build();
