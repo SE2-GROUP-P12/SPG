@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private Boolean testContext = true;
+    private static Boolean testContext = false;
     private final PasswordEncoder passwordEncoder;
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
@@ -25,6 +25,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public SecurityConfiguration(PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsServiceImpl) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsServiceImpl = userDetailsServiceImpl;
+    }
+
+    public static void setTestContext(){
+        testContext = true;
     }
 
     public void setTestContext(Boolean flag) {

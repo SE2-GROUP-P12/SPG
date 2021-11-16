@@ -1,6 +1,7 @@
 package it.polito.SE2.P12.SPG.entity;
 
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 //@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User {
+
     @Id
     @GeneratedValue(
             strategy = GenerationType.AUTO
@@ -62,8 +64,11 @@ public class User {
     }
 
     public Basket getBasket(){
-        if(this.basket == null)
-            this.basket = new Basket(this);
+        if(this.basket == null) {
+            Basket b = new Basket(this);
+            this.basket = b;
+        }
+
         return this.basket;
     }
 
