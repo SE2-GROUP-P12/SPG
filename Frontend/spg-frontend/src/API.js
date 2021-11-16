@@ -186,7 +186,7 @@ async function getOrdersByEmail(email){
 async function deliverOrder(orderId){
     try {
         const response = await fetch ("/api/customer/deliverOrder", {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type' : 'application/json'

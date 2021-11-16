@@ -45,16 +45,16 @@ public class SpgOrderService {
 
     public Boolean deliverOrder(Long orderId) {
         Optional<Order> o = orderRepo.findById(orderId);
-        if(!o.isPresent())
+        if (!o.isPresent())
             return false;
         Order order = o.get();
-        orderRepo.delete(order);
-        for(Map.Entry<Product, Double> e : order.getProds().entrySet()){
+        for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
             Product p = e.getKey();
             Double q = e.getValue();
-            if(!p.moveFromOrderedToDelivered(q))
+            if (!p.moveFromOrderedToDelivered(q))
                 return false;
         }
+        orderRepo.delete(order);
         return true;
     }
 

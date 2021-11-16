@@ -25,7 +25,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping(value = API.HOME,  produces = "application/json", consumes = "application/json")
+@RequestMapping(value = API.HOME, produces = "application/json", consumes = "application/json")
 public class SpgController {
 
     private final SpgProductService productService;
@@ -79,9 +79,9 @@ public class SpgController {
         if (userJsonData == null || userJsonData.equals(""))
             return ResponseEntity.badRequest().build();
         Map<String, Object> requestMap = extractMapFromJsonString(userJsonData);
-        if(requestMap == null)
+        if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if(requestMap.containsKey("email") && requestMap.containsKey("ssn")
+        if (requestMap.containsKey("email") && requestMap.containsKey("ssn")
                 && requestMap.containsKey("name") && requestMap.containsKey("surname")
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
                 && requestMap.containsKey("role")
@@ -158,6 +158,7 @@ public class SpgController {
     @PostMapping(API.DELIVER_ORDER)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity deliverOrder(@RequestBody Long orderId) {
+        System.out.println(orderId);
         return ResponseEntity.ok(orderService.deliverOrder(orderId));
     }
 
@@ -181,11 +182,11 @@ public class SpgController {
 
     @GetMapping(API.GET_ORDERS)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity getOrders(@RequestParam String email){
+    public ResponseEntity getOrders(@RequestParam String email) {
         User user = userService.getUserByEmail(email);
-        if(user == null) return ResponseEntity.badRequest().build();
+        if (user == null) return ResponseEntity.badRequest().build();
         String response = orderService.getOrdersProductsJson(user.getUserId());
-        if(response == null)
+        if (response == null)
             return ResponseEntity.badRequest().build();
         System.out.println(response);
         return ResponseEntity.ok(response);
@@ -194,7 +195,7 @@ public class SpgController {
     @GetMapping(API.TEST)
     public ResponseEntity test() {
         double response = userService.topUp("mario.rossi@gmail.com", 12.70);
-        System.out.println("top up quantity is: "+response);
+        System.out.println("top up quantity is: " + response);
         return ResponseEntity.ok(response);
     }
 
