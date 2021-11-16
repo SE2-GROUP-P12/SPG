@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.Http403ForbiddenEntryPoin
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private Boolean testContext = false;
     private final PasswordEncoder passwordEncoder;
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
@@ -28,28 +29,42 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
 
+    public void setTestContext(Boolean flag) {
+        this.testContext = flag;
+    }
+
+    public Boolean getTestContext(){
+        return this.testContext;
+    }
+
     //whitelist approach
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .cors().and()
-                .csrf().disable()
-                .authorizeRequests()
-                //.antMatchers("/api/product/all").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .exceptionHandling()//.accessDeniedHandler(restAccessDeniedHandler())
-                .authenticationEntryPoint(restAuthEntryPoint())
-                .and()
-                .formLogin()
-                .loginPage("/login").permitAll()
-                .defaultSuccessUrl("http://localhost:3000/ShopEmployee")
-                .and()
-                .logout()
-                .logoutSuccessUrl("http://localhost:3000/")
-                .deleteCookies("JSESSIONID").invalidateHttpSession(true);
-
+        if (this.testContext == Boolean.TRUE)
+            http
+                    .cors().and()
+                    .csrf().disable()
+                    .authorizeRequests().antMatchers("/**").permitAll();
+        else
+            http
+                    .cors().and()
+                    .csrf().disable()
+                    .authorizeRequests()
+                    .antMatchers("/api/customer/add").permitAll()
+                    .antMatchers("/api/customer/customerExists").permitAll()
+                    .anyRequest()
+                    .authenticated()
+                    .and()
+                    .exceptionHandling()//.accessDeniedHandler(restAccessDeniedHandler())
+                    .authenticationEntryPoint(restAuthEntryPoint())
+                    .and()
+                    .formLogin()
+                    .loginPage("/login").permitAll()
+                    .defaultSuccessUrl("http://localhost:3000/ShopEmployee")
+                    .and()
+                    .logout()
+                    .logoutSuccessUrl("http://localhost:3000/")
+                    .deleteCookies("JSESSIONID").invalidateHttpSession(true);
     }
 
 

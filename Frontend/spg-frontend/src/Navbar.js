@@ -17,7 +17,7 @@ function Navbar(props) {
     }
 
     //Login presence button
-    if (location === "http://localhost:3000/")
+    if (location == "http://localhost:3000/")
         return (
             <Nav className="navbar bg-success navbar-dark">
                 <img src={logo} alt="logo" className="logo"/>
@@ -26,7 +26,7 @@ function Navbar(props) {
             </Nav>
         );
 
-    else if (location === "http://localhost:3000/Unauthorized")
+    else if (location == "http://localhost:3000/Unauthorized")
         return (
             <Nav className="navbar bg-success navbar-dark">
                 <img src={logo} alt="logo" className="logo"/>
