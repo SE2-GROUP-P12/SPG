@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 @SpringBootTest
-public class UserControllerTest {
+public class UserServiceTest {
     private static final String customerJsonFormat = "{" +
             "  \"name\": \"fooName1\"," +
             "  \"surname\": \"fooSurname1\"," +
