@@ -187,7 +187,10 @@ async function deliverOrder(orderId){
     try {
         const response = await fetch ("/api/customer/deliverOrder", {
             method: 'PUT',
-            headers: {'Content-Type' : 'application/json'},
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type' : 'application/json'
+        },
             body: JSON.stringify(orderId)
         });
         const data = await response.json();

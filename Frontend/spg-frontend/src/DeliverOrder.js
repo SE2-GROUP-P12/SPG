@@ -11,13 +11,13 @@ import { API } from './API.js'
 
 function DeliverOrder(props) {
     const [customer, setCustomer] = useState(null);
-    const [orders, setOrders] = useState(null);
-
-/*     useEffect(()=>{
-        let getOrdersInfo = async () => {
-            API.browseOrders().then(ord => setOrders(ord));
-        };
-        getOrdersInfo();}, [customer] ); */
+    const [orders, setOrders] = useState([]);
+    const [dirty, setDirty] = useState(true);
+    /*     useEffect(()=>{
+            let getOrdersInfo = async () => {
+                API.browseOrders().then(ord => setOrders(ord));
+            };
+            getOrdersInfo();}, [customer] ); */
 
     /*TIME MACHINE MANAGEMENT*/
     const [itsTime, setItsTime] = useState(false)
@@ -45,22 +45,23 @@ function DeliverOrder(props) {
     }
 
     {/* TODO: introduce a method to get the order list of an user by its email*/ }
-    async function getOrdersByEmail(email) {
+    async function _getOrdersByEmail(email) {
         const data = await API.getOrdersByEmail(email);
+        console.log(data);
         return data;
     }
 
     async function handleSubmit(email) {
-        console.log(email);
         const okay = await customerExistsByMail(email);
-        console.log(okay);
         if (okay) {
-            setOrders(getOrdersByEmail(email));
+            const data = await API.getOrdersByEmail(email);
+            setOrders(old => data);
             console.log(orders);
         }
         else {
-            setOrders(null);
+            setOrders([]);
         }
+        setDirty(true);
     }
 
     return (
@@ -95,13 +96,38 @@ function DeliverOrder(props) {
 
 function Orders(props) {
     const [showAlert, setShowAlert] = useState(false);
+    const [orders, setOrders] = useState(props.orderList);
     let output = [];
-
     async function deliverOrder(orderId) {
         const data = await API.deliverOrder(orderId);
         return data;
     }
+    function printOrder(prod) {
+        let output = [];
+        let total = 0;
+        if (prod === null)
+            return (<h2>The order is empty </h2>);
+        for (let p of prod) {
+            output.push(<OrderEntry product={p} />);
+            total += p["unit price"] * p.amount;
+        }
+        output.push(
+            <li className='list-group-item'>
+                <h2>Total: {total} €</h2>
+            </li>
+        )
+        return output;
+    }
 
+    function OrderEntry(props) {
+        return (
+            <li className="list-group-item">
+                {props.product.name} : {props.product.amount}{props.product.unit}<br />
+                SUBTOTAL: {props.product["unit price"] * props.product.amount}€
+            </li>
+        );
+    }
+    
     async function handleDelivery(e, orderId) {
         e.preventDefault();
         const data = await deliverOrder(orderId);
@@ -112,9 +138,10 @@ function Orders(props) {
 
         }
     }
-    if (props.orderList !== null) {
-        for (let o in props.orderList) {
-           
+    console.log(props.orderList);
+    if (props.orderList !== []) {
+        for (let o of props.orderList) {
+            console.log(o);
             output.push(
                 <li className="list-group-item">
                     {printOrder(o.productList)}
