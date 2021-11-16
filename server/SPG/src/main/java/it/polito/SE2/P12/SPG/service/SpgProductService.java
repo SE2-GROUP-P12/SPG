@@ -131,7 +131,9 @@ public class SpgProductService {
         if(productRepo.findProductByName("Pecorino")==null)productRepo.save(temp50);
     }
     public List<Product> getAllProduct(){
-        return productRepo.findAll();
+        List<Product> listProduct = productRepo.findAll();
+        System.out.println(productRepo == null? "null" : "lista vuota");
+        return listProduct;
     }
     public Product getProductById(Long productId){
         return productRepo.findProductByProductId(productId);
