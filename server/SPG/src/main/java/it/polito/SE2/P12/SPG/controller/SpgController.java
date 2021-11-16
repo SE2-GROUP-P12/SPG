@@ -186,7 +186,7 @@ public class SpgController {
         User user = userService.getUserByEmail(email);
         if (user == null) return ResponseEntity.badRequest().build();
         String response = orderService.getOrdersProductsJson(user.getUserId());
-        if (response == null)
+        if (response.isEmpty())
             return ResponseEntity.badRequest().build();
         System.out.println(response);
         return ResponseEntity.ok(response);
