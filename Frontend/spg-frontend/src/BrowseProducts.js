@@ -102,7 +102,7 @@ function BrowseProducts() {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => { handleClose(); setShowError(null); setShowSuccess(null); }}>
+                        <Button variant="secondary" onClick={() => { handleClose(); setShowError(null); setShowSuccess(null); window.location.reload(false); }}>
                             Close
                         </Button>
                     </Modal.Footer>

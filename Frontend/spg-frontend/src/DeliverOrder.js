@@ -13,11 +13,6 @@ function DeliverOrder(props) {
     const [customer, setCustomer] = useState(null);
     const [orders, setOrders] = useState([]);
     const [dirty, setDirty] = useState(true);
-    /*     useEffect(()=>{
-            let getOrdersInfo = async () => {
-                API.browseOrders().then(ord => setOrders(ord));
-            };
-            getOrdersInfo();}, [customer] ); */
 
     /*TIME MACHINE MANAGEMENT*/
     const [itsTime, setItsTime] = useState(false)
@@ -39,7 +34,7 @@ function DeliverOrder(props) {
             return true;
         }
         else {
-            setCustomer(null);
+            setCustomer(undefined);
             return false;
         }
     }
@@ -87,7 +82,8 @@ function DeliverOrder(props) {
                             {errors.email && touched.email ? errors.email : null}
                         </Form>}
                 </Formik>
-                {customer === null ? null : <Orders itsTime={itsTime} orderList={orders} />}
+                {customer === undefined ? <Alert variant='danger'>Customer not found</Alert> : null}
+                {orders != undefined && orders.length === 0 ? <h2>No orders to display yet</h2> : <Orders itsTime={itsTime} orderList={orders} />}
             </div>
             <Link to='/ShopEmployee'><Button style={{ margin: '20px' }} variant='secondary'>Back</Button></Link>
         </>
@@ -97,8 +93,10 @@ function DeliverOrder(props) {
 function Orders(props) {
     const [showAlert, setShowAlert] = useState(false);
     const [orders, setOrders] = useState(props.orderList);
+
     let output = [];
-    async function deliverOrder(orderId) {
+    async function deliverOrder(orderId) 
+    {
         const data = await API.deliverOrder(orderId);
         return data;
     }
@@ -132,16 +130,16 @@ function Orders(props) {
         e.preventDefault();
         const data = await deliverOrder(orderId);
         if (data !== null) {
-
+            window.location.reload(false);
         }
         else {
-
+            return (<Alert variant='danger'>Some error occourred</Alert>);
         }
     }
-    console.log(props.orderList);
+    //console.log(props.orderList);
     if (props.orderList !== []) {
         for (let o of props.orderList) {
-            console.log(o);
+            //console.log(o);
             output.push(
                 <li className="list-group-item">
                     {printOrder(o.productList)}

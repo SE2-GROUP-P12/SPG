@@ -1,6 +1,7 @@
 package it.polito.SE2.P12.SPG.security;
 
 import it.polito.SE2.P12.SPG.auth.UserDetailsServiceImpl;
+import it.polito.SE2.P12.SPG.utils.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -52,7 +54,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .cors().and()
                     .csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/api/customer/**").permitAll()
+                    .antMatchers("/api"+ API.EXIST_CUSTOMER).permitAll()
+                    .antMatchers("/api"+API.CREATE_CUSTOMER).permitAll()
                     .anyRequest()
                     .authenticated()
                     .and()
