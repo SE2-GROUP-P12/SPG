@@ -50,7 +50,6 @@ public class SpgUserService {
     public double topUp(String email, double value){
         User tmp = userRepo.findUserByEmail(email);
         tmp.setWallet(tmp.getWallet()+value);
-        userRepo.deleteById(tmp.getUserId());
         userRepo.save(tmp);
         return tmp.getWallet();
     }

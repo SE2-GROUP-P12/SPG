@@ -41,7 +41,7 @@ function TopUp()
                 setModalError(false);
                 setModalSuccess(false);
                 setUser(null);
-                let outcome = await API.getWallet({'email': values.email});
+                let outcome = await API.getWallet(values.email);
                 if (outcome===undefined)
                     setError(true);
                 else

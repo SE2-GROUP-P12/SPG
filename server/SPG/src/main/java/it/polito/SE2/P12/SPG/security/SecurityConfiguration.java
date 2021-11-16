@@ -1,6 +1,7 @@
 package it.polito.SE2.P12.SPG.security;
 
 import it.polito.SE2.P12.SPG.auth.UserDetailsServiceImpl;
+import it.polito.SE2.P12.SPG.utils.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 //.antMatchers("/api/product/all").permitAll()
+                .antMatchers("/api"+ API.EXIST_CUSTOMER).permitAll()
+                .antMatchers("/api"+ API.CREATE_CUSTOMER).permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
