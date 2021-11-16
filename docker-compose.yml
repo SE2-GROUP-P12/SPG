@@ -1,0 +1,36 @@
+---
+version: '3.4'
+services:
+
+  my_personal_db:
+    image: mysql:5.7
+    environment: &mysql-default-environment
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: spg
+      MYSQL_USER: asparago
+      MYSQL_PASSWORD: asparago
+    ports:
+      - "3306:3306"
+    volumes:
+      #- ./opt/script/data/initialization/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - mysql-persistent-volume:/var/lib/mysql
+  
+  spg_frontend:
+    image: mattiariola/spg_frontend:0.0.1
+    ports:
+      - 3001:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+
+  spg_server:
+    image: mattiariola/spg_server:0.0.3
+    environment:
+      spring.datasource.url: "jdbc:mysql://my_personal_db:3306/spg"
+    ports:
+      - 8080:8080
+    
+
+volumes:
+  mysql-persistent-volume:

@@ -1,0 +1,60 @@
+### VS Code ###
+.vscode/
+=======
+.idea/
+
+### SERVER MAVEN + INTELLIJ IDEA ###
+
+server/SPG/HELP.md
+server/SPG/target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+server/SPG/.apt_generated
+server/SPG/.classpath
+server/SPG/.factorypath
+server/SPG/.project
+server/SPG/.settings
+server/SPG/.springBeans
+server/SPG/.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+server/SPG/nbproject/private/
+server/SPG/nbbuild/
+server/SPG/dist/
+server/SPG/nbdist/
+server/SPG/.nb-gradle/
+server/SPG/build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/Frontend/spg-frontend/node_modules
+/Frontend/spg-frontend/.pnp
+/Frontend/spg-frontend/.pnp.js
+
+# testing
+/Frontend/spg-frontend/coverage
+
+# production
+/Frontend/spg-frontend/build
+
+# misc
+/Frontend/spg-frontend/.DS_Store
+/Frontend/spg-frontend/.env.local
+/Frontend/spg-frontend/.env.development.local
+/Frontend/spg-frontend/.env.test.local
+/Frontend/spg-frontend/.env.production.local
+
+/Frontend/spg-frontend/npm-debug.log*
+/Frontend/spg-frontend/yarn-debug.log*
+/Frontend/spg-frontend/yarn-error.log*
