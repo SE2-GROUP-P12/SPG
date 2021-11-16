@@ -9,17 +9,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private Boolean testContext = false;
+    private Boolean testContext = true;
     private final PasswordEncoder passwordEncoder;
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
@@ -33,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.testContext = flag;
     }
 
-    public Boolean getTestContext(){
+    public Boolean getTestContext() {
         return this.testContext;
     }
 
@@ -50,8 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .cors().and()
                     .csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/api/customer/add").permitAll()
-                    .antMatchers("/api/customer/customerExists").permitAll()
+                    .antMatchers("/api/customer/**").permitAll()
                     .anyRequest()
                     .authenticated()
                     .and()
