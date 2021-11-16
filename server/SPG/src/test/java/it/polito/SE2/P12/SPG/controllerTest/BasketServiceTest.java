@@ -57,7 +57,7 @@ public class BasketServiceTest {
         userRepo.save(user2);
     }
 
-    @Test
+    /*@Test
     public void retrieveEmptyBasket() {
         User u = userRepo.findUserByEmail("customer1@foomail.com");
         Basket b = u.getBasket();
@@ -110,5 +110,5 @@ public class BasketServiceTest {
 
         basketService.addProductToCart(p, 100000000000.0, u1);
         Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
-    }
+    }*/
 }
