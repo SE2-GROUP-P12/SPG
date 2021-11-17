@@ -14,7 +14,6 @@ TEMPLATE FOR RETROSPECTIVE (Team 12)
 - 25 points committed vs 18 points done
 - 1w 2d 1h 10m (= 57h 10m) Nr of hours planned vs spent (as a team) 2w 2d 35m (= 96h 35m)
 
-
 **Remember**  a story is done ONLY if it fits the Definition of Done:
 
 - Unit Tests passing *(with a little tollerance)*
@@ -26,35 +25,48 @@ TEMPLATE FOR RETROSPECTIVE (Team 12)
 
 | Story       | # Tasks     | Points | Hours est. | Hours actual |
 | ----------- | ----------- | ------ | ---------- | ------------ |
-| _#0_        | 5           | -      | 4d 1h 30m  | 4d 1h 40m    |
-| -           | SPG-41      | -      | 1d 3h      | 1d 4h 5m     |
-| -           | S2112OQM-15 | -      | 0d 6h      | 0d 5h 15m    |
-| -           | S2112OQM-14 | -      | 0d 3h      | 0d 1h 15m    |
-| -           | S2112OQM-28 | -      | 0d 3h      | 0d 5h 20m    |
-| -           | S2112OQM-27 | -      | 1d 1h      | 0d 7h        |
-| -           | S2112OQM-26 | -      | 0d 1h 30m  | 0d 2h 45m    |
+| _#0_        | 6           | -      | -          | 6h 5m        | 
+| -           | SPG-41      | -      | 3h 10m     | 40m          |
+| -           | SPG-44      | -      | 1d 4h      | 2d 5h 40m    |
+| -           | SPG-48      | -      | 5h         | 2h           |
+| -           | SPG-52      | -      | 2h         | 2h 20m       |
+| -           | SPG-58      | -      | 2d         | 4h           |
+| -           | SPG-67      | -      | 6h         | 50m          |
 | -           | -           | -      | -          | -            |
-| S2112OQM-3  | S2112OQM-17 | 5      | 0d 1h      | 0d 1h        |
-| S2112OQM-4  | S2112OQM-23 | 8      | 0d 5h      | 0d 3h        |
-| S2112OQM-8  | S2112OQM-22 | 2      | 0d 1h      | 0h 30m       |
-| S2112OQM-10 | S2112OQM-25 | 3      | 0d 4h      | 0d 2h 15m    |
-| S2112OQM-11 | S2112OQM-19 | 8      | 0d 6h      | 0d 4h 30m    |
-| S2112OQM-6  | S2112OQM-29 | 2      | 0d 2h      | 0d 2h        |
+| SPG-1       | 2           | 8      | -          | 4h 45m       |
+| -           | SPG-53      | -      | 4h         | 2h 30m       |
+| -           | SPG-41      | -      | 4h         | 2h 25m       |
+| SPG-2       | 3           | 5      | -          | 50m          |
+| -           | SPG-49      | -      | 1h         | 3h 30m       |
+| -           | SPG-50      | -      | 2h         | 2h 35m       |
+| -           | SPG-51      | -      | 4h         | 50m          |
+| SPG-3       | 2           | 3      | -          | -            |
+| -           | SPG-59      | -      | 3h         | 1h           |
+| -           | SPG-60      | -      | 3h         | 1h           |
+| SPG-4       | 4           | 2      | -          | 2h           |
+| -           | SPG-55      | -      | 3h         | 1h           |
+| -           | SPG-57      | -      | 4h         | 3h 45m       |
+| -           | SPG-63      | -      | 2h         | 1h 45m       |
+| -           | SPG-64      | -      | 1h         | 1h 20m       |
+| SPG-5       | 2           | 2      | -          | 1h           |
+| -           | SPG-65      | -      | 1h         | 45m          |
+| -           | SPG-66      | -      | 3h         | 1h           |
+| SPG-6       | SPG-50      | 5      | 2h         | 2h 55m       |
 
-Total est: 6d 4h 30m
-Total actual: 5d 6h 55m
+
+Total est: 9d 7h 10m
+Total actual: 9d 0h 20m
 
 > place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
 
-**Note: story _#0_ contains also the transversal tasks**
+**Note: Hours actual in story entries (eg: _SPG-1_) means time spent in overall activities, it is not a total**
 
 - Hours per task (average, standard deviation)
-    - Average: 3 h 55m
-    - Standard deviation: 3h 7m
+    - Average: 3 h 37m
+    - Standard deviation: 4h 4m
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
-    - 52.5/46.91= 1.12
-
-
+    - 79.16/72.33 = 1.09
+    
 ## QUALITY MEASURES
 
 - Unit Testing:
@@ -76,18 +88,21 @@ Total actual: 5d 6h 55m
         -  5h
     - Total hours spent:
         - 4h 25m
-
-**ignore for this spring**
+        
 - Technical Debt management:
-    - Total hours estimated: 1d
-    - Total hours spent:
-    - Hours estimated for remediation by SonarQube
-    - Hours estimated for remediation by SonarQube only for the selected and planned issues
-    - Hours spent on remediation
-    - debt ratio (as reported by SonarQube under "Measures-Maintainability")
-    - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability )
+    - Total hours estimated: 0h
+    - Total hours spent: 0h
+    - Hours estimated for remediation by SonarQube: 30m
+    - Hours estimated for remediation by SonarQube only for the selected and planned issues: 0h
+    - Hours spent on remediation: 0h
+    - debt ratio (as reported by SonarQube under "Measures-Maintainability"): 1.8%
+    - rating for each quality characteristic reported in SonarQube under "Measures":
+      - Reliability: A
+      - Security: D
+      - Maintainability: A
 
-
+**Note:** Technical debt has not been explicitly managed in this sprint because of the high expected effort in the planning and starting phases.
+The team did its best during the sprint to keep the code easily maintainable to repay quickly its debt.
 
 ## ASSESSMENT
 
@@ -115,7 +130,7 @@ Total actual: 5d 6h 55m
 - Which ones you were not able to achieve? Why?
   - documentation must be improved for all part of the project:
     - not only for design but also for methods and new technologies imported into the project
-  - testing must be extend to increase coverage and improve code quality
+  - testing must be extended to increase coverage and improve code quality
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
     1. Write better code documentation to improve functionalities understanding and code readability.
@@ -133,6 +148,6 @@ Total actual: 5d 6h 55m
         - Have at least stable development branch
 
 - One thing you are proud of as a Team!!
-    - We did great docs in the design phase
+    - We did useful docs in the design phase
     - Everyone has learnt something new
     - Morale is high as always
