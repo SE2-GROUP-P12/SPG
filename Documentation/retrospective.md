@@ -91,17 +91,17 @@ Total actual: 9d 0h 20m
         
 - Technical Debt management:
     - Total hours estimated: 0h
-    - Total hours spent: 0h
+    - Total hours spent: 0h 25m
     - Hours estimated for remediation by SonarQube: 30m
     - Hours estimated for remediation by SonarQube only for the selected and planned issues: 0h
-    - Hours spent on remediation: 0h
+    - Hours spent on remediation: 0h 25m
     - debt ratio (as reported by SonarQube under "Measures-Maintainability"): 1.8%
     - rating for each quality characteristic reported in SonarQube under "Measures":
       - Reliability: A
       - Security: D
       - Maintainability: A
 
-**Note:** Technical debt has not been explicitly managed in this sprint because of the high expected effort in the planning and starting phases.
+**Note:** Technical debt has not been extensively managed in this sprint because of the high expected effort in the planning and starting phases.
 The team did its best during the sprint to keep the code easily maintainable to repay quickly its debt.
 
 ## ASSESSMENT
