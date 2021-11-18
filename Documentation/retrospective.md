@@ -12,60 +12,68 @@ TEMPLATE FOR RETROSPECTIVE (Team 12)
 
 - 6 stories committed vs 4 stories done
 - 25 points committed vs 18 points done
-- 1w 2d 1h 10m (= 57h 10m) Nr of hours planned vs spent (as a team) 2w 2d 35m (= 96h 35m)
+- 12d 3h 20m (= 99h 20m ) Nr of hours planned vs spent (as a team) 12d 20m (= 96h 20m )
 
-**Remember**  a story is done ONLY if it fits the Definition of Done:
-
+Definition of Done:
 - Unit Tests passing *(with a little tollerance)*
 - Code review completed
 - Code present on VCS
 - End-to-End tests performed at least manually
 
 ### Detailed statistics
+| Story      | #Task  | #Subtask | Points | Estimated time | Actual time    |
+| ---------- | ------ | ------- | ------ | --------- | --------- |
+| _SPG-40_   | 6      | \-      | \-     | \-        | 6h 5m     |
+| \-         | SPG-41 | 3       | \-     | 3h 10m    | 0m        |
+| \-         | \-     | SPG-42  | \-     | 10m       | 10m       |
+| \-         | \-     | SPG-43  | \-     | 1h        | 0m        |
+| \-         | \-     | SPG-45  | \-     | 2h        | 30m       |
+| \-         | SPG-44 | 4       | \-     | 1d 4h     | 7h 30m    |
+| \-         | \-     | SPG-47  | \-     | 2h        | 7h 10m    |
+| \-         | \-     | SPG-54  | \-     | 4h        | 0m        |
+| \-         | \-     | SPG-69  | \-     | 2h        | 1h 30m    |
+| \-         | \-     | SPG-72  | \-     | 4h        | 5h 30m    |
+| \-         | SPG-48 | 3       | \-     | 5h        | 30m       |
+| \-         | \-     | SPG-61  | \-     | 2h        | 30m       |
+| \-         | \-     | SPG-62  | \-     | 2h        | 0m        |
+| \-         | \-     | SPG-68  | \-     | 1h        | 1h        |
+| \-         | SPG-52 | \-      | \-     | 2h        | 2h 20m    |
+| \-         | SPG-58 | \-      | \-     | 2d        | 4h        |
+| \-         | SPG-67 | \-      | \-     | 6h        | 50m       |
+| SPG-71     | \-     | \-      | \-     | 0h        | 3d 1h 25m |
+| \-         | \-     | \-      | \-     | \-        | \-        |
+| SPG-1      | 2      | \-      | 8      |           | 4h 45m    |
+| \-         | SPG-53 | \-      |        | 4h        | 2h 30m    |
+| \-         | SPG-56 | \-      | \-     | 4h        | 2h 25m    |
+| SPG-2      | 3      | \-      | 5      | \-        | 50m       |
+| \-         | SPG-49 | \-      | \-     | 1h        | 3h 30m    |
+| \-         | SPG-50 | \-      | \-     | 2h        | 2h 35m    |
+| \-         | SPG-51 | \-      | \-     | 4h        | 50m       |
+| SPG-3      | 2      | \-      | 3      | \-        | 0m        |
+| \-         | SPG-59 | \-      | \-     | 3h        | 1h        |
+| \-         | SPG-60 | \-      | \-     | 3h        | 1h        |
+| SPG-4      | 4      | \-      | 2      | \-        | 2h        |
+| \-         | SPG-55 | \-      | \-     | 3h        | 1h        |
+| \-         | SPG-57 | \-      | \-     | 4h        | 3h 45m    |
+| \-         | SPG-63 | \-      | \-     | 2h        | 1h 45m    |
+| \-         | SPG-64 | \-      | \-     | 1h        | 1h 20m    |
+| SPG-5      | 2      | \-      | 2      | \-        | 1h        |
+| \-         | SPG-65 | \-      | \-     | 1h        | 45m       |
+| \-         | SPG-66 | \-      | \-     | 3h        | 1h        |
+| SPG-6      | \-     | \-      | 5      | \-        | 20m       |
 
-| Story       | # Tasks     | Points | Hours est. | Hours actual |
-| ----------- | ----------- | ------ | ---------- | ------------ |
-| _#0_        | 6           | -      | -          | 6h 5m        | 
-| -           | SPG-41      | -      | 3h 10m     | 40m          |
-| -           | SPG-44      | -      | 1d 4h      | 2d 5h 40m    |
-| -           | SPG-48      | -      | 5h         | 2h           |
-| -           | SPG-52      | -      | 2h         | 2h 20m       |
-| -           | SPG-58      | -      | 2d         | 4h           |
-| -           | SPG-67      | -      | 6h         | 50m          |
-| -           | -           | -      | -          | -            |
-| SPG-1       | 2           | 8      | -          | 4h 45m       |
-| -           | SPG-53      | -      | 4h         | 2h 30m       |
-| -           | SPG-41      | -      | 4h         | 2h 25m       |
-| SPG-2       | 3           | 5      | -          | 50m          |
-| -           | SPG-49      | -      | 1h         | 3h 30m       |
-| -           | SPG-50      | -      | 2h         | 2h 35m       |
-| -           | SPG-51      | -      | 4h         | 50m          |
-| SPG-3       | 2           | 3      | -          | -            |
-| -           | SPG-59      | -      | 3h         | 1h           |
-| -           | SPG-60      | -      | 3h         | 1h           |
-| SPG-4       | 4           | 2      | -          | 2h           |
-| -           | SPG-55      | -      | 3h         | 1h           |
-| -           | SPG-57      | -      | 4h         | 3h 45m       |
-| -           | SPG-63      | -      | 2h         | 1h 45m       |
-| -           | SPG-64      | -      | 1h         | 1h 20m       |
-| SPG-5       | 2           | 2      | -          | 1h           |
-| -           | SPG-65      | -      | 1h         | 45m          |
-| -           | SPG-66      | -      | 3h         | 1h           |
-| SPG-6       | SPG-50      | 5      | 2h         | 2h 55m       |
+**Note:** Actual time reported in story entries represents time spent in overall activities, it is **not** a total of its subtasks 
+(eg: time spent in _SPG-3_ isn't the sum of time spent in _SPG-59_ and _SPG-60_)
 
+**Total est:** 12d 3h 20m (= 99h 20m )
 
-Total est: 9d 7h 10m
-Total actual: 9d 0h 20m
-
-> place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
-
-**Note: Hours actual in story entries (eg: _SPG-1_) means time spent in overall activities, it is not a total**
+**Total actual:** 12d 20m (= 96h 20m )
 
 - Hours per task (average, standard deviation)
-    - Average: 3 h 37m
-    - Standard deviation: 4h 4m
-- Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
-    - 79.16/72.33 = 1.09
+    - Average: 2 h 36m
+    - Standard deviation: 4h 33m
+- Total task estimation error ratio: 
+  - sum of total hours estimation / sum of total hours spent from previous table: 99.33/96.33 = 1.03
     
 ## QUALITY MEASURES
 
@@ -91,17 +99,17 @@ Total actual: 9d 0h 20m
         
 - Technical Debt management:
     - Total hours estimated: 0h
-    - Total hours spent: 0h 25m
+    - Total hours spent: 25m
     - Hours estimated for remediation by SonarQube: 30m
     - Hours estimated for remediation by SonarQube only for the selected and planned issues: 0h
-    - Hours spent on remediation: 0h 25m
+    - Hours spent on remediation: 25m
     - debt ratio (as reported by SonarQube under "Measures-Maintainability"): 1.8%
     - rating for each quality characteristic reported in SonarQube under "Measures":
       - Reliability: A
       - Security: D
       - Maintainability: A
 
-**Note:** Technical debt has not been extensively managed in this sprint because of the high expected effort in the planning and starting phases.
+**Note:** Technical debt has not been explicitly managed in this sprint because of the high expected effort in the planning and starting phases.
 The team did its best during the sprint to keep the code easily maintainable to repay quickly its debt.
 
 ## ASSESSMENT
@@ -112,6 +120,7 @@ The team did its best during the sprint to keep the code easily maintainable to 
     3. adding spring security to the project: configurations and set up, form login hosted on server not reachable from fe
     4. docker macos: fixing bugs on mac devices
     5. lack of doc: handle docs in a better way especially in the end of sprint
+    6. overspecialization of tasks: defining too many levels and too complex relationships among tasks and subtasks made it difficult to keep precise track of time
 
 - What lessons did you learn (both positive and negative) in this sprint?
     1. it's better to plan and bind branches and tasks
@@ -146,8 +155,9 @@ The team did its best during the sprint to keep the code easily maintainable to 
         - Create subgroups in order to have a better alignment between fe and be for a specific task
         - Define the tasks assignments before starting development
         - Have at least stable development branch
+        - Create at most one level of subtasks
 
 - One thing you are proud of as a Team!!
     - We did useful docs in the design phase
     - Everyone has learnt something new
-    - Morale is high as always
+    - Morale is high as always, the team is positive about improvements that could be done
