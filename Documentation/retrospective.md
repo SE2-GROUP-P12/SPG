@@ -116,7 +116,7 @@ The team did its best during the sprint to keep the code easily maintainable to 
 
 - What caused your errors in estimation (if any)?
     1. merge different branches: late merge on sprint1 branch and conflict between fe and be
-    2. branch management: wrong branch handling related to different tasks
+    2. branch management: wrong branch handling related to different tasks, handling correctly tasks, subtasks and their bind.
     3. adding spring security to the project: configurations and set up, form login hosted on server not reachable from fe
     4. docker macos: fixing bugs on mac devices
     5. lack of doc: handle docs in a better way especially in the end of sprint
