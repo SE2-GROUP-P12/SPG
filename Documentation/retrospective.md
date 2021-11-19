@@ -12,7 +12,7 @@ TEMPLATE FOR RETROSPECTIVE (Team 12)
 
 - 6 stories committed vs 4 stories done
 - 25 points committed vs 18 points done
-- 12d 3h 20m (= 99h 20m ) Nr of hours planned vs spent (as a team) 12d 20m (= 96h 20m )
+- 12d 3h 20m (= 99h 20m ) Nr of hours planned vs spent (as a team) 12d 5h (= 101h )
 
 Definition of Done:
 - Unit Tests passing *(with a little tollerance)*
@@ -23,57 +23,57 @@ Definition of Done:
 ### Detailed statistics
 | Story      | #Task  | #Subtask | Points | Estimated time | Actual time    |
 | ---------- | ------ | ------- | ------ | --------- | --------- |
-| _SPG-40_   | 6      | \-      | \-     | \-        | 5h 30m     |
+| _SPG-40_   | 6      | \-      | \-     | \-        | \-        |
 | \-         | SPG-41 | 3       | \-     | 3h 10m    | 0m        |
 | \-         | \-     | SPG-42  | \-     | 10m       | 10m       |
-| \-         | \-     | SPG-43  | \-     | 1h        | 0m        |
+| \-         | \-     | SPG-43  | \-     | 1h        | 20m       |
 | \-         | \-     | SPG-45  | \-     | 2h        | 30m       |
 | \-         | SPG-44 | 4       | \-     | 1d 4h     | 7h 30m    |
 | \-         | \-     | SPG-47  | \-     | 2h        | 7h 10m    |
 | \-         | \-     | SPG-54  | \-     | 4h        | 0m        |
 | \-         | \-     | SPG-69  | \-     | 2h        | 1h 30m    |
-| \-         | \-     | SPG-72  | \-     | 4h        | 5h 30m    |
+| \-         | \-     | SPG-72  | \-     | 4h        | 6h 30m    |
 | \-         | SPG-48 | 3       | \-     | 5h        | 1h        |
 | \-         | \-     | SPG-61  | \-     | 2h        | 30m       |
 | \-         | \-     | SPG-62  | \-     | 2h        | 0m        |
 | \-         | \-     | SPG-68  | \-     | 1h        | 1h        |
 | \-         | SPG-52 | \-      | \-     | 2h        | 2h 20m    |
-| \-         | SPG-58 | \-      | \-     | 2d        | 4h  05m      |
+| \-         | SPG-58 | \-      | \-     | 2d        | 6h  05m   |
 | \-         | SPG-67 | \-      | \-     | 6h        | 50m       |
-| SPG-71     | \-     | \-      | \-     | 0h        | 3d 1h 25m |
+| SPG-71     | \-     | \-      | \-     | 0h        | 3d 4h 45m |
 | \-         | \-     | \-      | \-     | \-        | \-        |
-| SPG-1      | 2      | \-      | 8      |           | 4h 00m    |
-| \-         | SPG-53 | \-      |        | 4h        | 2h 30m    |
+| SPG-1      | 2      | \-      | 8      |           | \-        |
+| \-         | SPG-53 | \-      |        | 4h        | 6h 30m    |
 | \-         | SPG-56 | \-      | \-     | 4h        | 3h 10m    |
-| SPG-2      | 3      | \-      | 5      | \-        | 0m     |
+| SPG-2      | 3      | \-      | 5      | \-        | \-        |
 | \-         | SPG-49 | \-      | \-     | 1h        | 3h 30m    |
 | \-         | SPG-50 | \-      | \-     | 2h        | 3h 25m    |
 | \-         | SPG-51 | \-      | \-     | 4h        | 50m       |
-| SPG-3      | 2      | \-      | 3      | \-        | 0m        |
+| SPG-3      | 2      | \-      | 3      | \-        | \-        |
 | \-         | SPG-59 | \-      | \-     | 3h        | 1h        |
 | \-         | SPG-60 | \-      | \-     | 3h        | 1h        |
-| SPG-4      | 4      | \-      | 2      | \-        | 2h        |
-| \-         | SPG-55 | \-      | \-     | 3h        | 1h        |
+| SPG-4      | 4      | \-      | 2      | \-        | \-        |
+| \-         | SPG-55 | \-      | \-     | 3h        | 2h        |
 | \-         | SPG-57 | \-      | \-     | 4h        | 3h 45m    |
-| \-         | SPG-63 | \-      | \-     | 2h        | 1h 45m    |
+| \-         | SPG-63 | \-      | \-     | 2h        | 2h 45m    |
 | \-         | SPG-64 | \-      | \-     | 1h        | 1h 20m    |
-| SPG-5      | 2      | \-      | 2      | \-        | 0m        |
-| \-         | SPG-65 | \-      | \-     | 1h        | 1h 45m       |
+| SPG-5      | 2      | \-      | 2      | \-        | \-        |
+| \-         | SPG-65 | \-      | \-     | 1h        | 1h 45m    |
 | \-         | SPG-66 | \-      | \-     | 3h        | 1h        |
-| SPG-6      | SPG-50     | \-      | 5      | \-    | 20m       |
+| SPG-6      | SPG-50 | \-      | 5      | \-        | 20m       |
 
 **Note:** Actual time reported in story entries represents time spent in overall activities, it is **not** a total of its subtasks 
 (eg: time spent in _SPG-3_ isn't the sum of time spent in _SPG-59_ and _SPG-60_)
 
 **Total est:** 12d 3h 20m (= 99h 20m )
 
-**Total actual:** 12d 20m (= 96h 20m )
+**Total actual:** 12d 5h (= 101h )
 
 - Hours per task (average, standard deviation)
-    - Average: 3h 0m
-    - Standard deviation: 4h 33m
+    - Average: 5h 3m
+    - Standard deviation: 5h 32m
 - Total task estimation error ratio: 
-  - sum of total hours estimation / sum of total hours spent from previous table: 99.33/96.33 = 1.03
+  - sum of total hours estimation / sum of total hours spent from previous table: 99.33/101 = 0.98
     
 ## QUALITY MEASURES
 
