@@ -12,7 +12,6 @@ import { API } from './API.js'
 function DeliverOrder(props) {
     const [customer, setCustomer] = useState(null);
     const [orders, setOrders] = useState([]);
-    const [dirty, setDirty] = useState(true);
 
     /*TIME MACHINE MANAGEMENT*/
     const [itsTime, setItsTime] = useState(false)
@@ -56,7 +55,6 @@ function DeliverOrder(props) {
         else {
             setOrders([]);
         }
-        setDirty(true);
     }
 
     return (

@@ -14,6 +14,7 @@ async function browseProducts() {
 }
 */
 
+// GET the list of all the products, if error occurs it returns undefined 
 async function browseProducts() {
     try {
         let listProducts;
@@ -27,6 +28,7 @@ async function browseProducts() {
         if (response.ok)
             return listProducts;
         else{
+            //TODO: handle in a better way the error message
             window.location.href = "http://localhost:3000/Unauthorized";
         }
     }
@@ -36,7 +38,7 @@ async function browseProducts() {
     }
 }
 
-
+//GET the cart related to the requested user by his/her email address, if error occurs it returns undefined 
 async function getCart(data) {
     try {
         const response = await fetch("/api/customer/getCart?email=" + data.email, {
@@ -48,7 +50,6 @@ async function getCart(data) {
         let cart = await response.json();
         if (response.ok)
             return cart;
-
         else
             return undefined;
     }
@@ -58,6 +59,7 @@ async function getCart(data) {
     }
 }
 
+//POST: add products in the cart, it returns boolean
 async function addToCart(product) {
     try {
         const response = await fetch("/api/product/addToCart", {
@@ -78,6 +80,7 @@ async function addToCart(product) {
     }
 }
 
+//POST: increase the amount of money (data.value) in the wallet of a customer (data.email), it returns a boolean
 async function topUp(data)
 {
     try{
@@ -99,10 +102,11 @@ async function topUp(data)
     }
 }
 
-async function customerExistsByMail(data)
+//Check whether the customer exists or not by his/her email address, if error occurs it returns undefined, otherwise true
+async function customerExistsByMail(email)
 {
     try{
-        const response = await fetch ("/api/customer/customerExistsByMail?email="+data, {
+        const response = await fetch ("/api/customer/customerExistsByMail?email="+email, {
             method: 'GET',
             headers: { 
                 'Accept': 'application/json',
@@ -120,6 +124,7 @@ async function customerExistsByMail(data)
     }
 }
 
+//POST: place an order by the email address (data.email) of a customer (must be checked before), it returns boolean 
 async function placeOrder(data)
 {
     try{
@@ -141,6 +146,8 @@ async function placeOrder(data)
     }
 }
 
+//DELETE: delete the order of a customer by his/her email (data.email), it returns a boolean
+//TODO: what happen if a customer has more than one order?
 async function dropOrder (data)
 {
     try{
@@ -162,6 +169,8 @@ async function dropOrder (data)
     }
 }
 
+// GET: retrieve the list of all orders by customer's email address. 
+//      If error occurs it returns null, otherwise it returns a json with orderId + List of Products
 async function getOrdersByEmail(email){
     try {
         const response = await fetch ("api/customer/getOrdersByEmail?email="+email, {
@@ -183,6 +192,7 @@ async function getOrdersByEmail(email){
     }
 }
 
+//POST: handout of an order by the orderId, it returns a boolean
 async function deliverOrder(orderId){
     try {
         const response = await fetch ("/api/customer/deliverOrder", {
@@ -205,6 +215,7 @@ async function deliverOrder(orderId){
     }
 }
 
+//GET: retrieve the total amount of a customer's wallet by his/her email address
 async function getWallet(email) {
     
     try {
@@ -225,6 +236,7 @@ async function getWallet(email) {
     }
 }
 
+//GET: check whther the customer exists by its email and its SSN code, it returns a boolean
 async function customerExists(email, ssn) {
     try {
         const response = await fetch('/api/customer/customerExists', {
@@ -245,6 +257,7 @@ async function customerExists(email, ssn) {
     }
 }
 
+//POST: register a new customer by sending all his/her info, it returns a boolean
 async function addCustomer(jsonObj) {
     try {
         const response = await fetch("/api/customer/addCustomer", {
