@@ -60,7 +60,7 @@ Definition of Done:
 | SPG-5      | 2      | \-      | 2      | \-        | 0m        |
 | \-         | SPG-65 | \-      | \-     | 1h        | 1h 45m       |
 | \-         | SPG-66 | \-      | \-     | 3h        | 1h        |
-| SPG-6      | SPG-50     | \-      | 5      | \-        | 20m       |
+| SPG-6      | SPG-50     | \-      | 5      | \-    | 20m       |
 
 **Note:** Actual time reported in story entries represents time spent in overall activities, it is **not** a total of its subtasks 
 (eg: time spent in _SPG-3_ isn't the sum of time spent in _SPG-59_ and _SPG-60_)
@@ -70,7 +70,7 @@ Definition of Done:
 **Total actual:** 12d 20m (= 96h 20m )
 
 - Hours per task (average, standard deviation)
-    - Average: 2 h 36m
+    - Average: 3h 0m
     - Standard deviation: 4h 33m
 - Total task estimation error ratio: 
   - sum of total hours estimation / sum of total hours spent from previous table: 99.33/96.33 = 1.03
