@@ -1,4 +1,3 @@
-
 /* browse di RICK
 
 async function browseProducts() {
@@ -13,24 +12,38 @@ async function browseProducts() {
     }).catch(err => console.log(err));
 }
 */
+/**
+ *
+ * COSTANTS DEFINITION HERE
+ *
+ */
+
+const AuthorizationHeaders = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'Authorization': "Bearer " + sessionStorage.getItem("accessToken")
+};
+
+/**
+ *
+ * FETCH DECLARATIONS
+ *
+ */
 
 async function browseProducts() {
     try {
         let listProducts;
         const response = await fetch("/api/product/all", {
             method: 'GET',
-            headers: { 
-                'Accept': 'application/json',
-                'Content-Type': 'application/json' },
+            headers: AuthorizationHeaders,
         });
         listProducts = await response.json();
         if (response.ok)
             return listProducts;
-        else{
+        else {
             window.location.href = "http://localhost:3000/Unauthorized";
         }
-    }
-    catch (err) {
+    } catch (err) {
         console.log("Some error occourred");
         return undefined;
     }
@@ -41,9 +54,7 @@ async function getCart(data) {
     try {
         const response = await fetch("/api/customer/getCart?email=" + data.email, {
             method: 'GET',
-            headers: { 
-                'Accept': 'application/json',
-                'Content-Type': 'application/json' },
+            headers: AuthorizationHeaders,
         });
         let cart = await response.json();
         if (response.ok)
@@ -51,8 +62,7 @@ async function getCart(data) {
 
         else
             return undefined;
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err);
         return undefined;
     }
@@ -62,120 +72,101 @@ async function addToCart(product) {
     try {
         const response = await fetch("/api/product/addToCart", {
             method: 'POST',
-            headers: { 
-                'Accept': 'application/json',
-                'Content-Type': 'application/json' },
+            headers: AuthorizationHeaders,
             body: JSON.stringify(product)
         });
         if (response.ok)
             return true;
         else
             return false;
-    }
-    catch (err) {
+    } catch (err) {
         console.log("Some error occourred");
         return undefined;
     }
 }
 
-async function topUp(data)
-{
-    try{
-        const response = await fetch ("/api/customer/topUp", {
+async function topUp(data) {
+    try {
+        const response = await fetch("/api/customer/topUp", {
             method: 'POST',
-            headers: { 
-                'Accept': 'application/json',
-                'Content-Type': 'application/json' },
+            headers: AuthorizationHeaders,
             body: JSON.stringify(data)
         });
-        if(response.ok)
+        if (response.ok)
             return true;
         else
             return false;
-    }
-    catch(err) {
+    } catch (err) {
         console.log("Some error occourred");
         return undefined;
     }
 }
 
-async function customerExistsByMail(data)
-{
-    try{
-        const response = await fetch ("/api/customer/customerExistsByMail?email="+data, {
+async function customerExistsByMail(data) {
+    try {
+        const response = await fetch("/api/customer/customerExistsByMail?email=" + data, {
             method: 'GET',
-            headers: { 
+            headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json' },
+                'Content-Type': 'application/json'
+            },
         });
         let exists = await response.json();
-        if(response.ok)
+        if (response.ok)
             return exists;
         else
             return undefined;
-    }
-    catch(err) {
+    } catch (err) {
         console.log(err);
         return undefined;
     }
 }
 
-async function placeOrder(data)
-{
-    try{
-        const response = await fetch ("/api/customer/placeOrder", {
-            method: 'POST',
-            headers: { 
-                'Accept': 'application/json',
-                'Content-Type': 'application/json' },
-            body: JSON.stringify({'email' : data.email})
-        });
-        if(response.ok)
-            return true;
-        else
-            return false;
-    }
-    catch(err) {
-        console.log(err);
-        return undefined;
-    }
-}
-
-async function dropOrder (data)
-{
-    try{
-        const response = await fetch ("/api/customer/dropOrder", {
-            method: 'DELETE',
-            headers: { 
-                'Accept': 'application/json',
-                'Content-Type': 'application/json' },
-            body: JSON.stringify({'email' : data.email})
-        });
-        if(response.ok)
-            return true;
-        else
-            return false;
-    }
-    catch(err) {
-        console.log(err);
-        return undefined;
-    }
-}
-
-async function getOrdersByEmail(email){
+async function placeOrder(data) {
     try {
-        const response = await fetch ("api/customer/getOrdersByEmail?email="+email, {
+        const response = await fetch("/api/customer/placeOrder", {
+            method: 'POST',
+            headers: AuthorizationHeaders,
+            body: JSON.stringify({'email': data.email})
+        });
+        if (response.ok)
+            return true;
+        else
+            return false;
+    } catch (err) {
+        console.log(err);
+        return undefined;
+    }
+}
+
+async function dropOrder(data) {
+    try {
+        const response = await fetch("/api/customer/dropOrder", {
+            method: 'DELETE',
+            headers: AuthorizationHeaders,
+            body: JSON.stringify({'email': data.email})
+        });
+        if (response.ok)
+            return true;
+        else
+            return false;
+    } catch (err) {
+        console.log(err);
+        return undefined;
+    }
+}
+
+async function getOrdersByEmail(email) {
+    try {
+        const response = await fetch("api/customer/getOrdersByEmail?email=" + email, {
             method: 'GET',
-            headers: { 
-                'Accept': 'application/json',
-                'Content-Type': 'application/json' },
+            headers: AuthorizationHeaders,
         });
         const data = await response.json();
-        if(response.ok){
+        if (response.ok) {
             console.log(data);
             return data;
-        }
-        else {
+        } else {
             return null;
         }
     } catch (error) {
@@ -183,21 +174,17 @@ async function getOrdersByEmail(email){
     }
 }
 
-async function deliverOrder(orderId){
+async function deliverOrder(orderId) {
     try {
-        const response = await fetch ("/api/customer/deliverOrder", {
+        const response = await fetch("/api/customer/deliverOrder", {
             method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type' : 'application/json'
-        },
+            headers: AuthorizationHeaders,
             body: JSON.stringify(orderId)
         });
         const data = await response.json();
-        if (response.ok){
+        if (response.ok) {
             return data;
-        }
-        else{
+        } else {
             return false;
         }
     } catch (error) {
@@ -206,21 +193,18 @@ async function deliverOrder(orderId){
 }
 
 async function getWallet(email) {
-    
+
     try {
-        const response = await fetch("/api/customer/getWallet?email="+email, {
+        const response = await fetch("/api/customer/getWallet?email=" + email, {
             method: 'GET',
-            headers: { 
-                'Content-Type': 'application/json', 
-                'Accept': 'application/json'}
+            headers: AuthorizationHeaders
         });
         const data = await response.json();
         console.log(JSON.stringify(data));
         if (response.ok) {
             return data;
         }
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err);
     }
 }
@@ -233,14 +217,13 @@ async function customerExists(email, ssn) {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email: email, ssn: ssn })
+            body: JSON.stringify({email: email, ssn: ssn})
         })
         const data = await response.json();
         if (response.ok) {
             return data.exist;
         }
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err);
     }
 }
@@ -255,16 +238,28 @@ async function addCustomer(jsonObj) {
             },
             body: jsonObj
         });
-        if (response.ok){ 
+        if (response.ok) {
             console.log("done!");
             return response.ok;
         }
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err);
     }
 }
 
-const API = {browseProducts, placeOrder, addToCart, getWallet, topUp, getCart, customerExists, customerExistsByMail, dropOrder, getOrdersByEmail, deliverOrder, addCustomer};
+const API = {
+    browseProducts,
+    placeOrder,
+    addToCart,
+    getWallet,
+    topUp,
+    getCart,
+    customerExists,
+    customerExistsByMail,
+    dropOrder,
+    getOrdersByEmail,
+    deliverOrder,
+    addCustomer
+};
 export {API}
 

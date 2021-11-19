@@ -12,57 +12,48 @@ function Navbar(props) {
     const [location, setLocation] = useState(window.location);
 
     function doLogOut() {
-        window.location.href = "http://localhost:8081/logout";
+        //TODO: insert this fecth into the API file
+       fetch("/api/logout", {
+           method : 'GET',
+           headers : {
+               'Accept': 'application/json',
+               'Content-Type': 'application/json',
+               'Authorization': "Bearer " + sessionStorage.getItem("accessToken")
+           }
+       }).then(response => {
+           //Logout succesful, clear local/session storage lato FE
+           if(response.ok){
+               sessionStorage.removeItem("accessToken");
+               sessionStorage.removeItem("refreshToken");
+               localStorage.removeItem("role");
+               localStorage.removeItem("username");
+           }
+           else{
+               //Problems occour
+               window.location.href = "http://localhost:3000/Unauthorized";
+           }
+       })
+
     }
 
-    function doLogin() {
-        window.location.href = "http://localhost:8081/login";
-    }
-
-    /*Login presence button
-    // PARTE DI RICK
-    if (location == "http://localhost:3000/" || location == "http://localhost:3000/Unauthorized")
-        return (
-            <Nav className="navbar bg-success navbar-dark">
-                <img src={logo} alt="logo" className="logo"/>
-                <Link style={{color: 'white'}} to='/NewCustomer'>Sign in</Link>
-                <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log
-                    in </Button>
-            </Nav>
-        );
-
-    else if (location == "http://localhost:3000/NewCustomer")
-        return (
-            <Nav className="navbar bg-success navbar-dark">
-                <img src={logo} alt="logo" className="logo"/>
-            </Nav>
-        );
-
-    else
-        return (
-            <Nav className="navbar bg-success navbar-dark">
-                <img src={logo} alt="logo" className="logo"/>
-                <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
-            </Nav>
-        );
-        */
-
-    //PARTE DI MARTI
-    return(
-           <Switch>
-           <Route exact path="/">
+    return (
+        <Switch>
+            <Route exact path="/">
                 <Nav className="navbar bg-success navbar-dark">
                     <img src={logo} alt="logo" className="logo"/>
                     <Link style={{color: 'white'}} to='/NewCustomer'>Sign in</Link>
-                    <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                    <Link to="/LoginComponent">
+                        <Button className="btn btn-outline-light" variant="success"> Log in </Button>
+                    </Link>
                 </Nav>
             </Route>
-           <Route exact path="/Unauthorized">
+            <Route exact path="/Unauthorized">
                 <Nav className="navbar bg-success navbar-dark">
                     <img src={logo} alt="logo" className="logo"/>
                     <Link style={{color: 'white'}} to='/NewCustomer'>Sign in</Link>
-                    <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
-                </Nav>
+                    <Link to="/LoginComponent">
+                        <Button className="btn btn-outline-light" variant="success"> Log in </Button>
+                    </Link> </Nav>
             </Route>
             <Route exact path="/NewCustomer">
                 <Nav className="navbar bg-success navbar-dark">
@@ -72,10 +63,12 @@ function Navbar(props) {
             <Route>
                 <Nav className="navbar bg-success navbar-dark">
                     <img src={logo} alt="logo" className="logo"/>
-                    <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
-                </Nav>       
+                    <Link to = "/">
+                        <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
+                    </Link>
+                </Nav>
             </Route>
-           </Switch>
+        </Switch>
     );
 }
 

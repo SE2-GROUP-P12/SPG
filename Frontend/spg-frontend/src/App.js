@@ -23,7 +23,7 @@ const DEBUG = true;
 function App() {
     /*LOG IN AND SESSION MANAGEMENT*/
     const [isLogged, setIsLogged] = useState(false);
-    const [loggedUserInfo, setLoggedUserInfo] = useState({});
+    const [loggedUserInfo, setLoggedUserInfo] = useState(null);
 
     /*TIME MACHINE MANAGEMENT*/
     const [show, setShow] = useState(false);
@@ -47,7 +47,7 @@ function App() {
       <div className="App">
         <Container fluid className="header">
             <Router>
-                <Navbar isLogged = {isLogged} loggeduserInfo = {loggedUserInfo} setIsLogged={setIsLogged}/>
+                <Navbar isLogged = {isLogged} loggeduserInfo = {loggedUserInfo} setIsLogged={setIsLogged} setLoggedUserInfo = {setLoggedUserInfo}/>
            <Switch>
            <Route exact path="/DeliverOrder">
                    <DeliverOrder time={time} date={date}/>
@@ -68,7 +68,7 @@ function App() {
                    <ShopEmployee/>
                </Route>
                <Route exact path="/LoginComponent">
-                   <Login/>
+                   <Login setLeggedUserInfo = {setLoggedUserInfo} setIsLogged = {setIsLogged}/>
                </Route>
                <Route exact path="/Unauthorized">
                    <UnauthorizedComponent/>

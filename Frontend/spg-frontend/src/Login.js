@@ -5,14 +5,39 @@ import {Link} from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {Formik, Form, Field} from 'formik';
+import {buildLoginBody} from './Utilities';
 import * as Yup from 'yup';
+import {useState} from "react";
 
 let base64 = require('base-64');
 
 
 function Login(props) {
-    function onClickSubmissionHandler() {
+    const [redirectPath, setRedirectPath] = useState("/LoginComponent");
 
+    function onClickSubmissionHandler(username, password) {
+        fetch("/api/login", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: buildLoginBody({
+                'username': username,
+                'password': password
+            })
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(body => {
+                        sessionStorage.setItem('accessToken', body['accessToken']);
+                        sessionStorage.setItem('refreshToken', body['refreshToken']);
+                        localStorage.setItem('username', body['username']);
+                        localStorage.setItem('role', body['roles']);
+                    }
+                )
+                window.location.href = "http://localhost:3000/ShopEmployee"; //TODO: there's a better way to implement that system without using a location href
+            }
+        });
     }
 
 
@@ -29,7 +54,7 @@ function Login(props) {
                     password: Yup.string().required('Password is required').min(6, "Password is too short")
                 })}
                 onSubmit={async (values) => {
-                    alert(JSON.stringify(values, null, 2));
+                    onClickSubmissionHandler(values.email, values.password);
                 }}
                 validateOnChange={false}
                 validateOnBlur={false}>
@@ -43,9 +68,13 @@ function Login(props) {
                                 Password: <Field name="password" label="Password" type="password"/>
                             </Row>
                             <Row style={{padding: "20px"}}>
-                                <Col xs={6}><Button type="submit" variant="success"
-                                                    onClick={() => onClickSubmissionHandler()}>Login</Button></Col>
-                                <Col xs={6}><Link to="/"><Button variant="secondary">Back</Button></Link></Col>
+
+                                <Col xs={6}>
+                                    <Button type="submit" variant="success">Login</Button>
+                                </Col>
+
+                                <Col xs={6}><Link to="/"><Button variant="secondary">
+                                    Back</Button></Link></Col>
                             </Row>
                             <Row>
                                 {errors.email && touched.email ? (
