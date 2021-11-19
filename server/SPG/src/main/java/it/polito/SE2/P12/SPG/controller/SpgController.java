@@ -1,29 +1,39 @@
 package it.polito.SE2.P12.SPG.controller;
 
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.Basket;
-import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
-import it.polito.SE2.P12.SPG.service.SpgBasketService;
-import it.polito.SE2.P12.SPG.service.SpgOrderService;
-import it.polito.SE2.P12.SPG.service.SpgProductService;
-import it.polito.SE2.P12.SPG.service.SpgUserService;
+import it.polito.SE2.P12.SPG.security.ApplicationUserRole;
+import it.polito.SE2.P12.SPG.service.*;
 import it.polito.SE2.P12.SPG.utils.API;
+import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URI;
+import java.util.*;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 /**
  * NOTE: in order to granted access to an api based on the user roles add roles into the 'PreAuthorization' annotation as follows:
  * PreAuthorize("hasAnyRole('ROLE_<role1>', 'ROLE_<role2>, ...)"). Possible available roles are provided into /security/ApplicationUserRole enum.
  */
 
+@Slf4j
 @RestController
 @RequestMapping(value = API.HOME, produces = "application/json", consumes = "application/json")
 public class SpgController {
@@ -32,19 +42,22 @@ public class SpgController {
     private final SpgUserService userService;
     private final SpgOrderService orderService;
     private final SpgBasketService basketService;
+    private final JWTUserHandlerService jwtUserHandlerService;
+
 
     @Autowired
-    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService) {
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService) {
         this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
+        this.jwtUserHandlerService = jwtUserHandlerService;
         this.userService.populateDB();
         this.productService.populateDB();
     }
 
     @GetMapping("/")
-    public ResponseEntity home() {
+    public ResponseEntity<?> home() {
         return ResponseEntity.ok().build();
     }
 
@@ -76,6 +89,7 @@ public class SpgController {
     @PostMapping(API.CREATE_CUSTOMER)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity createCustomer(@RequestBody String userJsonData) {
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/" + API.CREATE_CUSTOMER).toUriString());
         if (userJsonData == null || userJsonData.equals(""))
             return ResponseEntity.badRequest().build();
         Map<String, Object> requestMap = extractMapFromJsonString(userJsonData);
@@ -86,13 +100,13 @@ public class SpgController {
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
                 && requestMap.containsKey("role")
         )
-            return ResponseEntity.ok(userService.addNewClient(
+            return ResponseEntity.created(uri).body(userService.addNewClient(
                     new User(requestMap.get("name").toString(), requestMap.get("surname").toString(),
                             requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
                             requestMap.get("role").toString(), requestMap.get("email").toString(),
                             requestMap.get("password").toString())
             ));
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.badRequest().body("email/ssn already present");
     }
 
     @PostMapping(API.PLACE_ORDER)
@@ -149,7 +163,7 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("email") && requestMap.containsKey("value")) {
             String email = (String) requestMap.get("email");
-            Double value = Double.valueOf((Double) requestMap.get("value"));
+            Double value = Double.valueOf(requestMap.get("value").toString());
             return ResponseEntity.ok(userService.topUp(email, value));
         }
         return ResponseEntity.badRequest().build();
@@ -192,6 +206,57 @@ public class SpgController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(API.REFRESH_TOKEN)
+    public void getRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String refreshToken = authorizationHeader.substring("Bearer ".length());
+            JWTProviderImpl jwtProvider = new JWTProviderImpl();
+            try {
+                Map<String, String> responseBody = jwtProvider.verifyRefreshTokenAndRegenerateAccessToken(refreshToken, request.getRequestURL().toString(), this.userService);
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
+            } catch (Exception e) {
+                log.error("Error  refreshing token: " + e.getMessage());
+                response.setHeader("error", e.getMessage());
+                response.setStatus(FORBIDDEN.value());
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), jwtProvider.setErrorMessage(e));
+            }
+        } else {
+            throw new RuntimeException("Refresh token is missing");
+        }
+    }
+
+    @GetMapping(API.LOGOUT)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public void doLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String accessToken = authorizationHeader.substring("Bearer ".length());
+            JWTProviderImpl jwtProvider = new JWTProviderImpl();
+            try {
+                Map<String, String> okResponseBody = new HashMap<>();
+                okResponseBody.put("status", "successful(user logged out correctly");
+                String username = jwtProvider.verifyAccessToken(accessToken);
+                User user = userService.getUserByEmail(username);
+                jwtUserHandlerService.invalidateUserTokens(user, accessToken);
+                response.setStatus(OK.value());
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), okResponseBody);
+            } catch (Exception e) {
+                log.error("Error logging out: " + e.getMessage());
+                log.error("Error logging out: " + Arrays.toString(e.getStackTrace()));
+                response.setHeader("error", e.getMessage());
+                response.setStatus(FORBIDDEN.value());
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), jwtProvider.setErrorMessage(e));
+            }
+        } else {
+            throw new RuntimeException("Refresh token is missing");
+        }
+    }
+
     @GetMapping(API.TEST)
     public ResponseEntity test() {
         double response = userService.topUp("mario.rossi@gmail.com", 12.70);
@@ -210,5 +275,4 @@ public class SpgController {
         }
         return requestMap;
     }
-
 }
