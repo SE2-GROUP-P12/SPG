@@ -24,26 +24,6 @@ function BrowseProducts() {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
 
-    /* useEffect(() => {
-        fetch('/api/product/all', {
-            method : 'GET',
-            headers : {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                //'Authorization': 'Basic ' + base64.encode('admin' + ":" + 'password')
-            }
-        }).then(response => {
-            if (response.ok) {
-                response.json().then((body) => {
-                    setProducts([...body]);
-                });
-            } else{
-                window.location.href = "http://localhost:3000/Unauthorized"
-            }
-            setLoadCompleted(true);
-        })
-    }, []); */
-
     async function _browseProducts() {
         const data = await API.browseProducts();
         setProducts(data);
@@ -142,23 +122,6 @@ function BrowseProducts() {
                 </Modal>
             </>
         );
-
-        /*        return (
-                    <>
-                        
-                        <li className="list-group-item">
-                            <Row>
-                                <Col xs={2}> <img src={fruit} alt="fruit" style={{ width: '50px', heigth: '50px' }} /> </Col>
-                                <Col
-                                    xs={8}>{props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Col>
-                                <Col xs={2}><Button variant="success" onClick={handleShow}> Add to cart </Button> </Col>
-                            </Row>
-                        </li>
-                    </>
-                );
-        */
-
-
     }
 
     return (
