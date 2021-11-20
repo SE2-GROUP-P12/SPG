@@ -246,7 +246,7 @@ function NewCustomer() {
     return (
         <Container className="mt-2">
             <Row>
-                <h1>Registration</h1>
+                <h1>Create a new customer</h1>
             </Row>
             <Row clasName="mb-4">
                 <ModalComponent />
