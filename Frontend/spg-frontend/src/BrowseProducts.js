@@ -23,10 +23,15 @@ import Grid from '@mui/material/Grid';
 function BrowseProducts() {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
+    const [productsErr, setProductsErr] = useState(false);
 
     async function _browseProducts() {
+        setProductsErr(false);
         const data = await API.browseProducts();
-        setProducts(data);
+        if(data===undefined)
+            setProductsErr(true)
+        else
+            setProducts(data);
         setLoadCompleted(true);
         return;
     }
@@ -128,13 +133,12 @@ function BrowseProducts() {
         <Container fluid>
             <h1>Products List</h1>
             <Grid container spacing={2} >
-                {
-                    loadCompleted === true ?
+                {productsErr ? <Grid xs={12} item align="center"><Alert variant='danger'> There has been an error contacting the server</Alert></Grid> : 
+                loadCompleted === true ?
                         products.map((prod, index) =>
                             <Grid item xs={12} sm={6} md={4} align="center">
                                 <ProductEntry key={index} product={prod}></ProductEntry>
-                            </Grid>
-                        )
+                            </Grid>)
                         :
                         <Grid xs={12} item align="center">
                             <Spinner animation="border" role="status">
