@@ -1,42 +1,53 @@
-# SPG
-SPG SE2_Project
-
-- [SPG](#spg)
-- [BE instructions](#be-instructions)
-  - [Requirement](#requirement)
-  - [Run the services in your local machine](#run-the-services-in-your-local-machine)
-    - [Connect to your local DB](#connect-to-your-local-db)
+**Table of contents**
+- [SPG Team P12](#spg-team-p12)
+- [Docs guide](#docs-guide)
+- [Running the application in container](#running-the-application-in-container)
+  - [Configure the server](#configure-the-server)
     - [Reset the local DB](#reset-the-local-db)
   - [Run the server](#run-the-server)
 - [FE instructions](#fe-instructions)
   - [Install FE dependencies](#install-fe-dependencies)
   - [Run FE application](#run-fe-application)
+# SPG Team P12
+Members:
+ - Gracis Riccardo (s287961)
+ - Giuseppe Gagliardi (s286286)
+ - Marco Riggio (s292515)
+ - Martina Saugo (s285326)
+ - Mattia Riola (s280169)
+ - Stefano Griva (s287729)
 
-full docs in documentation folder
+# Docs guide
 
-# BE instructions
-## Requirement
+The full documents are in the `Documents` folder
 
- + docker running and installed on the host machine
- + java 11 jdk (we use amazon corretto)
+[developer environment](/Documentation/SPG_contributes.md)
+[time machine developer](/Documentation/TimeMachineManual.md)
+[deploy and configuration](/Documentation/SPG_deploy.md)
 
-## Run the services in your local machine
 
-Let's run the docker containers for the services needed by our server application
+# Running the application in container
+requirement: 
+  - docker installed
+steps:
 
- 1. go in the same folder of our docker-compose.yml file
- 2. run the command  `docker-compose up -d` (sudo may be needed)
+- clone this repository
+- be sure that the following ports are free: 8080, 3000, 3306.
+  - if you want change the listening port in our application you can copy the `docker-compose.template.yourtemplate.yml` in a new file called `docker-compose.override.yml` and change the settings that you want
+- Run the application: `docker-compose up -d` (you may need admin privileges)
+  - this command will download our docker images and will run all the services needed by the application (DB, FE, BE)
+  - to be sure that the service are running you can use the command `docker ps -a` and check the status column
+  - in order to see the logs of the services use the `docker logs -f service_name` command (where service_name can be `spg_server` `spg_database`or `spg_frontend`)
 
-Note: the container with "test" in the name are used in the tests
-### Connect to your local DB
 
-The server should automatically connect to the db using the `application.properties`, if you want have acces to the db using the credential in the docker-compose
+
+## Configure the server
 
 ### Reset the local DB
  
  if you want reset the local db you can simply run the commands 
- 1. `docker-compose down` 
- 2. `docker prune volumes` (this will remove all the not used volumes, if you want you can only remove the `mysql-persistent-volume`)
+ 1. shut down the services and remove the container, you can do this with this commang: `docker-compose down` 
+ 2. execute this command to remove the volume used by mysql: `docker volume rm spg_mysql-persistent-volume`
 
 
 ## Run the server
