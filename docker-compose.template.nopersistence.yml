@@ -1,0 +1,10 @@
+---
+version: '3.4'
+services:
+
+  my_personal_db:
+    ports:
+      - "13306:3306"
+    volumes:
+
+

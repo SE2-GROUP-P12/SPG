@@ -2,7 +2,30 @@
 version: '3.4'
 services:
 
-  my_personal_db:
+  frontend:
+    image: mattiariola/spg_frontend:latest
+    depends_on:
+      - server
+    ports:
+      - "3000:3000"
+    environment:
+      CHOKIDAR_USEPOLLING: true
+      HTTP_PROXY: "http://server:8080/"
+      # HTTPS_PROXY: http://server:8080
+
+  server:
+    image: mattiariola/spg_server:latest
+    depends_on:
+      - database
+    environment:
+      spring.datasource.url: "jdbc:mysql://database:3306/spg"
+      server.port: 8080
+      spring.datasource.username: root
+      spring.datasource.password: password
+    ports:
+      - "8080:8080"
+    
+  database:
     image: mysql:5.7
     environment: &mysql-default-environment
       MYSQL_ROOT_USER: root
@@ -15,22 +38,6 @@ services:
     volumes:
       #- ./opt/script/data/initialization/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
       - mysql-persistent-volume:/var/lib/mysql
-  
-  spg_frontend:
-    image: mattiariola/spg_frontend:0.0.1
-    ports:
-      - 3001:3000
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-
-
-  spg_server:
-    image: mattiariola/spg_server:0.0.3
-    environment:
-      spring.datasource.url: "jdbc:mysql://my_personal_db:3306/spg"
-    ports:
-      - 8080:8080
-    
 
 volumes:
   mysql-persistent-volume:
