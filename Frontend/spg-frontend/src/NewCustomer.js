@@ -360,6 +360,13 @@ function NewCustomer() {
                     
                     <Row>
                         <Col className="mt-4">
+                            <Link to="/ShopEmployee">
+                                <Button variant="secondary" size="lg" className="mt-4">
+                                    Back
+                                </Button>
+                            </Link>
+                        </Col>
+                        <Col className="mt-4">
                             {
                                 !(emailValidator === true && passwordValidator === true &&
                                     nameValidator === true && surnameValidator === true && addressValidator === true
@@ -373,13 +380,6 @@ function NewCustomer() {
                                         Submit
                                     </Button>
                             }
-                        </Col>
-                        <Col className="mt-4">
-                            <Link to="/ShopEmployee">
-                                <Button variant="secondary" size="lg" className="mt-4">
-                                    Back
-                                </Button>
-                            </Link>
                         </Col>
                     </Row>
                 </Form>

@@ -118,9 +118,9 @@ function PlaceOrder(props)
             </Formik>
             </div>
             <Row>
-                <Col xs={4}><Button disabled={(!itsTime||order===null||customer===null) ? true : false} variant='success' onClick={placeOrder}>Send order</Button></Col>
-                <Col xs={4}><Button disabled={order===null ? true : false} variant='danger' onClick={dropOrder}>Delete order</Button></Col>
                 <Col xs={4}><Link to='/ShopEmployee'><Button variant='secondary'>Back</Button></Link></Col>
+                <Col xs={4}><Button disabled={order===null ? true : false} variant='danger' onClick={dropOrder}>Delete order</Button></Col>
+                <Col xs={4}><Button disabled={(!itsTime||order===null||customer===null) ? true : false} variant='success' onClick={placeOrder}>Send order</Button></Col>
             </Row>
         </>
     );

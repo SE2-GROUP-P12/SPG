@@ -64,26 +64,30 @@ function TopUp()
                 {error ? <Alert variant='danger'>User not found</Alert> : null}
                 {success ? <Alert variant='success'>User correctly found</Alert> : null}
                 {modalError ? <Alert variant='danger'>Something went wrong during the top up</Alert> : null}
-                {modalSuccess ? <Alert variant='success'>Top us correctly performed</Alert> : null}
+                {modalSuccess ? <Alert variant='success'>Top up correctly performed</Alert> : null}
                 </Form>
             </div>
             }
         </Formik>
         <h2>User's wallet: {wallet}€</h2>
-        <div id="container" className="dashboard">
+        <div id="container" className="dashboard" style={{margin: '20px'}}>
             { user===null ? 
             <Row>
             <Col ><Button disabled onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Cash</h1> </Button></Col>
             <Col ><Button disabled onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Bancomat</h1> </Button></Col>
             <Col ><Button disabled onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Gift Card</h1> </Button></Col>
-            </Row> :
+            </Row>
+             :
             <Row>
             <Col ><Button onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Cash</h1> </Button></Col>
             <Col ><Button onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Bancomat</h1> </Button></Col>
             <Col ><Button onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Gift Card</h1> </Button></Col>
-            </Row>}
-    </div>
-    <Link to='/ShopEmployee'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
+            </Row>
+            }
+        </div>
+        <Row>
+            <Link to='/ShopEmployee'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
+        </Row>
     <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Top Up</Modal.Title>
