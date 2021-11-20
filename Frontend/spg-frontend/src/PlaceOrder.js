@@ -49,7 +49,7 @@ function PlaceOrder(props)
         const placeOrder = async() =>{
             setSendError(false);
             setSendSuccess(false);
-            let outcome= await API.placeOrder({'email' : email});
+            let outcome= await API.placeOrder({'email' : email, 'customer' : customer});
             if(outcome)
             {
                 setOrder(null);

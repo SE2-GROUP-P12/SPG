@@ -133,7 +133,7 @@ async function placeOrder(data)
             headers: { 
                 'Accept': 'application/json',
                 'Content-Type': 'application/json' },
-            body: JSON.stringify({'email' : data.email})
+            body: JSON.stringify({'email' : data.email, 'customer' : data.customer})
         });
         if(response.ok)
             return true;
@@ -168,6 +168,31 @@ async function dropOrder (data)
         return undefined;
     }
 }
+
+//GET: get a list of all orders. 
+//If no order is found, return empty list. 
+//If an error occours, return null
+async function getAllOrders(){
+    try {
+        const response = await fetch ("api/customer/getAllOrders", {
+            method: 'GET',
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' },
+        });
+        const data = await response.json();
+        if(response.ok){
+            if(data.length===0)
+                return ([]);
+            return data;
+        }
+        else {
+            return null;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+} 
 
 // GET: retrieve the list of all orders by customer's email address. 
 //      If error occurs it returns null, otherwise it returns a json with orderId + List of Products
@@ -278,6 +303,7 @@ async function addCustomer(jsonObj) {
     }
 }
 
-const API = {browseProducts, placeOrder, addToCart, getWallet, topUp, getCart, customerExists, customerExistsByMail, dropOrder, getOrdersByEmail, deliverOrder, addCustomer};
+
+const API = {browseProducts, placeOrder, addToCart, getWallet, topUp, getCart, customerExists, customerExistsByMail, dropOrder, getAllOrders, getOrdersByEmail, deliverOrder, addCustomer};
 export {API}
 

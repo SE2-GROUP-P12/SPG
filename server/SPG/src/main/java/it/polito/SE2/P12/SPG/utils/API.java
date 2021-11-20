@@ -13,6 +13,7 @@ public class API {
     public static final String TOP_UP= "/customer/topUp";
     public static final String DELIVER_ORDER= "/customer/deliverOrder";
     public static final String DROP_ORDER= "/customer/dropOrder";
-    public static final String GET_ORDERS= "/customer/getOrdersByEmail";
+    public static final String GET_ORDERS_BY_EMAIL= "/customer/getOrdersByEmail";
+    public static final String GET_ALL_ORDERS = "/customer/getAllOrders";
     public static final String TEST = "test";
 }

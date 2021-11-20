@@ -99,12 +99,14 @@ public class SpgController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity placeOrder(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
-        if (requestMap == null)
+        if (requestMap == null) {
             return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("email")) {
+        }
+        if (requestMap.containsKey("email") && requestMap.containsKey("customer")) {
             User user = userService.getUserByEmail((String) requestMap.get("email"));
             Basket basket = user.getBasket();
             basketService.dropBasket(basket);
+            basket.setCust(userService.getUserByEmail((String) requestMap.get("customer")));
             return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket));
         }
         return ResponseEntity.badRequest().build();
@@ -180,12 +182,23 @@ public class SpgController {
         return ResponseEntity.badRequest().build();
     }
 
-    @GetMapping(API.GET_ORDERS)
+    @GetMapping(API.GET_ORDERS_BY_EMAIL)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity getOrders(@RequestParam String email) {
         User user = userService.getUserByEmail(email);
         if (user == null) return ResponseEntity.badRequest().build();
-        String response = orderService.getOrdersProductsJson(user.getUserId());
+        String response = orderService.getUserOrdersProductsJson(user.getUserId());
+        if (response.isEmpty())
+            return ResponseEntity.badRequest().build();
+        System.out.println(response);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(API.GET_ALL_ORDERS)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity getAllOrders() {
+        String response = orderService.getAllOrdersProductJson();
+        System.out.println("RESPONSE: "+response);
         if (response.isEmpty())
             return ResponseEntity.badRequest().build();
         System.out.println(response);
