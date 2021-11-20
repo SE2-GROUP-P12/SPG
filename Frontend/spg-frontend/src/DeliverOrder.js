@@ -12,6 +12,7 @@ import { API } from './API.js'
 function DeliverOrder(props) {
     const [customer, setCustomer] = useState(null);
     const [orders, setOrders] = useState([]);
+    const [errUser, setErrUser] = useState(false);
 
     /*TIME MACHINE MANAGEMENT*/
     const [itsTime, setItsTime] = useState(false)
@@ -25,6 +26,22 @@ function DeliverOrder(props) {
         }
         checkTime(props.time, props.date);
     }, [props.date, props.time])
+
+    /*LOADING ALL ORDERS WHEN NO MAIL IS SET*/
+    async function _getAllOrders()
+    {
+        const data = await API.getAllOrders();
+        return data;
+    }
+    async function loadAllOrders()
+    {
+        const data = await _getAllOrders();
+        console.log("DATA: "+data);
+        setOrders(data);
+    }
+    useEffect(async ()=>{
+        loadAllOrders();
+    }, [])
 
     async function customerExistsByMail(email) {
         const data = await API.customerExistsByMail(email);
@@ -46,6 +63,7 @@ function DeliverOrder(props) {
     }
 
     async function handleSubmit(email) {
+        setErrUser(false);
         const okay = await customerExistsByMail(email);
         if (okay) {
             const data = await API.getOrdersByEmail(email);
@@ -53,7 +71,7 @@ function DeliverOrder(props) {
             console.log(orders);
         }
         else {
-            setOrders([]);
+            setErrUser(true);
         }
     }
 
@@ -67,9 +85,14 @@ function DeliverOrder(props) {
                         email: ''
                     }}
                     validationSchema={Yup.object({
-                        email: Yup.string().email().required()
+                        email: Yup.string().email()
                     })}
-                    onSubmit={(values) => { handleSubmit(values.email) }}
+                    onSubmit={(values) => {
+                        if(values.email!="") 
+                            handleSubmit(values.email) 
+                        else    
+                            loadAllOrders();
+                    }}
                     validateOnChange={false}
                     validateOnBlur={false}
                 >
@@ -80,8 +103,8 @@ function DeliverOrder(props) {
                             {errors.email && touched.email ? errors.email : null}
                         </Form>}
                 </Formik>
-                {customer === undefined ? <Alert variant='danger'>Customer not found</Alert> : null}
-                {orders != undefined && orders.length === 0 ? <h2>No orders to display yet</h2> : <Orders itsTime={itsTime} orderList={orders} />}
+                {errUser ? <Alert variant='danger'>Customer not found</Alert> : null}
+                {orders != null && orders.length === 0 ? <h2>No orders to display yet</h2> : <Orders itsTime={itsTime} orderList={orders} />}
             </div>
             <Link to='/ShopEmployee'><Button style={{ margin: '20px' }} variant='secondary'>Back</Button></Link>
         </>
