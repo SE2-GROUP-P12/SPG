@@ -13,30 +13,16 @@ import { Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 
 function BrowseProducts() {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
-
-    /* useEffect(() => {
-        fetch('/api/product/all', {
-            method : 'GET',
-            headers : {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                //'Authorization': 'Basic ' + base64.encode('admin' + ":" + 'password')
-            }
-        }).then(response => {
-            if (response.ok) {
-                response.json().then((body) => {
-                    setProducts([...body]);
-                });
-            } else{
-                window.location.href = "http://localhost:3000/Unauthorized"
-            }
-            setLoadCompleted(true);
-        })
-    }, []); */
 
     async function _browseProducts() {
         const data = await API.browseProducts();
@@ -60,14 +46,41 @@ function BrowseProducts() {
 
         return (
             <>
+                <Card sx={{ maxWidth: 345 }}>
+                    <CardMedia
+                        component="img"
+                        height="140"
+                        image={fruit}
+                        alt="fruit"
+                    />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                            {props.product.name} 
+                        </Typography>
+                        <Typography variant="body">
+                        {props.product.quantityAvailable}{props.product.unitOfMeasurement} available <br/>
+                        {props.product.price}€/{props.product.unitOfMeasurement}
+                        </Typography>
+                    </CardContent>
+                    <CardActions>
+                        <Grid container>
+                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Add to cart </Button> </Grid>
+                        </Grid>
+                    </CardActions>
+                </Card>
+
                 <Modal show={show} onHide={() => { handleClose(); setShowError(null); setShowSuccess(null); }}>
                     <Modal.Header closeButton>
                         <Modal.Title>Add product to cart</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <div id="container" className="pagecontent">
+                        <div id="container" className="pagecontent" align='center'>
                             <img src={fruit} alt="fruit" style={{ width: '150px', height: '150px' }} />
-                            <Row> {props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Row>
+                            <Row>
+                                <Col xs={12}>
+                                    {props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}
+                                </Col>
+                            </Row>
                             <Row>
                                 <Formik
                                     initialValues={{ amount: 0 }}
@@ -107,14 +120,6 @@ function BrowseProducts() {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                <li className="list-group-item">
-                    <Row>
-                        <Col xs={2}> <img src={fruit} alt="fruit" style={{ width: '50px', heigth: '50px' }} /> </Col>
-                        <Col
-                            xs={8}>{props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Col>
-                        <Col xs={2}><Button variant="success" onClick={handleShow}> Add to cart </Button> </Col>
-                    </Row>
-                </li>
             </>
         );
     }
@@ -122,15 +127,22 @@ function BrowseProducts() {
     return (
         <Container fluid>
             <h1>Products List</h1>
-            {
-                loadCompleted === true ?
-                    products.map((prod, index) => <ProductEntry key={index} product={prod}></ProductEntry>)
-                    :
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </Spinner>
-            }
-
+            <Grid container spacing={2} >
+                {
+                    loadCompleted === true ?
+                        products.map((prod, index) =>
+                            <Grid item xs={12} sm={6} md={4} align="center">
+                                <ProductEntry key={index} product={prod}></ProductEntry>
+                            </Grid>
+                        )
+                        :
+                        <Grid xs={12} item align="center">
+                            <Spinner animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner>
+                        </Grid>
+                }
+            </Grid>
             <Link to='/ShopEmployee'><Button style={{ margin: '20px' }} variant='secondary'>Back</Button></Link>
         </Container>
     );
