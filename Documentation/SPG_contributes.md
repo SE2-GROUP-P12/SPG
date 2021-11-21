@@ -95,6 +95,7 @@ Before start the frontend application you have to install the dependencies:
 ### Server docker image
 
 1. Go in `/server/SPG` folder, there should be the Dockerfile
+   - Note: if new dependecies are added in package.json you should add in `package.docker.json` as well 
 2. Execute this command `docker build --tag mattiariola/spg_server:x.x.x` where x.x.x is the version that you want to build (i.e. 1.0.0)
  - optional steps:
 3. once the build is done you can select the version used by docker-compose changing the `image:` tag
