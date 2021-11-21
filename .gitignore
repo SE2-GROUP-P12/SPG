@@ -3,6 +3,9 @@
 =======
 .idea/
 
+### Docker ###
+docker-compose.override.yml
+
 ### SERVER MAVEN + INTELLIJ IDEA ###
 
 server/SPG/HELP.md

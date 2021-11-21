@@ -12,11 +12,11 @@ function Navbar(props) {
     const [location, setLocation] = useState(window.location);
 
     function doLogOut() {
-        window.location.href = "http://localhost:8081/logout";
+        window.location.href = "http://localhost:8080/logout";
     }
 
     function doLogin() {
-        window.location.href = "http://localhost:8081/login";
+        window.location.href = "http://localhost:8080/login";
     }
 
     /*Login presence button
