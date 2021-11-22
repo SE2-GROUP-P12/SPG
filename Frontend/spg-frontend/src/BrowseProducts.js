@@ -36,8 +36,8 @@ function BrowseProducts() {
         return;
     }
 
-    useEffect(() => {
-        _browseProducts();
+    useEffect(async () => {
+        await _browseProducts();
     }, []);
 
 
@@ -55,7 +55,7 @@ function BrowseProducts() {
                     <CardMedia
                         component="img"
                         height="140"
-                        image={fruit}
+                        image={props.product.imageUrl == null ? fruit : props.product.imageUrl}
                         alt="fruit"
                     />
                     <CardContent>

@@ -36,10 +36,12 @@ public class Product {
     private Double quantityDelivered;
     @Column(name = "price", nullable = false)
     private Double price;
+    @Column (name= "image_url")
+    private String imageUrl;
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price) {
         this.name = name;
-        this.producer = "default produces";
+        this.producer = "default producer";
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -47,6 +49,20 @@ public class Product {
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
         this.price = price;
+        this.imageUrl=null;
+    }
+
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl) {
+        this.name = name;
+        this.producer = "default producer";
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.totalQuantity = totalQuantity;
+        this.quantityAvailable = totalQuantity;
+        this.quantityBaskets = 0.0;
+        this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
+        this.price = price;
+        this.imageUrl=imageUrl;
     }
 
     public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price) {
@@ -59,6 +75,7 @@ public class Product {
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
         this.price = price;
+        this.imageUrl=null;
     }
 
     public Boolean moveFromAvailableToBasket(Double quantity) {
