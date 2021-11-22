@@ -22,9 +22,9 @@ public class SpgProductService {
     }
 
     public void populateDB(){
-        Product temp1 = new Product ("Apples","Kg",50.0,2.50);
-        Product temp2 = new Product ("Flour","Kg",10.0,5.00);
-        Product temp3 = new Product ("Eggs","Units",36.0,6.25);
+        Product temp1 = new Product ("Apples","Kg",50.0,2.50, "https://www.dissapore.com/wp-content/uploads/2020/11/come-conservare-le-mele.jpg");
+        Product temp2 = new Product ("Flour","Kg",10.0,5.00, "https://www.misya.info/wp-content/uploads/2012/11/farina-0-2.jpg");
+        Product temp3 = new Product ("Eggs","Units",36.0,6.25, "https://images.fidhouse.com/fidelitynews/wp-content/uploads/sites/6/2019/11/Come-pastorizzare-le-uova-7.jpg?w=580");
         Product temp4 = new Product ("Oranges","Kg",12.0,2.10);
         Product temp5 = new Product ("Cherries","Kg",15.0,4.00);
         Product temp6 = new Product ("Bananas","Kg",22.0,6.25);
