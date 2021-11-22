@@ -8,11 +8,11 @@ import java.util.Map;
 
 public interface JWTProvider {
 
-    public String generateAccessToken(UserDetailsImpl userDetails, String requestURL);
+    public String generateAccessToken(UserDetailsImpl userDetails, String requestURL) throws Exception;
 
-    public String generateRefreshToken(UserDetailsImpl userDetails, String requestURL);
+    public String generateRefreshToken(UserDetailsImpl userDetails, String requestURL) throws Exception;
 
-    public Map<String, String> getFrontEndUSerJWT(UserDetailsImpl userDetails, String requestURL);
+    public Map<String, String> getFrontEndUSerJWT(UserDetailsImpl userDetails, String requestURL) throws Exception;
 
     public void setAlgorithm(Algorithm newAlgo); //Default is HMAC-256
 
@@ -20,6 +20,6 @@ public interface JWTProvider {
 
     public Map<String, String> setErrorMessage(Exception e);
 
-    public Map<String, String> verifyRefreshTokenAndRegenerateAccessToken(String refreshToken, String requestURL, SpgUserService userService);
+    public Map<String, String> verifyRefreshTokenAndRegenerateAccessToken(String refreshToken, String requestURL, SpgUserService userService) throws Exception;
 
 }
