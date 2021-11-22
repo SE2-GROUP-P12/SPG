@@ -54,14 +54,11 @@ public class SpgController {
         return ResponseEntity.ok(productService.getAllProduct());
     }
 
-    @PostMapping(API.EXIST_CUSTOMER)
+    @GetMapping (API.EXIST_CUSTOMER)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')")
-    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData) {
-        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
-        if (requestMap == null)
-            return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("email") && requestMap.containsKey("ssn"))
-            return ResponseEntity.ok(userService.checkPresenceOfUser((String) requestMap.get("email"), (String) requestMap.get("ssn")));
+    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestParam String email, @RequestParam String ssn) {
+        if (email!="" && ssn!="")
+            return ResponseEntity.ok(userService.checkPresenceOfUser(email, ssn));
         return ResponseEntity.badRequest().build();
     }
 
@@ -75,8 +72,9 @@ public class SpgController {
 
     @PostMapping(API.CREATE_CUSTOMER)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity createCustomer(@RequestBody String userJsonData) {
-        if (userJsonData == null || userJsonData.equals(""))
+    public ResponseEntity createCustomer(@RequestBody String userJsonData)
+    {
+      if (userJsonData == null || userJsonData.equals(""))
             return ResponseEntity.badRequest().build();
         Map<String, Object> requestMap = extractMapFromJsonString(userJsonData);
         if (requestMap == null)
@@ -86,8 +84,7 @@ public class SpgController {
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
                 && requestMap.containsKey("role")
         )
-            return ResponseEntity.ok(userService.addNewClient(
-                    new User(requestMap.get("name").toString(), requestMap.get("surname").toString(),
+        return ResponseEntity.ok(userService.addNewClient(new User(requestMap.get("name").toString(), requestMap.get("surname").toString(),
                             requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
                             requestMap.get("role").toString(), requestMap.get("email").toString(),
                             requestMap.get("password").toString())
