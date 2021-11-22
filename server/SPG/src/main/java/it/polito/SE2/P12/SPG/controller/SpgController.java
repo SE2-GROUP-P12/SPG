@@ -12,6 +12,7 @@ import it.polito.SE2.P12.SPG.utils.API;
 import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -89,9 +90,12 @@ public class SpgController {
     @PostMapping(API.CREATE_CUSTOMER)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity createCustomer(@RequestBody String userJsonData) {
+        Map<String, String> error = new HashMap<>();
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/" + API.CREATE_CUSTOMER).toUriString());
-        if (userJsonData == null || userJsonData.equals(""))
-            return ResponseEntity.badRequest().build();
+        if (userJsonData == null || userJsonData.equals("")) {
+            error.put("errorMessage", "Body is not valid");
+            return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(error);
+        }
         Map<String, Object> requestMap = extractMapFromJsonString(userJsonData);
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
@@ -99,6 +103,8 @@ public class SpgController {
                 && requestMap.containsKey("name") && requestMap.containsKey("surname")
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
                 && requestMap.containsKey("role")
+                && Boolean.FALSE.equals(userService.checkPresenceOfMail(requestMap.get("email").toString()))
+                && Boolean.FALSE.equals(userService.checkPresenceOfSSN(requestMap.get("ssn").toString()))
         )
             return ResponseEntity.created(uri).body(userService.addNewClient(
                     new User(requestMap.get("name").toString(), requestMap.get("surname").toString(),
@@ -106,7 +112,10 @@ public class SpgController {
                             requestMap.get("role").toString(), requestMap.get("email").toString(),
                             requestMap.get("password").toString())
             ));
-        return ResponseEntity.badRequest().body("email/ssn already present");
+        error.put("errorMessage", "email/ssn already present in the system");
+        return ResponseEntity.badRequest()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(error);
     }
 
     @PostMapping(API.PLACE_ORDER)

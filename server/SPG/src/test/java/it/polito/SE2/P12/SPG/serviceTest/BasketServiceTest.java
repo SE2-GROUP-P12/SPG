@@ -1,4 +1,4 @@
-package it.polito.SE2.P12.SPG.controllerTest;
+package it.polito.SE2.P12.SPG.serviceTest;
 
 import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.Basket;
@@ -39,7 +39,6 @@ public class BasketServiceTest {
 
     @BeforeEach
     public void initContext() {
-        SecurityConfiguration.setTestContext();
         basketRepo.deleteAll();
         productRepo.deleteAll();
         userRepo.deleteAll();
