@@ -17,6 +17,7 @@ public interface JWTUserHandlerRepo extends JpaRepository<JWTUserHandlerImpl, Lo
 
     JWTUserHandlerImpl deleteJWTUserHandlerImplById(Long id);
 
+    JWTUserHandlerImpl findJWTUserHandlerImplByUserId(Long userId);
 
     @Modifying
     @Query(value = "update JWTUserHandlerImpl j set j.valid = :valid where (j.userId = :userId and j.accessToken = :accessToken)")

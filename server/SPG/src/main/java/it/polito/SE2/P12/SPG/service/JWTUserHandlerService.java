@@ -23,7 +23,7 @@ public class JWTUserHandlerService {
     }
 
     public void addRelationUserTokens(User user, String accessToken, String refreshTokens) {
-        JWTUserHandlerImpl jwtUserHandlerObj = new JWTUserHandlerImpl(user.getUserId(), accessToken, refreshTokens, JWTUserHandlerService.now(), Boolean.TRUE);
+        JWTUserHandlerImpl jwtUserHandlerObj = new JWTUserHandlerImpl(user.getUserId(), accessToken, refreshTokens, JWTUserHandlerService.now());
         jwtUserHandlerRepo.save(jwtUserHandlerObj);
     }
 
@@ -32,7 +32,7 @@ public class JWTUserHandlerService {
         if (jwtUserHandler.getUserId() == user.getUserId()) {
             jwtUserHandlerRepo.updateTokenValidity(false, user.getUserId(), accessToken);
         } else {
-            throw new Exception("ERROR: User id requested and userid bound to the access token are not consistent");
+            throw new Exception("ERROR: User id requested and access token bound to the access token are not consistent");
         }
     }
 
