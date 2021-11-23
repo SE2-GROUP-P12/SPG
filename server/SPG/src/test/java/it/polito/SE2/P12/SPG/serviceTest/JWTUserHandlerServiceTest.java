@@ -4,6 +4,7 @@ import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.JWTUserHandlerRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.JWTUserHandlerService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,12 @@ public class JWTUserHandlerServiceTest {
         User tester = new User("tester", "tester", "tester_aaaaaaaaaaaa", "", "ADMIN", "tester@test.com", "password");
         userRepo.save(tester);
         userRepo.save(user);
+        jwtUserHandlerRepo.deleteAll();
+    }
+
+    @AfterEach
+    public void restDB(){
+        userRepo.deleteAll();
         jwtUserHandlerRepo.deleteAll();
     }
 

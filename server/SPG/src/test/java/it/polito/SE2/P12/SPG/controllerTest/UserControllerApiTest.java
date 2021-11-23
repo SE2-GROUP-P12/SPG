@@ -3,6 +3,7 @@ package it.polito.SE2.P12.SPG.controllerTest;
 import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 
+import java.sql.SQLException;
 import java.util.Map;
 
 @SpringBootTest
@@ -47,6 +49,11 @@ public class UserControllerApiTest {
         userRepo.deleteAll();
         User fooUser1 = new User("fooName1", "fooSurname1", "ssn_aaaaaaaaaaaa", "", "ROLE_CUSTOMER", "foouser@foomail.com", "password");
         userRepo.save(fooUser1);
+    }
+
+    @AfterEach
+    public void restDB(){
+        userRepo.deleteAll();
     }
 
     /**

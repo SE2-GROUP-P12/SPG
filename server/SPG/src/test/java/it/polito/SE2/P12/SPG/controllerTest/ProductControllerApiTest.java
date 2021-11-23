@@ -6,6 +6,7 @@ import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
 import it.polito.SE2.P12.SPG.utils.API;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,12 @@ class ProductControllerApiTest {
         productRepo.save(prod1);
         productRepo.save(prod2);
         productRepo.save(prod3);
+    }
+
+    @AfterEach
+    public void restDB(){
+       productRepo.deleteAll();
+
     }
 
     @Test

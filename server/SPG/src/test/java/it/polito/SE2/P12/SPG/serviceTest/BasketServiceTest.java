@@ -1,6 +1,5 @@
 package it.polito.SE2.P12.SPG.serviceTest;
 
-import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
@@ -8,18 +7,15 @@ import it.polito.SE2.P12.SPG.repository.BasketRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 
+import java.sql.SQLException;
+
 @SpringBootTest
 public class BasketServiceTest {
-    @Autowired
-    private SpgController spgController;
     @Autowired
     private BasketRepo basketRepo;
     @Autowired
@@ -30,10 +26,10 @@ public class BasketServiceTest {
     private SpgBasketService basketService;
 
     @BeforeEach
-    public void initContext() {
+    public void initContext() throws SQLException {
+        userRepo.deleteAll();
         basketRepo.deleteAll();
         productRepo.deleteAll();
-        userRepo.deleteAll();
         //Create some product and then add them to the Customer Cart
         Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F);
         Product prod2 = new Product("Prod2", "Producer2", "KG", 100.0, 5.50F);
@@ -47,6 +43,14 @@ public class BasketServiceTest {
         userRepo.save(user1);
         userRepo.save(user2);
     }
+
+    @AfterEach
+    public void resetDB(){
+        basketRepo.deleteAll();
+        productRepo.deleteAll();
+        userRepo.deleteAll();
+    }
+
 
     @Test
     public void retrieveEmptyBasket() {

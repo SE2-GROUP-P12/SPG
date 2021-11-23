@@ -7,6 +7,7 @@ import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,11 @@ public class JWTProviderTest {
         userRepo.deleteAll();
         User tester = new User("tester", "tester", "tester_aaaaaaaaaaaa", "", "ADMIN", "tester@test.com", "password");
         userRepo.save(tester);
+    }
+
+    @AfterEach
+    public void restDB(){
+        userRepo.deleteAll();
     }
 
     @Test

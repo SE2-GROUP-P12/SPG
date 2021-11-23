@@ -5,7 +5,7 @@ import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.JWTUserHandlerRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
-import it.polito.SE2.P12.SPG.testUtils.SQLUtilities;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,12 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.event.annotation.AfterTestClass;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,10 +36,16 @@ public class AuthenticationFilterTest {
 
 
     @BeforeEach
-    public void initContext() throws SQLException {
+    public void initContext() {
         userRepo.deleteAll();
         User tester = new User("tester", "tester", "tester_aaaaaaaaaaaa", "", "ADMIN", "tester@test.com", "password");
         userRepo.save(tester);
+    }
+
+    @AfterEach
+    public void restDB(){
+        userRepo.deleteAll();
+        jwtUserHandlerRepo.deleteAll();
     }
 
 

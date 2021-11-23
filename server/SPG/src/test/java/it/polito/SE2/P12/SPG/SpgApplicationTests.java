@@ -1,13 +1,18 @@
 package it.polito.SE2.P12.SPG;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import it.polito.SE2.P12.SPG.serviceTest.BasketServiceTest;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-@SpringBootTest
+
+/**
+ * ADD TEST PACKAGES HERE
+ */
+
+
+//@RunWith(JunitPlatform.class)
+@Suite.SuiteClasses({
+		BasketServiceTest.class,
+})
 class SpgApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
 }
