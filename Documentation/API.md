@@ -1,238 +1,260 @@
 # API LIST
-## Login 
+
+## Login
+
 - POST `/api/sessions` //for login
-  - request body content:
+    - request body content:
   ```json
    {
      "email":"customer@gmail.com", 
      "password":"$2a$10$pHD31er2rY6Izwb9TbmxwOvU.kQp2QWJQTWDi2KmmMCGrorFXg1G6"
    } 
   ```
-  - response body content:
-    - 200 OK
-    ```json
-    {
-      "role":"customer"
-    }
-    ```
-    - 404 NOT FOUND
+    - response body content:
+        - 200 OK
+      ```json
+      {
+        "role":"customer"
+      }
+      ```
+        - 404 NOT FOUND
 
-- DELETE `/api/sessions/current` //for logout 
-  - request body content: 
-    ```json
-    {
-      "email":"customer@gmail.com"
-    }
-    ```
-  - response body content: 
-    - 200 OK
-    - 404 NOT FOUND
+- DELETE `/api/sessions/current` //for logout
+    - request body content:
+      ```json
+      {
+        "email":"customer@gmail.com"
+      }
+      ```
+    - response body content:
+        - 200 OK
+        - 404 NOT FOUND
 
 - GET `/api/sessions/current` //to check the current user
-  - response body content: 
-    - 200 OK 
-    ```json
-    {
-      "email":"customer@gmail.com", 
-      "role":"customer"
-    }
-    ```
-    - 404 NOT FOUND
-    
+    - response body content:
+        - 200 OK
+      ```json
+      {
+        "email":"customer@gmail.com", 
+        "role":"customer"
+      }
+      ```
+        - 404 NOT FOUND
+
 ## Shop Employee
 
 - GET `/api/customer/customerExists` //see if customer already exists
-  - request parameters: {}
-  - request body content: 
-    ```json
-    {
-      "email":"customer@gmail.com"
-    }
-    ```
-  - response body content: 
-    - 200 OK //user exists
-    ```json
-    {
-      "exists": "true"
-    }
-    ```
-    - 200 OK //user doesn't exist
-    ```json
-    {
-      "exists": "false"
-    }
-    ```
-    - 500 SERVER ERROR
-- POST `/api/customer/addCustomer` //add new customer
-  - request body content: 
-    ```json
-    {
-      "email":"customer@gmail.com",
-      "password": "$2a$10$pHD31er2rY6Izwb9TbmxwOvU.kQp2QWJQTWDi2KmmMCGrorFXg1G6",
-      "name":"Mario",
-      "surname":"Itsumi", 
-      "role":"customer",
-      "address":"Via Roma 15, 10141 Torino (TO)",
-      "phone number":"+39 123456789"
-    }
-    ```
-  - response body content:
-    - 200 OK
-    - 500 SERVER ERROR
+    - request parameters:
 
-- GET `/api/product/browseProducts` //list sellable products
-  - response body content: 
-    - 200 OK
+      | Name        | Value       |
+                                  | ----------- | --------------------------------------------|
+      | email       | email of the customer to lookup for         |
+      | ssn         | (Optional) ssn of the customer to lookup for|
+
+    - response body content:
+        - 200 OK //user exists
       ```json
       {
-        "products": 
-        [
-          {
-            "productId":"1",
-            "name": "Apples",
-            "producer" : "Tonio Cartonio s.p.a.",
-            "unit":"kg",
-            "unit price" : "1.99",
-            "amount" : "100" //available amount (total-sum of orders)
-          },
-          {
-            "productId":"2",
-            "name": "Eggs",
-            "producer" : "KFC farms", 
-            "unit":"unit",
-            "unit price" : "0.10",
-            "amount" : "50"
-          }
-        ]
+        "exist": "true"
       }
       ```
-    - 404 NOT FOUND
-//TODO add customer id to request body
-    - POST `/api/product/addToCart` //add product to cart
-      - request body content:
-        ```json
-        {
-          "productId":"1",
-          "name": "Apples",
-          "producer" : "Tonio Cartonio s.p.a.",
-          "unit":"kg",
-          "unit price" : "1.99",
-          "amount" : "1" //amount i wish to order
-        }
-        ```
-      - response body content
+        - 200 OK //user doesn't exist
+      ```json
+      {
+        "exist": "false"
+      }
+      ```
+        - 400 BAD REQUEST If parameters aren't present
+
+- POST `/api/customer/addCustomer` //add new customer
+    - request body content:
+      ```json
+      {
+        "name":"Mario",
+        "surname":"Itsumi",
+        "address":"Via Roma 15, 10141 Torino (TO)",
+        "ssn": "MRATSM80A01Z219V",
+        "phoneNumber":"+39 123456789",
+        "email":"customer@gmail.com",
+        "password": "$2a$10$pHD31er2rY6Izwb9TbmxwOvU.kQp2QWJQTWDi2KmmMCGrorFXg1G6"
+      }
+      ```
+    - response body content:
         - 200 OK
         - 500 SERVER ERROR
-          //TODO add customer id to request body
-- GET `/api/customer/getCart` //list products inside current cart
-  - response body content:
-    - 200 OK
-      ```json
-      {"products":[
-        {
-          "productId":"1",
-          "name": "Apples",
-          "producer" : "Tonio Cartonio s.p.a.",
-          "unit":"kg",
-          "unit price" : "1.99",
-          "amount" : "10" //ordered amount 
-        },
-        {
-          "productId":"2",
-          "name": "Eggs",
-          "producer" : "KFC farms", 
-          "unit":"unit",
-          "unit price" : "0.10",
-          "amount" : "6" 
-        }
-      ]}
-      ```
-    - 404 NOT FOUND
 
-- GET `/api/customer/getWallet?email=mario.rossi@gmail.com` //get customer's wallet
-  - response body content:
-    ```json
-    {
-      "wallet":"0.00"
-    }
-    ```
+- GET `/api/product/all`
+    - response body content:
+        - 200 OK
+          ```json
+            [
+              {
+                "productId":"1",
+                "name": "Apples",
+                "producer" : "Tonio Cartonio s.p.a.",
+                "unitOfMeasurement":"kg",
+                "totalQuantity": 10,
+                "quantityAvailable": 10,
+                "quantityBaskets": 0,
+                "quantityOrdered": 0,
+                "quantityDelivered": 0,
+                "price": 5,
+                "imageUrl" : "http://..."
+              },
+              {
+                "productId":"2",
+                "name": "Flour",
+                "producer" : "Mulino Bianco",
+                "unitOfMeasurement":"kg",
+                "totalQuantity": 20,
+                "quantityAvailable": 10,
+                "quantityBaskets": 5,
+                "quantityOrdered": 0,
+                "quantityDelivered": 5,
+                "price": 7,
+                "imageUrl" : "http://..."
+              }
+            ]
+          ```
+        - 404 NOT FOUND
+
+- POST `/api/product/addToCart` //add product to cart
+    - request body content:
+      ```json
+      {
+        "email": "mario.rossi@gmail.com",
+        "productId": 7,
+        "quantity": 1
+      }
+      ```
+    - response body content
+        - 200 OK
+        - 500 SERVER ERROR //TODO add customer id to request body
+
+- GET `/api/customer/getCart` //list products inside current cart
+    - request parameters:
+
+  | Name        | Value       | 
+            | ----------- | --------------------------------------------|
+  | email       | email of the customer to lookup for         |
+
+    - response body content:
+        - 200 OK
+          ```json
+          [
+              {
+                "productId":"1",
+                "name": "Apples",
+                "producer" : "Tonio Cartonio s.p.a.",
+                "unitOfMeasurement":"kg",
+                "totalQuantity": 10,
+                "quantityAvailable": 10,
+                "quantityBaskets": 0,
+                "quantityOrdered": 0,
+                "quantityDelivered": 0,
+                "price": 5,
+                "imageUrl" : "http://..."
+              },
+              {
+                "productId":"2",
+                "name": "Flour",
+                "producer" : "Mulino Bianco",
+                "unitOfMeasurement":"kg",
+                "totalQuantity": 20,
+                "quantityAvailable": 10,
+                "quantityBaskets": 5,
+                "quantityOrdered": 0,
+                "quantityDelivered": 5,
+                "price": 7,
+                "imageUrl" : "http://..."
+              }
+            ]
+          ```
+        - 404 NOT FOUND
+
+- GET `/api/customer/getWallet` //get customer's wallet
+    - request parameters:
+
+  | Name        | Value       | 
+            | ----------- | --------------------------------------------|
+  | email       | email of the customer to lookup for         |
+-
+    - response body content:
+      ```
+      {
+        12.50
+      }
+      ```
+
 - POST `/api/customer/topUp` //top up customer's wallet
-  - request body content: 
-    ```json
-    {
-      "email":"customer@gmail.com",
-      "topUp":"10.00"
-    }
-    ```
-  - response body content:
-    - 200 OK
-    - 404 NOT FOUND
+    - request body content:
+      ```json
+      {
+        "email":"customer@gmail.com",
+        "value": 10.00
+      }
+      ```
+    - response body content:
+        - 200 OK
+        - 404 NOT FOUND
+
 - POST `/api/customer/placeOrder` //create an order for the customer
-  - request body content:
+    - request body content:
   ```json
   {
-    "email":"customer@gmail.com",
-    "order": 
-      [
-        {
-          "productId":"1",
-          "amount" : "10" //desired amount 
-        },
-        {
-          "productId":"2",
-          "amount" : "6"
-        }
-      ]
+    "email":"owner_of@cart.com",
+    "customer": "customer@who_ordered.com"
   }
   ```
-  - response body content:
-    - 200 OK
-    - 404 NOT FOUND
+    - response body content:
+        - 200 OK
+        - 404 NOT FOUND
 
 - DELETE `/api/customer/dropOrder`
-  - request body content: 
-    ```json 
-    {"email":"customer@gmail.com"}
-    ```
-  - response body content:
-    - 200 OK 
-    - 500 Internal server error
-    
-- PUT `/api/customer/deliverOrder` //mark order as delivered
-  - request body content:
-    ```json
-    {
-      "orderId":1
-    }
-    ```
-  - response body content:
-    - 200 OK
-    - 404 NOT FOUND
-
-- GET `/api/customer/getOrdersByEmail?email=mario.rossi@gmail.com` //get all the orders of a single customer using its email
-  - response body content:
-    - 200 OK
+    - request body content:
+      ```json 
       {
-        "orderId":1,
-        "productList" : 
-          [
-            {
-              "productId":"1",
-              "name": "Apples",
-              "producer" : "Tonio Cartonio s.p.a.",
-              "unit":"kg",
-              "unit price" : "1.99",
-              "amount" : "10" //ordered amount 
-            },
-            {
-              "productId":"2",
-              "name": "Eggs",
-              "producer" : "KFC farms", 
-              "unit":"unit",
-              "unit price" : "0.10",
-              "amount" : "6" 
-            }
-          ]
+      "email":"customer@gmail.com"
       }
-    - 404 NOT FOUND
+      ```
+    - response body content:
+        - 200 OK
+        - 500 Internal server error
 
+- POST `/api/customer/deliverOrder` //mark order as delivered
+    - request body content:
+      ```
+      {
+        10 //It's the id of the order to deliver
+      }
+      ```
+    - response body content:
+        - 200 OK
+        - 404 NOT FOUND
+
+- GET `/api/customer/getOrdersByEmail`
+  //get all the orders of a single customer using its email
+    - request parameters:
+
+      | Name        | Value       |
+            | ----------- | --------------------------------------------|
+      | email       | email of the customer to lookup for         |
+        - response body content:
+            ```json 
+          [
+              {
+                  "orderId":60,
+                  "email":"paolo.bianchi@gmail.com",
+                  "productList": [
+                      {
+                          "productId":"10",
+                          "name":"Bananas",
+                          "producer":"default producer",
+                          "unit":"Kg",
+                          "unit price":"6.25",
+                          "amount":"5.0"
+                      }
+                 ]
+              }
+          ]
+          ```
