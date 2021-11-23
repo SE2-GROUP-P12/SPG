@@ -31,7 +31,7 @@ function Login(props) {
                 response.json().then(body => {
                         sessionStorage.setItem('accessToken', body['accessToken']);
                         sessionStorage.setItem('refreshToken', body['refreshToken']);
-                        localStorage.setItem('username', body['username']);
+                        localStorage.setItem('username', body['email']);
                         localStorage.setItem('role', body['roles']);
                     }
                 )

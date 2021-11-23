@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.testSecurityConfig;
 
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
 import it.polito.SE2.P12.SPG.entity.User;
+import it.polito.SE2.P12.SPG.testUtils.SQLUtilities;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -9,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import java.lang.reflect.Array;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 @TestConfiguration
@@ -25,4 +26,5 @@ public class SpringSecurityTestConfig {
                 "user@test.com", "password"));
         return new InMemoryUserDetailsManager(Arrays.asList(tester, basicUser));
     }
+
 }

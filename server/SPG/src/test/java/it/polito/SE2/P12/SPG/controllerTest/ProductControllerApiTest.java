@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = SpringSecurityTestConfig.class
 )
 @AutoConfigureMockMvc
+public
 class ProductControllerApiTest {
     @Autowired
     private ProductRepo productRepo;
