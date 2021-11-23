@@ -54,7 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(new CustomAuthorizationFilter(jwtUserHandlerService, spgUserService), UsernamePasswordAuthenticationFilter.class);
         http.authorizeRequests()
                 .antMatchers("/api/login").permitAll()
-                .antMatchers( "/api/token/refresh").permitAll()
+                .antMatchers("/api/token/refresh").permitAll()
                 .antMatchers("/api" + API.EXIST_CUSTOMER).permitAll()
                 .antMatchers("/api" + API.CREATE_CUSTOMER).permitAll()
                 .anyRequest()

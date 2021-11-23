@@ -31,10 +31,6 @@ public class UserDetailsImpl implements UserDetails {
         return this.name;
     }
 
-    public void setActive(Boolean active){
-        this.active = active;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorityList;

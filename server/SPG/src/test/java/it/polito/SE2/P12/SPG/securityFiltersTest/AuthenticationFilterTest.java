@@ -52,7 +52,6 @@ public class AuthenticationFilterTest {
 
     @Test
     public void attemptAuthenticationTest() throws Exception {
-        //Try using login HttpServletRequest
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -94,7 +93,7 @@ public class AuthenticationFilterTest {
         result = mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized()) //TODO: check why thew filter is not able to understand the content type header (SHOULD RETURN 415-UnsupportedMediaType)
+                .andExpect(status().isUnauthorized())
                 .andReturn();
     }
 }

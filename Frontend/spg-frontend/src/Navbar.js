@@ -9,30 +9,31 @@ import {useState} from "react";
 import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
 
 function Navbar(props) {
-    const [location, setLocation] = useState(window.location);
+    const [redirectLocation, setRedirectLocation] = useState("/");
 
     function doLogOut() {
         //TODO: insert this fecth into the API file
-       fetch("/api/logout", {
-           method : 'GET',
-           headers : {
-               'Accept': 'application/json',
-               'Content-Type': 'application/json',
-               'Authorization': "Bearer " + sessionStorage.getItem("accessToken")
-           }
-       }).then(response => {
-           //Logout succesful, clear local/session storage lato FE
-           if(response.ok){
-               sessionStorage.removeItem("accessToken");
-               sessionStorage.removeItem("refreshToken");
-               localStorage.removeItem("role");
-               localStorage.removeItem("username");
-           }
-           else{
-               //Problems occour
-               window.location.href = "http://localhost:3000/Unauthorized";
-           }
-       })
+        fetch("/api/logout", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + sessionStorage.getItem("accessToken")
+            }
+        }).then(response => {
+            //Logout succesful, clear local/session storage lato FE
+            if (response.ok) {
+                sessionStorage.removeItem("accessToken");
+                sessionStorage.removeItem("refreshToken");
+                localStorage.removeItem("role");
+                localStorage.removeItem("username");
+                window.location.href = "/";
+            } else {
+                //setRedirectLocation("/Unauthorized");
+                //Problems occour
+                window.location.href = "http://localhost:3000/Unauthorized";
+            }
+        })
 
     }
 
@@ -63,9 +64,7 @@ function Navbar(props) {
             <Route>
                 <Nav className="navbar bg-success navbar-dark">
                     <img src={logo} alt="logo" className="logo"/>
-                    <Link to = "/">
-                        <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
-                    </Link>
+                    <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
                 </Nav>
             </Route>
         </Switch>
