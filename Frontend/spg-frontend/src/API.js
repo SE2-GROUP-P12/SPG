@@ -106,7 +106,7 @@ async function topUp(data)
 async function customerExistsByMail(email)
 {
     try{
-        const response = await fetch ("/api/customer/customerExistsByMail?email="+email, {
+        const response = await fetch ("/api/customer/customerExists?email="+email+"&ssn=", {
             method: 'GET',
             headers: { 
                 'Accept': 'application/json',

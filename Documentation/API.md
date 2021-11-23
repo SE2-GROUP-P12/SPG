@@ -42,24 +42,24 @@
 ## Shop Employee
 
 - GET `/api/customer/customerExists` //see if customer already exists
-  - request parameters: {}
-  - request body content: 
-    ```json
-    {
-      "email":"customer@gmail.com"
-    }
-    ```
+  - request parameters:
+  
+    | Name        | Value       |
+    | ----------- | --------------------------------------------|
+    | email       | email of the customer to lookup for         |
+    | ssn         | (Optional) ssn of the customer to lookup for|
+  
   - response body content: 
     - 200 OK //user exists
     ```json
     {
-      "exists": "true"
+      "exist": "true"
     }
     ```
     - 200 OK //user doesn't exist
     ```json
     {
-      "exists": "false"
+      "exist": "false"
     }
     ```
     - 500 SERVER ERROR
