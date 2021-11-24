@@ -1,6 +1,7 @@
 package it.polito.SE2.P12.SPG.controllerTest;
 
 import it.polito.SE2.P12.SPG.controller.SpgController;
+import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
@@ -45,7 +46,7 @@ public class UserServiceTest {
     public void initContext() {
         SecurityConfiguration.setTestContext();
         userRepo.deleteAll();
-        User fooUser1 = new User("fooName1", "fooSurname1", "ssn_aaaaaaaaaaaa", "", "ROLE_CUSTOMER", "foouser@foomail.com", "password");
+        Customer fooUser1 = new Customer("fooName1", "fooSurname1", "ssn_aaaaaaaaaaaa", "123456789", "foouser@foomail.com", "password","address");
         userRepo.save(fooUser1);
     }
 

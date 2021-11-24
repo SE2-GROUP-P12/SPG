@@ -2,10 +2,7 @@ package it.polito.SE2.P12.SPG.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polito.SE2.P12.SPG.entity.Basket;
-import it.polito.SE2.P12.SPG.entity.Order;
-import it.polito.SE2.P12.SPG.entity.Product;
-import it.polito.SE2.P12.SPG.entity.User;
+import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgProductService;
@@ -84,13 +81,12 @@ public class SpgController {
         if (requestMap.containsKey("email") && requestMap.containsKey("ssn")
                 && requestMap.containsKey("name") && requestMap.containsKey("surname")
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
-                && requestMap.containsKey("role")
+                && requestMap.containsKey("role") && requestMap.containsKey("address")
         )
             return ResponseEntity.ok(userService.addNewClient(
-                    new User(requestMap.get("name").toString(), requestMap.get("surname").toString(),
+                    new Customer(requestMap.get("name").toString(), requestMap.get("surname").toString(),
                             requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
-                            requestMap.get("role").toString(), requestMap.get("email").toString(),
-                            requestMap.get("password").toString())
+                            requestMap.get("email").toString(), requestMap.get("password").toString(), requestMap.get("address").toString())
             ));
         return ResponseEntity.badRequest().build();
     }

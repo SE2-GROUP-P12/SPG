@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.controllerTest;
 
 import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.Basket;
+import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
@@ -51,10 +52,10 @@ public class BasketServiceTest {
         productRepo.save(prod2);
         productRepo.save(prod3);
         //Create 2 user to issue some order
-        User user1 = new User("customer1", "surname1", "ssn_aaaaaaaaaaaa", "", "CUSTOMER", "customer1@foomail.com", "password1223ABC");
-        User user2 = new User("customer2", "surname1", "ssn_bbbbbbbbbbbb", "", "CUSTOMER", "customer2@foomail.com", "password1223ABC");
-        userRepo.save(user1);
-        userRepo.save(user2);
+        Customer cust1 = new Customer("customer1", "surname1", "ssn_aaaaaaaaaaaa", "", "CUSTOMER", "customer1@foomail.com", "password1223ABC");
+        Customer cust2 = new Customer("customer2", "surname1", "ssn_bbbbbbbbbbbb", "", "CUSTOMER", "customer2@foomail.com", "password1223ABC");
+        userRepo.save(cust1);
+        userRepo.save(cust2);
     }
 
     /*@Test
