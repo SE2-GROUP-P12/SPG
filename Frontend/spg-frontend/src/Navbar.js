@@ -3,10 +3,10 @@ import './App.css';
 import logo from "./resources/logo.png";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
-import {Link} from 'react-router-dom';
-import {useState} from "react";
+import { Link } from 'react-router-dom';
+import { useState } from "react";
 
-import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 
 function Navbar(props) {
     const [location, setLocation] = useState(window.location);
@@ -48,35 +48,61 @@ function Navbar(props) {
         */
 
     //PARTE DI MARTI
-    return(
-           <Switch>
-           <Route exact path="/">
+    return (
+        <Switch>
+            <Route exact path="/">
                 <Nav className="navbar bg-success navbar-dark">
-                    <img src={logo} alt="logo" className="logo"/>
-                    <Link style={{color: 'white'}} to='/NewCustomer'>Sign in</Link>
-                    <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                    <img src={logo} alt="logo" className="logo" />
+                    <div style={{ paddingBlock: "5px" }}>
+                        <Button className="btn btn-outline-light" variant="success" href='/NewCustomer'> Sign up </Button>
+                        <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                    </div>
                 </Nav>
             </Route>
-           <Route exact path="/Unauthorized">
+            <Route exact path="/Unauthorized">
                 <Nav className="navbar bg-success navbar-dark">
-                    <img src={logo} alt="logo" className="logo"/>
-                    <Link style={{color: 'white'}} to='/NewCustomer'>Sign in</Link>
-                    <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                    <img src={logo} alt="logo" className="logo" />
+                    <div style={{ paddingBlock: "5px" }}>
+                        <Button className="btn btn-outline-light" variant="success" href='/NewCustomer'> Sign up </Button>
+                        <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                    </div>
                 </Nav>
             </Route>
             <Route exact path="/NewCustomer">
                 <Nav className="navbar bg-success navbar-dark">
-                    <img src={logo} alt="logo" className="logo"/>
+                    <img src={logo} alt="logo" className="logo" />
                 </Nav>
             </Route>
             <Route>
                 <Nav className="navbar bg-success navbar-dark">
-                    <img src={logo} alt="logo" className="logo"/>
-                    <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
-                </Nav>       
+                    <img src={logo} alt="logo" className="logo" />
+                    <div style={{ paddingBlock: "5px" }}>
+                        <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
+                    </div>
+                </Nav>
             </Route>
-           </Switch>
+        </Switch>
     );
+
+    /*
+    return (
+        <Nav className="navbar bg-success navbar-dark">
+            <img src={logo} alt="logo" className="logo" />
+            <div style={{ paddingBlock: "5px" }}>
+            { props.isLogged ? 
+                <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
+                :
+                <div>
+                <Button className="btn btn-outline-light" variant="success" href='/NewCustomer'> Sign up </Button>
+                <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                }
+                </div>
+            </div>
+        </Nav>
+        )
+    
+    */
+
 }
 
-export {Navbar}
+export { Navbar }
