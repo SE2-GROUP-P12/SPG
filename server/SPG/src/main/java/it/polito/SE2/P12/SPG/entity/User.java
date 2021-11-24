@@ -63,6 +63,18 @@ public class User {
         this.active = false;
     }
 
+    public User(String name, String surname, String ssn,
+                String phoneNumber,
+                String email, String password) {
+        this.name = name;
+        this.surname = surname;
+        this.ssn = ssn;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.password = password;
+        this.active = false;
+    }
+
     public Basket getBasket(){
         if(this.basket == null) {
             Basket b = new Basket(this);
@@ -87,4 +99,6 @@ public class User {
                 ", basket=" + (basket==null?"null":this.basket.getBasketId()) +
                 '}';
     }
+
+
 }
