@@ -93,7 +93,7 @@ public class AuthenticationFilterTest {
         result = mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isUnsupportedMediaType())
                 .andReturn();
     }
 }
