@@ -1,5 +1,6 @@
 package it.polito.SE2.P12.SPG.serviceTest;
 
+import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
@@ -11,8 +12,6 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
-
-import java.sql.SQLException;
 
 @SpringBootTest
 public class BasketServiceTest {
@@ -26,7 +25,7 @@ public class BasketServiceTest {
     private SpgBasketService basketService;
 
     @BeforeEach
-    public void initContext() throws SQLException {
+    public void initContext() {
         userRepo.deleteAll();
         basketRepo.deleteAll();
         productRepo.deleteAll();

@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -44,14 +43,14 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-//        if (!request.getHeader(CONTENT_TYPE).equals(APPLICATION_FORM_URLENCODED_VALUE)) {
-//            Map<String, String> responseBody = new HashMap<>();
-//            responseBody.put("errorMessage", "Invalid content type");
-//            response.setStatus(415);
-//            response.setContentType(APPLICATION_JSON_VALUE);
-//            new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
-//            return null;
-//        }
+        if (!request.getHeader(CONTENT_TYPE).split(";")[0].equals(APPLICATION_FORM_URLENCODED_VALUE)) {
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("errorMessage", "Invalid content type");
+            response.setStatus(415);
+            response.setContentType(APPLICATION_JSON_VALUE);
+            new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
+            return null;
+        }
         //get parameters from the request body (x-www-urlencoded type)
         String username = request.getParameter("username");
         String password = request.getParameter("password");
