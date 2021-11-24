@@ -48,30 +48,26 @@ public class SpgController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(API.ALL_PRODUCT)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Product>> getAllProduct() {
-        return ResponseEntity.ok(productService.getAllProduct());
-    }
-
-    @PostMapping(API.EXIST_CUSTOMER)
+    @GetMapping(API.EXIST_CUSTOMER)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')")
-    public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData) {
-        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
-        if (requestMap == null)
-            return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("email") && requestMap.containsKey("ssn"))
-            return ResponseEntity.ok(userService.checkPresenceOfUser((String) requestMap.get("email"), (String) requestMap.get("ssn")));
+    public ResponseEntity<Map<String, Boolean>> checkExistCustomer(@RequestParam String email, @RequestParam String ssn) {
+        if (!email.isEmpty()) {
+            if (!ssn.isEmpty())
+                return ResponseEntity.ok(userService.checkPresenceOfUser(email, ssn));
+            return ResponseEntity.ok(userService.checkPresenceOfUser(email));
+        }
         return ResponseEntity.badRequest().build();
     }
 
+    /*
     @GetMapping(API.EXIST_CUSTOMER_BY_MAIL)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity checkExistCustomerMail(@RequestParam String email) {
         if (email == null)
             return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(userService.checkPresenceOfMail(email));
+        return ResponseEntity.ok(userService.checkPresenceOfUser(email));
     }
+    */
 
     @PostMapping(API.CREATE_CUSTOMER)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
@@ -86,13 +82,28 @@ public class SpgController {
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
                 && requestMap.containsKey("role")
         )
-            return ResponseEntity.ok(userService.addNewClient(
-                    new User(requestMap.get("name").toString(), requestMap.get("surname").toString(),
-                            requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
-                            requestMap.get("role").toString(), requestMap.get("email").toString(),
-                            requestMap.get("password").toString())
+            return ResponseEntity.ok(userService.addNewClient(new User(requestMap.get("name").toString(), requestMap.get("surname").toString(),
+                    requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
+                    requestMap.get("role").toString(), requestMap.get("email").toString(),
+                    requestMap.get("password").toString())
             ));
         return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping(API.ALL_PRODUCT)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<List<Product>> getAllProduct() {
+        return ResponseEntity.ok(productService.getAllProduct());
+    }
+
+    @GetMapping(API.GET_CART)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<List<Product>> getCart(@RequestParam String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(basketService.getProductsInBasket(user));
     }
 
     @PostMapping(API.PLACE_ORDER)
@@ -127,16 +138,6 @@ public class SpgController {
         return ResponseEntity.badRequest().build();
     }
 
-    @GetMapping(API.GET_CART)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Product>> getCart(@RequestParam String email) {
-        User user = userService.getUserByEmail(email);
-        if (user == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(basketService.getProductsInBasket(user));
-    }
-
     @GetMapping(API.GET_WALLET)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<Double> getWallet(@RequestParam String email) {
@@ -157,13 +158,6 @@ public class SpgController {
         return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping(API.DELIVER_ORDER)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity deliverOrder(@RequestBody Long orderId) {
-        System.out.println(orderId);
-        return ResponseEntity.ok(orderService.deliverOrder(orderId));
-    }
-
     @DeleteMapping(API.DROP_ORDER)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity dropOrder(@RequestBody String jsonData) {
@@ -182,6 +176,12 @@ public class SpgController {
         return ResponseEntity.badRequest().build();
     }
 
+    @PostMapping(API.DELIVER_ORDER)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity deliverOrder(@RequestBody Long orderId) {
+        return ResponseEntity.ok(orderService.deliverOrder(orderId));
+    }
+
     @GetMapping(API.GET_ORDERS_BY_EMAIL)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity getOrders(@RequestParam String email) {
@@ -198,17 +198,10 @@ public class SpgController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity getAllOrders() {
         String response = orderService.getAllOrdersProductJson();
-        System.out.println("RESPONSE: "+response);
+        System.out.println("RESPONSE: " + response);
         if (response.isEmpty())
             return ResponseEntity.badRequest().build();
         System.out.println(response);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping(API.TEST)
-    public ResponseEntity test() {
-        double response = userService.topUp("mario.rossi@gmail.com", 12.70);
-        System.out.println("top up quantity is: " + response);
         return ResponseEntity.ok(response);
     }
 

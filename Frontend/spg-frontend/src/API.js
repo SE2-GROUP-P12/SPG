@@ -106,7 +106,7 @@ async function topUp(data)
 async function customerExistsByMail(email)
 {
     try{
-        const response = await fetch ("/api/customer/customerExistsByMail?email="+email, {
+        const response = await fetch ("/api/customer/customerExists?email="+email+"&ssn=", {
             method: 'GET',
             headers: { 
                 'Accept': 'application/json',
@@ -251,7 +251,6 @@ async function getWallet(email) {
                 'Accept': 'application/json'}
         });
         const data = await response.json();
-        console.log(JSON.stringify(data));
         if (response.ok) {
             return data;
         }
@@ -262,47 +261,54 @@ async function getWallet(email) {
 }
 
 //GET: check whther the customer exists by its email and its SSN code, it returns a boolean
-async function customerExists(email, ssn) {
-    try {
-        const response = await fetch('/api/customer/customerExists', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email: email, ssn: ssn })
-        })
-        const data = await response.json();
-        if (response.ok) {
-            return data.exist;
-        }
+async function customerExists(data)
+{
+    try{
+        const response = await fetch ("/api/customer/customerExists?email="+data.email+"&ssn="+data.ssn , 
+        {
+            method: 'GET',
+            headers: { 
+                'Accept':'application/json',
+                'Content-Type': 'application/json' 
+            } 
+        });
+        let answer = await response.json();
+        if(response.ok)
+            return answer.exist;
+        else
+            return undefined;
     }
-    catch (err) {
+    catch(err) {
         console.log(err);
+        return undefined;
     }
 }
 
 //POST: register a new customer by sending all his/her info, it returns a boolean
-async function addCustomer(jsonObj) {
-    try {
-        const response = await fetch("/api/customer/addCustomer", {
+async function addCustomer(data)
+{
+    console.log(JSON.stringify(data));
+    try
+    {
+        const response = await fetch("/api/customer/addCustomer", 
+        {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: jsonObj
+            body: JSON.stringify(data)
         });
-        if (response.ok){ 
-            console.log("done!");
-            return response.ok;
-        }
+        if(response.ok)
+            return true;
+        return undefined;
     }
-    catch (err) {
+    catch(err)
+    {
         console.log(err);
+        return undefined;
     }
 }
-
 
 const API = {browseProducts, placeOrder, addToCart, getWallet, topUp, getCart, customerExists, customerExistsByMail, dropOrder, getAllOrders, getOrdersByEmail, deliverOrder, addCustomer};
 export {API}
