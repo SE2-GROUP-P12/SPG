@@ -1,8 +1,7 @@
 package it.polito.SE2.P12.SPG.service;
 
 import it.polito.SE2.P12.SPG.entity.*;
-import it.polito.SE2.P12.SPG.repository.CustomerRepo;
-import it.polito.SE2.P12.SPG.repository.UserRepo;
+import it.polito.SE2.P12.SPG.repository.*;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +14,17 @@ import java.util.Map;
 public class SpgUserService {
     private UserRepo userRepo;
     private CustomerRepo customerRepo;
+    private ShopEmployeeRepo shopEmployeeRepo;
+    private AdminRepo adminRepo;
+    private FarmerRepo farmerRepo;
 
     @Autowired
-    public SpgUserService(UserRepo userRepo, CustomerRepo customerRepo) {
+    public SpgUserService(UserRepo userRepo, CustomerRepo customerRepo, ShopEmployeeRepo shopEmployeeRepo, AdminRepo adminRepo, FarmerRepo farmerRepo) {
         this.userRepo = userRepo;
         this.customerRepo = customerRepo;
+        this.shopEmployeeRepo = shopEmployeeRepo;
+        this.adminRepo = adminRepo;
+        this.farmerRepo = farmerRepo;
     }
 
     public void populateDB() {
@@ -36,11 +41,11 @@ public class SpgUserService {
         //Farmer
         Farmer temp4 = new Farmer("Thomas", "Jefferson", "JFRTHM00D12N376V", "01234567892",
                 "thomas.jefferson@gmail.com", "password");
-        if (userRepo.findUserByEmail("mario.rossi@gmail.com") == null) userRepo.save(temp1);
-        if (userRepo.findUserByEmail("paolo.bianchi@gmail.com") == null) userRepo.save(temp2);
-        if (userRepo.findUserByEmail("francesco.conte@gmail.com") == null) userRepo.save(temp3);
-        if (userRepo.findUserByEmail("admin") == null) userRepo.save(admin);
-        if (userRepo.findUserByEmail("thomas.jefferson@gmail.com") == null) userRepo.save(temp4);
+        if (userRepo.findUserByEmail("mario.rossi@gmail.com") == null) customerRepo.save(temp1);
+        if (userRepo.findUserByEmail("paolo.bianchi@gmail.com") == null) customerRepo.save(temp2);
+        if (userRepo.findUserByEmail("francesco.conte@gmail.com") == null) shopEmployeeRepo.save(temp3);
+        if (userRepo.findUserByEmail("admin") == null) adminRepo.save(admin);
+        if (userRepo.findUserByEmail("thomas.jefferson@gmail.com") == null) farmerRepo.save(temp4);
     }
 
     public Long getUserIdByEmail(String email) {
