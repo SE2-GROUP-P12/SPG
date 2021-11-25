@@ -132,7 +132,6 @@ public class SpgProductService {
     }
     public List<Product> getAllProduct(){
         List<Product> listProduct = productRepo.findAll();
-        System.out.println(productRepo == null? "null" : "lista vuota");
         return listProduct;
     }
     public Product getProductById(Long productId){

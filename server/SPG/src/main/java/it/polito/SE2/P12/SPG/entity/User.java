@@ -18,7 +18,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name="role", discriminatorType = DiscriminatorType.STRING)
 public class User {
 
     @Id
@@ -35,29 +36,26 @@ public class User {
     private String ssn;
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
-    @Column(name = "role")
-    private String role;
     @Column(name = "email", nullable = false)
     private String email;
     @Column(name = "password" /*, nullable = false*/)
     private String password;
-    @Column(name = "wallet")
-    private double wallet=0.00;
     @Column(name = "active")
     private Boolean active;
+    @Column(name = "role", insertable = false, updatable = false)
+    private String role;
     @OneToOne(mappedBy = "cust")
     private Basket basket;
     @OneToMany(mappedBy = "cust")
     private List<Order> orderList;
 
     public User(String name, String surname, String ssn,
-                String phoneNumber, String role,
+                String phoneNumber,
                 String email, String password) {
         this.name = name;
         this.surname = surname;
         this.ssn = ssn;
         this.phoneNumber = phoneNumber;
-        this.role = role;
         this.email = email;
         this.password = password;
         this.active = false;
@@ -80,11 +78,11 @@ public class User {
                 ", surname='" + surname + '\'' +
                 ", ssn='" + ssn + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", role='" + role + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", wallet=" + wallet +
                 ", basket=" + (basket==null?"null":this.basket.getBasketId()) +
                 '}';
     }
+
+
 }

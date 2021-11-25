@@ -12,49 +12,69 @@ TEMPLATE FOR RETROSPECTIVE (Team 12)
 
 - 6 stories committed vs 4 stories done
 - 25 points committed vs 18 points done
-- 1w 2d 1h 10m (= 57h 10m) Nr of hours planned vs spent (as a team) 2w 2d 35m (= 96h 35m)
+- 12d 3h 20m (= 99h 20m ) Nr of hours planned vs spent (as a team) 12d 5h (= 101h )
 
-
-**Remember**  a story is done ONLY if it fits the Definition of Done:
-
+Definition of Done:
 - Unit Tests passing *(with a little tollerance)*
 - Code review completed
 - Code present on VCS
 - End-to-End tests performed at least manually
 
 ### Detailed statistics
+| Story      | #Task  | #Subtask | Points | Estimated time | Actual time    |
+| ---------- | ------ | ------- | ------ | --------- | --------- |
+| _SPG-40_   | 6      | \-      | \-     | \-        | \-        |
+| \-         | SPG-41 | 3       | \-     | 3h 10m    | 0m        |
+| \-         | \-     | SPG-42  | \-     | 10m       | 10m       |
+| \-         | \-     | SPG-43  | \-     | 1h        | 20m       |
+| \-         | \-     | SPG-45  | \-     | 2h        | 30m       |
+| \-         | SPG-44 | 4       | \-     | 1d 4h     | 7h 30m    |
+| \-         | \-     | SPG-47  | \-     | 2h        | 7h 10m    |
+| \-         | \-     | SPG-54  | \-     | 4h        | 0m        |
+| \-         | \-     | SPG-69  | \-     | 2h        | 1h 30m    |
+| \-         | \-     | SPG-72  | \-     | 4h        | 6h 30m    |
+| \-         | SPG-48 | 3       | \-     | 5h        | 1h        |
+| \-         | \-     | SPG-61  | \-     | 2h        | 30m       |
+| \-         | \-     | SPG-62  | \-     | 2h        | 0m        |
+| \-         | \-     | SPG-68  | \-     | 1h        | 1h        |
+| \-         | SPG-52 | \-      | \-     | 2h        | 2h 20m    |
+| \-         | SPG-58 | \-      | \-     | 2d        | 6h  05m   |
+| \-         | SPG-67 | \-      | \-     | 6h        | 50m       |
+| SPG-71     | \-     | \-      | \-     | 0h        | 3d 4h 45m |
+| \-         | \-     | \-      | \-     | \-        | \-        |
+| SPG-1      | 2      | \-      | 8      |           | \-        |
+| \-         | SPG-53 | \-      |        | 4h        | 6h 30m    |
+| \-         | SPG-56 | \-      | \-     | 4h        | 3h 10m    |
+| SPG-2      | 3      | \-      | 5      | \-        | \-        |
+| \-         | SPG-49 | \-      | \-     | 1h        | 3h 30m    |
+| \-         | SPG-50 | \-      | \-     | 2h        | 3h 25m    |
+| \-         | SPG-51 | \-      | \-     | 4h        | 50m       |
+| SPG-3      | 2      | \-      | 3      | \-        | \-        |
+| \-         | SPG-59 | \-      | \-     | 3h        | 1h        |
+| \-         | SPG-60 | \-      | \-     | 3h        | 1h        |
+| SPG-4      | 4      | \-      | 2      | \-        | \-        |
+| \-         | SPG-55 | \-      | \-     | 3h        | 2h        |
+| \-         | SPG-57 | \-      | \-     | 4h        | 3h 45m    |
+| \-         | SPG-63 | \-      | \-     | 2h        | 2h 45m    |
+| \-         | SPG-64 | \-      | \-     | 1h        | 1h 20m    |
+| SPG-5      | 2      | \-      | 2      | \-        | \-        |
+| \-         | SPG-65 | \-      | \-     | 1h        | 1h 45m    |
+| \-         | SPG-66 | \-      | \-     | 3h        | 1h        |
+| SPG-6      | SPG-50 | \-      | 5      | \-        | 20m       |
 
-| Story       | # Tasks     | Points | Hours est. | Hours actual |
-| ----------- | ----------- | ------ | ---------- | ------------ |
-| _#0_        | 5           | -      | 4d 1h 30m  | 4d 1h 40m    |
-| -           | SPG-41      | -      | 1d 3h      | 1d 4h 5m     |
-| -           | S2112OQM-15 | -      | 0d 6h      | 0d 5h 15m    |
-| -           | S2112OQM-14 | -      | 0d 3h      | 0d 1h 15m    |
-| -           | S2112OQM-28 | -      | 0d 3h      | 0d 5h 20m    |
-| -           | S2112OQM-27 | -      | 1d 1h      | 0d 7h        |
-| -           | S2112OQM-26 | -      | 0d 1h 30m  | 0d 2h 45m    |
-| -           | -           | -      | -          | -            |
-| S2112OQM-3  | S2112OQM-17 | 5      | 0d 1h      | 0d 1h        |
-| S2112OQM-4  | S2112OQM-23 | 8      | 0d 5h      | 0d 3h        |
-| S2112OQM-8  | S2112OQM-22 | 2      | 0d 1h      | 0h 30m       |
-| S2112OQM-10 | S2112OQM-25 | 3      | 0d 4h      | 0d 2h 15m    |
-| S2112OQM-11 | S2112OQM-19 | 8      | 0d 6h      | 0d 4h 30m    |
-| S2112OQM-6  | S2112OQM-29 | 2      | 0d 2h      | 0d 2h        |
+**Note:** Actual time reported in story entries represents time spent in overall activities, it is **not** a total of its subtasks 
+(eg: time spent in _SPG-3_ isn't the sum of time spent in _SPG-59_ and _SPG-60_)
 
-Total est: 6d 4h 30m
-Total actual: 5d 6h 55m
+**Total est:** 12d 3h 20m (= 99h 20m )
 
-> place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
-
-**Note: story _#0_ contains also the transversal tasks**
+**Total actual:** 12d 5h (= 101h )
 
 - Hours per task (average, standard deviation)
-    - Average: 3 h 55m
-    - Standard deviation: 3h 7m
-- Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
-    - 52.5/46.91= 1.12
-
-
+    - Average: 5h 3m
+    - Standard deviation: 5h 32m
+- Total task estimation error ratio: 
+  - sum of total hours estimation / sum of total hours spent from previous table: 99.33/101 = 0.98
+    
 ## QUALITY MEASURES
 
 - Unit Testing:
@@ -76,27 +96,31 @@ Total actual: 5d 6h 55m
         -  5h
     - Total hours spent:
         - 4h 25m
-
-**ignore for this spring**
+        
 - Technical Debt management:
-    - Total hours estimated: 1d
-    - Total hours spent:
-    - Hours estimated for remediation by SonarQube
-    - Hours estimated for remediation by SonarQube only for the selected and planned issues
-    - Hours spent on remediation
-    - debt ratio (as reported by SonarQube under "Measures-Maintainability")
-    - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability )
+    - Total hours estimated: 0h
+    - Total hours spent: 25m
+    - Hours estimated for remediation by SonarQube: 30m
+    - Hours estimated for remediation by SonarQube only for the selected and planned issues: 0h
+    - Hours spent on remediation: 25m
+    - debt ratio (as reported by SonarQube under "Measures-Maintainability"): 1.8%
+    - rating for each quality characteristic reported in SonarQube under "Measures":
+      - Reliability: A
+      - Security: D
+      - Maintainability: A
 
-
+**Note:** Technical debt has not been explicitly managed in this sprint because of the high expected effort in the planning and starting phases.
+The team did its best during the sprint to keep the code easily maintainable to repay quickly its debt.
 
 ## ASSESSMENT
 
 - What caused your errors in estimation (if any)?
     1. merge different branches: late merge on sprint1 branch and conflict between fe and be
-    2. branch management: wrong branch handling related to different tasks
+    2. branch management: wrong branch handling related to different tasks, handling correctly tasks, subtasks and their bind.
     3. adding spring security to the project: configurations and set up, form login hosted on server not reachable from fe
     4. docker macos: fixing bugs on mac devices
     5. lack of doc: handle docs in a better way especially in the end of sprint
+    6. overspecialization of tasks: defining too many levels and too complex relationships among tasks and subtasks made it difficult to keep precise track of time
 
 - What lessons did you learn (both positive and negative) in this sprint?
     1. it's better to plan and bind branches and tasks
@@ -115,7 +139,7 @@ Total actual: 5d 6h 55m
 - Which ones you were not able to achieve? Why?
   - documentation must be improved for all part of the project:
     - not only for design but also for methods and new technologies imported into the project
-  - testing must be extend to increase coverage and improve code quality
+  - testing must be extended to increase coverage and improve code quality
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
     1. Write better code documentation to improve functionalities understanding and code readability.
@@ -131,8 +155,9 @@ Total actual: 5d 6h 55m
         - Create subgroups in order to have a better alignment between fe and be for a specific task
         - Define the tasks assignments before starting development
         - Have at least stable development branch
+        - Create at most one level of subtasks
 
 - One thing you are proud of as a Team!!
-    - We did great docs in the design phase
+    - We did useful docs in the design phase
     - Everyone has learnt something new
-    - Morale is high as always
+    - Morale is high as always, the team is positive about improvements that could be done

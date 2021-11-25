@@ -36,8 +36,11 @@ public class Product {
     private Double quantityDelivered;
     @Column(name = "price", nullable = false)
     private Double price;
+    @ManyToOne
+    private Farmer farmer;
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price) {
+        //WARNING this method sets the farmer to null, only to be used before we set farmer in the system
         this.name = name;
         this.producer = "default produces";
         this.unitOfMeasurement = unitOfMeasurement;
@@ -47,6 +50,7 @@ public class Product {
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
         this.price = price;
+        this.farmer = null;
     }
 
     public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price) {
@@ -59,6 +63,19 @@ public class Product {
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
         this.price = price;
+    }
+
+    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
+        this.name = name;
+        this.producer = producer;
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.totalQuantity = totalQuantity;
+        this.quantityAvailable = totalQuantity;
+        this.quantityBaskets = 0.0;
+        this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
+        this.price = price;
+        this.farmer = farmer;
     }
 
     public Boolean moveFromAvailableToBasket(Double quantity) {

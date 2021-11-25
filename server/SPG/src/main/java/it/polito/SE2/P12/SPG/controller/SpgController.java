@@ -1,8 +1,12 @@
 package it.polito.SE2.P12.SPG.controller;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polito.SE2.P12.SPG.entity.*;
+import it.polito.SE2.P12.SPG.service.SpgBasketService;
+import it.polito.SE2.P12.SPG.service.SpgOrderService;
+import it.polito.SE2.P12.SPG.service.SpgProductService;
+import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
@@ -15,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,13 +30,15 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * NOTE: in order to granted access to an api based on the user roles add roles into the 'PreAuthorization' annotation as follows:
  * PreAuthorize("hasAnyRole('ROLE_<role1>', 'ROLE_<role2>, ...)"). Possible available roles are provided into /security/ApplicationUserRole enum.
  */
 
-@Slf4j
 @RestController
 @RequestMapping(value = API.HOME, produces = "application/json", consumes = "application/json")
 public class SpgController {
@@ -51,7 +56,6 @@ public class SpgController {
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
-        this.jwtUserHandlerService = jwtUserHandlerService;
         this.userService.populateDB();
         this.productService.populateDB();
     }
@@ -71,10 +75,16 @@ public class SpgController {
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')")
     public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        Map<String, Boolean> response = new HashMap<>();
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("email") && requestMap.containsKey("ssn"))
-            return ResponseEntity.ok(userService.checkPresenceOfUser((String) requestMap.get("email"), (String) requestMap.get("ssn")));
+        if (requestMap.containsKey("email") && requestMap.containsKey("ssn")) {
+            if(userService.checkPresenceOfUser((String) requestMap.get("email"), (String) requestMap.get("ssn")))
+                response.put("exist", true);
+            else
+                response.put("exist", false);
+            return ResponseEntity.ok(response);
+        }
         return ResponseEntity.badRequest().build();
     }
 
@@ -108,6 +118,18 @@ public class SpgController {
             ));
         return ResponseEntity.badRequest().body("email/ssn already present");
     }
+/* && requestMap.containsKey("role") && requestMap.containsKey("address")
+        ) {
+            Customer c = new Customer(requestMap.get("name").toString(), requestMap.get("surname").toString(),
+                    requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
+                    requestMap.get("email").toString(), requestMap.get("password").toString(), requestMap.get("address").toString());
+            if(userService.addNewCustomer(c))
+                response.put("responseMessage", "Customer already present");
+            else
+                response.put("responseMessage", "Customer added successfully");
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.badRequest().build();*/
 
     @PostMapping(API.PLACE_ORDER)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
@@ -163,7 +185,7 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("email") && requestMap.containsKey("value")) {
             String email = (String) requestMap.get("email");
-            Double value = Double.valueOf(requestMap.get("value").toString());
+            Double value = (Double) requestMap.get("value");
             return ResponseEntity.ok(userService.topUp(email, value));
         }
         return ResponseEntity.badRequest().build();
@@ -200,7 +222,7 @@ public class SpgController {
         User user = userService.getUserByEmail(email);
         if (user == null) return ResponseEntity.badRequest().build();
         String response = orderService.getOrdersProductsJson(user.getUserId());
-        if (response == null)
+        if (response.isEmpty())
             return ResponseEntity.badRequest().build();
         System.out.println(response);
         return ResponseEntity.ok(response);
@@ -275,4 +297,5 @@ public class SpgController {
         }
         return requestMap;
     }
+
 }

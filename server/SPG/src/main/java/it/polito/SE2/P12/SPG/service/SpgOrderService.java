@@ -66,7 +66,7 @@ public class SpgOrderService {
     public String getOrdersProductsJson(Long userId) {
         List<Order> orders = orderRepo.findAllByCust_UserId(userId);
         ObjectMapper mapper = new ObjectMapper();
-        String response = null;
+        String response = new String();
         try {
             response = mapper.writeValueAsString(orders);
 
