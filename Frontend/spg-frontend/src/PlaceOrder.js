@@ -23,7 +23,7 @@ function PlaceOrder(props) {
     const [triggerError, setTriggerError] = useState(false);
 
     /***************************************************************************/
-    let email = 'mario.rossi@gmail.co' //dovrebbe essere recuperata dalla sessione
+    let email = 'mario.rossi@gmail.com' //dovrebbe essere recuperata dalla sessione
     //const username = localStorage.getItem("username");
     //const username = props.loggedUser; //requires hooks system from App.js (where loggedUser state is located)
     /***************************************************************************/

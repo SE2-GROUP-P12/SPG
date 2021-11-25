@@ -28,8 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = SpringSecurityTestConfig.class
 )
 @AutoConfigureMockMvc
-public
-class ProductControllerApiTest {
+public class ProductControllerApiTest {
     @Autowired
     private ProductRepo productRepo;
     @Autowired
@@ -49,8 +48,8 @@ class ProductControllerApiTest {
     }
 
     @AfterEach
-    public void restDB(){
-       productRepo.deleteAll();
+    public void restDB() {
+        productRepo.deleteAll();
 
     }
 
@@ -61,7 +60,8 @@ class ProductControllerApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
-        List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>(){});
+        List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>() {
+        });
         Assertions.assertEquals(3, productList.size());
         Assertions.assertEquals("Prod1", productList.get(0).getName());
         Assertions.assertEquals(100.00, productList.get(1).getTotalQuantity());
@@ -76,7 +76,8 @@ class ProductControllerApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
-        List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>(){});
+        List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>() {
+        });
         Assertions.assertEquals(0, productList.size());
     }
 

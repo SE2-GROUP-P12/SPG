@@ -34,7 +34,7 @@ public class SpgUserService {
     public void populateDB() {
         //ADMIN
         Admin admin = new Admin("admin", "admin", "ADMIN00000000000", "0000000000",
-                "admin", "password");
+                "admin@foomail.com", "password");
         //Customers
         Customer temp1 = new Customer("Mario", "Rossi", "RSSMRA00D12N376V", "01234567892", "mario.rossi@gmail.com", "password", "Main street 1234");
         Customer temp2 = new Customer("Paolo", "Bianchi", "BNCPLA00D12N376V", "01234567892",
@@ -48,7 +48,7 @@ public class SpgUserService {
         if (userRepo.findUserByEmail("mario.rossi@gmail.com") == null) customerRepo.save(temp1);
         if (userRepo.findUserByEmail("paolo.bianchi@gmail.com") == null) customerRepo.save(temp2);
         if (userRepo.findUserByEmail("francesco.conte@gmail.com") == null) shopEmployeeRepo.save(temp3);
-        if (userRepo.findUserByEmail("admin") == null) adminRepo.save(admin);
+        if (userRepo.findUserByEmail("admin@foomail.com") == null) adminRepo.save(admin);
         if (userRepo.findUserByEmail("thomas.jefferson@gmail.com") == null) farmerRepo.save(temp4);
     }
 
