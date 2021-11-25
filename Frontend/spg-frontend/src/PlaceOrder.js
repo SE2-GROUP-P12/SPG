@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
-import {API} from './API';
+import {API} from './API/API';
 
 function PlaceOrder(props)
 {

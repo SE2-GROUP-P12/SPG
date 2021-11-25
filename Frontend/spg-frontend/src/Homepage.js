@@ -26,7 +26,6 @@ return (
         </Grid>
     </Grid>
 );
-
 }
 
 export {Homepage}

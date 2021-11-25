@@ -8,7 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import {Formik, Form, Field} from "formik";
 import * as Yup from "yup";
 import {Link} from 'react-router-dom';
-import {API} from "./API";
+import {API} from "./API/API";
 import Alert from 'react-bootstrap/Alert';
 import Grid from '@mui/material/Grid';
 

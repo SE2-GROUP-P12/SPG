@@ -55,16 +55,20 @@ public class SpgUserService {
     }
     public Map<String, Boolean> checkPresenceOfUser(String email, String ssn){
         Map<String, Boolean> response = new HashMap<>();
-        //System.out.println("Here, ssn: " + ssn + ", email : " + email);
-        if (checkPresenceOfMail(email) || checkPresenceOfSSN(ssn))
+        if (userRepo.existsByEmail(email) || userRepo.existsBySsn(ssn))
             response.put("exist", true);
         else
             response.put("exist", false);
         return response;
     }
 
-    public Boolean checkPresenceOfMail(String email) {
-        return userRepo.existsByEmail(email);
+    public Map<String, Boolean> checkPresenceOfUser(String email){
+        Map<String, Boolean> response = new HashMap<>();
+        if (userRepo.existsByEmail(email))
+            response.put("exist", true);
+        else
+            response.put("exist", false);
+        return response;
     }
 
     private Boolean checkPresenceOfSSN(String ssn){
