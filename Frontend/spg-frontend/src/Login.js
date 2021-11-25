@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Button from "react-bootstrap/Button";
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {Formik, Form, Field} from 'formik';
@@ -13,9 +13,11 @@ let base64 = require('base-64');
 
 
 function Login(props) {
-    const [redirectPath, setRedirectPath] = useState("/LoginComponent");
+    const [redirectRun, setRedirectRun] = useState(false);
+
 
     function onClickSubmissionHandler(username, password) {
+        //event.preventDefault();
         fetch("/api/login", {
             method: 'POST',
             headers: {
@@ -29,17 +31,26 @@ function Login(props) {
         }).then(response => {
             if (response.ok) {
                 response.json().then(body => {
+                        props.setAccessToken(body['accessToken']);
                         sessionStorage.setItem('accessToken', body['accessToken']);
                         sessionStorage.setItem('refreshToken', body['refreshToken']);
-                        localStorage.setItem('username', body['username']);
+                        localStorage.setItem('username', body['email']);
                         localStorage.setItem('role', body['roles']);
+                        props.setLoggedFlag(true);
+                        props.setLoggedUser(localStorage.getItem('username'));
                     }
                 )
-                window.location.href = "http://localhost:3000/ShopEmployee"; //TODO: there's a better way to implement that system without using a location href
+                //window.location.href = "http://localhost:3000/ShopEmployee"; //TODO: there's a better way to implement that system without using a location href
             }
         });
+        return true;
     }
 
+    if (redirectRun == true) {
+        return (
+            <Redirect to="/ShopEmployee"></Redirect>
+        );
+    }
 
     return (
         <>
@@ -54,7 +65,8 @@ function Login(props) {
                     password: Yup.string().required('Password is required').min(6, "Password is too short")
                 })}
                 onSubmit={async (values) => {
-                    onClickSubmissionHandler(values.email, values.password);
+                    let r = await onClickSubmissionHandler(values.email, values.password);
+                    setRedirectRun(true);
                 }}
                 validateOnChange={false}
                 validateOnBlur={false}>
@@ -70,9 +82,9 @@ function Login(props) {
                             <Row style={{padding: "20px"}}>
 
                                 <Col xs={6}>
-                                    <Button type="submit" variant="success">Login</Button>
+                                    <Button type="submit" variant="success"
+                                    >Login</Button>
                                 </Col>
-
                                 <Col xs={6}><Link to="/"><Button variant="secondary">
                                     Back</Button></Link></Col>
                             </Row>

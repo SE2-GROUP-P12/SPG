@@ -1,9 +1,15 @@
-package it.polito.SE2.P12.SPG.controllerTest;
+package it.polito.SE2.P12.SPG.serviceTest;
 
 import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.repository.*;
 import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
+import it.polito.SE2.P12.SPG.entity.Basket;
+import it.polito.SE2.P12.SPG.entity.Product;
+import it.polito.SE2.P12.SPG.entity.User;
+import it.polito.SE2.P12.SPG.repository.BasketRepo;
+import it.polito.SE2.P12.SPG.repository.ProductRepo;
+import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.utils.UserRole;
@@ -12,21 +18,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 public class BasketServiceTest {
-    @Autowired
-    private SpgController spgController;
     @Autowired
     private BasketRepo basketRepo;
     @Autowired
@@ -46,11 +45,10 @@ public class BasketServiceTest {
 
     @BeforeEach
     public void initContext() {
-        SecurityConfiguration.setTestContext();
+        userRepo.deleteAll();
         basketRepo.deleteAll();
         orderRepo.deleteAll();
         productRepo.deleteAll();
-        userRepo.deleteAll();
         //Create some product and then add them to the Customer Cart
         Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F);
         Product prod2 = new Product("Prod2", "Producer2", "KG", 100.0, 5.50F);
@@ -64,6 +62,14 @@ public class BasketServiceTest {
         customerRepo.save(cust1);
         customerRepo.save(cust2);
     }
+
+    @AfterEach
+    public void resetDB(){
+        basketRepo.deleteAll();
+        productRepo.deleteAll();
+        userRepo.deleteAll();
+    }
+
 
     @Test
     public void retrieveEmptyBasket() {

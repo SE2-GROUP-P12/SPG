@@ -15,6 +15,7 @@ import it.polito.SE2.P12.SPG.utils.API;
 import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -100,9 +101,12 @@ public class SpgController {
     @PostMapping(API.CREATE_CUSTOMER)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity createCustomer(@RequestBody String userJsonData) {
+        Map<String, String> error = new HashMap<>();
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/" + API.CREATE_CUSTOMER).toUriString());
-        if (userJsonData == null || userJsonData.equals(""))
-            return ResponseEntity.badRequest().build();
+        if (userJsonData == null || userJsonData.equals("")) {
+            error.put("errorMessage", "Body is not valid");
+            return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(error);
+        }
         Map<String, Object> requestMap = extractMapFromJsonString(userJsonData);
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
@@ -110,6 +114,8 @@ public class SpgController {
                 && requestMap.containsKey("name") && requestMap.containsKey("surname")
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
                 && requestMap.containsKey("role")
+                && Boolean.FALSE.equals(userService.checkPresenceOfMail(requestMap.get("email").toString()))
+                && Boolean.FALSE.equals(userService.checkPresenceOfSSN(requestMap.get("ssn").toString()))
         )
             return ResponseEntity.created(uri).body(userService.addNewCustomer(
                     new Customer(requestMap.get("name").toString(), requestMap.get("surname").toString(),
@@ -117,7 +123,10 @@ public class SpgController {
                              requestMap.get("email").toString(),
                             requestMap.get("password").toString(), requestMap.get("address").toString())
             ));
-        return ResponseEntity.badRequest().body("email/ssn already present");
+        error.put("errorMessage", "email/ssn already present in the system");
+        return ResponseEntity.badRequest()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(error);
     }
 /* && requestMap.containsKey("role") && requestMap.containsKey("address")
         ) {
@@ -167,7 +176,7 @@ public class SpgController {
     public ResponseEntity<List<Product>> getCart(@RequestParam String email) {
         User user = userService.getUserByEmail(email);
         if (user == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(basketService.getProductsInBasket(user));
     }
@@ -238,6 +247,10 @@ public class SpgController {
             try {
                 Map<String, String> responseBody = jwtProvider.verifyRefreshTokenAndRegenerateAccessToken(refreshToken, request.getRequestURL().toString(), this.userService);
                 response.setContentType(APPLICATION_JSON_VALUE);
+                jwtUserHandlerService.invalidateByUserRefreshTokens(userService.getUserByEmail(responseBody.get("email")), refreshToken);
+                String accessToken = responseBody.get("accessToken");
+                jwtUserHandlerService.addRelationUserTokens(userService.getUserByEmail(responseBody.get("email")),
+                        accessToken, refreshToken);
                 new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
             } catch (Exception e) {
                 log.error("Error  refreshing token: " + e.getMessage());

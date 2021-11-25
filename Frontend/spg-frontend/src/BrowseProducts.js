@@ -1,54 +1,40 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Container from "react-bootstrap/Container";
-import { useState, useEffect } from "react";
-import { API } from "./API";
+import {useState, useEffect} from "react";
+import {API} from "./API";
 import fruit from "./resources/fruits.png" //Recheck the original filename
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
-import { Modal } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { Formik, Form, Field } from 'formik';
+import {Modal} from "react-bootstrap";
+import {Link, Redirect} from "react-router-dom";
+import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 
-function BrowseProducts() {
+
+function BrowseProducts(props) {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
+    const [triggerError, setTriggerError] = useState(false);
 
-    /* useEffect(() => {
-        fetch('/api/product/all', {
-            method : 'GET',
-            headers : {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                //'Authorization': 'Basic ' + base64.encode('admin' + ":" + 'password')
-            }
-        }).then(response => {
-            if (response.ok) {
-                response.json().then((body) => {
-                    setProducts([...body]);
-                });
-            } else{
-                window.location.href = "http://localhost:3000/Unauthorized"
-            }
-            setLoadCompleted(true);
-        })
-    }, []); */
 
     async function _browseProducts() {
-        const data = await API.browseProducts();
-        setProducts(data);
-        setLoadCompleted(true);
+        const data = await API.browseProducts(props.setErrorMessage);
+        //console.log(data);
+        if (data !== null) {
+            setProducts(data['data']);
+            setLoadCompleted(true);
+        }else
+            setTriggerError(true);
         return;
     }
 
     useEffect(() => {
         _browseProducts();
     }, []);
-
 
 
     function ProductEntry(props) {
@@ -60,18 +46,22 @@ function BrowseProducts() {
 
         return (
             <>
-                <Modal show={show} onHide={() => { handleClose(); setShowError(null); setShowSuccess(null); }}>
+                <Modal show={show} onHide={() => {
+                    handleClose();
+                    setShowError(null);
+                    setShowSuccess(null);
+                }}>
                     <Modal.Header closeButton>
                         <Modal.Title>Add product to cart</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent">
-                            <img src={fruit} alt="fruit" style={{ width: '150px', height: '150px' }} />
+                            <img src={fruit} alt="fruit" style={{width: '150px', height: '150px'}}/>
                             <Row> {props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Row>
                             <Row>
                                 <Formik
-                                    initialValues={{ amount: 0 }}
-                                    validationSchema={Yup.object({ amount: Yup.number().min(0).max(props.product.quantityAvailable).required('Amount required!') })}
+                                    initialValues={{amount: 0}}
+                                    validationSchema={Yup.object({amount: Yup.number().min(0).max(props.product.quantityAvailable).required('Amount required!')})}
                                     onSubmit={async (values) => {
                                         let outcome = await API.addToCart({
                                             "productId": props.product.productId,
@@ -86,14 +76,17 @@ function BrowseProducts() {
                                     validateOnChange={false}
                                     validateOnBlur={false}
                                 >
-                                    {({ values, errors, touched }) =>
+                                    {({values, errors, touched}) =>
                                         <Form>
-                                            Amount: <Field type="number" id="amount" name="amount" max={props.product.quantityAvailable} min={0} /> {props.product.unitOfMeasurement}
-                                            <br />
-                                            <Button style={{ margin: '20px' }} type="submit" variant="success">Add to
+                                            Amount: <Field type="number" id="amount" name="amount"
+                                                           max={props.product.quantityAvailable}
+                                                           min={0}/> {props.product.unitOfMeasurement}
+                                            <br/>
+                                            <Button style={{margin: '20px'}} type="submit" variant="success">Add to
                                                 cart</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
-                                            {showSuccess !== null ? <Alert variant='success'>{showSuccess}</Alert> : null}
+                                            {showSuccess !== null ?
+                                                <Alert variant='success'>{showSuccess}</Alert> : null}
                                             {showError !== null ? <Alert variant='danger'>{showError}</Alert> : null}
                                         </Form>
                                     }
@@ -102,14 +95,19 @@ function BrowseProducts() {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => { handleClose(); setShowError(null); setShowSuccess(null); window.location.reload(false); }}>
+                        <Button variant="secondary" onClick={() => {
+                            handleClose();
+                            setShowError(null);
+                            setShowSuccess(null);
+                            window.location.reload(false);
+                        }}>
                             Close
                         </Button>
                     </Modal.Footer>
                 </Modal>
                 <li className="list-group-item">
                     <Row>
-                        <Col xs={2}> <img src={fruit} alt="fruit" style={{ width: '50px', heigth: '50px' }} /> </Col>
+                        <Col xs={2}> <img src={fruit} alt="fruit" style={{width: '50px', heigth: '50px'}}/> </Col>
                         <Col
                             xs={8}>{props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}</Col>
                         <Col xs={2}><Button variant="success" onClick={handleShow}> Add to cart </Button> </Col>
@@ -119,32 +117,35 @@ function BrowseProducts() {
         );
     }
 
-    return (
-        <Container fluid>
-            <h1>Products List</h1>
-            {
-                loadCompleted === true ?
-                    products.map((prod, index) => <ProductEntry key={index} product={prod}></ProductEntry>)
-                    :
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </Spinner>
-            }
+    if(triggerError === true){
+        return (<Redirect to="/ErrorHandler"></Redirect>);
+    }
 
-            <Link to='/ShopEmployee'><Button style={{ margin: '20px' }} variant='secondary'>Back</Button></Link>
-        </Container>
-    );
+        return (
+            <Container fluid>
+                <h1>Products List</h1>
+                {
+                    loadCompleted === true ?
+                        products.map((prod, index) => <ProductEntry key={index} product={prod}
+                                                                    isLogged={props.isLogged}></ProductEntry>)
+                        :
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                }
+
+                <Link to='/ShopEmployee'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
+            </Container>
+        );
 }
 
 function printProducts(prod) {
     let output = [];
     for (let p of prod) {
-        output.push(<ProductEntry product={p} />)
+        output.push(<ProductEntry product={p}/>)
     }
     return output;
 }
 
 
-
-
-export { BrowseProducts }
+export {BrowseProducts}

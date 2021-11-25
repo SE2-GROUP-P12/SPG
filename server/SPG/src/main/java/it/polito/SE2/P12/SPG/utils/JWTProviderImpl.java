@@ -23,6 +23,9 @@ public class JWTProviderImpl implements JWTProvider {
     //TODO: maybe with ECDSA it's better -> non-repudiation
     private Algorithm algorithm = Algorithm.HMAC256(Constants.SERVER_SECRET.getBytes(StandardCharsets.UTF_8));
 
+    public String getAlgorithmName() {
+        return algorithm.toString();
+    }
 
     public JWTProviderImpl() {
         //Do nothing...
@@ -35,7 +38,7 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public Map<String, String> verifyRefreshTokenAndRegenerateAccessToken(String refreshToken, String requestURL, SpgUserService userService) {
+    public Map<String, String> verifyRefreshTokenAndRegenerateAccessToken(String refreshToken, String requestURL, SpgUserService userService) throws Exception {
         Map<String, String> responseBody = new HashMap<>();
         String username = this.verifyRefreshToken(refreshToken); //username as email
         UserDetailsImpl userDetails = new UserDetailsImpl(userService.getUserByEmail(username));
@@ -50,7 +53,7 @@ public class JWTProviderImpl implements JWTProvider {
     @Override
     public Map<String, String> setErrorMessage(Exception e) {
         Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("error message", e.getMessage());
+        responseBody.put("errorMessage", e.getMessage());
         return responseBody;
     }
 
@@ -68,7 +71,11 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public String generateAccessToken(UserDetailsImpl userDetails, String requestURL) {
+    public String generateAccessToken(UserDetailsImpl userDetails, String requestURL) throws Exception {
+        if (requestURL == null || requestURL.equals(""))
+            throw new Exception("Invalid URL");
+        if (userDetails == null)
+            throw new Exception("Invalid userDetails");
         return JWT.create()
                 .withSubject(userDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + Constants.EXPIRED_INTERVAL_TIME_ACCESS_TOKEN))
@@ -78,7 +85,11 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public String generateRefreshToken(UserDetailsImpl userDetails, String requestURL) {
+    public String generateRefreshToken(UserDetailsImpl userDetails, String requestURL) throws Exception {
+        if (requestURL == null || requestURL.equals(""))
+            throw new Exception("Invalid URL");
+        if (userDetails == null)
+            throw new Exception("Invalid userDetails");
         return JWT.create()
                 .withSubject(userDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + Constants.EXPIRED_INTERVAL_TIME_REFRESH_TOKEN))
@@ -87,7 +98,7 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public Map<String, String> getFrontEndUSerJWT(UserDetailsImpl userDetails, String requestURL) {
+    public Map<String, String> getFrontEndUSerJWT(UserDetailsImpl userDetails, String requestURL) throws Exception {
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("accessToken", generateAccessToken(userDetails, requestURL));
         responseBody.put("refreshToken", generateRefreshToken(userDetails, requestURL));

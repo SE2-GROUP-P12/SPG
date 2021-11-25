@@ -86,7 +86,7 @@ public class SpgUserService {
         return userRepo.existsByEmail(email);
     }
 
-    private Boolean checkPresenceOfSSN(String ssn) {
+    public Boolean checkPresenceOfSSN(String ssn) {
         return userRepo.existsBySsn(ssn);
     }
 

@@ -17,9 +17,15 @@ public interface JWTUserHandlerRepo extends JpaRepository<JWTUserHandlerImpl, Lo
 
     JWTUserHandlerImpl deleteJWTUserHandlerImplById(Long id);
 
+    JWTUserHandlerImpl findJWTUserHandlerImplByUserId(Long userId);
+
+    JWTUserHandlerImpl findJWTUserHandlerImplByRefreshTokenAndValidIsTrue(String refreshToken);
 
     @Modifying
     @Query(value = "update JWTUserHandlerImpl j set j.valid = :valid where (j.userId = :userId and j.accessToken = :accessToken)")
-    void updateTokenValidity(@Param(value = "valid") Boolean valid, @Param(value = "userId") Long userId, @Param(value = "accessToken") String accessToken);
+    void updateAccessTokenValidity(@Param(value = "valid") Boolean valid, @Param(value = "userId") Long userId, @Param(value = "accessToken") String accessToken);
 
+    @Modifying
+    @Query(value = "update JWTUserHandlerImpl j set j.valid = :valid where (j.userId = :userId and j.refreshToken = :refreshToken)")
+    void updateRefreshTokenValidity(@Param(value = "valid") Boolean valid, @Param(value = "userId") Long userId, @Param(value = "refreshToken") String refreshToken);
 }

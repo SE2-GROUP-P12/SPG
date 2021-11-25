@@ -4,7 +4,7 @@ import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
-import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,11 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
 
+
+import java.sql.SQLException;
 import java.util.Map;
 
 @SpringBootTest
-public class UserServiceTest {
+public class UserControllerApiTest {
     private static final String customerJsonFormat = "{" +
             "  \"name\": \"fooName1\"," +
             "  \"surname\": \"fooSurname1\"," +
@@ -44,23 +47,27 @@ public class UserServiceTest {
 
     @BeforeEach
     public void initContext() {
-        SecurityConfiguration.setTestContext();
         userRepo.deleteAll();
         Customer fooUser1 = new Customer("fooName1", "fooSurname1", "ssn_aaaaaaaaaaaa", "123456789", "foouser@foomail.com", "password","address");
         userRepo.save(fooUser1);
+    }
+
+    @AfterEach
+    public void restDB(){
+        userRepo.deleteAll();
     }
 
     /**
      * CUSTOMER CREATION/CHECK PRESENCE TESTING
      */
 
-    /*@Test
-    public void testNullCustomerCreation() {
+    @Test
+    public void testNullCustomerCreation() throws Exception {
         ResponseEntity response;
         response = spgController.createCustomer(null);
-        Assertions.assertNull(response.getBody()); // Body is not present
-        Assertions.assertTrue(response.getStatusCode().isError());
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        Map<String, String> responseMap = (Map<String, String>) response.getBody();
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertEquals("Body is not valid", responseMap.get("errorMessage"));
     }
 
     @Test
@@ -68,7 +75,7 @@ public class UserServiceTest {
         ResponseEntity response;
         response = spgController.createCustomer(customerJsonFormat1);
         Map<String, String> responseMap = (Map<String, String>) response.getBody();
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Assertions.assertEquals("200-OK-(Customer added successfully)", responseMap.get("responseMessage"));
     }
 
@@ -77,8 +84,8 @@ public class UserServiceTest {
         ResponseEntity response;
         response = spgController.createCustomer(customerJsonFormat);
         Map<String, String> responseMap = (Map<String, String>) response.getBody();
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals("200-OK-(Customer already present)", responseMap.get("responseMessage"));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertEquals("email/ssn already present in the system", responseMap.get("errorMessage"));
     }
 
     @Test
@@ -86,15 +93,16 @@ public class UserServiceTest {
         ResponseEntity response;
         response = spgController.createCustomer(customerJsonFormat);
         Map<String, String> responseMap = (Map<String, String>) response.getBody();
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals("200-OK-(Customer already present)", responseMap.get("responseMessage"));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assert responseMap != null;
+        Assertions.assertEquals("email/ssn already present in the system", responseMap.get("errorMessage"));
     }
 
     @Test
     public void testEmptyCustomerCheck() {
         ResponseEntity response;
         response = spgController.checkExistCustomerMailAndSsn("");
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -102,7 +110,7 @@ public class UserServiceTest {
         ResponseEntity response;
         String jsonData = "{\"filed1\":\"foo1@foomail.com\",\"field2\":\"aaaaaaaaaaaaaaaa\"}";
         response = spgController.checkExistCustomerMailAndSsn(jsonData);
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -110,7 +118,7 @@ public class UserServiceTest {
         ResponseEntity response;
         String jsonData = "foo-data <> not-a-json-structure!";
         response = spgController.checkExistCustomerMailAndSsn(jsonData);
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -118,6 +126,6 @@ public class UserServiceTest {
         String email = "admin";
         ResponseEntity response;
         response = spgController.checkExistCustomerMail(email);
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    }*/
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 }
