@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,10 +56,16 @@ public class SpgController {
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')")
     public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        Map<String, Boolean> response = new HashMap<>();
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("email") && requestMap.containsKey("ssn"))
-            return ResponseEntity.ok(userService.checkPresenceOfUser((String) requestMap.get("email"), (String) requestMap.get("ssn")));
+        if (requestMap.containsKey("email") && requestMap.containsKey("ssn")) {
+            if(userService.checkPresenceOfUser((String) requestMap.get("email"), (String) requestMap.get("ssn")))
+                response.put("exist", true);
+            else
+                response.put("exist", false);
+            return ResponseEntity.ok(response);
+        }
         return ResponseEntity.badRequest().build();
     }
 
@@ -73,6 +80,7 @@ public class SpgController {
     @PostMapping(API.CREATE_CUSTOMER)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity createCustomer(@RequestBody String userJsonData) {
+        Map<String, String> response = new HashMap<>();
         if (userJsonData == null || userJsonData.equals(""))
             return ResponseEntity.badRequest().build();
         Map<String, Object> requestMap = extractMapFromJsonString(userJsonData);
@@ -82,12 +90,16 @@ public class SpgController {
                 && requestMap.containsKey("name") && requestMap.containsKey("surname")
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
                 && requestMap.containsKey("role") && requestMap.containsKey("address")
-        )
-            return ResponseEntity.ok(userService.addNewClient(
-                    new Customer(requestMap.get("name").toString(), requestMap.get("surname").toString(),
-                            requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
-                            requestMap.get("email").toString(), requestMap.get("password").toString(), requestMap.get("address").toString())
-            ));
+        ) {
+            Customer c = new Customer(requestMap.get("name").toString(), requestMap.get("surname").toString(),
+                    requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
+                    requestMap.get("email").toString(), requestMap.get("password").toString(), requestMap.get("address").toString());
+            if(userService.addNewCustomer(c))
+                response.put("responseMessage", "Customer already present");
+            else
+                response.put("responseMessage", "Customer added successfully");
+            return ResponseEntity.ok(response);
+        }
         return ResponseEntity.badRequest().build();
     }
 

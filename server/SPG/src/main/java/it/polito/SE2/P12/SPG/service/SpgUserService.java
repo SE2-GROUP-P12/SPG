@@ -67,15 +67,10 @@ public class SpgUserService {
         return tmp.getWallet();
     }
 
-    public Map<String, Boolean> checkPresenceOfUser(String email, String ssn) {
-        //checks if a user is present in the database
-        Map<String, Boolean> response = new HashMap<>();
-        //System.out.println("Here, ssn: " + ssn + ", email : " + email);
+    public Boolean checkPresenceOfUser(String email, String ssn) {
         if (checkPresenceOfMail(email) || checkPresenceOfSSN(ssn))
-            response.put("exist", true);
-        else
-            response.put("exist", false);
-        return response;
+            return true;
+        return false;
     }
 
     public Boolean checkPresenceOfMail(String email) {
@@ -86,16 +81,12 @@ public class SpgUserService {
         return userRepo.existsBySsn(ssn);
     }
 
-    public Map<String, String> addNewClient(User user) {
-        //adds a new user to the database
-        Map<String, String> response = new HashMap<>();
-        if (userRepo.existsByEmail(user.getEmail()) || userRepo.existsBySsn(user.getSsn())) {
-            response.put("responseMessage", "200-OK-(Customer already present)");
-            return response;
+    public Boolean addNewCustomer(Customer customer) {
+        if (userRepo.existsByEmail(customer.getEmail()) || userRepo.existsBySsn(customer.getSsn())) {
+            return false;
         }
-        userRepo.save(user);
-        response.put("responseMessage", "200-OK-(Customer added successfully)");
-        return response;
+        customerRepo.save(customer);
+        return true;
     }
 
     public boolean checkEmployeePermission(Long userId) {
