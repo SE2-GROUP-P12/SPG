@@ -75,8 +75,9 @@ async function addToCart(product) {
             return false;
     }
     catch (err) {
-        console.log("Some error occourred");
-        return undefined;
+        console.log("AAAAAAAAAA: "+err);
+        //return undefined;
+        return err;
     }
 }
 
