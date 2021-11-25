@@ -28,6 +28,8 @@ public class Product {
     private Double totalQuantity;
     @Column(name = "quantity_available", nullable = false)
     private Double quantityAvailable;
+    @Column(name = "quantity_forecast", nullable = false)
+    private Double quantityForcast;
     @Column(name = "quantity_baskets", nullable = false)
     private Double quantityBaskets;
     @Column(name = "quantity_ordered", nullable = false)
