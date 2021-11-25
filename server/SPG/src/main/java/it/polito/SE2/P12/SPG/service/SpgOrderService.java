@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.entity.Product;
+import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -74,6 +75,16 @@ public class SpgOrderService {
             e.printStackTrace();
         }
         return response.toString();
+    }
+
+    public Double getTotalPrice(Long userId){
+        Double output=0.00;
+        for (Order order: orderRepo.findAllByCust_UserId(userId)){
+            for(Product product: order.getProds().keySet()){
+                output+= order.getProds().get(product)*product.getPrice();
+            }
+        }
+        return output;
     }
 
 }

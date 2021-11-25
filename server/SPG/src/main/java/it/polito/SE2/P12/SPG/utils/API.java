@@ -14,6 +14,7 @@ public class API {
     public static final String DELIVER_ORDER = "/customer/deliverOrder";
     public static final String DROP_ORDER = "/customer/dropOrder";
     public static final String GET_ORDERS = "/customer/getOrdersByEmail";
+    public static final String RETRIEVE_ERROR = "/customer/retrieveError";
     public static final String TEST = "test";
     public static final String REFRESH_TOKEN = "/token/refresh";
     public static final String LOGOUT = "/logout";
