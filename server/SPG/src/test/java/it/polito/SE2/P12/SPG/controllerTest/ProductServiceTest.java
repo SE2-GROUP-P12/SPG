@@ -3,7 +3,10 @@ package it.polito.SE2.P12.SPG.controllerTest;
 
 import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.Product;
+import it.polito.SE2.P12.SPG.repository.BasketRepo;
+import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
+import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,12 +24,21 @@ public class ProductServiceTest {
     private SpgController spgController;
     @Autowired
     private ProductRepo productRepo;
+    @Autowired
+    private BasketRepo basketRepo;
+    @Autowired
+    private OrderRepo orderRepo;
+    @Autowired
+    private UserRepo userRepo;
+
 
     @BeforeEach
     public void initContext(){
         SecurityConfiguration.setTestContext();
-        //Empty all the product
+        basketRepo.deleteAll();
+        orderRepo.deleteAll();
         productRepo.deleteAll();
+        userRepo.deleteAll();
         //Create some testing product
         Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F);
         Product prod2 = new Product("Prod2", "Producer2","KG", 100.0, 5.50F);

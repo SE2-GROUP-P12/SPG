@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
 
 @Repository
@@ -15,4 +16,6 @@ public interface UserRepo
     User findUserByUserId(Long userId);
     Boolean existsByEmail(String email);
     Boolean existsBySsn(String ssn);
+    List<User> findAllByRoleIn(List<String> roles);
+    List<User> findAllByRole(String role);
 }
