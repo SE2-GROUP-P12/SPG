@@ -61,6 +61,7 @@ public class ProductControllerApiTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
         List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>() {
+            
         });
         Assertions.assertEquals(3, productList.size());
         Assertions.assertEquals("Prod1", productList.get(0).getName());

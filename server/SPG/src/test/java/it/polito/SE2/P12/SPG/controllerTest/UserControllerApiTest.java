@@ -1,8 +1,10 @@
 package it.polito.SE2.P12.SPG.controllerTest;
 
+import com.google.j2objc.annotations.AutoreleasePool;
 import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.entity.User;
+import it.polito.SE2.P12.SPG.repository.CustomerRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -38,18 +40,21 @@ public class UserControllerApiTest {
             "  \"role\": \"ROLE_CUSTOMER\"," +
             "  \"email\": \"foouser1@foomail.com\"," +
             "  \"password\": \"password\"" +
+            "  \"address\": \"address\"" +
             "}";
 
     @Autowired
     private SpgController spgController;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private CustomerRepo customerRepo;
 
     @BeforeEach
     public void initContext() {
         userRepo.deleteAll();
         Customer fooUser1 = new Customer("fooName1", "fooSurname1", "ssn_aaaaaaaaaaaa", "123456789", "foouser@foomail.com", "password","address");
-        userRepo.save(fooUser1);
+        customerRepo.save(fooUser1);
     }
 
     @AfterEach

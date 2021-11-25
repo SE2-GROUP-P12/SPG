@@ -1,7 +1,10 @@
 package it.polito.SE2.P12.SPG.entity;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+import it.polito.SE2.P12.SPG.repository.FarmerRepo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 
@@ -36,8 +39,10 @@ public class Product {
     private Double quantityDelivered;
     @Column(name = "price", nullable = false)
     private Double price;
-    @ManyToOne
+    @OneToOne
     private Farmer farmer;
+//    @Column
+//    private String farmer;
 
     public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price) {
         this.name = name;
@@ -78,7 +83,6 @@ public class Product {
         this.price = price;
         this.farmer = null;
     }
-
 
     public Boolean moveFromAvailableToBasket(Double quantity) {
         if(this.quantityAvailable < quantity)

@@ -6,6 +6,7 @@ import it.polito.SE2.P12.SPG.entity.Farmer;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.repository.FarmerRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
+import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
 import it.polito.SE2.P12.SPG.utils.API;
 import org.junit.jupiter.api.AfterEach;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,18 +34,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ProductServiceTest {
     @Autowired
+    private UserRepo userRepo;
+    @Autowired
     private ProductRepo productRepo;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private FarmerRepo farmerRepo;
 
+
     @BeforeEach
     public void initContext() {
         //Empty all the product
+        userRepo.deleteAll();
         productRepo.deleteAll();
         //farmerRepo.deleteAll();
         //Create some testing product
+//        Farmer farmer1 = new Farmer("farmer1", "farmer1", "FARMER_02343454567", "1234567890",
+//                "farmer1@foomail.com", "password");
+        //farmerRepo.save(farmer1);
         Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F);
         Product prod2 = new Product("Prod2", "Producer2", "KG", 100.0, 5.50F);
         Product prod3 = new Product("Prod3", "Producer3", "KG", 20.0, 8.00F);
@@ -54,6 +63,7 @@ class ProductServiceTest {
 
     @AfterEach
     public void resetDB() {
+        userRepo.deleteAll();
         productRepo.deleteAll();
         //farmerRepo.deleteAll();
     }
@@ -65,8 +75,8 @@ class ProductServiceTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
-        List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>() {
-        });
+        List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>() {});
+        //List<Object> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), ArrayList.class);
         Assertions.assertEquals(3, productList.size());
         Assertions.assertEquals("Prod1", productList.get(0).getName());
         Assertions.assertEquals(100.00, productList.get(1).getTotalQuantity());

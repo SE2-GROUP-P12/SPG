@@ -113,7 +113,7 @@ public class SpgController {
         if (requestMap.containsKey("email") && requestMap.containsKey("ssn")
                 && requestMap.containsKey("name") && requestMap.containsKey("surname")
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
-                && requestMap.containsKey("role")
+                && requestMap.containsKey("role") && requestMap.containsKey("address")
                 && Boolean.FALSE.equals(userService.checkPresenceOfMail(requestMap.get("email").toString()))
                 && Boolean.FALSE.equals(userService.checkPresenceOfSSN(requestMap.get("ssn").toString()))
         )
