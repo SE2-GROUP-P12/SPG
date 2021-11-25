@@ -10,7 +10,6 @@ import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
-import it.polito.SE2.P12.SPG.security.ApplicationUserRole;
 import it.polito.SE2.P12.SPG.service.*;
 import it.polito.SE2.P12.SPG.utils.API;
 import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
@@ -19,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +38,7 @@ import java.util.Map;
  * NOTE: in order to granted access to an api based on the user roles add roles into the 'PreAuthorization' annotation as follows:
  * PreAuthorize("hasAnyRole('ROLE_<role1>', 'ROLE_<role2>, ...)"). Possible available roles are provided into /security/ApplicationUserRole enum.
  */
-
+@Slf4j
 @RestController
 @RequestMapping(value = API.HOME, produces = "application/json", consumes = "application/json")
 public class SpgController {
@@ -51,11 +51,12 @@ public class SpgController {
 
 
     @Autowired
-    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService) {
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService, JWTUserHandlerService jwtUserHandlerService1) {
         this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
+        this.jwtUserHandlerService = jwtUserHandlerService1;
         this.userService.populateDB();
         this.productService.populateDB();
     }
@@ -110,11 +111,11 @@ public class SpgController {
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
                 && requestMap.containsKey("role")
         )
-            return ResponseEntity.created(uri).body(userService.addNewClient(
-                    new User(requestMap.get("name").toString(), requestMap.get("surname").toString(),
+            return ResponseEntity.created(uri).body(userService.addNewCustomer(
+                    new Customer(requestMap.get("name").toString(), requestMap.get("surname").toString(),
                             requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
-                            requestMap.get("role").toString(), requestMap.get("email").toString(),
-                            requestMap.get("password").toString())
+                             requestMap.get("email").toString(),
+                            requestMap.get("password").toString(), requestMap.get("address").toString())
             ));
         return ResponseEntity.badRequest().body("email/ssn already present");
     }
