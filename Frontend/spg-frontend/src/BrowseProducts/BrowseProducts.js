@@ -153,15 +153,4 @@ function BrowseProducts() {
     );
 }
 
-function printProducts(prod) {
-    let output = [];
-    for (let p of prod) {
-        output.push(<ProductEntry product={p} />)
-    }
-    return output;
-}
-
-
-
-
 export { BrowseProducts }

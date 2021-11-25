@@ -6,7 +6,7 @@ import {Homepage} from "./Homepage/Homepage";
 import {Login} from "./Login";
 import {ShopEmployee} from "./ShopEmployee";
 import {BrowseProducts} from "./BrowseProducts/BrowseProducts";
-import { NewCustomer } from './NewCustomer';
+import { NewCustomer } from './NewCustomer/NewCustomer';
 import {TopUp} from "./TopUp";
 import {PlaceOrder} from './PlaceOrder';
 import { DeliverOrder } from './DeliverOrder';

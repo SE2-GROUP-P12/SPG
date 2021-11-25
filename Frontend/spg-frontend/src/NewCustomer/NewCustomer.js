@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {API} from './API/API.js'
+import {API} from './../API/API.js'
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 import Grid from '@mui/material/Grid';
@@ -40,20 +40,8 @@ function NewCustomer() {
         return (
             <Modal show={modalShow}
                 onHide={() => setModalShow(false)}>
-                <Modal.Header>
-                    <Modal.Title>
-                        <h2 className="text-center">
-                            {modalMessage.messageTitle}
-                        </h2>
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Container>
-                        <Row>
-                            {modalMessage.messageText}
-                        </Row>
-                    </Container>
-                </Modal.Body>
+                <Modal.Header><Modal.Title><h2 className="text-center">{modalMessage.messageTitle}</h2></Modal.Title></Modal.Header>
+                <Modal.Body><Container><Row>{modalMessage.messageText}</Row></Container></Modal.Body>
                 <Modal.Footer>
                     {
                         modalMessage.id !== 2 ?
@@ -138,38 +126,38 @@ function NewCustomer() {
                     <Grid container align='center'>
                         {/*EMAIL FIELD*/}
                         <Grid item xs={1} sm={2}/>
-                        <Grid item xs={4} sm={2} align='left'>Email*</Grid>
-                        <Grid item xs={6}><Field type="email" name="email" label="Email" style={{width: '100%'}}/></Grid>
+                        <Grid item xs={4} sm={2} align='left'><label htmlFor="email">Email*</label></Grid>
+                        <Grid item xs={6}><Field id='email' type="email" name="email" label="Email" style={{width: '100%'}}/></Grid>
                         <Grid item xs={1} sm={2}/>
                         {/*PASSWORD FIELD*/}
                         <Grid item xs={1} sm={2}/>
-                        <Grid item xs={4} sm={2} align='left'>Password*</Grid>
-                        <Grid item xs={6}><Field type="password" name="password" label="Password" style={{width: '100%'}}/></Grid>
+                        <Grid item xs={4} sm={2} align='left'><label htmlFor='password'>Password*</label></Grid>
+                        <Grid item xs={6}><Field id='password' type="password" name="password" label="Password" style={{width: '100%'}}/></Grid>
                         <Grid item xs={1} sm={2}/>
                         {/*NAME FIELD*/}
                         <Grid item xs={1} sm={2}/>
-                        <Grid item xs={4} sm={2} align='left'>Name*</Grid> 
-                        <Grid item xs={6}><Field type="text" name="name" label="Name" style={{width: '100%'}}/></Grid>
+                        <Grid item xs={4} sm={2} align='left'><label htmlFor='name'>Name*</label></Grid> 
+                        <Grid item xs={6}><Field id='name' type="text" name="name" label="Name" style={{width: '100%'}}/></Grid>
                         <Grid item xs={1} sm={2}/>
                         {/*SURNAME FIELD*/}
                         <Grid item xs={1} sm={2}/>
-                        <Grid item xs={4} sm={2} align='left'>Surname*</Grid>
-                        <Grid item xs={6}><Field type="text" name="surname" label="Surname" style={{width: '100%'}}/></Grid>
+                        <Grid item xs={4} sm={2} align='left'><label htmlFor='surname'>Surname*</label></Grid>
+                        <Grid item xs={6}><Field id='surname' type="text" name="surname" label="Surname" style={{width: '100%'}}/></Grid>
                         <Grid item xs={1} sm={2}/>
                         {/*ADDRESS FIELD*/}
                         <Grid item xs={1} sm={2}/>
-                        <Grid item xs={4} sm={2} align='left'>Address*</Grid>
-                        <Grid item xs={6}><Field type="text" name="address" label="Address" style={{width: '100%'}}/></Grid>
+                        <Grid item xs={4} sm={2} align='left'><label htmlFor='address'>Address*</label></Grid>
+                        <Grid item xs={6}><Field id='address' type="text" name="address" label="Address" style={{width: '100%'}}/></Grid>
                         <Grid item xs={1} sm={2}/>
                         {/*SSN FIELD*/}
                         <Grid item xs={1} sm={2}/>
-                        <Grid item xs={4} sm={2} align='left'>SSN*</Grid>
-                        <Grid item xs={6}><Field type="text" name="SSN" label="SSN" style={{width: '100%'}}/></Grid>
+                        <Grid item xs={4} sm={2} align='left'><label htmlFor='ssn'>SSN*</label></Grid>
+                        <Grid item xs={6}><Field id='ssn' type="text" name="SSN" label="SSN" style={{width: '100%'}}/></Grid>
                         <Grid item xs={1} sm={2}/>
                         {/*PHONE NUMBER FIELD*/}
                         <Grid item xs={1} sm={2}/>
-                        <Grid item xs={4} sm={2} align='left'>Phone Number</Grid>
-                        <Grid item xs={6}><Field type="text" name="phoneNumber" label="PhoneNumber" style={{width: '100%'}}/></Grid>
+                        <Grid item xs={4} sm={2} align='left'><label htmlFor='phoneNumber'>Phone Number</label></Grid>
+                        <Grid item xs={6}><Field id='phoneNumber' type="text" name="phoneNumber" label="PhoneNumber" style={{width: '100%'}}/></Grid>
                         <Grid item xs={1} sm={2}/>
                     {/*BUTTONs COMPONENT*/}
                         <Grid item xs={6}>

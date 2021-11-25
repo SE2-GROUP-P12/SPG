@@ -14,6 +14,7 @@ async() => {
     );
 });
 
+
 test ("Add to mario.rossi@gmail.com's cart 1kg of apples to cart and retrieve it afterwards",
 async () => {
     docapi.API.addToCart({productId: 5, email: "mario.rossi@gmail.com", quantity: 1}).then(

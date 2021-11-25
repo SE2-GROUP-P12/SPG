@@ -4,13 +4,6 @@ import {BrowserRouter as Router} from "react-router-dom";
 
 import {BrowseProducts} from "./BrowseProducts";
 import {API} from "./../API/API";
-import { getByLabelText, getByPlaceholderText } from "@testing-library/dom";
-
-/*const render = (comp) => {
-    const root = document.createElement("div");
-    ReactDOM.render(comp, root);
-    return getQueriesForElement(root);
-}*/
 
 const mockBrowseProducts = (API.browseProducts = jest.fn());
 const mockAddToCard = (API.addToCart = jest.fn());
@@ -101,3 +94,23 @@ test("Add to cart", async () => {
     expect(mockAddToCard).toBeCalledTimes(1);
     expect(mockAddToCard).toBeCalledWith({"productId":5 ,"email": 'mario.rossi@gmail.com',"quantity": 1});
 });
+
+test ("Failed to load products", async() => {
+    mockBrowseProducts.mockResolvedValueOnce(undefined);
+
+    const {getByText, getByAltText} = render(
+        <Router>
+            <BrowseProducts/>
+        </Router>
+    );
+
+    getByText("Products List");
+    getByText("Loading...");
+    await waitFor(()=>{
+        getByText("There has been an error contacting the server");
+    })
+
+    expect(mockBrowseProducts).toBeCalledTimes(1);
+    expect(mockBrowseProducts).toBeCalledWith();
+});
+
