@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import farmer from "./resources/farmer.jpg";
-import italymap from "./resources/map.PNG";
+import '../App.css';
+import farmer from "./../resources/farmer.jpg";
+import italymap from "./../resources/map.PNG";
 import Grid from '@mui/material/Grid';
 
 function Homepage() {
