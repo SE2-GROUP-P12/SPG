@@ -22,15 +22,24 @@ public class JWTUserHandlerService {
         this.jwtUserHandlerRepo = jwtUserHandlerRepo;
     }
 
-    public void addRelationUserTokens(User user, String accessToken, String refreshTokens) {
-        JWTUserHandlerImpl jwtUserHandlerObj = new JWTUserHandlerImpl(user.getUserId(), accessToken, refreshTokens, JWTUserHandlerService.now());
+    public void addRelationUserTokens(User user, String accessToken, String refreshToken) {
+        JWTUserHandlerImpl jwtUserHandlerObj = new JWTUserHandlerImpl(user.getUserId(), accessToken, refreshToken, JWTUserHandlerService.now());
         jwtUserHandlerRepo.save(jwtUserHandlerObj);
     }
 
     public void invalidateUserTokens(User user, String accessToken) throws Exception {
         JWTUserHandlerImpl jwtUserHandler = jwtUserHandlerRepo.findJWTUserHandlerImplByAccessToken(accessToken);
         if (jwtUserHandler.getUserId() == user.getUserId()) {
-            jwtUserHandlerRepo.updateTokenValidity(false, user.getUserId(), accessToken);
+            jwtUserHandlerRepo.updateAccessTokenValidity(false, user.getUserId(), accessToken);
+        } else {
+            throw new Exception("ERROR: User id requested and access token bound to the access token are not consistent");
+        }
+    }
+
+    public void invalidateByUserRefreshTokens(User user, String refreshToken) throws Exception {
+        JWTUserHandlerImpl jwtUserHandler = jwtUserHandlerRepo.findJWTUserHandlerImplByRefreshTokenAndValidIsTrue(refreshToken);
+        if (jwtUserHandler.getUserId() == user.getUserId()) {
+            jwtUserHandlerRepo.updateRefreshTokenValidity(false, user.getUserId(), refreshToken);
         } else {
             throw new Exception("ERROR: User id requested and access token bound to the access token are not consistent");
         }

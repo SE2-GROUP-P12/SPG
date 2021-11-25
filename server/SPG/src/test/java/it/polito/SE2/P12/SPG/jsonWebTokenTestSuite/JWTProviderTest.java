@@ -119,7 +119,7 @@ public class JWTProviderTest {
     public void setErrorMessageTest() {
         JWTProviderImpl jwtProvider = new JWTProviderImpl();
         Exception e = new Exception("This is the error message");
-        Assertions.assertEquals("This is the error message", jwtProvider.setErrorMessage(e).get("error message"));
+        Assertions.assertEquals("This is the error message", jwtProvider.setErrorMessage(e).get("errorMessage"));
     }
 
     @Test

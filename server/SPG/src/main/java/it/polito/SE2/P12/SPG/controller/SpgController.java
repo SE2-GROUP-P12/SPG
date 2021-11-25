@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
-import it.polito.SE2.P12.SPG.security.ApplicationUserRole;
 import it.polito.SE2.P12.SPG.service.*;
 import it.polito.SE2.P12.SPG.utils.API;
 import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
@@ -153,7 +152,7 @@ public class SpgController {
     public ResponseEntity<List<Product>> getCart(@RequestParam String email) {
         User user = userService.getUserByEmail(email);
         if (user == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(basketService.getProductsInBasket(user));
     }
@@ -224,6 +223,10 @@ public class SpgController {
             try {
                 Map<String, String> responseBody = jwtProvider.verifyRefreshTokenAndRegenerateAccessToken(refreshToken, request.getRequestURL().toString(), this.userService);
                 response.setContentType(APPLICATION_JSON_VALUE);
+                jwtUserHandlerService.invalidateByUserRefreshTokens(userService.getUserByEmail(responseBody.get("email")), refreshToken);
+                String accessToken = responseBody.get("accessToken");
+                jwtUserHandlerService.addRelationUserTokens(userService.getUserByEmail(responseBody.get("email")),
+                        accessToken, refreshToken);
                 new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
             } catch (Exception e) {
                 log.error("Error  refreshing token: " + e.getMessage());

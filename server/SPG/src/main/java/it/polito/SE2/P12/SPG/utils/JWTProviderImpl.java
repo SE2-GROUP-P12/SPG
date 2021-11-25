@@ -53,7 +53,7 @@ public class JWTProviderImpl implements JWTProvider {
     @Override
     public Map<String, String> setErrorMessage(Exception e) {
         Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("error message", e.getMessage());
+        responseBody.put("errorMessage", e.getMessage());
         return responseBody;
     }
 

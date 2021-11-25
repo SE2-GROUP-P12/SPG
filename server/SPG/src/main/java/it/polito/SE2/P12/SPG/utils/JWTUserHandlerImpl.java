@@ -13,9 +13,9 @@ public class JWTUserHandlerImpl {
     private Long id;
     @Column(name = "user_id", nullable = false)
     private long userId;
-    @Column(name = "access_toke")
+    @Column(name = "access_token", length = 500)
     private String accessToken;
-    @Column(name = "refresh_token")
+    @Column(name = "refresh_token", length = 500)
     private String refreshToken;
     @Column(name = "creation_date")
     private String creationDate;

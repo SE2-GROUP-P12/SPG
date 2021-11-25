@@ -55,7 +55,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         //log the attempt
-        log.info("Authentication attempt: " + username);
+        log.info("Authentication attempt: " + username + ", " + password);
         //create new UsernameAndPasswordAuthenticationToken object to try the authentication
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         //Set it into the authentication manager (see security config file)
@@ -78,5 +78,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
     }
+
 
 }
