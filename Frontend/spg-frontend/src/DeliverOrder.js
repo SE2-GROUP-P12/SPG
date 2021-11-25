@@ -1,13 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import '../App.css';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import { useState, useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { printOrder } from './PlaceOrder';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
-import { API } from './API/API.js'
+import { API } from '../API/API.js'
 
 function DeliverOrder(props) {
     const [customer, setCustomer] = useState(null);
@@ -98,7 +97,7 @@ function DeliverOrder(props) {
                 >
                     {({ values, errors, touched }) =>
                         <Form>
-                            Email:<Field style={{ margin: '20px' }} name="email" type="text" />
+                            <label htmlFor='email'>Email:</label><Field id='email' style={{ margin: '20px' }} name="email" type="text" />
                             <Button style={{ margin: '20px' }} type="submit" variant="success" disabled={itsTime ? false : true} >Submit customer</Button>
                             {errors.email && touched.email ? errors.email : null}
                         </Form>}
