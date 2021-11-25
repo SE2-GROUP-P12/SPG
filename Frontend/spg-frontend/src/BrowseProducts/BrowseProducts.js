@@ -1,9 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import './../App.css';
 import Container from "react-bootstrap/Container";
 import { useState, useEffect } from "react";
-import { API } from "./API";
-import fruit from "./resources/fruits.png" //Recheck the original filename
+import { API } from "./../API/API";
+import fruit from "./../resources/fruits.png" //Recheck the original filename
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -106,7 +106,8 @@ function BrowseProducts() {
                                 >
                                     {({ values, errors, touched }) =>
                                         <Form>
-                                            Amount: <Field type="number" id="amount" name="amount" max={props.product.quantityAvailable} min={0} /> {props.product.unitOfMeasurement}
+                                            <label htmlFor='amount'>Amount:</label> 
+                                            <Field type="number" id="amount" name="amount" max={props.product.quantityAvailable} min={0} /> {props.product.unitOfMeasurement}
                                             <br />
                                             <Button style={{ margin: '20px' }} type="submit" variant="success">Add to
                                                 cart</Button>

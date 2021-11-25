@@ -1,17 +1,17 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import farmer from "./resources/farmer.jpg";
+import './../App.css';
+import farmer from "./../resources/farmer.jpg";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import italymap from "./resources/map.PNG";
+import italymap from "./../resources/map.PNG";
 
 function Homepage() {
     return (
         <div>
-            <img src={farmer} className="farmer" alt="farmer"/>
+            <img id='farmer' src={farmer} className="farmer" alt="farmer"/>
             <Row className="findus">
             <Col xs={6}>
-                <img src={italymap} className="italymap" alt="italymap" />
+                <img id='italy' src={italymap} className="italymap" alt="italymap" />
             </Col>
                 <Col className="findus">
                     <h1>Come and find us!</h1>
@@ -20,7 +20,7 @@ function Homepage() {
                         <li>Roma</li>
                         <li>Vicenza</li>
                         <li>Biella</li>
-                        <li>Napoli</li>
+                        <li>Caserta</li>
                         <li>Torino</li>
                         <li>Catania</li>
                     </ul></h4>

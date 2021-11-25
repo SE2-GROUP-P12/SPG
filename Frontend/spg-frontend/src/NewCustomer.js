@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {API} from './API.js'
+import {API} from './API/API.js'
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 import Grid from '@mui/material/Grid';

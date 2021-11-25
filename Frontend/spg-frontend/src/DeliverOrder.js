@@ -7,7 +7,7 @@ import { Formik, Form, Field } from 'formik';
 import { printOrder } from './PlaceOrder';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
-import { API } from './API.js'
+import { API } from './API/API.js'
 
 function DeliverOrder(props) {
     const [customer, setCustomer] = useState(null);
