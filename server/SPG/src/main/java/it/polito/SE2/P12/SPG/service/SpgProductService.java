@@ -1,15 +1,12 @@
 package it.polito.SE2.P12.SPG.service;
 
+import it.polito.SE2.P12.SPG.entity.Farmer;
 import it.polito.SE2.P12.SPG.entity.Product;
-import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
-import it.polito.SE2.P12.SPG.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class SpgProductService {
@@ -148,7 +145,11 @@ public class SpgProductService {
     }
 
 
-
-
-
+    public void setForecast(Long productId, Farmer farmer, Double forecast, String start, String end) {
+        Product product = productRepo.findProductByProductId(productId);
+        product.setFarmer(farmer);
+        product.setQuantityForecast(forecast);
+        product.setStartAvailability(start);
+        product.setEndAvailability(end);
+    }
 }

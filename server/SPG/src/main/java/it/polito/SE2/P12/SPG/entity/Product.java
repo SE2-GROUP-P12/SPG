@@ -25,18 +25,33 @@ public class Product {
     private String producer;
     @Column(name = "unit_of_measurement", nullable = false)
     private String unitOfMeasurement;
+    //Quantità ufficialmente messa a disposizione dal farmer a inizio settimana.
+    //È la somma di quantityAvailable, quantityBasket, quantityOrdered e quantityDelivered
     @Column(name = "total_quantity", nullable = false)
     private Double totalQuantity;
+    //Quantità disponibile all'acquisto (non impegnata in basket, ordini o consegnata)
     @Column(name = "quantity_available", nullable = false)
     private Double quantityAvailable;
+    //Quantità prevista per la settimana seguente dal farmer. Da confermare.
+    @Column(name = "quantity_forecast", nullable = false)
+    private Double quantityForecast;
+    //Quantità di totalQuantity inserita nei carelli degli user
     @Column(name = "quantity_baskets", nullable = false)
     private Double quantityBaskets;
+    //Quantità di totalQuantity inserita negli ordini degli user
     @Column(name = "quantity_ordered", nullable = false)
     private Double quantityOrdered;
+    //Quantità di totalQuantity consegnata agli acquirenti tramite deliverOrder
     @Column(name = "quantity_delivered", nullable = false)
     private Double quantityDelivered;
     @Column(name = "price", nullable = false)
     private Double price;
+    //start time for last prediction given
+    @Column(name = "startAvailability", nullable = true)
+    private String startAvailability;
+    //end time for last prediction given
+    @Column(name = "endAvailability", nullable = true)
+    private String endAvailability;
     @ManyToOne
     private Farmer farmer;
     @Column (name= "image_url")
@@ -48,6 +63,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
+        this.quantityForecast = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
@@ -62,6 +78,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
+        this.quantityForecast = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
@@ -76,6 +93,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
+        this.quantityForecast = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
@@ -90,6 +108,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
+        this.quantityForecast = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
