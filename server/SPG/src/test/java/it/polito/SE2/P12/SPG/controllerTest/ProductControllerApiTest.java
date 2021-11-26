@@ -49,7 +49,7 @@ public class ProductControllerApiTest {
         productRepo.deleteAll();
         userRepo.deleteAll();
         //Create a farmer
-        Farmer farmer = new Farmer("farmer_name","farmer_surname","ssn_faaaaaaarmer","12345667","far@mer.com","password");
+        Farmer farmer = new Farmer("farmer_name", "farmer_surname", "ssn_faaaaaaarmer", "12345667", "far@mer.com", "password");
         farmerRepo.save(farmer);
         //Create some testing product
         Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F, farmer);
@@ -79,7 +79,7 @@ public class ProductControllerApiTest {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode tree = objectMapper.readTree(response);
         List<Product> productList = new ArrayList<>();
-        for(JsonNode i : tree) {
+        for (JsonNode i : tree) {
             productList.add(new Product(
                     i.get("name").textValue(),
                     i.get("producer").textValue(),
@@ -88,7 +88,6 @@ public class ProductControllerApiTest {
                     i.get("price").asDouble()
             ));
         }
-
         Assertions.assertEquals(3, productList.size());
         Assertions.assertEquals("Prod1", productList.get(0).getName());
         Assertions.assertEquals(100.00, productList.get(1).getTotalQuantity());
@@ -104,13 +103,11 @@ public class ProductControllerApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
-        /*List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>() {
-        });*/
         String response = result.getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode tree = objectMapper.readTree(response);
         List<Product> productList = new ArrayList<>();
-        for(JsonNode i : tree) {
+        for (JsonNode i : tree) {
             productList.add(new Product(
                     i.get("name").textValue(),
                     i.get("producer").textValue(),
