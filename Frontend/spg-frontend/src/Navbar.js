@@ -158,3 +158,23 @@ export {Navbar}
            </Switch>
     );
 * */
+
+//Parte di giuseppe
+/*
+return (
+    <Nav className="navbar bg-success navbar-dark">
+        <img src={logo} alt="logo" className="logo" />
+        <div style={{ paddingBlock: "5px" }}>
+        { props.isLogged ?
+            <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
+            :
+            <div>
+            <Button className="btn btn-outline-light" variant="success" href='/NewCustomer'> Sign up </Button>
+            <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+            }
+            </div>
+        </div>
+    </Nav>
+    )
+
+*/
