@@ -38,6 +38,12 @@ public class Product {
     private Double quantityDelivered;
     @Column(name = "price", nullable = false)
     private Double price;
+    @Column(name = "startAvailability", nullable = true)
+    private String startAvailability;
+    //start time for last prediction given
+    @Column(name = "endAvailability", nullable = true)
+    private String endAvailability;
+    //end time for last prediction given
     @ManyToOne
     private Farmer farmer;
 
