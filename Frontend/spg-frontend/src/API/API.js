@@ -170,9 +170,9 @@ async function topUp(data) {
     }
 }
 //Check whether the customer exists or not by his/her email address, if error occurs it returns undefined, otherwise true
-async function customerExistsByMail(data) {
+async function customerExistsByMail(email) {
     try {
-        const response = await fetch ("/api/customer/customerExists?email="+email+"&ssn=", {
+        const response = await fetch ("/api/customer/customerExistsByEmail?email="+email, {
             method: 'GET',
             headers: getAuthenticationHeaders(),
         });

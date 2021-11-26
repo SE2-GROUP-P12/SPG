@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.entity.Product;
+import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,16 @@ public class SpgOrderService {
             p.moveFromAvailableToOrdered(q);
         }
         Order order = new Order(basket.getCust(), LocalDateTime.now(), basket.getProductQuantityMap());
+        return addNewOrder(order);
+    }
+
+    public Boolean addNewOrderFromBasket(Basket basket, User user) {
+        for (Map.Entry<Product, Double> e : basket.getProductQuantityMap().entrySet()) {
+            Product p = e.getKey();
+            Double q = e.getValue();
+            p.moveFromAvailableToOrdered(q);
+        }
+        Order order = new Order(user, LocalDateTime.now(), basket.getProductQuantityMap());
         return addNewOrder(order);
     }
 

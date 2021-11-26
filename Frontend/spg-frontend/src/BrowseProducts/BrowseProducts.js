@@ -32,7 +32,7 @@ function BrowseProducts(props) {
         if (data !== null) {
             setProducts(data['data']);
             setLoadCompleted(true);
-        }else
+        } else
             setTriggerError(true);
         return;
     }
@@ -40,7 +40,6 @@ function BrowseProducts(props) {
     useEffect(async () => {
         await _browseProducts();
     }, []);
-
 
 
     function ProductEntry(props) {
@@ -52,7 +51,7 @@ function BrowseProducts(props) {
 
         return (
             <>
-                <Card sx={{ maxWidth: 345 }}>
+                <Card sx={{maxWidth: 345}}>
                     <CardMedia
                         component="img"
                         height="140"
@@ -64,24 +63,29 @@ function BrowseProducts(props) {
                             {props.product.name}
                         </Typography>
                         <Typography variant="body">
-                        {props.product.quantityAvailable}{props.product.unitOfMeasurement} available <br/>
-                        {props.product.price}€/{props.product.unitOfMeasurement}
+                            {props.product.quantityAvailable}{props.product.unitOfMeasurement} available <br/>
+                            {props.product.price}€/{props.product.unitOfMeasurement}
                         </Typography>
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Add to cart </Button> </Grid>
+                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Add to cart </Button>
+                            </Grid>
                         </Grid>
                     </CardActions>
                 </Card>
 
-                <Modal show={show} onHide={() => { handleClose(); setShowError(null); setShowSuccess(null); }}>
-                    <Modal.Header closeButton>
+                <Modal show={show} onHide={() => {
+                    handleClose();
+                    setShowError(null);
+                    setShowSuccess(null);
+                }}>
+                    <Modal.Header>
                         <Modal.Title>Add product to cart</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={fruit} alt="fruit" style={{ width: '150px', height: '150px' }} />
+                            <img src={fruit} alt="fruit" style={{width: '150px', height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
                                     {props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}
@@ -108,9 +112,11 @@ function BrowseProducts(props) {
                                     {({values, errors, touched}) =>
                                         <Form>
                                             <label htmlFor='amount'>Amount:</label>
-                                            <Field type="number" id="amount" name="amount" max={props.product.quantityAvailable} min={0} /> {props.product.unitOfMeasurement}
-                                            <br />
-                                            <Button style={{ margin: '20px' }} type="submit" variant="success">Add to
+                                            <Field type="number" id="amount" name="amount"
+                                                   max={props.product.quantityAvailable}
+                                                   min={0}/> {props.product.unitOfMeasurement}
+                                            <br/>
+                                            <Button style={{margin: '20px'}} type="submit" variant="success">Add to
                                                 cart</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
@@ -128,7 +134,7 @@ function BrowseProducts(props) {
                             setShowError(null);
                             setShowSuccess(null);
                             //TODO: Check correctness
-                            _browseProduct();
+                            _browseProducts();
                         }}>
                             Close
                         </Button>
@@ -138,16 +144,16 @@ function BrowseProducts(props) {
         );
     }
 
-    if(triggerError === true){
+    if (triggerError === true) {
         return (<Redirect to="/ErrorHandler"></Redirect>);
     }
 
     return (
         <Container fluid>
             <h1>Products List</h1>
-            <Grid container spacing={2} >
-                {productsErr ? <Grid xs={12} item align="center"><Alert variant='danger'> There has been an error contacting the server</Alert></Grid> :
-                loadCompleted === true ?
+            <Grid container spacing={2}>
+                {
+                    loadCompleted === true ?
                         products.map((prod, index) =>
                             <Grid item xs={12} sm={6} md={4} align="center">
                                 <ProductEntry key={index} product={prod}></ProductEntry>
@@ -160,9 +166,9 @@ function BrowseProducts(props) {
                         </Grid>
                 }
             </Grid>
-            <Link to='/ShopEmployee'><Button style={{ margin: '20px' }} variant='secondary'>Back</Button></Link>
+            <Link to='/ShopEmployee'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
         </Container>
     );
 }
 
-export { BrowseProducts }
+export {BrowseProducts}

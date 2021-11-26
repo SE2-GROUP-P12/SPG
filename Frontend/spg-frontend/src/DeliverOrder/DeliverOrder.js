@@ -32,6 +32,7 @@ function DeliverOrder(props) {
         const data = await API.getAllOrders();
         return data;
     }
+
     async function loadAllOrders()
     {
         const data = await _getAllOrders();
