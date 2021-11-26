@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.*;
+import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class SpgOrderService {
             Double q = e.getValue();
             p.moveFromAvailableToOrdered(q);
         }
-        Order order = new Order(basket.getCust(), LocalDateTime.now(), basket.getProductQuantityMap());
+        Order order = new Order((OrderUserType) basket.getCust(), LocalDateTime.now(), basket.getProductQuantityMap());
         return addNewOrder(order);
     }
 
@@ -47,7 +48,7 @@ public class SpgOrderService {
             Double q = e.getValue();
             p.moveFromAvailableToOrdered(q);
         }
-        Order order = new Order(user, LocalDateTime.now(), basket.getProductQuantityMap());
+        Order order = new Order((OrderUserType) user, LocalDateTime.now(), basket.getProductQuantityMap());
         return addNewOrder(order);
     }
 

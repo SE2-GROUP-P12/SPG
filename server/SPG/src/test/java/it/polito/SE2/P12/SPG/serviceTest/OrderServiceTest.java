@@ -79,9 +79,10 @@ public class OrderServiceTest {
         List<Order> orders = orderRepo.findAll();
         Assertions.assertEquals(0, orders.size());
         Assertions.assertTrue(orderService.addNewOrderFromBasket(b1));
+        System.out.println(orders);
         orders = orderRepo.findAll();
         Assertions.assertEquals(1, orders.size());
-        Assertions.assertEquals(orders.get(0).getCust(),user);
+        Assertions.assertEquals(orders.get(0).getCust().getUserId(),((User)user).getUserId());
         Assertions.assertEquals(orders.get(0).getProds().entrySet().size(),3);
 
         Product p1 = productRepo.findProductByName("Prod1");

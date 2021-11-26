@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -36,13 +37,17 @@ public class Order {
     @Column(name = "quantity")
     private Map<Product, Double> prods;
 
-    public Order(User cust, LocalDateTime date, Map<Product, Double> prods) {
-        this.cust=cust;
+    public Order(OrderUserType cust, LocalDateTime date, Map<Product, Double> prods) {
+        this.cust=(User)cust;
         this.date = date;
         this.prods = prods;
     }
     public List<Product> getProductList() {
         return new ArrayList<>(prods.keySet());
+    }
+
+    public User getCust(){
+        return this.cust;
     }
 
     public static class CustomSerializer extends StdSerializer<Order> {
