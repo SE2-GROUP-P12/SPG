@@ -114,7 +114,7 @@ public class SpgController {
         if (requestMap.containsKey("email") && requestMap.containsKey("ssn")
                 && requestMap.containsKey("name") && requestMap.containsKey("surname")
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
-                && requestMap.containsKey("role") && requestMap.containsKey("address")
+                && requestMap.containsKey("address")
                 && Boolean.FALSE.equals(userService.checkPresenceOfMail(requestMap.get("email").toString()))
                 && Boolean.FALSE.equals(userService.checkPresenceOfSSN(requestMap.get("ssn").toString()))
         )
@@ -129,18 +129,6 @@ public class SpgController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(error);
     }
-/* && requestMap.containsKey("role") && requestMap.containsKey("address")
-        ) {
-            Customer c = new Customer(requestMap.get("name").toString(), requestMap.get("surname").toString(),
-                    requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
-                    requestMap.get("email").toString(), requestMap.get("password").toString(), requestMap.get("address").toString());
-            if(userService.addNewCustomer(c))
-                response.put("responseMessage", "Customer already present");
-            else
-                response.put("responseMessage", "Customer added successfully");
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.badRequest().build();*/
 
     @PostMapping(API.PLACE_ORDER)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
@@ -230,7 +218,7 @@ public class SpgController {
     @GetMapping(API.GET_ORDERS_BY_EMAIL)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity getOrdersByEmail(@RequestParam String email) {
-        if(email == null)
+        if (email == null)
             return ResponseEntity.badRequest().build();
         User user = userService.getUserByEmail(email);
         if (user == null) return ResponseEntity.badRequest().build();
@@ -243,7 +231,7 @@ public class SpgController {
     @GetMapping(API.GET_ORDERS)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<String> getOrders() {
-        String response= orderService.getAllOrdersProductJson();
+        String response = orderService.getAllOrdersProductJson();
         if (response.isEmpty())
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(response);

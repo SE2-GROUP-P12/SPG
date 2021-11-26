@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.authenticationInterfaceTest;
 
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
 import it.polito.SE2.P12.SPG.auth.UserDetailsServiceImpl;
+import it.polito.SE2.P12.SPG.entity.Admin;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import org.junit.jupiter.api.AfterEach;
@@ -24,7 +25,7 @@ public class UserDetailsTest {
     @BeforeEach
     public void initContext() throws SQLException {
         userRepo.deleteAll();
-        User tester = new User("tester", "tester", "tester_aaaaaaaaaaaa", "", "ADMIN", "tester@test.com", "password");
+        User tester = new Admin("tester", "tester", "tester_aaaaaaaaaaaa", "", "tester@test.com", "password");
         userRepo.save(tester);
     }
 

@@ -3,6 +3,7 @@ package it.polito.SE2.P12.SPG.jsonWebTokenTestSuite;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
+import it.polito.SE2.P12.SPG.entity.Admin;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
@@ -28,12 +29,12 @@ public class JWTProviderTest {
     @BeforeEach
     public void initContext() {
         userRepo.deleteAll();
-        User tester = new User("tester", "tester", "tester_aaaaaaaaaaaa", "", "ADMIN", "tester@test.com", "password");
+        User tester = new Admin("tester", "tester", "tester_aaaaaaaaaaaa", "", "tester@test.com", "password");
         userRepo.save(tester);
     }
 
     @AfterEach
-    public void restDB(){
+    public void restDB() {
         userRepo.deleteAll();
     }
 
