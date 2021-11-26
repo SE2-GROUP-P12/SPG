@@ -1,22 +1,17 @@
 package it.polito.SE2.P12.SPG.serviceTest;
 
-import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.*;
-import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
 import it.polito.SE2.P12.SPG.repository.*;
-import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
-import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.entity.Product;
-import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +73,7 @@ public class OrderServiceTest {
 
     @Test
     public void addNewOrderFromBasketTest() {
-        BasketUser user = userService.getBasketUserByEmail("customer1@foomail.com");
+        BasketUserType user = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b1 = user.getBasket();
 
         List<Order> orders = orderRepo.findAll();

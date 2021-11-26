@@ -1,7 +1,7 @@
 package it.polito.SE2.P12.SPG.entity;
 
-import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
-import it.polito.SE2.P12.SPG.interfaceEntity.OrderUser;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
+import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name="customer")
 @Data
 @NoArgsConstructor
-public class Customer extends User implements BasketUser, OrderUser {
+public class Customer extends User implements BasketUserType, OrderUserType {
     @Column(name = "address")
     private String address;
     @Column(name = "wallet")

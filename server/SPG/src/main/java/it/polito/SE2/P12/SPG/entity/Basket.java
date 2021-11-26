@@ -1,5 +1,6 @@
 package it.polito.SE2.P12.SPG.entity;
 
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,13 +32,13 @@ public class Basket {
     @Column(name = "quantity")
     private Map<Product, Double> prods;
 
-    public Basket(User cust) {
-        this.cust = cust;
+    public Basket(BasketUserType cust) {
+        this.cust = (User) cust;
         this.prods = new HashMap<>();
     }
 
-    public Basket(User cust, Map<Product, Double> prods) {
-        this.cust = cust;
+    public Basket(BasketUserType cust, Map<Product, Double> prods) {
+        this.cust = (User) cust;
         this.prods = prods;
     }
 
@@ -72,7 +73,7 @@ public class Basket {
         prodString.deleteCharAt(prodString.lastIndexOf(","));
         return "Basket{" +
                 "basketId= " + basketId +
-                ", cust= " + (cust == null ? "null" : cust.getUserId()) +
+                ", cust= " + (cust == null ? "null" : ((User)cust).getUserId()) +
                 ", prods= " + prodString +
                 '}';
     }

@@ -1,6 +1,6 @@
 package it.polito.SE2.P12.SPG.entity;
 
-import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Table(name = "shop_employee")
 @Data
 @NoArgsConstructor
-public class ShopEmployee extends User implements BasketUser {
+public class ShopEmployee extends User implements BasketUserType {
 
     @OneToOne(mappedBy = "cust")
     private Basket basket;

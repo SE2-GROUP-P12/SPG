@@ -1,28 +1,20 @@
 package it.polito.SE2.P12.SPG.serviceTest;
 
-import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.*;
-import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
 import it.polito.SE2.P12.SPG.repository.*;
-import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Product;
-import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
-import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
-import it.polito.SE2.P12.SPG.utils.UserRole;
-import org.hibernate.TransientObjectException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 
@@ -77,7 +69,7 @@ public class BasketServiceTest {
 
     @Test
     public void retrieveEmptyBasket() {
-        BasketUser u = userService.getBasketUserByEmail("customer1@foomail.com");
+        BasketUserType u = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u.getBasket();
 
         Assertions.assertEquals(b.getBasketId(), u.getBasket().getBasketId());
@@ -112,7 +104,7 @@ public class BasketServiceTest {
     @Test
     public void addNotStoredProductToBasket() {
         Product notStored = new Product("Unicorn Powder", "Unicornland", "gr", 10000.0, 10.0);
-        BasketUser u1 = userService.getBasketUserByEmail("customer1@foomail.com");
+        BasketUserType u1 = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
         Assertions.assertThrows(InvalidDataAccessApiUsageException.class, () -> {
@@ -123,7 +115,7 @@ public class BasketServiceTest {
     @Test
     public void addNotAvailableProductToBasket() {
         Product p = productRepo.findAll().get(0);
-        BasketUser u1 = userService.getBasketUserByEmail("customer1@foomail.com");
+        BasketUserType u1 = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
         basketService.addProductToCart(p, 100000000000.0, u1);

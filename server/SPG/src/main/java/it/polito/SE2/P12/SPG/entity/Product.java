@@ -72,6 +72,21 @@ public class Product {
         this.imageUrl=null;
     }
 
+    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
+        this.name = name;
+        this.producer = producer;
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.totalQuantity = totalQuantity;
+        this.quantityAvailable = totalQuantity;
+        this.quantityForecast = 0.0;
+        this.quantityBaskets = 0.0;
+        this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
+        this.price = price;
+        this.farmer = farmer;
+        this.imageUrl=null;
+    }
+
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl) {
         this.name = name;
         this.producer = "default producer";

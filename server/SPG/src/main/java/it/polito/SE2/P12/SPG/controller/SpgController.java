@@ -3,7 +3,7 @@ package it.polito.SE2.P12.SPG.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.*;
-import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgProductService;
@@ -140,13 +140,13 @@ public class SpgController {
         if (requestMap.containsKey("email") && requestMap.containsKey("customer")) {
             User orderIssuer = userService.getUserByEmail(requestMap.get("customer").toString());
             if (requestMap.get("email").toString().isEmpty()) { //It is a customer order
-                BasketUser user = userService.getBasketUserByEmail(orderIssuer.getEmail());
+                BasketUserType user = userService.getBasketUserTypeByEmail(orderIssuer.getEmail());
                 Basket basket = user.getBasket();
                 basketService.dropBasket(basket);
                 return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, orderIssuer));
             }
             //It's an order provided by the shopEmployee
-            BasketUser user = userService.getBasketUserByEmail((String) requestMap.get("email"));
+            BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
             Basket basket = user.getBasket();
             basketService.dropBasket(basket);
             return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, orderIssuer));
@@ -163,7 +163,7 @@ public class SpgController {
         if (requestMap.containsKey("productId") && requestMap.containsKey("email") && requestMap.containsKey("quantity")) {
             Product product = productService.getProductById(Long.valueOf((Integer) requestMap.get("productId")));
             Double quantity = Double.valueOf((Integer) requestMap.get("quantity"));
-            BasketUser user = userService.getBasketUserByEmail((String) requestMap.get("email"));
+            BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
             return ResponseEntity.ok(basketService.addProductToCart(product, quantity, user));
         }
         return ResponseEntity.badRequest().build();
@@ -172,7 +172,7 @@ public class SpgController {
     @GetMapping(API.GET_CART)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<List<Product>> getBasket(@RequestParam String email) {
-        BasketUser user = userService.getBasketUserByEmail(email);
+        BasketUserType user = userService.getBasketUserTypeByEmail(email);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
@@ -213,7 +213,7 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("email")) {
             String email = (String) requestMap.get("email");
-            BasketUser user = userService.getBasketUserByEmail(email);
+            BasketUserType user = userService.getBasketUserTypeByEmail(email);
             if (user == null) {
                 return ResponseEntity.badRequest().build();
             }
