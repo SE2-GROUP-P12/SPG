@@ -10,6 +10,7 @@ import { NewCustomer } from './NewCustomer';
 import {TopUp} from "./TopUp";
 import {PlaceOrder} from './PlaceOrder';
 import { DeliverOrder } from './DeliverOrder';
+import { Customer } from './Customer'
 import {UnauthorizedComponent} from './UnauthorizedComponent';
 //import {NoTime} from './NoTime'; //non sono ancora sicura che serva (-Marti)
 import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
@@ -69,6 +70,9 @@ function App() {
                </Route>
                <Route exact path="/LoginComponent">
                    <Login/>
+               </Route>
+               <Route exact path="/Customer">
+                   <Customer/>
                </Route>
                <Route exact path="/Unauthorized">
                    <UnauthorizedComponent/>
