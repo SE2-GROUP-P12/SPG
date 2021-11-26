@@ -44,8 +44,6 @@ public class User {
     private Boolean active;
     @Column(name = "role", insertable = false, updatable = false)
     private String role;
-    @OneToOne(mappedBy = "cust")
-    private Basket basket;
     @OneToMany(mappedBy = "cust")
     private List<Order> orderList;
 
@@ -74,14 +72,6 @@ public class User {
         this.role = role;
     }
 
-    public Basket getBasket(){
-        if(this.basket == null) {
-            Basket b = new Basket(this);
-            this.basket = b;
-        }
-
-        return this.basket;
-    }
 
     @Override
     public String toString() {
@@ -93,7 +83,6 @@ public class User {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", basket=" + (basket==null?"null":this.basket.getBasketId()) +
                 '}';
     }
 
