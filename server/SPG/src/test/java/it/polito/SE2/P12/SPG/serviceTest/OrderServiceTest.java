@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.serviceTest;
 
 import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.*;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
 import it.polito.SE2.P12.SPG.repository.*;
 import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
@@ -14,6 +15,7 @@ import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
+import it.polito.SE2.P12.SPG.service.SpgUserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +41,8 @@ public class OrderServiceTest {
     private CustomerRepo customerRepo;
     @Autowired
     private SpgOrderService orderService;
+    @Autowired
+    private SpgUserService userService;
 
     @BeforeEach
     public void initContext() {
@@ -81,7 +85,7 @@ public class OrderServiceTest {
 
     @Test
     public void addNewOrderFromBasketTest() {
-        User u1 = userRepo.findUserByEmail("customer1@foomail.com");
+        BasketUser u1 = userService.getBasketUserByEmail("customer1@foomail.com");
         Basket b1 = u1.getBasket();
 
         List<Order> orders = orderRepo.findAll();

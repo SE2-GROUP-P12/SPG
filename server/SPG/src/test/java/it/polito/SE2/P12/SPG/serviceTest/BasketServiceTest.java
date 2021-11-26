@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.serviceTest;
 
 import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.*;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
 import it.polito.SE2.P12.SPG.repository.*;
 import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
 import it.polito.SE2.P12.SPG.entity.Basket;
@@ -12,6 +13,7 @@ import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
+import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.hibernate.TransientObjectException;
 import org.junit.jupiter.api.Assertions;
@@ -42,6 +44,8 @@ public class BasketServiceTest {
     private ShopEmployeeRepo shopEmployeeRepo;
     @Autowired
     private AdminRepo adminRepo;
+    @Autowired
+    private SpgUserService userService;
 
     @BeforeEach
     public void initContext() {
@@ -73,7 +77,7 @@ public class BasketServiceTest {
 
     @Test
     public void retrieveEmptyBasket() {
-        User u = userRepo.findUserByEmail("customer1@foomail.com");
+        BasketUser u = userService.getBasketUserByEmail("customer1@foomail.com");
         Basket b = u.getBasket();
 
         Assertions.assertEquals(b.getBasketId(), u.getBasket().getBasketId());
@@ -85,7 +89,7 @@ public class BasketServiceTest {
         Product p1 = productRepo.findAll().get(0);
         Product p2 = productRepo.findAll().get(1);
         Product p3 = productRepo.findAll().get(2);
-        Customer u1 = (Customer) userRepo.findUserByEmail("customer1@foomail.com");
+        Customer u1 = (Customer) userService.getUserByEmail("customer1@foomail.com");
         Basket b1 = u1.getBasket();
 
         Assertions.assertEquals(u1.getBasket(), b1);
@@ -108,7 +112,7 @@ public class BasketServiceTest {
     @Test
     public void addNotStoredProductToBasket() {
         Product notStored = new Product("Unicorn Powder", "Unicornland", "gr", 10000.0, 10.0);
-        User u1 = userRepo.findUserByEmail("customer1@foomail.com");
+        BasketUser u1 = userService.getBasketUserByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
         Assertions.assertThrows(InvalidDataAccessApiUsageException.class, () -> {
@@ -119,7 +123,7 @@ public class BasketServiceTest {
     @Test
     public void addNotAvailableProductToBasket() {
         Product p = productRepo.findAll().get(0);
-        User u1 = userRepo.findUserByEmail("customer1@foomail.com");
+        BasketUser u1 = userService.getBasketUserByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
         basketService.addProductToCart(p, 100000000000.0, u1);

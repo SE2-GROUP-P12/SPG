@@ -1,9 +1,13 @@
 package it.polito.SE2.P12.SPG.controllerTest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polito.SE2.P12.SPG.entity.Farmer;
 import it.polito.SE2.P12.SPG.entity.Product;
+import it.polito.SE2.P12.SPG.repository.FarmerRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
+import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
 import it.polito.SE2.P12.SPG.utils.API;
 import org.junit.jupiter.api.AfterEach;
@@ -19,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,24 +37,34 @@ public class ProductControllerApiTest {
     @Autowired
     private ProductRepo productRepo;
     @Autowired
+    private UserRepo userRepo;
+    @Autowired
+    private FarmerRepo farmerRepo;
+    @Autowired
     private MockMvc mockMvc;
 
     @BeforeEach
     public void initContext() {
         //Empty all the product
         productRepo.deleteAll();
+        userRepo.deleteAll();
+        //Create a farmer
+        Farmer farmer = new Farmer("farmer_name","farmer_surname","ssn_faaaaaaarmer","12345667","far@mer.com","password");
+        farmerRepo.save(farmer);
         //Create some testing product
-        Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F);
-        Product prod2 = new Product("Prod2", "Producer2", "KG", 100.0, 5.50F);
-        Product prod3 = new Product("Prod3", "Producer3", "KG", 20.0, 8.00F);
+        Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F, farmer);
+        Product prod2 = new Product("Prod2", "Producer2", "KG", 100.0, 5.50F, farmer);
+        Product prod3 = new Product("Prod3", "Producer3", "KG", 20.0, 8.00F, farmer);
         productRepo.save(prod1);
         productRepo.save(prod2);
         productRepo.save(prod3);
+
     }
 
     @AfterEach
     public void restDB() {
         productRepo.deleteAll();
+        userRepo.deleteAll();
 
     }
 
@@ -60,13 +75,30 @@ public class ProductControllerApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
+        /*
         List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>() {
             
         });
+        */
+        String response = result.getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode tree = objectMapper.readTree(response);
+        List<Product> productList = new ArrayList<>();
+        for(JsonNode i : tree) {
+            productList.add(new Product(
+                    i.get("name").textValue(),
+                    i.get("producer").textValue(),
+                    i.get("unitOfMeasurement").textValue(),
+                    i.get("totalQuantity").asDouble(),
+                    i.get("price").asDouble()
+            ));
+        }
+
         Assertions.assertEquals(3, productList.size());
         Assertions.assertEquals("Prod1", productList.get(0).getName());
         Assertions.assertEquals(100.00, productList.get(1).getTotalQuantity());
         Assertions.assertEquals(8.00F, productList.get(2).getPrice());
+
     }
 
     @Test
@@ -77,8 +109,22 @@ public class ProductControllerApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
-        List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>() {
-        });
+        /*List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>() {
+        });*/
+        String response = result.getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode tree = objectMapper.readTree(response);
+        List<Product> productList = new ArrayList<>();
+        for(JsonNode i : tree) {
+            productList.add(new Product(
+                    i.get("name").textValue(),
+                    i.get("producer").textValue(),
+                    i.get("unitOfMeasurement").textValue(),
+                    i.get("totalQuantity").asDouble(),
+                    i.get("price").asDouble()
+            ));
+        }
+
         Assertions.assertEquals(0, productList.size());
     }
 

@@ -1,6 +1,7 @@
 package it.polito.SE2.P12.SPG.service;
 
 import it.polito.SE2.P12.SPG.entity.User;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import it.polito.SE2.P12.SPG.entity.*;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -100,6 +102,10 @@ public class SpgUserService {
 
     public boolean checkEmployeePermission(Long userId) {
         return userRepo.findUserByUserId(userId).getRole() == UserRole.ROLE_SHOP_EMPLOYEE;
+    }
+
+    public BasketUser getBasketUserByEmail(String email){
+        return (BasketUser) userRepo.findByEmailAndRoleIn(email, UserRole.ROLE_BASKETUSER);
     }
 
 }
