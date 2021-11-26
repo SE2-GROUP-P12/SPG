@@ -40,7 +40,6 @@ function Login(props) {
                         props.setLoggedUser(localStorage.getItem('username'));
                     }
                 )
-                //window.location.href = "http://localhost:3000/ShopEmployee"; //TODO: there's a better way to implement that system without using a location href
             }
         });
         return true;

@@ -313,7 +313,7 @@ async function addCustomer(jsonObj) {
 async function sessionReloader() {
     try {
         const response = await fetch("/api/token/refresh", {
-            method: 'GEt',
+            method: 'GET',
             headers: getSessionReloadHeaders(),
         });
         if (response.ok) {
