@@ -197,7 +197,7 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("email") && requestMap.containsKey("value")) {
             String email = (String) requestMap.get("email");
-            Double value = (Double) requestMap.get("value");
+            Double value = Double.valueOf(requestMap.get("value").toString());
             return ResponseEntity.ok(userService.topUp(email, value));
         }
         return ResponseEntity.badRequest().build();
@@ -206,7 +206,6 @@ public class SpgController {
     @PostMapping(API.DELIVER_ORDER)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity deliverOrder(@RequestBody Long orderId) {
-        System.out.println(orderId);
         return ResponseEntity.ok(orderService.deliverOrder(orderId));
     }
 
