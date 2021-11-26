@@ -249,6 +249,31 @@ public class SpgController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(API.RETRIEVE_ERROR)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity retrieveError(@RequestParam String email) {
+        //Warning! only customer have a wallet and therefore this will send an error
+        Customer user = userService.getCustomerByEmail(email);
+        Map<String,String> response=new HashMap<String,String>();
+        if (user == null){
+            if(userService.getUserByEmail(email)==null) {
+                //the user doesn't exist
+                return ResponseEntity.badRequest().build();
+            }
+            //the user isn't a customer and therefore has no wallet
+            response.put("exist", "false");
+            return ResponseEntity.ok(response);
+        }
+        Double total = orderService.getTotalPrice(user.getUserId());
+        if (total>user.getWallet()){
+            response.put("exist", "true");
+            response.put("message", "Balance insufficient, remember to top up!");
+        }
+        else response.put("exist", "false");
+        return ResponseEntity.ok(response);
+    }
+
+
     @GetMapping(API.REFRESH_TOKEN)
     public void getRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
