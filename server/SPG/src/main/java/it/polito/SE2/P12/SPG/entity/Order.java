@@ -31,7 +31,7 @@ public class Order {
     private User cust;
     @Column(name="date")
     private LocalDateTime date;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "product_id")
     @Column(name = "quantity")
     private Map<Product, Double> prods;

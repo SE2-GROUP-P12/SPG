@@ -8,11 +8,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+
 public class RestAuthEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest httpRequest, HttpServletResponse httpResponse, AuthenticationException authException) throws IOException, ServletException {
-        httpResponse.setContentType("application/json;charset=UTF-8");
-        httpResponse.sendError(401, "Unauthorized, please try to login with authorized user.");
+        if (httpResponse.getStatus() == FORBIDDEN.value()){
+            httpResponse.setStatus(403);
+        }
+        else{
+            httpResponse.setStatus(401);
+        }
     }
 }
