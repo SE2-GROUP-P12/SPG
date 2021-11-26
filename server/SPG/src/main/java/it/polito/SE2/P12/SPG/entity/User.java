@@ -27,25 +27,23 @@ public class User {
             strategy = GenerationType.AUTO
     )
     @Column(name="user_id")
-    private Long userId;
+    protected Long userId;
     @Column(name = "name", nullable = false)
-    private String name;
+    protected String name;
     @Column(name = "surname", nullable = false)
-    private String surname;
+    protected String surname;
     @Column(name = "ssn", nullable = false)
-    private String ssn;
+    protected String ssn;
     @Column(name = "phone_number", nullable = false)
-    private String phoneNumber;
+    protected String phoneNumber;
     @Column(name = "email", nullable = false)
-    private String email;
+    protected String email;
     @Column(name = "password" /*, nullable = false*/)
-    private String password;
+    protected String password;
     @Column(name = "active")
-    private Boolean active;
+    protected Boolean active;
     @Column(name = "role", insertable = false, updatable = false)
-    private String role;
-    @OneToMany(mappedBy = "cust")
-    private List<Order> orderList;
+    protected String role;
 
     public User(String name, String surname, String ssn,
                 String phoneNumber,
@@ -72,7 +70,6 @@ public class User {
         this.role = role;
     }
 
-
     @Override
     public String toString() {
         return "User{" +
@@ -83,8 +80,8 @@ public class User {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", active=" + active +
+                ", role='" + role + '\'' +
                 '}';
     }
-
-
 }

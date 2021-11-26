@@ -76,24 +76,17 @@ public class OrderServiceTest {
         basketRepo.save(basket2);
     }
 
-    @AfterEach
-    public void resetDB() {
-       orderRepo.deleteAll();
-       basketRepo.deleteAll();
-       userRepo.deleteAll();
-    }
-
     @Test
     public void addNewOrderFromBasketTest() {
-        BasketUser u1 = userService.getBasketUserByEmail("customer1@foomail.com");
-        Basket b1 = u1.getBasket();
+        BasketUser user = userService.getBasketUserByEmail("customer1@foomail.com");
+        Basket b1 = user.getBasket();
 
         List<Order> orders = orderRepo.findAll();
         Assertions.assertEquals(0, orders.size());
         Assertions.assertTrue(orderService.addNewOrderFromBasket(b1));
         orders = orderRepo.findAll();
         Assertions.assertEquals(1, orders.size());
-        Assertions.assertEquals(orders.get(0).getCust(),u1);
+        Assertions.assertEquals(orders.get(0).getCust(),user);
         Assertions.assertEquals(orders.get(0).getProds().entrySet().size(),3);
 
         Product p1 = productRepo.findProductByName("Prod1");

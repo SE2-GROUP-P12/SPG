@@ -33,26 +33,7 @@ public class SpgUserService {
         this.farmerRepo = farmerRepo;
     }
 
-    public void populateDB() {
-        //ADMIN
-        Admin admin = new Admin("admin", "admin", "ADMIN00000000000", "0000000000",
-                "admin@foomail.com", "password");
-        //Customers
-        Customer temp1 = new Customer("Mario", "Rossi", "RSSMRA00D12N376V", "01234567892", "mario.rossi@gmail.com", "password", "Main street 1234");
-        Customer temp2 = new Customer("Paolo", "Bianchi", "BNCPLA00D12N376V", "01234567892",
-                "paolo.bianchi@gmail.com", "password", "Main street 1456");
-        //Shop Employee
-        ShopEmployee temp3 = new ShopEmployee("Francesco", "Conte", "CNTFRN00D12N376V", "01234567892",
-                "francesco.conte@gmail.com", "password");
-        //Farmer
-        Farmer temp4 = new Farmer("Thomas", "Jefferson", "JFRTHM00D12N376V", "01234567892",
-                "thomas.jefferson@gmail.com", "password");
-        if (userRepo.findUserByEmail("mario.rossi@gmail.com") == null) customerRepo.save(temp1);
-        if (userRepo.findUserByEmail("paolo.bianchi@gmail.com") == null) customerRepo.save(temp2);
-        if (userRepo.findUserByEmail("francesco.conte@gmail.com") == null) shopEmployeeRepo.save(temp3);
-        if (userRepo.findUserByEmail("admin@foomail.com") == null) adminRepo.save(admin);
-        if (userRepo.findUserByEmail("thomas.jefferson@gmail.com") == null) farmerRepo.save(temp4);
-    }
+
 
     public Long getUserIdByEmail(String email) {
         return userRepo.findUserByEmail(email).getUserId();

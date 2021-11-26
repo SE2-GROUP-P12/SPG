@@ -87,9 +87,9 @@ public class Product {
         this.imageUrl=imageUrl;
     }
 
-    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
         this.name = name;
-        this.producer = producer;
+        this.producer = farmer.getCompanyName();
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -102,9 +102,9 @@ public class Product {
         this.imageUrl=null;
     }
 
-    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl ,Farmer farmer) {
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl ,Farmer farmer) {
         this.name = name;
-        this.producer = producer;
+        this.producer = farmer.getCompanyName();
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
