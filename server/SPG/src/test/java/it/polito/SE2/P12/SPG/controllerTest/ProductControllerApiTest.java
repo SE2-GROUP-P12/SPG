@@ -10,6 +10,7 @@ import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
 import it.polito.SE2.P12.SPG.utils.API;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,9 +43,12 @@ public class ProductControllerApiTest {
     private FarmerRepo farmerRepo;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private DBUtilsService dbUtilsService;
 
     @BeforeEach
     public void initContext() {
+        dbUtilsService.dropAll();
         //Empty all the product
         productRepo.deleteAll();
         userRepo.deleteAll();
@@ -61,12 +65,6 @@ public class ProductControllerApiTest {
 
     }
 
-    @AfterEach
-    public void restDB() {
-        productRepo.deleteAll();
-        userRepo.deleteAll();
-
-    }
 
     @Test
     @WithUserDetails("tester@test.com")

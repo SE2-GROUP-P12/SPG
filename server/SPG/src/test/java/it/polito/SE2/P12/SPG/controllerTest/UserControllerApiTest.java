@@ -8,6 +8,7 @@ import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.CustomerRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import org.checkerframework.checker.nullness.qual.AssertNonNullIfNonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -50,10 +51,12 @@ public class UserControllerApiTest {
     private UserRepo userRepo;
     @Autowired
     private CustomerRepo customerRepo;
+    @Autowired
+    private DBUtilsService dbUtilsService;
 
     @BeforeEach
     public void initContext() {
-        userRepo.deleteAll();
+        dbUtilsService.dropAll();
         Customer fooUser1 = new Customer("fooName1", "fooSurname1", "ssn_aaaaaaaaaaaa", "123456789", "foouser@foomail.com", "password", "address");
         customerRepo.save(fooUser1);
     }

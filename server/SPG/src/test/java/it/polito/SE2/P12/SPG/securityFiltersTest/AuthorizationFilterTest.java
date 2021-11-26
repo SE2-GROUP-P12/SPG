@@ -9,6 +9,7 @@ import it.polito.SE2.P12.SPG.repository.JWTUserHandlerRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.JWTUserHandlerService;
 import it.polito.SE2.P12.SPG.utils.API;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import it.polito.SE2.P12.SPG.utils.Utilities;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -40,10 +41,12 @@ public class AuthorizationFilterTest {
     private JWTUserHandlerRepo jwtUserHandlerRepo;
     @Autowired
     private JWTUserHandlerService jwtUserHandlerService;
+    @Autowired
+    private DBUtilsService dbUtilsService;
 
     @BeforeEach
     public void initContext() {
-        userRepo.deleteAll();
+        dbUtilsService.dropAll();
         jwtUserHandlerRepo.deleteAll();
         User tester = new Admin("tester", "tester", "tester_aaaaaaaaaaaa", "", "tester@test.com", "password");
         userRepo.save(tester);
@@ -51,7 +54,6 @@ public class AuthorizationFilterTest {
 
     @AfterEach
     public void restDB() {
-        userRepo.deleteAll();
         jwtUserHandlerRepo.deleteAll();
     }
 

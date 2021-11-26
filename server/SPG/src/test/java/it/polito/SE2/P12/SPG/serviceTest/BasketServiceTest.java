@@ -10,6 +10,7 @@ import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,13 +39,12 @@ public class BasketServiceTest {
     private AdminRepo adminRepo;
     @Autowired
     private SpgUserService userService;
+    @Autowired
+    DBUtilsService dbUtilsService;
 
     @BeforeEach
     public void initContext() {
-        userRepo.deleteAll();
-        basketRepo.deleteAll();
-        orderRepo.deleteAll();
-        productRepo.deleteAll();
+        dbUtilsService.dropAll();
         //Create some product and then add them to the Customer Cart
         Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F);
         Product prod2 = new Product("Prod2", "Producer2", "KG", 100.0, 5.50F);
@@ -58,14 +58,6 @@ public class BasketServiceTest {
         customerRepo.save(cust1);
         customerRepo.save(cust2);
     }
-
-    @AfterEach
-    public void resetDB(){
-        basketRepo.deleteAll();
-        productRepo.deleteAll();
-        userRepo.deleteAll();
-    }
-
 
     @Test
     public void retrieveEmptyBasket() {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 @Service
-public class DBPoupulatorService {
+public class DBUtilsService {
 
     private UserRepo userRepo;
     private CustomerRepo customerRepo;
@@ -21,14 +21,14 @@ public class DBPoupulatorService {
     private ProductRepo productRepo;
 
     @Autowired
-    public DBPoupulatorService(UserRepo userRepo,
-            CustomerRepo customerRepo,
-            FarmerRepo farmerRepo,
-            AdminRepo adminRepo,
-            ShopEmployeeRepo shopEmployeeRepo,
-            BasketRepo basketRepo,
-            OrderRepo orderRepo,
-            ProductRepo productRepo) {
+    public DBUtilsService(UserRepo userRepo,
+                          CustomerRepo customerRepo,
+                          FarmerRepo farmerRepo,
+                          AdminRepo adminRepo,
+                          ShopEmployeeRepo shopEmployeeRepo,
+                          BasketRepo basketRepo,
+                          OrderRepo orderRepo,
+                          ProductRepo productRepo) {
         this.userRepo=userRepo;
         this.customerRepo=customerRepo;
         this.farmerRepo=farmerRepo;
@@ -43,6 +43,13 @@ public class DBPoupulatorService {
     public void init() {
         populateUsers();
         populateProducts();
+    }
+
+    public void dropAll(){
+        basketRepo.deleteAll();
+        orderRepo.deleteAll();
+        productRepo.deleteAll();
+        userRepo.deleteAll();
     }
 
     private void populateUsers() {
@@ -68,7 +75,7 @@ public class DBPoupulatorService {
         if (userRepo.findUserByEmail("alexander.hamilton@yahoo.com") == null) farmerRepo.save(temp5);
     }
 
-    public void populateProducts(){
+    private void populateProducts(){
         Farmer farmer1 = farmerRepo.findFarmerByEmail("thomas.jefferson@gmail.com");
         Farmer farmer2 = farmerRepo.findFarmerByEmail("alexander.hamilton@yahoo.com");
 

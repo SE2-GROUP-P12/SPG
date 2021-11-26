@@ -8,6 +8,7 @@ import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.serviceTest.OrderServiceTest;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
 import it.polito.SE2.P12.SPG.utils.API;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import it.polito.SE2.P12.SPG.utils.Utilities;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -52,15 +53,12 @@ public class OrderControllerApiTest {
     private SpgBasketService basketService;
     @Autowired
     private BasketRepo basketRepo;
+    @Autowired
+    private DBUtilsService dbUtilsService;
 
     @BeforeEach
     public void initContext() {
-        basketRepo.deleteAll();
-        orderRepo.deleteAll();
-        productRepo.deleteAll();
-        farmerRepo.deleteAll();
-        customerRepo.deleteAll();
-        shopEmployeeRepo.deleteAll();
+        dbUtilsService.dropAll();
         Customer customer1 = new Customer("customer1", "", "123450001", "", "customer1@test.com", "password", "");
         Customer customer2 = new Customer("customer2", "", "123450000", "", "customer2@test.com", "password", "");
         ShopEmployee employee = new ShopEmployee("employee", "", "employee_123456", "", "employee@test.com", "password");
@@ -84,16 +82,6 @@ public class OrderControllerApiTest {
         basketService.addProductToCart(prod1, 2.001, customer2);
         basketService.addProductToCart(prod2, 5.001, customer2);
 
-    }
-
-    @AfterEach
-    public void resetDB() {
-        basketRepo.deleteAll();
-        orderRepo.deleteAll();
-        productRepo.deleteAll();
-        farmerRepo.deleteAll();
-        customerRepo.deleteAll();
-        shopEmployeeRepo.deleteAll();
     }
 
     @Test
