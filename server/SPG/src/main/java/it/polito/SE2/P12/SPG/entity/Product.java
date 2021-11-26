@@ -56,6 +56,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
+        this.quantityForcast = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
@@ -70,6 +71,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
+        this.quantityForcast = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
@@ -84,6 +86,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
+        this.quantityForcast = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
@@ -98,6 +101,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
+        this.quantityForcast = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
