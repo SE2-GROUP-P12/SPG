@@ -273,6 +273,56 @@ public class SpgController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(API.EXPECTED_PRODUCTS)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity expectedProducts() {
+        //returns all products with their respective validity dates
+        List<Product> response = new ArrayList<Product>();
+        response= productService.getAllProduct();
+        return ResponseEntity.ok(response);
+    }
+
+
+
+
+
+    @PostMapping(API.REPORT_EXPECTED)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity reportExpected(@RequestBody String jsonData) {
+    // sets expected values for products
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        Long productId;
+        Farmer farmer;
+        Double forecast;
+        String start;
+        String end;
+        if (requestMap == null)
+            return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("productId")) {
+            productId = (Long) requestMap.get("producerId");
+        }
+        else return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("producerId")) {
+            Long farmerId = (Long) requestMap.get("producerId");
+            farmer = userService.getFarmerById(farmerId);
+            if (farmer==null) return ResponseEntity.badRequest().build();
+        }
+        else return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("quantityForecast")) {
+            forecast = (Double) requestMap.get("quantityForecast");
+        }
+        else return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("startAvailability")) {
+            start = (String) requestMap.get("startAvailability");
+        }
+        else return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("endAvailability")) {
+            end = (String) requestMap.get("endAvailability");
+        }
+        else return ResponseEntity.badRequest().build();
+        productService.setForecast(productId,farmer, forecast, start,end);
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping(API.REFRESH_TOKEN)
     public void getRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {

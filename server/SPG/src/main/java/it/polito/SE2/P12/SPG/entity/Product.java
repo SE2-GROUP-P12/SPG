@@ -29,6 +29,8 @@ public class Product {
     private Double totalQuantity;
     @Column(name = "quantity_available", nullable = false)
     private Double quantityAvailable;
+    @Column(name = "quantity_forecast", nullable = false)
+    private Double quantityForcast;
     @Column(name = "quantity_baskets", nullable = false)
     private Double quantityBaskets;
     @Column(name = "quantity_ordered", nullable = false)
@@ -37,6 +39,12 @@ public class Product {
     private Double quantityDelivered;
     @Column(name = "price", nullable = false)
     private Double price;
+    @Column(name = "startAvailability", nullable = true)
+    private String startAvailability;
+    //start time for last prediction given
+    @Column(name = "endAvailability", nullable = true)
+    private String endAvailability;
+    //end time for last prediction given
     @ManyToOne
     private Farmer farmer;
     @Column (name= "image_url")

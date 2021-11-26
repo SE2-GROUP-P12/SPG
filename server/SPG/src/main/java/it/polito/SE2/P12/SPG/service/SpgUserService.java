@@ -66,6 +66,11 @@ public class SpgUserService {
         return customerRepo.findCustomerByEmail(email);
     }
 
+    public Farmer getFarmerById(Long farmerId) {
+        if(userRepo.findUserByUserId(farmerId).getRole()!=UserRole.ROLE_FARMER) return null;
+        return farmerRepo.findFarmerByUserId(farmerId);
+    }
+
     public User getUserByUserId(Long userId) {
         return userRepo.findUserByUserId(userId);
     }
