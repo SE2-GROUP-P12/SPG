@@ -68,7 +68,7 @@ public class UserControllerApiTest {
      */
 
     @Test
-    public void testNullCustomerCreation() throws Exception {
+    public void nullCustomerCreationTest() throws Exception {
         ResponseEntity response;
         response = spgController.createCustomer(null);
         Map<String, String> responseMap = (Map<String, String>) response.getBody();
@@ -77,16 +77,27 @@ public class UserControllerApiTest {
     }
 
     @Test
-    public void testValidCustomerCreation() {
+    public void validCustomerCreationTest() {
         ResponseEntity response;
         response = spgController.createCustomer(customerJsonFormat1);
         Boolean responseBoolean = (Boolean) response.getBody();
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        Assertions.assertNotNull(responseBoolean);
         Assertions.assertTrue(responseBoolean);
     }
 
     @Test
-    public void alreadyPresentCustomerMailHandling() {
+    public void invalidCustomerStringCreationTest() {
+        ResponseEntity response;
+        response = spgController.createCustomer("an invalid string");
+        Boolean responseBoolean = (Boolean) response.getBody();
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertNull(responseBoolean);
+    }
+
+
+    @Test
+    public void alreadyPresentCustomerMailHandlingTest() {
         ResponseEntity response;
         response = spgController.createCustomer(customerJsonFormat);
         Map<String, String> responseMap = (Map<String, String>) response.getBody();
@@ -95,7 +106,7 @@ public class UserControllerApiTest {
     }
 
     @Test
-    public void alreadyPresentCustomerSsnHandling() {
+    public void alreadyPresentCustomerSsnHandlingTest() {
         ResponseEntity response;
         response = spgController.createCustomer(customerJsonFormat);
         Map<String, String> responseMap = (Map<String, String>) response.getBody();
@@ -105,8 +116,22 @@ public class UserControllerApiTest {
     }
 
     @Test
-    public void testEmptyCustomerCheck() throws JsonProcessingException {
+    public void validCustomerInfoCheckTest() {
         ResponseEntity response;
+        //Correct information
+        response = spgController.checkExistCustomerMailAndSsn("foouser@foomail.com", "ssn_aaaaaaaaaaaa");
+        Map<String, Boolean> responseMap = (Map<String, Boolean>) response.getBody();
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertNotNull(responseMap);
+        Assertions.assertTrue(responseMap.containsKey("exist"));
+        Assertions.assertTrue((Boolean) responseMap.get("exist"));
+    }
+
+    @Test
+    public void invalidCustomerInfoCheckTest() {
+        ResponseEntity response;
+        //Empty String
         response = spgController.checkExistCustomerMailAndSsn("", "");
         Map<String, Boolean> responseMap = (Map<String, Boolean>) response.getBody();
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -114,5 +139,36 @@ public class UserControllerApiTest {
         Assertions.assertNotNull(responseMap);
         Assertions.assertTrue(responseMap.containsKey("exist"));
         Assertions.assertFalse((Boolean) responseMap.get("exist"));
+        //null String
+        response = spgController.checkExistCustomerMailAndSsn(null, null);
+        responseMap = (Map<String, Boolean>) response.getBody();
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertNull(response.getBody());
+    }
+
+    @Test
+    public void existCustomerByEmailTest() {
+        ResponseEntity response;
+        //Nor present mail
+        response = spgController.checkExistCustomerMail("tester@test.com");
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(200, response.getStatusCodeValue());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertFalse((Boolean) response.getBody());
+        //present mail
+        response = spgController.checkExistCustomerMail("foouser@foomail.com");
+        Assertions.assertEquals(200, response.getStatusCodeValue());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertTrue((Boolean) response.getBody());
+    }
+
+    @Test
+    public void existCustomerByEmailErrorHandlerTest() {
+        //null mail
+        ResponseEntity response;
+        response = spgController.checkExistCustomerMail(null);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(400, response.getStatusCodeValue());
+        Assertions.assertNull(response.getBody());
     }
 }
