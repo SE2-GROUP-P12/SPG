@@ -81,6 +81,7 @@ async function createSuccesfulHandlerObject(response) {
  *
  */
 
+// GET the list of all the products, if error occurs it returns undefined
 async function browseProducts(setErrorMessage) {
     try {
         let listProducts;
@@ -105,9 +106,9 @@ async function browseProducts(setErrorMessage) {
     }
 }
 
-
+//GET the cart related to the requested user by his/her email address, if error occurs it returns undefined
 async function getCart(data, setErrorMessage) {
-    console.log("here");
+    //console.log("here");
     try {
         const response = await fetch("/api/customer/getCart?email=" + data.email, {
             method: 'GET',
@@ -133,6 +134,7 @@ async function getCart(data, setErrorMessage) {
     }
 }
 
+//POST: add products in the cart, it returns boolean
 async function addToCart(product) {
     try {
         const response = await fetch("/api/product/addToCart", {
@@ -150,6 +152,7 @@ async function addToCart(product) {
     }
 }
 
+//POST: increase the amount of money (data.value) in the wallet of a customer (data.email), it returns a boolean
 async function topUp(data) {
     try {
         const response = await fetch("/api/customer/topUp", {
@@ -166,10 +169,10 @@ async function topUp(data) {
         return undefined;
     }
 }
-
+//Check whether the customer exists or not by his/her email address, if error occurs it returns undefined, otherwise true
 async function customerExistsByMail(data) {
     try {
-        const response = await fetch("/api/customer/customerExistsByMail?email=" + data, {
+        const response = await fetch ("/api/customer/customerExists?email="+email+"&ssn=", {
             method: 'GET',
             headers: getAuthenticationHeaders(),
         });
@@ -183,13 +186,13 @@ async function customerExistsByMail(data) {
         return undefined;
     }
 }
-
+//POST: place an order by the email address (data.email) of a customer (must be checked before), it returns boolean
 async function placeOrder(data) {
     try {
         const response = await fetch("/api/customer/placeOrder", {
             method: 'POST',
             headers: getAuthenticationHeaders(),
-            body: JSON.stringify({'email': data.email})
+            body: JSON.stringify({'email' : data.email, 'customer' : data.customer})
         });
         if (response.ok)
             return true;
@@ -200,7 +203,8 @@ async function placeOrder(data) {
         return undefined;
     }
 }
-
+//DELETE: delete the order of a customer by his/her email (data.email), it returns a boolean
+//TODO: what happen if a customer has more than one order?
 async function dropOrder(data) {
     try {
         const response = await fetch("/api/customer/dropOrder", {
@@ -218,7 +222,32 @@ async function dropOrder(data) {
     }
 }
 
-async function getOrdersByEmail(email) {
+//GET: get a list of all orders.
+//If no order is found, return empty list.
+//If an error occours, return null
+async function getAllOrders(){
+    try {
+        const response = await fetch ("api/customer/getAllOrders", {
+            method: 'GET',
+            headers: getAuthenticationHeaders(),
+        });
+        const data = await response.json();
+        if(response.ok){
+            if(data.length===0)
+                return ([]);
+            return data;
+        }
+        else {
+            return null;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// GET: retrieve the list of all orders by customer's email address.
+//      If error occurs it returns null, otherwise it returns a json with orderId + List of Products
+async function getOrdersByEmail(email){
     try {
         const response = await fetch("api/customer/getOrdersByEmail?email=" + email, {
             method: 'GET',
@@ -236,6 +265,7 @@ async function getOrdersByEmail(email) {
     }
 }
 
+//POST: handout of an order by the orderId, it returns a boolean
 async function deliverOrder(orderId) {
     try {
         const response = await fetch("/api/customer/deliverOrder", {
@@ -254,15 +284,15 @@ async function deliverOrder(orderId) {
     }
 }
 
+//GET: retrieve the total amount of a customer's wallet by his/her email address
 async function getWallet(email) {
-
     try {
         const response = await fetch("/api/customer/getWallet?email=" + email, {
             method: 'GET',
             headers: getAuthenticationHeaders()
         });
         const data = await response.json();
-        console.log(JSON.stringify(data));
+        //console.log(JSON.stringify(data));
         if (response.ok) {
             return data;
         }
@@ -271,41 +301,53 @@ async function getWallet(email) {
     }
 }
 
-async function customerExists(email, ssn) {
-    try {
-        const response = await fetch('/api/customer/customerExists', {
-            method: 'POST',
+//GET: check whther the customer exists by its email and its SSN code, it returns a boolean
+async function customerExists(data)
+{
+    try{
+        const response = await fetch ("/api/customer/customerExists?email="+data.email+"&ssn="+data.ssn ,
+        {
+            method: 'GET',
             headers: {
-                'Accept': 'application/json',
+                'Accept':'application/json',
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({email: email, ssn: ssn})
-        })
-        const data = await response.json();
-        if (response.ok) {
-            return data.exist;
-        }
-    } catch (err) {
+            }
+        });
+        let answer = await response.json();
+        if(response.ok)
+            return answer.exist;
+        else
+            return undefined;
+    }
+    catch(err) {
         console.log(err);
+        return undefined;
     }
 }
 
-async function addCustomer(jsonObj) {
-    try {
-        const response = await fetch("/api/customer/addCustomer", {
+//POST: register a new customer by sending all his/her info, it returns a boolean
+async function addCustomer(data)
+{
+    console.log(JSON.stringify(data));
+    try
+    {
+        const response = await fetch("/api/customer/addCustomer",
+        {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: jsonObj
+            body: JSON.stringify(data)
         });
-        if (response.ok) {
-            console.log("done!");
-            return response.ok;
-        }
-    } catch (err) {
+        if(response.ok)
+            return true;
+        return undefined;
+    }
+    catch(err)
+    {
         console.log(err);
+        return undefined;
     }
 }
 
@@ -337,6 +379,7 @@ const API = {
     customerExists,
     customerExistsByMail,
     dropOrder,
+    getAllOrders,
     getOrdersByEmail,
     deliverOrder,
     addCustomer,

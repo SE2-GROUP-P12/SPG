@@ -63,7 +63,7 @@ public class SpgOrderService {
         return output;
     }
 
-    public String getOrdersProductsJson(Long userId) {
+    public String getUserOrdersProductsJson(Long userId) {
         List<Order> orders = orderRepo.findAllByCust_UserId(userId);
         ObjectMapper mapper = new ObjectMapper();
         String response = new String();
@@ -76,5 +76,18 @@ public class SpgOrderService {
         return response.toString();
     }
 
+    public String getAllOrdersProductJson()
+    {
+        List<Order> orders = orderRepo.findAll();
+        ObjectMapper mapper = new ObjectMapper();
+        String response= new String();
+        try{
+            response=mapper.writeValueAsString(orders);
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return response.toString();
+    }
 }
 

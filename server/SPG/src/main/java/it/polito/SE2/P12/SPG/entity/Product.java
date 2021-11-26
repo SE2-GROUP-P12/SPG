@@ -1,10 +1,8 @@
 package it.polito.SE2.P12.SPG.entity;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import it.polito.SE2.P12.SPG.repository.FarmerRepo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 
@@ -39,10 +37,10 @@ public class Product {
     private Double quantityDelivered;
     @Column(name = "price", nullable = false)
     private Double price;
-    @OneToOne
+    @ManyToOne
     private Farmer farmer;
-//    @Column
-//    private String farmer;
+    @Column (name= "image_url")
+    private String imageUrl;
 
     public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price) {
         this.name = name;
@@ -55,6 +53,21 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = null;
+        this.imageUrl=null;
+    }
+
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl) {
+        this.name = name;
+        this.producer = "default producer";
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.totalQuantity = totalQuantity;
+        this.quantityAvailable = totalQuantity;
+        this.quantityBaskets = 0.0;
+        this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
+        this.price = price;
+        this.farmer = null;
+        this.imageUrl=imageUrl;
     }
 
     public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
@@ -68,12 +81,12 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = farmer;
+        this.imageUrl=null;
     }
 
-    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price) {
-        //WARNING this method sets the farmer to null, only to be used before we set farmer in the system
+    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl ,Farmer farmer) {
         this.name = name;
-        this.producer = "default produces";
+        this.producer = producer;
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -81,7 +94,8 @@ public class Product {
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
         this.price = price;
-        this.farmer = null;
+        this.farmer = farmer;
+        this.imageUrl=imageUrl;
     }
 
     public Boolean moveFromAvailableToBasket(Double quantity) {

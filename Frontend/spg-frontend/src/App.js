@@ -1,16 +1,16 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import {API} from "./API";
+import {API} from "./API/API";
 import Container from 'react-bootstrap/Container';
 import {Navbar} from "./Navbar";
-import {Homepage} from "./Homepage";
+import {Homepage} from "./Homepage/Homepage";
 import {Login} from "./Login";
-import {ShopEmployee} from "./ShopEmployee";
-import {BrowseProducts} from "./BrowseProducts";
-import {NewCustomer} from './NewCustomer';
+import {ShopEmployee} from "./ShopEmployee/ShopEmployee";
+import {BrowseProducts} from "./BrowseProducts/BrowseProducts";
+import { NewCustomer } from './NewCustomer/NewCustomer';
 import {TopUp} from "./TopUp";
 import {PlaceOrder} from './PlaceOrder';
-import {DeliverOrder} from './DeliverOrder';
+import { DeliverOrder } from './DeliverOrder/DeliverOrder';
 import {UnauthorizedComponent} from './UnauthorizedComponent';
 //import {NoTime} from './NoTime'; //non sono ancora sicura che serva (-Marti)
 import {Switch, Route, BrowserRouter as Router} from "react-router-dom";

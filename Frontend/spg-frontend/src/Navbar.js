@@ -2,11 +2,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import logo from "./resources/logo.png";
 import Button from "react-bootstrap/Button";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Dropdown from "react-bootstrap/Dropdown";
 import Nav from "react-bootstrap/Nav";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
+import {Link} from 'react-router-dom';
+import {useState} from "react";
+import Grid from '@mui/material/Grid';
 import {buildLoginBody} from './Utilities';
 import {Link, Redirect} from 'react-router-dom';
 import {useState, useEffect} from "react";
@@ -47,81 +46,10 @@ function Navbar(props) {
     }
     useEffect(() => {setRunRedirect(false)}, );
 
-    /*
-     const [showModalLogin, setShowModalLogin] = useState(false);
-        const [enableSubmit, setEnableSubmit] = useState(false);
+    function doLogin() {
+        window.location.href = "http://localhost:8081/login";
+    }
 
-
-        function LoginForm(props) {
-
-            const usernameHandler = (event) => {
-                props.setUsername(event.target.value);
-            }
-            const passwordHandler = (event) => {
-                props.setPassword(event.target.value);
-            }
-
-
-            return (
-                <Form>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" onChange={(event) => usernameHandler(event)}
-                                      value={props.username}/>
-                        <Form.Text className="text-muted">
-                            We'll never share your email with anyone else.
-                        </Form.Text>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" onChange={(event) => passwordHandler(event)}
-                                      value={props.password}/>
-                    </Form.Group>
-                </Form>);
-        }
-
-        function ModalComponent() {
-            const [username, setUsername] = useState("");
-            const [password, setPassword] = useState("");
-
-            return (
-
-                <Modal
-                    show={showModalLogin}
-                    onHide={() => setShowModalLogin(false)}
-                    backdrop="static"
-                    keyboard={false}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Please, log in into SPG</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <LoginForm username={username} setUsername={setUsername}
-                                   password={password} setPassword={setPassword}/>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="success" onClick={event => {
-                            onClickSubmissionHandler(event, username, password);
-                            setShowModalLogin(false);
-                            //setRedirect(true);
-                        }}>
-                            LOG IN
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            );
-        }
-
-        function DropDownLoggedUser() {
-            return (
-                <DropdownButton variant="outline-dark" id="dropdown-item-button" title={props.loggedUser.split("@")[0]}>
-                    <Link to="/ShopEmployee"><Dropdown.Item as="button">HOME</Dropdown.Item></Link>
-                    <Dropdown.Item as="button" onClkick={(event) => doLogOut(event, props)}>LOG
-                        OUT</Dropdown.Item>
-                </DropdownButton>
-            );
-        }
-    */
 
     if (runRedirect === true) {
         return (<Redirect to="/"></Redirect>);
@@ -171,3 +99,64 @@ function Navbar(props) {
 }
 
 export {Navbar}
+
+//Navbar return by MARTI
+/*
+* return(
+           <Switch>
+           <Route exact path="/">
+                <Nav className="navbar bg-success navbar-dark" >
+                    <Grid container spacing={2}>
+                        <Grid item align='left' xs={4}>
+                            <img src={logo} alt="logo" className="logo"/>
+                        </Grid>
+                        <Grid item align='center' xs={4}>
+                            <Link to='/NewCustomer'><Button className="btn btn-outline-light" variant="success"> Sign in </Button></Link>
+                        </Grid>
+                        <Grid item align='right' xs={4}>
+                            <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                        </Grid>
+                    </Grid>
+                </Nav>
+            </Route>
+           <Route exact path="/Unauthorized">
+        <Nav className="navbar bg-success navbar-dark" >
+                    <Grid container spacing={2}>
+                        <Grid item align='left' xs={4}>
+                            <img src={logo} alt="logo" className="logo"/>
+                        </Grid>
+                        <Grid item align='center' xs={4}>
+                            <Link to='/NewCustomer'><Button className="btn btn-outline-light" variant="success"> Sign in </Button></Link>
+                        </Grid>
+                        <Grid item align='right' xs={4}>
+                            <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                        </Grid>
+                    </Grid>
+                </Nav>
+            </Route>
+            <Route exact path="/NewCustomer">
+            <Nav className="navbar bg-success navbar-dark" >
+                    <Grid container spacing={2}>
+                        <Grid item align='left' xs={4}>
+                            <img src={logo} alt="logo" className="logo"/>
+                        </Grid>
+                        <Grid item align='center' xs={8}/>
+                    </Grid>
+                </Nav>
+            </Route>
+            <Route>
+            <Nav className="navbar bg-success navbar-dark" >
+                    <Grid container spacing={2}>
+                        <Grid item align='left' xs={4}>
+                            <img src={logo} alt="logo" className="logo"/>
+                        </Grid>
+                        <Grid item xs={4}/>
+                        <Grid item align='right' xs={4}>
+                            <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
+                        </Grid>
+                    </Grid>
+                </Nav>
+            </Route>
+           </Switch>
+    );
+* */

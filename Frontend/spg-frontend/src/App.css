@@ -63,10 +63,10 @@
   padding: 20px;
 }
 
-.dashButton{
+.btn-huge{
   width: 90%;
   height: 90%;
-  margin: 10%;
+  padding: 10%;
 }
 
 .pagecontent{

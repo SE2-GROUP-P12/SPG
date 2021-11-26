@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
-import {API} from './API';
+import {API} from './API/API';
 import {Redirect} from "react-router-dom";
 
 function PlaceOrder(props) {
@@ -52,16 +52,18 @@ function PlaceOrder(props) {
             setDeleteError(true);
     }
 
-    const placeOrder = async () => {
-        setSendError(false);
-        setSendSuccess(false);
-        let outcome = await API.placeOrder({'email': email});
-        if (outcome) {
-            setOrder(null);
-            setSendSuccess(true);
-        } else
-            setSendError(true);
-    }
+        const placeOrder = async() =>{
+            setSendError(false);
+            setSendSuccess(false);
+            let outcome= await API.placeOrder({'email' : email, 'customer' : customer});
+            if(outcome)
+            {
+                setOrder(null);
+                setSendSuccess(true);
+            }
+            else
+                setSendError(true);
+        }
 
     /*TIME MACHINE MANAGEMENT*/
     const [itsTime, setItsTime] = useState(false)
@@ -132,11 +134,9 @@ function PlaceOrder(props) {
                 </Formik>
             </div>
             <Row>
-                <Col xs={4}><Button disabled={(!itsTime || order === null || customer === null) ? true : false}
-                                    variant='success' onClick={placeOrder}>Send order</Button></Col>
-                <Col xs={4}><Button disabled={order === null ? true : false} variant='danger' onClick={dropOrder}>Delete
-                    order</Button></Col>
                 <Col xs={4}><Link to='/ShopEmployee'><Button variant='secondary'>Back</Button></Link></Col>
+                <Col xs={4}><Button disabled={order===null ? true : false} variant='danger' onClick={dropOrder}>Delete order</Button></Col>
+                <Col xs={4}><Button disabled={(!itsTime||order===null||customer===null) ? true : false} variant='success' onClick={placeOrder}>Send order</Button></Col>
             </Row>
         </>
     );
