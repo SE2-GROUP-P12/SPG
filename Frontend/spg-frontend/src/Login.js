@@ -1,6 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
+
 import {Link, Redirect} from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -14,6 +16,7 @@ let base64 = require('base-64');
 
 function Login(props) {
     const [redirectRun, setRedirectRun] = useState(false);
+    const [alertShow, setAlertShow] = useState(false);
 
 
     function onClickSubmissionHandler(username, password) {
@@ -38,11 +41,36 @@ function Login(props) {
                         localStorage.setItem('role', body['roles']);
                         props.setLoggedFlag(true);
                         props.setLoggedUser(localStorage.getItem('username'));
+                        setRedirectRun(true);
                     }
                 )
+            } else if (response.status === 401) {
+                setAlertShow(true);
             }
         });
         return true;
+    }
+
+    function ErrorCredentialAlert() {
+        return (
+            <Row className="justify-content-md-center">
+                <Alert xs variant="danger" onClose={() => setAlertShow(false)} dismissible>
+                    <Alert.Heading>Wrong Credentials</Alert.Heading>
+                    <p>
+                        Please recheck your credentials.
+                    </p>
+                    <hr/>
+                    <div className="d-flex justify-content-end">
+                        <Row>
+                            <Button variant="outline-danger">
+                                RESET
+                                PASSWORD
+                            </Button>
+                        </Row>
+                    </div>
+                </Alert>
+            </Row>
+        );
     }
 
     if (redirectRun == true) {
@@ -54,6 +82,11 @@ function Login(props) {
     return (
         <>
             <h1>Login</h1>
+            <Row>
+                <Col>
+                    {alertShow === true ? <ErrorCredentialAlert/> : ""}
+                </Col>
+            </Row>
             <Formik
                 initialValues={{
                     email: "",
@@ -65,7 +98,6 @@ function Login(props) {
                 })}
                 onSubmit={async (values) => {
                     let r = await onClickSubmissionHandler(values.email, values.password);
-                    setRedirectRun(true);
                 }}
                 validateOnChange={false}
                 validateOnBlur={false}>
@@ -75,17 +107,16 @@ function Login(props) {
                             <Row>
                                 Email: <Field name="email" label="Email"/>
                             </Row>
-                            <Row>
+                            <Row className="mt-5">
                                 Password: <Field name="password" label="Password" type="password"/>
                             </Row>
-                            <Row style={{padding: "20px"}}>
-
+                            <Row className="mt-5" style={{padding: "20px"}}>
+                                <Col xs={6}><Link to="/"><Button variant="secondary">
+                                    Back</Button></Link></Col>
                                 <Col xs={6}>
                                     <Button type="submit" variant="success"
                                     >Login</Button>
                                 </Col>
-                                <Col xs={6}><Link to="/"><Button variant="secondary">
-                                    Back</Button></Link></Col>
                             </Row>
                             <Row>
                                 {errors.email && touched.email ? (
