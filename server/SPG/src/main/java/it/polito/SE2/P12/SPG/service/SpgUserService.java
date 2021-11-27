@@ -101,9 +101,6 @@ public class SpgUserService {
     }
 
     public void payForProducts(Basket basket, Customer user) {
-        for (Product prod: basket.getProductList()
-             ) {
-            user.pay(prod.getPrice()*basket.getProds().get(prod));
-        }
+        user.pay(basket.getValue());
     }
 }
