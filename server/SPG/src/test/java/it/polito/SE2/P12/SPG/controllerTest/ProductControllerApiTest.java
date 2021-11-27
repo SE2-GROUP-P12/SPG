@@ -80,7 +80,6 @@ public class ProductControllerApiTest {
         for (JsonNode i : tree) {
             productList.add(new Product(
                     i.get("name").textValue(),
-                    i.get("producer").textValue(),
                     i.get("unitOfMeasurement").textValue(),
                     i.get("totalQuantity").asDouble(),
                     i.get("price").asDouble()
@@ -108,7 +107,6 @@ public class ProductControllerApiTest {
         for (JsonNode i : tree) {
             productList.add(new Product(
                     i.get("name").textValue(),
-                    i.get("producer").textValue(),
                     i.get("unitOfMeasurement").textValue(),
                     i.get("totalQuantity").asDouble(),
                     i.get("price").asDouble()

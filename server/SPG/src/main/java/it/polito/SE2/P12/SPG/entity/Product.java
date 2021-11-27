@@ -21,8 +21,6 @@ public class Product {
     private Long productId;
     @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "producer", nullable = false)
-    private String producer;
     @Column(name = "unit_of_measurement", nullable = false)
     private String unitOfMeasurement;
     //Quantità ufficialmente messa a disposizione dal farmer a inizio settimana.
@@ -57,9 +55,8 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl;
 
-    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price) {
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price) {
         this.name = name;
-        this.producer = producer;
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -72,9 +69,8 @@ public class Product {
         this.imageUrl = null;
     }
 
-    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
         this.name = name;
-        this.producer = producer;
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -89,7 +85,6 @@ public class Product {
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl) {
         this.name = name;
-        this.producer = "default producer";
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -102,9 +97,8 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
+    public Product(String name, Double totalQuantity, double price, Farmer farmer) {
         this.name = name;
-        this.producer = farmer.getCompanyName();
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -120,7 +114,6 @@ public class Product {
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl, Farmer farmer) {
         this.name = name;
-        this.producer = farmer.getCompanyName();
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -179,5 +172,25 @@ public class Product {
         this.quantityOrdered -= quantity;
         this.quantityDelivered += quantity;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", name='" + name + '\'' +
+                ", unitOfMeasurement='" + unitOfMeasurement + '\'' +
+                ", totalQuantity=" + totalQuantity +
+                ", quantityAvailable=" + quantityAvailable +
+                ", quantityForecast=" + quantityForecast +
+                ", quantityBaskets=" + quantityBaskets +
+                ", quantityOrdered=" + quantityOrdered +
+                ", quantityDelivered=" + quantityDelivered +
+                ", price=" + price +
+                ", startAvailability='" + startAvailability + '\'' +
+                ", endAvailability='" + endAvailability + '\'' +
+                ", farmer=" + (farmer == null ? "null" : farmer.getUserId()) +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }

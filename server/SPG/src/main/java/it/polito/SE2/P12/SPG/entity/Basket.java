@@ -27,8 +27,8 @@ public class Basket {
     private Long basketId;
     @OneToOne
     private User cust;
-    @Column(name="value")
-    private Double value = 0.0;
+    @Column(name = "value")
+    private Double value;
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "product_id")
     @Column(name = "quantity")
@@ -37,20 +37,24 @@ public class Basket {
     public Basket(BasketUserType cust) {
         this.cust = (User) cust;
         this.prods = new HashMap<>();
+        this.value = 0.0;
     }
 
     public Basket(BasketUserType cust, Map<Product, Double> prods) {
         this.cust = (User) cust;
         this.prods = prods;
+        this.value = 0.0;
+        for (Map.Entry<Product, Double> e : prods.entrySet()) {
+            this.value += e.getKey().getPrice() * e.getValue();
+        }
     }
 
     //Returns false if quantity is not available
     public Boolean addProduct(Product product, Double quantity) {
-        if(product.moveFromAvailableToBasket(quantity)) {
-            if(prods.containsKey(product)){
-                prods.put(product,prods.get(product)+quantity);
-            }
-            else {
+        if (product.moveFromAvailableToBasket(quantity)) {
+            if (prods.containsKey(product)) {
+                prods.put(product, prods.get(product) + quantity);
+            } else {
                 prods.put(product, quantity);
             }
             return true;
@@ -68,16 +72,16 @@ public class Basket {
 
     public void add(Product product, Double quantity) {
         Double price = product.getPrice();
-        Double prevQuantity = 0.0;
-        if(prods.containsKey(product))
-            prevQuantity = prods.get(product).doubleValue();
-        Double newQuantity = prevQuantity + quantity;
-        prods.put(product, newQuantity);
-        this.value += (price * newQuantity) - (price * prevQuantity);
+        if (prods.containsKey(product)) {
+            prods.put(product, prods.get(product) + quantity);
+        } else {
+            prods.put(product, quantity);
+        }
+        this.value += product.getPrice() * quantity;
     }
 
     public Boolean remove(Product product) {
-        if(!prods.containsKey(product))
+        if (!prods.containsKey(product))
             return false;
         Double price = product.getPrice();
         this.value -= price * prods.get(product).doubleValue();
@@ -94,7 +98,7 @@ public class Basket {
         prodString.deleteCharAt(prodString.lastIndexOf(","));
         return "Basket{" +
                 "basketId= " + basketId +
-                ", cust= " + (cust == null ? "null" : ((User)cust).getUserId()) +
+                ", cust= " + (cust == null ? "null" : ((User) cust).getUserId()) +
                 ", prods= " + prodString +
                 '}';
     }

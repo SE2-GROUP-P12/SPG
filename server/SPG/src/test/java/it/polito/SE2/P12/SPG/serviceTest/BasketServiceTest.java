@@ -31,14 +31,16 @@ public class BasketServiceTest {
     private SpgUserService userService;
     @Autowired
     DBUtilsService dbUtilsService;
+    @Autowired
+    BasketRepo basketRepo;
 
     @BeforeEach
     public void initContext() {
         dbUtilsService.dropAll();
         //Create some product and then add them to the Customer Cart
-        Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F);
-        Product prod2 = new Product("Prod2", "Producer2", "KG", 100.0, 5.50F);
-        Product prod3 = new Product("Prod3", "Producer3", "KG", 20.0, 8.00F);
+        Product prod1 = new Product("Prod1", "KG", 1000.0, 10.50F);
+        Product prod2 = new Product("Prod2", "KG", 100.0, 5.50F);
+        Product prod3 = new Product("Prod3", "KG", 20.0, 8.00F);
         productRepo.save(prod1);
         productRepo.save(prod2);
         productRepo.save(prod3);
@@ -70,25 +72,23 @@ public class BasketServiceTest {
 
         Assertions.assertEquals(b1.getProductQuantityMap().size(), 0);
         basketService.addProductToCart(p1, 10.0, u1);
+        System.out.println(basketRepo.findAll());
+        System.out.println(b1.getProds());
         Assertions.assertEquals(b1.getProductQuantityMap().size(), 1);
-        System.out.println(b1.getProductQuantityMap());
-        System.out.println(p1);
-        System.out.println((Product) b1.getProductQuantityMap().keySet().toArray()[0]);
-        Assertions.assertEquals(((Product) b1.getProductQuantityMap().keySet().toArray()[0]).getProductId(), p1.getProductId());
+        Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p1));
         Assertions.assertEquals(b1.getProductQuantityMap().get(p1), 10.0);
-
         basketService.addProductToCart(p2, 12.0, u1);
         basketService.addProductToCart(p3, 15.2, u1);
         Assertions.assertEquals(b1.getProductQuantityMap().size(), 3);
-        Assertions.assertEquals(((Product) b1.getProductQuantityMap().keySet().toArray()[1]).getProductId(), p2.getProductId());
-        Assertions.assertEquals(((Product) b1.getProductQuantityMap().keySet().toArray()[2]).getProductId(), p3.getProductId());
+        Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p2));
+        Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p3));
         Assertions.assertEquals(b1.getProductQuantityMap().get(p2), 12.0);
         Assertions.assertEquals(b1.getProductQuantityMap().get(p3), 15.2);
     }
 
     @Test
     public void addNotStoredProductToBasket() {
-        Product notStored = new Product("Unicorn Powder", "Unicornland", "gr", 10000.0, 10.0);
+        Product notStored = new Product("Unicorn Powder", "gr", 10000.0, 10.0);
         BasketUserType u1 = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 

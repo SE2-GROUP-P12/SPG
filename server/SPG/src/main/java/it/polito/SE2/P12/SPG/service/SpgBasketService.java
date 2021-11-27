@@ -40,10 +40,10 @@ public class SpgBasketService {
     public Boolean addProductToCart(Product product, Double quantity, BasketUserType user) {
         if(product.getQuantityAvailable() < quantity)
             return false;
+        product.moveFromAvailableToBasket(quantity);
         Basket basket = user.getBasket();
         basket.add(product, quantity);
         basketRepo.save(basket);
-        product.moveFromAvailableToBasket(quantity);
         return true;
     }
 
