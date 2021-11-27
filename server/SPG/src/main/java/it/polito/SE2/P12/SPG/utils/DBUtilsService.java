@@ -56,21 +56,25 @@ public class DBUtilsService {
         jwtUserHandlerRepo.deleteAll();
     }
 
+    //Original password is 'password' (don't modify salt on FE else all password will be different)
+    private final String hashedPassword = "9acfb5c4e244f6a63f54536a08eb6bdd9315c50747e136e8bfd7df95edeecfa1";
+
+
     private void populateUsers() {
         //ADMIN
         Admin admin = new Admin("admin", "admin", "ADMIN00000000000", "0000000000",
-                "admin@foomail.com", "password");
+                "admin@foomail.com", hashedPassword);
         //Customers
-        Customer temp1 = new Customer("Mario", "Rossi", "RSSMRA00D12N376V", "01234567892", "mario.rossi@gmail.com", "password", "Main street 1234");
+        Customer temp1 = new Customer("Mario", "Rossi", "RSSMRA00D12N376V", "01234567892", "mario.rossi@gmail.com", hashedPassword, "Main street 1234");
         Customer temp2 = new Customer("Paolo", "Bianchi", "BNCPLA00D12N376V", "01234567892",
-                "paolo.bianchi@gmail.com", "password", "Main street 1456");
+                "paolo.bianchi@gmail.com", hashedPassword, "Main street 1456");
         //Shop Employee
         ShopEmployee temp3 = new ShopEmployee("Francesco", "Conte", "CNTFRN00D12N376V", "01234567892",
-                "francesco.conte@gmail.com", "password");
+                "francesco.conte@gmail.com", hashedPassword);
         //Farmer
         Farmer temp4 = new Farmer("Thomas", "Jefferson", "JFRTHM00D12N376V", "01234567892",
-                "thomas.jefferson@gmail.com", "password");
-        Farmer temp5 = new Farmer("Alexander", "Hamilton", "HMLLND00A11Z501E", "0123456743", "alexander.hamilton@yahoo.com", "password");
+                "thomas.jefferson@gmail.com", hashedPassword);
+        Farmer temp5 = new Farmer("Alexander", "Hamilton", "HMLLND00A11Z501E", "0123456743", "alexander.hamilton@yahoo.com", hashedPassword);
         if (userRepo.findUserByEmail("mario.rossi@gmail.com") == null) customerRepo.save(temp1);
         if (userRepo.findUserByEmail("paolo.bianchi@gmail.com") == null) customerRepo.save(temp2);
         if (userRepo.findUserByEmail("francesco.conte@gmail.com") == null) shopEmployeeRepo.save(temp3);

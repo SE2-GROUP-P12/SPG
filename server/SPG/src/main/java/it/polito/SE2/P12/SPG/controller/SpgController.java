@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -101,8 +103,10 @@ public class SpgController {
 
     @PostMapping(API.CREATE_CUSTOMER)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity createCustomer(@RequestBody String userJsonData) {
+    public ResponseEntity createCustomer(@RequestBody String userJsonData, HttpServletRequest request) {
+        User tmp;
         Map<String, String> error = new HashMap<>();
+        Map<String, String> responseMap;
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/" + API.CREATE_CUSTOMER).toUriString());
         if (userJsonData == null || userJsonData.equals("")) {
             error.put("errorMessage", "Body is not valid");
@@ -117,13 +121,26 @@ public class SpgController {
                 && requestMap.containsKey("address")
                 && Boolean.FALSE.equals(userService.checkPresenceOfMail(requestMap.get("email").toString()))
                 && Boolean.FALSE.equals(userService.checkPresenceOfSSN(requestMap.get("ssn").toString()))
-        )
-            return ResponseEntity.created(uri).body(userService.addNewCustomer(
-                    new Customer(requestMap.get("name").toString(), requestMap.get("surname").toString(),
-                            requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
-                            requestMap.get("email").toString(),
-                            requestMap.get("password").toString(), requestMap.get("address").toString())
-            ));
+        ) {
+            userService.addNewCustomer(new Customer(requestMap.get("name").toString(), requestMap.get("surname").toString(),
+                    requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
+                    requestMap.get("email").toString(),
+                    requestMap.get("password").toString(), requestMap.get("address").toString()));
+            tmp = userService.getUserByEmail(requestMap.get("email").toString());
+            tmp.setRole("CUSTOMER");
+            try {
+                JWTProviderImpl jwtProvider = new JWTProviderImpl();
+                responseMap = jwtProvider.getFrontEndUSerJWT(new UserDetailsImpl(tmp),
+                        request.getRequestURL().toString());
+                jwtUserHandlerService.addRelationUserTokens(tmp, responseMap.get("accessToken"), responseMap.get("refreshToken"));
+                return ResponseEntity.created(uri).body(responseMap);
+            } catch (Exception e) {
+                error.put("errorMessage", e.getMessage());
+                ResponseEntity.badRequest()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(error);
+            }
+        }
         error.put("errorMessage", "email/ssn already present in the system");
         return ResponseEntity.badRequest()
                 .contentType(MediaType.APPLICATION_JSON)

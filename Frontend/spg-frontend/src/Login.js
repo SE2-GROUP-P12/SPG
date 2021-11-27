@@ -7,18 +7,17 @@ import {Link, Redirect} from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {Formik, Form, Field} from 'formik';
-import {buildLoginBody} from './Utilities';
+import {buildLoginBody, getSalt} from './Utilities';
 import * as Yup from 'yup';
 import {useState} from "react";
 
-let base64 = require('base-64');
+const pbkdf2 = require('pbkdf2');
 
 
 function Login(props) {
     const [redirectRun, setRedirectRun] = useState(false);
     const [alertShow, setAlertShow] = useState(false);
-
-
+    console.log(pbkdf2.pbkdf2Sync('password', getSalt(), 1, 32, 'sha512').toString('hex'));
     function onClickSubmissionHandler(username, password) {
         //event.preventDefault();
         fetch("/api/login", {
@@ -29,7 +28,7 @@ function Login(props) {
             },
             body: buildLoginBody({
                 'username': username,
-                'password': password
+                'password': pbkdf2.pbkdf2Sync(password, getSalt(), 1, 32, 'sha512').toString('hex')
             })
         }).then(response => {
             if (response.ok) {
@@ -41,6 +40,7 @@ function Login(props) {
                         localStorage.setItem('role', body['roles']);
                         props.setLoggedFlag(true);
                         props.setLoggedUser(localStorage.getItem('username'));
+                        props.setLoggedUserRole(body['roles']);
                         setRedirectRun(true);
                     }
                 )

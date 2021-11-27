@@ -11,6 +11,8 @@ import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @Slf4j
 public class SpgUserService {
@@ -87,7 +89,7 @@ public class SpgUserService {
     }
 
     public boolean checkEmployeePermission(Long userId) {
-        return userRepo.findUserByUserId(userId).getRole() == UserRole.ROLE_SHOP_EMPLOYEE;
+        return Objects.equals(userRepo.findUserByUserId(userId).getRole(), UserRole.ROLE_SHOP_EMPLOYEE);
     }
 
     public BasketUserType getBasketUserTypeByEmail(String email){
