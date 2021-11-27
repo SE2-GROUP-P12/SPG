@@ -57,12 +57,17 @@ public class SpgOrderService {
         if (!o.isPresent())
             return false;
         Order order = o.get();
+        OrderUserType user = (OrderUserType) order.getCust();
+        if(user.getWallet() < order.getValue())
+            return false;
         for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
             Product p = e.getKey();
             Double q = e.getValue();
             if (!p.moveFromOrderedToDelivered(q))
                 return false;
         }
+        user.setWallet(user.getWallet() - order.getValue());
+
         orderRepo.delete(order);
         return true;
     }
@@ -88,9 +93,7 @@ public class SpgOrderService {
     public Double getTotalPrice(Long userId){
         Double output=0.00;
         for (Order order: orderRepo.findAllByCust_UserId(userId)){
-            for(Product product: order.getProds().keySet()){
-                output+= order.getProds().get(product)*product.getPrice();
-            }
+                output+= order.getValue();
         }
         return output;
     }
