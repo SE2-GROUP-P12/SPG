@@ -38,10 +38,14 @@ public class JWTUserHandlerService {
 
     public void invalidateByUserRefreshTokens(User user, String refreshToken) throws Exception {
         JWTUserHandlerImpl jwtUserHandler = jwtUserHandlerRepo.findJWTUserHandlerImplByRefreshTokenAndValidIsTrue(refreshToken);
+        if (jwtUserHandler == null) {
+            throw new Exception("token is not valid anymore");
+
+        }
         if (jwtUserHandler.getUserId() == user.getUserId()) {
             jwtUserHandlerRepo.updateRefreshTokenValidity(false, user.getUserId(), refreshToken);
         } else {
-            throw new Exception("ERROR: User id requested and access token bound to the access token are not consistent");
+            throw new Exception("ERROR: User id requested and access token bound to the refresh token are not consistent");
         }
     }
 

@@ -30,8 +30,7 @@ import java.net.URI;
 import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 import java.util.HashMap;
@@ -56,7 +55,7 @@ public class SpgController {
 
 
     @Autowired
-    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService) {
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService) {
         this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
@@ -339,12 +338,14 @@ public class SpgController {
                 new ObjectMapper().writeValue(response.getOutputStream(), jwtProvider.setErrorMessage(e));
             }
         } else {
-            throw new RuntimeException("Refresh token is missing");
+            response.setHeader("error", "Headers value does not match!");
+            response.setStatus(BAD_REQUEST.value());
+            response.setContentType(APPLICATION_JSON_VALUE);
         }
     }
 
     @GetMapping(API.LOGOUT)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER', 'ROLE_EMPLOYEE')")
     public void doLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -352,7 +353,7 @@ public class SpgController {
             JWTProviderImpl jwtProvider = new JWTProviderImpl();
             try {
                 Map<String, String> okResponseBody = new HashMap<>();
-                okResponseBody.put("status", "successful(user logged out correctly");
+                okResponseBody.put("status", "successful (user logged out correctly)");
                 String username = jwtProvider.verifyAccessToken(accessToken);
                 User user = userService.getUserByEmail(username);
                 jwtUserHandlerService.invalidateUserTokens(user, accessToken);
@@ -361,22 +362,16 @@ public class SpgController {
                 new ObjectMapper().writeValue(response.getOutputStream(), okResponseBody);
             } catch (Exception e) {
                 log.error("Error logging out: " + e.getMessage());
-                log.error("Error logging out: " + Arrays.toString(e.getStackTrace()));
                 response.setHeader("error", e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), jwtProvider.setErrorMessage(e));
             }
         } else {
-            throw new RuntimeException("Refresh token is missing");
+            response.setHeader("error", "Headers value does not match!");
+            response.setStatus(BAD_REQUEST.value());
+            response.setContentType(APPLICATION_JSON_VALUE);
         }
-    }
-
-    @GetMapping(API.TEST)
-    public ResponseEntity test() {
-        double response = userService.topUp("mario.rossi@gmail.com", 12.70);
-        System.out.println("top up quantity is: " + response);
-        return ResponseEntity.ok(response);
     }
 
     public Map<String, Object> extractMapFromJsonString(String jsonData) {

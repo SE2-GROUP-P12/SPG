@@ -7,6 +7,8 @@ import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.entity.Product;
 import org.aspectj.weaver.ast.Or;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,4 +96,5 @@ ProductList like that;
         }
         return productQuantity;
     }
+
 }

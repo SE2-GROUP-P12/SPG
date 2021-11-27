@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum ApplicationUserRole {
-    CUSTOMER(Sets.newHashSet(/*DEFINE PERMISSIONs*/)),
+    CUSTOMER(Sets.newHashSet()),
     USER(Sets.newHashSet()),
     ADMIN(Sets.newHashSet(
             ApplicationUserPermission.CUSTOMER_READ,
@@ -16,7 +16,8 @@ public enum ApplicationUserRole {
     EMPLOYEE(Sets.newHashSet(
             ApplicationUserPermission.CUSTOMER_READ,
             ApplicationUserPermission.CUSTOMER_WRITE
-    ));
+    )),
+    FARMER(Sets.newHashSet());
 
     private final Set<ApplicationUserPermission> permissions;
 
@@ -24,14 +25,14 @@ public enum ApplicationUserRole {
         this.permissions = permissions;
     }
 
-    public Set<ApplicationUserPermission> getPermissions(){
+    public Set<ApplicationUserPermission> getPermissions() {
         return permissions;
     }
 
     public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
         //Map al the existent permissions instanced in the permissions enum file
         Set<SimpleGrantedAuthority> permissionsLocal = getPermissions().stream().map(
-                permission -> new SimpleGrantedAuthority(permission.getPermissions()))
+                        permission -> new SimpleGrantedAuthority(permission.getPermissions()))
                 .collect(Collectors.toSet());
         permissionsLocal.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
         return permissionsLocal;
