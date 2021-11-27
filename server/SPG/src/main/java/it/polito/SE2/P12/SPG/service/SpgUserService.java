@@ -100,4 +100,10 @@ public class SpgUserService {
         return (OrderUserType) userRepo.findByEmailAndRoleIn(email, UserRole.ROLE_ORDER_USER_TYPE);
     }
 
+    public void payForProducts(Basket basket, Customer user) {
+        for (Product prod: basket.getProductList()
+             ) {
+            user.pay(prod.getPrice()*basket.getProds().get(prod));
+        }
+    }
 }
