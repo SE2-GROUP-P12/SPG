@@ -78,4 +78,20 @@ ProductList like that;
         }
         return null;
     }
+
+    public static Map<Product, Double> basketProductDeserializer(String jsonString) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode tree = objectMapper.readTree(jsonString);
+        Map<Product, Double> productQuantity = new HashMap<>();
+        for (JsonNode prod : tree) {
+            Product tmp = new Product(
+                    prod.get("name").asText(),
+                    prod.get("unitOfMeasurement").asText(),
+                    prod.get("totalQuantity").asDouble(),
+                    prod.get("price").asDouble(),
+                    "");
+            productQuantity.put(tmp, prod.get("quantityAvailable").asDouble());
+        }
+        return productQuantity;
+    }
 }

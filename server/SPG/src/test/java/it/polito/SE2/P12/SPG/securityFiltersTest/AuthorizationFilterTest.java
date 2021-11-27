@@ -48,6 +48,7 @@ public class AuthorizationFilterTest {
     public void initContext() {
         dbUtilsService.dropAll();
         jwtUserHandlerRepo.deleteAll();
+        dbUtilsService.loadTestingProds();
         User tester = new Admin("tester", "tester", "tester_aaaaaaaaaaaa", "", "tester@test.com", "password");
         userRepo.save(tester);
     }

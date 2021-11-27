@@ -164,6 +164,8 @@ public class SpgController {
             Product product = productService.getProductById(Long.valueOf((Integer) requestMap.get("productId")));
             Double quantity = Double.valueOf((Integer) requestMap.get("quantity"));
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
+            if (user == null || product == null || quantity > product.getQuantityAvailable())
+                return ResponseEntity.badRequest().build();
             return ResponseEntity.ok(basketService.addProductToCart(product, quantity, user));
         }
         return ResponseEntity.badRequest().build();
@@ -182,6 +184,8 @@ public class SpgController {
     @GetMapping(API.GET_WALLET)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<Double> getWallet(@RequestParam String email) {
+        if (!Boolean.TRUE.equals(userService.checkPresenceOfMail(email)))
+            return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(userService.getWallet(email));
     }
 
@@ -194,6 +198,8 @@ public class SpgController {
         if (requestMap.containsKey("email") && requestMap.containsKey("value")) {
             String email = (String) requestMap.get("email");
             Double value = Double.valueOf(requestMap.get("value").toString());
+            if (!userService.checkPresenceOfMail(email) || value <= 0)
+                return ResponseEntity.badRequest().build();
             return ResponseEntity.ok(userService.topUp(email, value));
         }
         return ResponseEntity.badRequest().build();
@@ -250,9 +256,9 @@ public class SpgController {
     public ResponseEntity retrieveError(@RequestParam String email) {
         //Warning! only customer have a wallet and therefore this will send an error
         Customer user = userService.getCustomerByEmail(email);
-        Map<String,String> response=new HashMap<String,String>();
-        if (user == null){
-            if(userService.getUserByEmail(email)==null) {
+        Map<String, String> response = new HashMap<String, String>();
+        if (user == null) {
+            if (userService.getUserByEmail(email) == null) {
                 //the user doesn't exist
                 return ResponseEntity.badRequest().build();
             }
@@ -261,11 +267,10 @@ public class SpgController {
             return ResponseEntity.ok(response);
         }
         Double total = orderService.getTotalPrice(user.getUserId());
-        if (total>user.getWallet()){
+        if (total > user.getWallet()) {
             response.put("exist", "true");
             response.put("message", "Balance insufficient, remember to top up!");
-        }
-        else response.put("exist", "false");
+        } else response.put("exist", "false");
         return ResponseEntity.ok(response);
     }
 
@@ -274,18 +279,15 @@ public class SpgController {
     public ResponseEntity expectedProducts() {
         //returns all products with their respective validity dates
         List<Product> response = new ArrayList<Product>();
-        response= productService.getAllProduct();
+        response = productService.getAllProduct();
         return ResponseEntity.ok(response);
     }
-
-
-
 
 
     @PostMapping(API.REPORT_EXPECTED)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity reportExpected(@RequestBody String jsonData) {
-    // sets expected values for products
+        // sets expected values for products
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         Long productId;
         Farmer farmer;
@@ -296,27 +298,22 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("productId")) {
             productId = (Long) requestMap.get("producerId");
-        }
-        else return ResponseEntity.badRequest().build();
+        } else return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("producerId")) {
             Long farmerId = (Long) requestMap.get("producerId");
             farmer = userService.getFarmerById(farmerId);
-            if (farmer==null) return ResponseEntity.badRequest().build();
-        }
-        else return ResponseEntity.badRequest().build();
+            if (farmer == null) return ResponseEntity.badRequest().build();
+        } else return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("quantityForecast")) {
             forecast = (Double) requestMap.get("quantityForecast");
-        }
-        else return ResponseEntity.badRequest().build();
+        } else return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("startAvailability")) {
             start = (String) requestMap.get("startAvailability");
-        }
-        else return ResponseEntity.badRequest().build();
+        } else return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("endAvailability")) {
             end = (String) requestMap.get("endAvailability");
-        }
-        else return ResponseEntity.badRequest().build();
-        productService.setForecast(productId,farmer, forecast, start,end);
+        } else return ResponseEntity.badRequest().build();
+        productService.setForecast(productId, farmer, forecast, start, end);
         return ResponseEntity.ok().build();
     }
 

@@ -54,7 +54,7 @@ public class Product {
     private String endAvailability;
     @ManyToOne
     private Farmer farmer;
-    @Column (name= "image_url")
+    @Column(name = "image_url")
     private String imageUrl;
 
     public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price) {
@@ -69,7 +69,7 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = null;
-        this.imageUrl=null;
+        this.imageUrl = null;
     }
 
     public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
@@ -84,7 +84,7 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = farmer;
-        this.imageUrl=null;
+        this.imageUrl = null;
     }
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl) {
@@ -99,7 +99,7 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = null;
-        this.imageUrl=imageUrl;
+        this.imageUrl = imageUrl;
     }
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
@@ -114,10 +114,11 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = farmer;
-        this.imageUrl=null;
+        this.imageUrl = null;
     }
 
-    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl ,Farmer farmer) {
+
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl, Farmer farmer) {
         this.name = name;
         this.producer = farmer.getCompanyName();
         this.unitOfMeasurement = unitOfMeasurement;
@@ -129,18 +130,19 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = farmer;
-        this.imageUrl=imageUrl;
+        this.imageUrl = imageUrl;
     }
 
     public Boolean moveFromAvailableToBasket(Double quantity) {
-        if(this.quantityAvailable < quantity)
+        if (this.quantityAvailable < quantity)
             return false;
         this.quantityAvailable -= quantity;
         this.quantityBaskets += quantity;
         return true;
     }
+
     public Boolean moveFromBasketToOrdered(Double quantity) {
-        if(this.quantityBaskets < quantity)
+        if (this.quantityBaskets < quantity)
             return false;
         this.quantityOrdered += quantity;
         this.quantityBaskets -= quantity;
@@ -148,7 +150,7 @@ public class Product {
     }
 
     public Boolean moveFromBasketToAvailable(Double quantity) {
-        if(this.quantityBaskets < quantity)
+        if (this.quantityBaskets < quantity)
             return false;
         this.quantityAvailable += quantity;
         this.quantityBaskets -= quantity;
@@ -156,7 +158,7 @@ public class Product {
     }
 
     public Boolean moveFromAvailableToOrdered(Double quantity) {
-        if(this.quantityAvailable < quantity)
+        if (this.quantityAvailable < quantity)
             return false;
         this.quantityAvailable -= quantity;
         this.quantityOrdered += quantity;
@@ -164,7 +166,7 @@ public class Product {
     }
 
     public Boolean moveFromAvailableToDelivered(Double quantity) {
-        if(this.quantityAvailable < quantity)
+        if (this.quantityAvailable < quantity)
             return false;
         this.quantityAvailable -= quantity;
         this.quantityDelivered += quantity;
@@ -172,7 +174,7 @@ public class Product {
     }
 
     public Boolean moveFromOrderedToDelivered(Double quantity) {
-        if(this.quantityOrdered < quantity)
+        if (this.quantityOrdered < quantity)
             return false;
         this.quantityOrdered -= quantity;
         this.quantityDelivered += quantity;

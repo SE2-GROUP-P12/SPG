@@ -28,7 +28,7 @@ public class UserDetailsTest {
     @BeforeEach
     public void initContext() throws SQLException {
         dbUtilsService.dropAll();
-        User tester = new User("tester", "tester", "tester_aaaaaaaaaaaa", "", "tester@test.com", "password");
+        Admin tester = new Admin("tester", "tester", "tester_aaaaaaaaaaaa", "", "tester@test.com", "password");
         userRepo.save(tester);
     }
 
