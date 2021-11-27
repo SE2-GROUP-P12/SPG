@@ -37,13 +37,14 @@ public class SpgBasketService {
         basketRepo.delete(basket);
     }
 
-    public Map<String, String> addProductToCart(Product product, Double quantity, BasketUserType user) {
-        Map<String, String> response = new HashMap<>();
+    public Boolean addProductToCart(Product product, Double quantity, BasketUserType user) {
+        if(product.getQuantityAvailable() < quantity)
+            return false;
         Basket basket = user.getBasket();
-        basket.addProduct(product, quantity);
+        basket.add(product, quantity);
         basketRepo.save(basket);
-        response.put("responseStatus", "200-OK");
-        return response;
+        product.moveFromAvailableToBasket(quantity);
+        return true;
     }
 
     public List<Product> getProductsInBasket(BasketUserType user) {

@@ -22,21 +22,11 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 @SpringBootTest
 public class BasketServiceTest {
     @Autowired
-    private BasketRepo basketRepo;
-    @Autowired
     private ProductRepo productRepo;
-    @Autowired
-    private UserRepo userRepo;
     @Autowired
     private CustomerRepo customerRepo;
     @Autowired
     private SpgBasketService basketService;
-    @Autowired
-    private OrderRepo orderRepo;
-    @Autowired
-    private ShopEmployeeRepo shopEmployeeRepo;
-    @Autowired
-    private AdminRepo adminRepo;
     @Autowired
     private SpgUserService userService;
     @Autowired
@@ -81,14 +71,17 @@ public class BasketServiceTest {
         Assertions.assertEquals(b1.getProductQuantityMap().size(), 0);
         basketService.addProductToCart(p1, 10.0, u1);
         Assertions.assertEquals(b1.getProductQuantityMap().size(), 1);
-        Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p1));
+        System.out.println(b1.getProductQuantityMap());
+        System.out.println(p1);
+        System.out.println((Product) b1.getProductQuantityMap().keySet().toArray()[0]);
+        Assertions.assertEquals(((Product) b1.getProductQuantityMap().keySet().toArray()[0]).getProductId(), p1.getProductId());
         Assertions.assertEquals(b1.getProductQuantityMap().get(p1), 10.0);
 
         basketService.addProductToCart(p2, 12.0, u1);
         basketService.addProductToCart(p3, 15.2, u1);
         Assertions.assertEquals(b1.getProductQuantityMap().size(), 3);
-        Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p2));
-        Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p3));
+        Assertions.assertEquals(((Product) b1.getProductQuantityMap().keySet().toArray()[1]).getProductId(), p2.getProductId());
+        Assertions.assertEquals(((Product) b1.getProductQuantityMap().keySet().toArray()[2]).getProductId(), p3.getProductId());
         Assertions.assertEquals(b1.getProductQuantityMap().get(p2), 12.0);
         Assertions.assertEquals(b1.getProductQuantityMap().get(p3), 15.2);
     }
@@ -110,7 +103,7 @@ public class BasketServiceTest {
         BasketUserType u1 = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
-        basketService.addProductToCart(p, 100000000000.0, u1);
+        Assertions.assertFalse(basketService.addProductToCart(p, 100000000000.0, u1));
         Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
     }
 }

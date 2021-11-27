@@ -157,15 +157,17 @@ public class SpgController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity addToBasket(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        Map<String, String> response = new HashMap<>();
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("productId") && requestMap.containsKey("email") && requestMap.containsKey("quantity")) {
             Product product = productService.getProductById(Long.valueOf((Integer) requestMap.get("productId")));
-            Double quantity = Double.valueOf((Integer) requestMap.get("quantity"));
+            Double quantity = Double.valueOf(requestMap.get("quantity").toString());
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
-            if (user == null || product == null || quantity > product.getQuantityAvailable())
+            if (user == null || product == null || !basketService.addProductToCart(product, quantity, user))
                 return ResponseEntity.badRequest().build();
-            return ResponseEntity.ok(basketService.addProductToCart(product, quantity, user));
+            response.put("responseStatus", "200-OK");
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.badRequest().build();
     }

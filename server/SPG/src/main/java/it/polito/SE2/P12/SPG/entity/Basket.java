@@ -27,6 +27,8 @@ public class Basket {
     private Long basketId;
     @OneToOne
     private User cust;
+    @Column(name="value")
+    private Double value = 0.0;
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "product_id")
     @Column(name = "quantity")
@@ -62,6 +64,25 @@ public class Basket {
 
     public Map<Product, Double> getProductQuantityMap() {
         return this.prods;
+    }
+
+    public void add(Product product, Double quantity) {
+        Double price = product.getPrice();
+        Double prevQuantity = 0.0;
+        if(prods.containsKey(product))
+            prevQuantity = prods.get(product).doubleValue();
+        Double newQuantity = prevQuantity + quantity;
+        prods.put(product, newQuantity);
+        this.value += (price * newQuantity) - (price * prevQuantity);
+    }
+
+    public Boolean remove(Product product) {
+        if(!prods.containsKey(product))
+            return false;
+        Double price = product.getPrice();
+        this.value -= price * prods.get(product).doubleValue();
+        prods.remove(product);
+        return true;
     }
 
     @Override
