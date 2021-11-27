@@ -6,9 +6,9 @@
  *     password : hashedPassword
  * }
  */
-function buildLoginBody(details){
+function buildLoginBody(details) {
     let formBody = [];
-    for(let prop in details){
+    for (let prop in details) {
         var encodedKey = encodeURIComponent(prop);
         var encodedValue = encodeURIComponent(details[prop]);
         formBody.push(encodedKey + "=" + encodedValue);
@@ -16,4 +16,11 @@ function buildLoginBody(details){
     return formBody.join("&");
 }
 
-export {buildLoginBody}
+function getSalt() {
+    return '!.@su^,!H!C<eHsLM-Am;`]fR~?%c3EN'.toString('hex');
+}
+
+export {
+    buildLoginBody,
+    getSalt,
+}
