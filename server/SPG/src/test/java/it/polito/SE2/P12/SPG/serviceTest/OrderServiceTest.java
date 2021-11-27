@@ -1,6 +1,11 @@
-package it.polito.SE2.P12.SPG.controllerTest;
+package it.polito.SE2.P12.SPG.serviceTest;
 
 import it.polito.SE2.P12.SPG.controller.SpgController;
+import it.polito.SE2.P12.SPG.entity.*;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
+import it.polito.SE2.P12.SPG.repository.*;
+import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
+import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.entity.Product;
@@ -9,9 +14,9 @@ import it.polito.SE2.P12.SPG.repository.BasketRepo;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
-import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
-import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
+import it.polito.SE2.P12.SPG.service.SpgUserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +30,6 @@ import java.util.Map;
 @SpringBootTest
 public class OrderServiceTest {
     @Autowired
-    private SpgController spgController;
-    @Autowired
     private BasketRepo basketRepo;
     @Autowired
     private ProductRepo productRepo;
@@ -35,12 +38,16 @@ public class OrderServiceTest {
     @Autowired
     private OrderRepo orderRepo;
     @Autowired
+    private CustomerRepo customerRepo;
+    @Autowired
     private SpgOrderService orderService;
+    @Autowired
+    private SpgUserService userService;
 
     @BeforeEach
     public void initContext() {
-        SecurityConfiguration.setTestContext();
         basketRepo.deleteAll();
+        orderRepo.deleteAll();
         productRepo.deleteAll();
         userRepo.deleteAll();
         //Create some product and then add them to the Customer Cart
@@ -51,10 +58,10 @@ public class OrderServiceTest {
         productRepo.save(prod2);
         productRepo.save(prod3);
         //Create 2 user to issue some order
-        User user1 = new User("customer1", "surname1", "ssn_aaaaaaaaaaaa", "", "CUSTOMER", "customer1@foomail.com", "password1223ABC");
-        User user2 = new User("customer2", "surname1", "ssn_bbbbbbbbbbbb", "", "CUSTOMER", "customer2@foomail.com", "password1223ABC");
-        userRepo.save(user1);
-        userRepo.save(user2);
+        Customer cust1 = new Customer("customer1", "surname1", "ssn_aaaaaaaaaaaa", "123456789", "customer1@foomail.com", "password1223ABC", "address1");
+        Customer cust2 = new Customer("customer2", "surname2", "ssn_bbbbbbbbbbbb", "123456789", "customer2@foomail.com", "password1223ABC", "address2");
+        customerRepo.save(cust1);
+        customerRepo.save(cust2);
         //Create some baskets
         Map<Product, Double> m1 = new HashMap<>();
         m1.put(prod1, 10.0);
@@ -63,22 +70,29 @@ public class OrderServiceTest {
         Map<Product, Double> m2 = new HashMap<>();
         m2.put(prod1, 12.7);
         m2.put(prod3, 13.2);
-        Basket basket1 = new Basket(user1, m1);
-        Basket basket2 = new Basket(user2, m2);
+        Basket basket1 = new Basket(cust1, m1);
+        Basket basket2 = new Basket(cust2, m2);
         basketRepo.save(basket1);
         basketRepo.save(basket2);
     }
 
-    /*@Test
+    @AfterEach
+    public void resetDB() {
+       orderRepo.deleteAll();
+       basketRepo.deleteAll();
+       userRepo.deleteAll();
+    }
+
+    @Test
     public void addNewOrderFromBasketTest() {
-        User u1 = userRepo.findUserByEmail("customer1@foomail.com");
+        BasketUser u1 = userService.getBasketUserByEmail("customer1@foomail.com");
         Basket b1 = u1.getBasket();
 
         List<Order> orders = orderRepo.findAll();
-        Assertions.assertEquals(orders.size(), 0);
+        Assertions.assertEquals(0, orders.size());
         Assertions.assertTrue(orderService.addNewOrderFromBasket(b1));
         orders = orderRepo.findAll();
-        Assertions.assertEquals(orders.size(), 1);
+        Assertions.assertEquals(1, orders.size());
         Assertions.assertEquals(orders.get(0).getCust(),u1);
         Assertions.assertEquals(orders.get(0).getProds().entrySet().size(),3);
 
@@ -90,8 +104,9 @@ public class OrderServiceTest {
         Assertions.assertTrue(orders.get(0).getProds().containsKey(p2));
         Assertions.assertTrue(orders.get(0).getProds().containsKey(p3));
 
-        Assertions.assertEquals(orders.get(0).getProds().get(p1),10.0);
-        Assertions.assertEquals(orders.get(0).getProds().get(p2),15.0);
-        Assertions.assertEquals(orders.get(0).getProds().get(p3),12.0);
-    }*/
+        Assertions.assertEquals(10.0, orders.get(0).getProds().get(p1));
+        Assertions.assertEquals(15.0, orders.get(0).getProds().get(p2));
+        Assertions.assertEquals(12.0, orders.get(0).getProds().get(p3));
+    }
+
 }

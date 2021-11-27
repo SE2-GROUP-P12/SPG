@@ -26,7 +26,7 @@ public class Basket {
     private Long basketId;
     @OneToOne
     private User cust;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "product_id")
     @Column(name = "quantity")
     private Map<Product, Double> prods;

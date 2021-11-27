@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.service;
 
 
 import it.polito.SE2.P12.SPG.entity.*;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
 import org.springframework.stereotype.Service;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
 
@@ -18,13 +19,13 @@ public class SpgBasketService {
         this.basketRepo = basketRepo;
     }
 
-    public Basket emptyBasket(User  user){
+    public Basket emptyBasket(BasketUser user){
         Basket output = user.getBasket();
         basketRepo.deleteById(output.getBasketId());
         return  output;
     }
 
-    public void dropBasket(User user) {
+    public void dropBasket(BasketUser user) {
         this.dropBasket(user.getBasket());
     }
 
@@ -37,20 +38,20 @@ public class SpgBasketService {
         basketRepo.delete(basket);
     }
 
-    public Map<String, String> addProductToCart(Product product, Double quantity, User customer) {
+    public Map<String, String> addProductToCart(Product product, Double quantity, BasketUser user) {
         Map<String, String> response = new HashMap<>();
-        Basket basket = customer.getBasket();
+        Basket basket = user.getBasket();
         basket.addProduct(product, quantity);
         basketRepo.save(basket);
         response.put("responseStatus", "200-OK");
         return response;
     }
 
-    public List<Product> getProductsInBasket(User customer) {
-        Basket basket = customer.getBasket();
+    public List<Product> getProductsInBasket(BasketUser user) {
+        Basket basket = user.getBasket();
         List <Product> list = basket.getProductList();
         for (Product basketItem: list) {
-            basketItem.setQuantityAvailable(basketRepo.findBasketByCust_UserId(customer.getUserId()).getProds().get(basketItem));
+            basketItem.setQuantityAvailable(basketRepo.findBasketByCust_UserId(((User)user).getUserId()).getProds().get(basketItem));
         }
         return  list;
     }

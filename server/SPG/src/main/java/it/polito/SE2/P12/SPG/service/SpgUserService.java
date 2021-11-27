@@ -1,85 +1,120 @@
 package it.polito.SE2.P12.SPG.service;
 
 import it.polito.SE2.P12.SPG.entity.User;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
+import lombok.extern.slf4j.Slf4j;
+import it.polito.SE2.P12.SPG.entity.*;
+import it.polito.SE2.P12.SPG.repository.*;
+import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.CodingErrorAction;
+import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class SpgUserService {
     private UserRepo userRepo;
+    private CustomerRepo customerRepo;
+    private ShopEmployeeRepo shopEmployeeRepo;
+    private AdminRepo adminRepo;
+    private FarmerRepo farmerRepo;
 
     @Autowired
-    public SpgUserService(UserRepo userRepo) {
+    public SpgUserService(UserRepo userRepo, CustomerRepo customerRepo, ShopEmployeeRepo shopEmployeeRepo, AdminRepo adminRepo, FarmerRepo farmerRepo) {
         this.userRepo = userRepo;
+        this.customerRepo = customerRepo;
+        this.shopEmployeeRepo = shopEmployeeRepo;
+        this.adminRepo = adminRepo;
+        this.farmerRepo = farmerRepo;
     }
 
-    public void populateDB(){
+    public void populateDB() {
         //ADMIN
-        User admin = new User ("admin","admin","ADMIN00000000000","0000000000",
-                "ADMIN","admin","password");
-        //Other users
-        User temp1 = new User ("Mario","Rossi","RSSMRA00D12N376V","01234567892",
-                "CUSTOMER","mario.rossi@gmail.com","password");
-        User temp2 = new User ("Paolo","Bianchi","BNCPLA00D12N376V","01234567892",
-                "CUSTOMER","paolo.bianchi@gmail.com","password");
-        User temp3 = new User ("Francesco","Conte","CNTFRN00D12N376V","01234567892",
-                "EMPLOYEE","francesco.conte@gmail.com", "password");
-        if(userRepo.findUserByEmail("mario.rossi@gmail.com")==null)userRepo.save(temp1);
-        if(userRepo.findUserByEmail("paolo.bianchi@gmail.com")==null)userRepo.save(temp2);
-        if(userRepo.findUserByEmail("francesco.conte@gmail.com")==null)userRepo.save(temp3);
-        if(userRepo.findUserByEmail("admin")==null)userRepo.save(admin);
+        Admin admin = new Admin("admin", "admin", "ADMIN00000000000", "0000000000",
+                "admin@foomail.com", "password");
+        //Customers
+        Customer temp1 = new Customer("Mario", "Rossi", "RSSMRA00D12N376V", "01234567892", "mario.rossi@gmail.com", "password", "Main street 1234");
+        Customer temp2 = new Customer("Paolo", "Bianchi", "BNCPLA00D12N376V", "01234567892",
+                "paolo.bianchi@gmail.com", "password", "Main street 1456");
+        //Shop Employee
+        ShopEmployee temp3 = new ShopEmployee("Francesco", "Conte", "CNTFRN00D12N376V", "01234567892",
+                "francesco.conte@gmail.com", "password");
+        //Farmer
+        Farmer temp4 = new Farmer("Thomas", "Jefferson", "JFRTHM00D12N376V", "01234567892",
+                "thomas.jefferson@gmail.com", "password");
+        if (userRepo.findUserByEmail("mario.rossi@gmail.com") == null) customerRepo.save(temp1);
+        if (userRepo.findUserByEmail("paolo.bianchi@gmail.com") == null) customerRepo.save(temp2);
+        if (userRepo.findUserByEmail("francesco.conte@gmail.com") == null) shopEmployeeRepo.save(temp3);
+        if (userRepo.findUserByEmail("admin@foomail.com") == null) adminRepo.save(admin);
+        if (userRepo.findUserByEmail("thomas.jefferson@gmail.com") == null) farmerRepo.save(temp4);
     }
-    public Long getUserIdByEmail(String email){
+
+    public Long getUserIdByEmail(String email) {
         return userRepo.findUserByEmail(email).getUserId();
     }
-    public User getUserByEmail(String email){
+
+    public User getUserByEmail(String email) {
         return userRepo.findUserByEmail(email);
     }
-    public  User getUserByUserId(Long userId){
+    public Customer getCustomerByEmail(String email) {
+        if(userRepo.findUserByEmail(email).getRole()!=UserRole.ROLE_CUSTOMER) return null;
+        return customerRepo.findCustomerByEmail(email);
+    }
+
+    public Farmer getFarmerById(Long farmerId) {
+        if(userRepo.findUserByUserId(farmerId).getRole()!=UserRole.ROLE_FARMER) return null;
+        return farmerRepo.findFarmerByUserId(farmerId);
+    }
+
+    public User getUserByUserId(Long userId) {
         return userRepo.findUserByUserId(userId);
     }
 
-    public double getWallet(String email){
-        return userRepo.findUserByEmail(email).getWallet();
+    public Double getWallet(String email) {
+        return customerRepo.findCustomerByEmail(email).getWallet();
     }
-    public double topUp(String email, double value){
-        User tmp = userRepo.findUserByEmail(email);
-        tmp.setWallet(tmp.getWallet()+value);
-        userRepo.save(tmp);
+
+    public double topUp(String email, double value) {
+        //adds value to the user's wallet
+        Customer tmp = customerRepo.findCustomerByEmail(email);
+        tmp.setWallet(tmp.getWallet() + value);
+        customerRepo.save(tmp);
         return tmp.getWallet();
     }
-    public Map<String, Boolean> checkPresenceOfUser(String email, String ssn){
-        Map<String, Boolean> response = new HashMap<>();
-        //System.out.println("Here, ssn: " + ssn + ", email : " + email);
+
+    public Boolean checkPresenceOfUser(String email, String ssn) {
         if (checkPresenceOfMail(email) || checkPresenceOfSSN(ssn))
-            response.put("exist", true);
-        else
-            response.put("exist", false);
-        return response;
+            return true;
+        return false;
     }
 
     public Boolean checkPresenceOfMail(String email) {
         return userRepo.existsByEmail(email);
     }
 
-    private Boolean checkPresenceOfSSN(String ssn){
+    public Boolean checkPresenceOfSSN(String ssn) {
         return userRepo.existsBySsn(ssn);
     }
 
-    public Map<String, String> addNewClient(User user) {
-        Map<String, String> response = new HashMap<>();
-        if(userRepo.existsByEmail(user.getEmail()) || userRepo.existsBySsn(user.getSsn())){
-            response.put("responseMessage", "200-OK-(Customer already present)");
-            return response;
+    public Boolean addNewCustomer(Customer customer) {
+        if (userRepo.existsByEmail(customer.getEmail()) || userRepo.existsBySsn(customer.getSsn())) {
+            return false;
         }
-        userRepo.save(user);
-        response.put("responseMessage", "200-OK-(Customer added successfully)");
-        return response;
+        customerRepo.save(customer);
+        return true;
+    }
+
+    public boolean checkEmployeePermission(Long userId) {
+        return userRepo.findUserByUserId(userId).getRole() == UserRole.ROLE_SHOP_EMPLOYEE;
+    }
+
+    public BasketUser getBasketUserByEmail(String email){
+        return (BasketUser) userRepo.findByEmailAndRoleIn(email, UserRole.ROLE_BASKETUSER);
     }
 
 }

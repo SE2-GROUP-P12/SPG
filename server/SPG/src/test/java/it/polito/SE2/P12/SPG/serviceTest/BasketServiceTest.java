@@ -1,33 +1,33 @@
-package it.polito.SE2.P12.SPG.controllerTest;
+package it.polito.SE2.P12.SPG.serviceTest;
 
 import it.polito.SE2.P12.SPG.controller.SpgController;
+import it.polito.SE2.P12.SPG.entity.*;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
+import it.polito.SE2.P12.SPG.repository.*;
+import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
 import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
-import it.polito.SE2.P12.SPG.security.SecurityConfiguration;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
+import it.polito.SE2.P12.SPG.service.SpgOrderService;
+import it.polito.SE2.P12.SPG.service.SpgUserService;
+import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.hibernate.TransientObjectException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 public class BasketServiceTest {
-    @Autowired
-    private SpgController spgController;
     @Autowired
     private BasketRepo basketRepo;
     @Autowired
@@ -35,14 +35,24 @@ public class BasketServiceTest {
     @Autowired
     private UserRepo userRepo;
     @Autowired
+    private CustomerRepo customerRepo;
+    @Autowired
     private SpgBasketService basketService;
+    @Autowired
+    private OrderRepo orderRepo;
+    @Autowired
+    private ShopEmployeeRepo shopEmployeeRepo;
+    @Autowired
+    private AdminRepo adminRepo;
+    @Autowired
+    private SpgUserService userService;
 
     @BeforeEach
     public void initContext() {
-        SecurityConfiguration.setTestContext();
-        basketRepo.deleteAll();
-        productRepo.deleteAll();
         userRepo.deleteAll();
+        basketRepo.deleteAll();
+        orderRepo.deleteAll();
+        productRepo.deleteAll();
         //Create some product and then add them to the Customer Cart
         Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F);
         Product prod2 = new Product("Prod2", "Producer2", "KG", 100.0, 5.50F);
@@ -51,15 +61,23 @@ public class BasketServiceTest {
         productRepo.save(prod2);
         productRepo.save(prod3);
         //Create 2 user to issue some order
-        User user1 = new User("customer1", "surname1", "ssn_aaaaaaaaaaaa", "", "CUSTOMER", "customer1@foomail.com", "password1223ABC");
-        User user2 = new User("customer2", "surname1", "ssn_bbbbbbbbbbbb", "", "CUSTOMER", "customer2@foomail.com", "password1223ABC");
-        userRepo.save(user1);
-        userRepo.save(user2);
+        Customer cust1 = new Customer("customer1", "surname1", "ssn_aaaaaaaaaaaa", "123456789", "customer1@foomail.com", "password1223ABC", "address1");
+        Customer cust2 = new Customer("customer2", "surname2", "ssn_bbbbbbbbbbbb", "123456789", "customer2@foomail.com", "password1223ABC", "address2");
+        customerRepo.save(cust1);
+        customerRepo.save(cust2);
     }
 
-    /*@Test
+    @AfterEach
+    public void resetDB(){
+        basketRepo.deleteAll();
+        productRepo.deleteAll();
+        userRepo.deleteAll();
+    }
+
+
+    @Test
     public void retrieveEmptyBasket() {
-        User u = userRepo.findUserByEmail("customer1@foomail.com");
+        BasketUser u = userService.getBasketUserByEmail("customer1@foomail.com");
         Basket b = u.getBasket();
 
         Assertions.assertEquals(b.getBasketId(), u.getBasket().getBasketId());
@@ -71,7 +89,7 @@ public class BasketServiceTest {
         Product p1 = productRepo.findAll().get(0);
         Product p2 = productRepo.findAll().get(1);
         Product p3 = productRepo.findAll().get(2);
-        User u1 = userRepo.findUserByEmail("customer1@foomail.com");
+        Customer u1 = (Customer) userService.getUserByEmail("customer1@foomail.com");
         Basket b1 = u1.getBasket();
 
         Assertions.assertEquals(u1.getBasket(), b1);
@@ -94,7 +112,7 @@ public class BasketServiceTest {
     @Test
     public void addNotStoredProductToBasket() {
         Product notStored = new Product("Unicorn Powder", "Unicornland", "gr", 10000.0, 10.0);
-        User u1 = userRepo.findUserByEmail("customer1@foomail.com");
+        BasketUser u1 = userService.getBasketUserByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
         Assertions.assertThrows(InvalidDataAccessApiUsageException.class, () -> {
@@ -105,10 +123,10 @@ public class BasketServiceTest {
     @Test
     public void addNotAvailableProductToBasket() {
         Product p = productRepo.findAll().get(0);
-        User u1 = userRepo.findUserByEmail("customer1@foomail.com");
+        BasketUser u1 = userService.getBasketUserByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
         basketService.addProductToCart(p, 100000000000.0, u1);
         Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
-    }*/
+    }
 }
