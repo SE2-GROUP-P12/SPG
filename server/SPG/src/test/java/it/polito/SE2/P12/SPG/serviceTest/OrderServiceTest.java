@@ -172,14 +172,12 @@ public class OrderServiceTest {
     @Test
     public void deliverOrderTest() {
         BasketUserType user = userService.getBasketUserTypeByEmail("customer1@foomail.com");
-        OrderUserType orderUser = userService.getOrderUserTypeByEmail("customer1@foomail.com");
         Basket b = user.getBasket();
 
         Assertions.assertNotNull(user);
-        Assertions.assertNotNull(orderUser);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b, orderUser);
+        orderService.addNewOrderFromBasket(b);
 
         Order order = orderRepo.findAll().get(0);
 
@@ -203,14 +201,12 @@ public class OrderServiceTest {
     @Test
     public void insufficientBalanceDeliverOrderTest() {
         BasketUserType user = userService.getBasketUserTypeByEmail("customer2@foomail.com");
-        OrderUserType orderUser = userService.getOrderUserTypeByEmail("customer2@foomail.com");
         Basket b = user.getBasket();
 
         Assertions.assertNotNull(user);
-        Assertions.assertNotNull(orderUser);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b, orderUser);
+        orderService.addNewOrderFromBasket(b);
 
         Order order = orderRepo.findAll().get(0);
 
@@ -229,5 +225,18 @@ public class OrderServiceTest {
             Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
             Assertions.assertEquals(p.getQuantityDelivered(), 0.0);
         }
+    }
+
+    @Test
+    public void correctGetTotalPriceTest(){
+
+        BasketUserType user = userService.getBasketUserTypeByEmail("customer1@foomail.com");
+        Basket b = user.getBasket();
+
+        Assertions.assertNotNull(user);
+
+        basketService.dropBasket(b);
+        orderService.addNewOrderFromBasket(b);
+
     }
 }
