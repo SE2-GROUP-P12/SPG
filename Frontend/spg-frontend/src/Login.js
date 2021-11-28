@@ -6,7 +6,7 @@ import { Link, Redirect } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Formik, Form, Field } from 'formik';
-import { buildLoginBody } from './Utilities';
+import { buildLoginBody, getSalt } from './Utilities';
 
 import Alert from "react-bootstrap/Alert";
 
@@ -17,12 +17,7 @@ const pbkdf2 = require('pbkdf2');
 
 
 function Login(props) {
-
-    const [redirectPage,setRedirectPage] = useState("/");
-
-
-    async function onClickSubmissionHandler(username, password) {
-    const [redirectPage,setRedirectPage] = useState("/");
+    const [redirectPage, setRedirectPage] = useState("/");
     const [redirectRun, setRedirectRun] = useState(false);
     const [alertShow, setAlertShow] = useState(false);
     console.log(pbkdf2.pbkdf2Sync('password', getSalt(), 1, 32, 'sha512').toString('hex'));
@@ -42,16 +37,16 @@ function Login(props) {
         }).then(response => {
             if (response.ok) {
                 response.json().then(body => {
-                        props.setAccessToken(body['accessToken']);
-                        sessionStorage.setItem('accessToken', body['accessToken']);
-                        sessionStorage.setItem('refreshToken', body['refreshToken']);
-                        localStorage.setItem('username', body['email']);
-                        localStorage.setItem('role', body['roles']);
-                        props.setLoggedFlag(true);
-                        props.setLoggedUser(localStorage.getItem('username'));
-                        props.setLoggedUserRole(body['roles']);
-                        setRedirectRun(true);
-                    }
+                    props.setAccessToken(body['accessToken']);
+                    sessionStorage.setItem('accessToken', body['accessToken']);
+                    sessionStorage.setItem('refreshToken', body['refreshToken']);
+                    localStorage.setItem('username', body['email']);
+                    localStorage.setItem('role', body['roles']);
+                    props.setLoggedFlag(true);
+                    props.setLoggedUser(localStorage.getItem('username'));
+                    props.setLoggedUserRole(body['roles']);
+                    setRedirectRun(true);
+                }
                 )
             } else if (response.status === 401) {
                 setAlertShow(true);
@@ -59,10 +54,10 @@ function Login(props) {
         });
         return true;
     }
-    
+
     useEffect(() => {
         setRedirectRun(false)
-    },[redirectRun]);
+    }, [redirectRun]);
 
     function ErrorCredentialAlert() {
         return (
@@ -72,7 +67,7 @@ function Login(props) {
                     <p>
                         Please recheck your credentials.
                     </p>
-                    <hr/>
+                    <hr />
                     <div className="d-flex justify-content-end">
                         <Row>
                             <Button variant="outline-danger">
@@ -90,14 +85,14 @@ function Login(props) {
         return (
             <Redirect to={`/${localStorage.getItem('role')}`}></Redirect>
         );
-}
+    }
 
     return (
         <>
             <h1>Login</h1>
             <Row>
                 <Col>
-                    {alertShow === true ? <ErrorCredentialAlert/> : ""}
+                    {alertShow === true ? <ErrorCredentialAlert /> : ""}
                 </Col>
             </Row>
             <Formik
@@ -114,16 +109,16 @@ function Login(props) {
                 }}
                 validateOnChange={false}
                 validateOnBlur={false}>
-                {({values, errors, touched}) =>
+                {({ values, errors, touched }) =>
                     <div id="container" className="pagecontent">
                         <Form>
                             <Row>
-                                Email: <Field name="email" label="Email"/>
+                                Email: <Field name="email" label="Email" />
                             </Row>
                             <Row className="mt-5">
-                                Password: <Field name="password" label="Password" type="password"/>
+                                Password: <Field name="password" label="Password" type="password" />
                             </Row>
-                            <Row className="mt-5" style={{padding: "20px"}}>
+                            <Row className="mt-5" style={{ padding: "20px" }}>
                                 <Col xs={6}><Link to="/"><Button variant="secondary">
                                     Back</Button></Link></Col>
                                 <Col xs={6}>
