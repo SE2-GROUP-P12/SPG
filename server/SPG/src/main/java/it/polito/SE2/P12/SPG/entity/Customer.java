@@ -66,4 +66,7 @@ public class Customer extends User implements BasketUserType, OrderUserType {
                 ", orders=" + (orders==null ? "null": orders.stream().mapToLong(o -> o.getOrderId()).toString()) +
                 '}';
     }
+    public void pay(Double amount) {
+        this.wallet-=amount;
+    }
 }

@@ -32,6 +32,7 @@ public class SpgUserService {
     }
 
 
+
     public Long getUserIdByEmail(String email) {
         return userRepo.findUserByEmail(email).getUserId();
     }
@@ -41,10 +42,12 @@ public class SpgUserService {
     }
 
     public Customer getCustomerByEmail(String email) {
+        if(userRepo.findUserByEmail(email).getRole()!=UserRole.ROLE_CUSTOMER) return null;
         return customerRepo.findCustomerByEmail(email);
     }
 
     public Farmer getFarmerById(Long farmerId) {
+        if(userRepo.findUserByUserId(farmerId).getRole()!=UserRole.ROLE_FARMER) return null;
         return farmerRepo.findFarmerByUserId(farmerId);
     }
 
@@ -111,5 +114,8 @@ public class SpgUserService {
 
     public Boolean isOrderUserType(User user) {
         return UserRole.ROLE_ORDER_USER_TYPE.contains(user.getRole());
+    }
+    public void payForProducts(Basket basket, Customer user) {
+        user.pay(basket.getValue());
     }
 }
