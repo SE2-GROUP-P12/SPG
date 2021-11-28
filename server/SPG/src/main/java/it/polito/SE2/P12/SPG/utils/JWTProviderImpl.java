@@ -112,7 +112,7 @@ public class JWTProviderImpl implements JWTProvider {
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("accessToken", generateAccessToken(userDetails, requestURL));
         responseBody.put("refreshToken", generateRefreshToken(userDetails, requestURL));
-        responseBody.put("roles", userDetails.getAuthorities().toString()); //Max 1 authority(?)
+        responseBody.put("roles", userDetails.getAuthorities().toString().split("_")[1].replaceAll("]", "")); //Max 1 authority(?)
         responseBody.put("email", userDetails.getUsername());
         return responseBody;
     }

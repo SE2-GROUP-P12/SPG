@@ -9,14 +9,8 @@ import java.util.stream.Collectors;
 public enum ApplicationUserRole {
     CUSTOMER(Sets.newHashSet()),
     USER(Sets.newHashSet()),
-    ADMIN(Sets.newHashSet(
-            ApplicationUserPermission.CUSTOMER_READ,
-            ApplicationUserPermission.CUSTOMER_WRITE
-    )),
-    EMPLOYEE(Sets.newHashSet(
-            ApplicationUserPermission.CUSTOMER_READ,
-            ApplicationUserPermission.CUSTOMER_WRITE
-    )),
+    ADMIN(Sets.newHashSet()),
+    EMPLOYEE(Sets.newHashSet()),
     FARMER(Sets.newHashSet());
 
     private final Set<ApplicationUserPermission> permissions;
@@ -36,6 +30,5 @@ public enum ApplicationUserRole {
                 .collect(Collectors.toSet());
         permissionsLocal.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
         return permissionsLocal;
-
     }
 }
