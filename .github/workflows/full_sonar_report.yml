@@ -41,9 +41,9 @@ jobs:
       - name: move in FE
         run: cd ./Frontend/spg-frontend
       - name: fe sonar test report generate
-        run: npm test:ci
+        run: npm run test:ci
       - name: fe sonar coverage report generate
-        run: npm coverage:ci
+        run: npm run coverage:ci
 
 
       - name: SonarCloud Scan
