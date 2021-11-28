@@ -96,7 +96,7 @@ public class AuthorizationFilterTest {
         Map<String, String> response = new ObjectMapper().readValue(result.getResponse().getContentAsString(), Map.class);
         String accessToken = response.get("accessToken");
         //empty access token
-        result = mockMvc.perform(MockMvcRequestBuilders.get("/api/" + API.ALL_PRODUCT)
+        result = mockMvc.perform(MockMvcRequestBuilders.get("/api/" + API.GET_ORDERS)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION, ""))

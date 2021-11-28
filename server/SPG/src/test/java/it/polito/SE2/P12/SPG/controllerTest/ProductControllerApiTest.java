@@ -57,8 +57,8 @@ public class ProductControllerApiTest {
         farmerRepo.save(farmer);
         //Create some testing product
         Product prod1 = new Product("Prod1", "KG", 1000.0, 10.50F, farmer);
-        Product prod2 = new Product("Prod2",  "KG", 100.0, 5.50F, farmer);
-        Product prod3 = new Product("Prod3",  "KG", 20.0, 8.00F, farmer);
+        Product prod2 = new Product("Prod2", "KG", 100.0, 5.50F, farmer);
+        Product prod3 = new Product("Prod3", "KG", 20.0, 8.00F, farmer);
         productRepo.save(prod1);
         productRepo.save(prod2);
         productRepo.save(prod3);
@@ -116,15 +116,5 @@ public class ProductControllerApiTest {
         Assertions.assertEquals(0, productList.size());
     }
 
-
-
-    @Test
-    @WithUserDetails("user@test.com")
-    void unauthorizedUserGetProductTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/" + API.ALL_PRODUCT)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden()).andReturn();
-    }
 
 }

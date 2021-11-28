@@ -55,7 +55,7 @@ public class JWTProviderImpl implements JWTProvider {
         String accessToken = this.generateAccessToken(userDetails, requestURL);
         responseBody.put("accessToken", accessToken);
         responseBody.put("refreshToken", refreshToken);
-        responseBody.put("roles", userDetails.getAuthorities().toString());
+        responseBody.put("roles", userDetails.getAuthorities().toString().split("_")[1].replaceAll("]", ""));
         responseBody.put("email", username);
         return responseBody;
     }
