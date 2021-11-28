@@ -21,4 +21,19 @@ public class Admin extends User{
                 String email, String password) {
         super(name, surname, ssn, phoneNumber, email, password);
     }
+
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", ssn='" + ssn + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", active=" + active +
+                ", role='" + role + '\'' +
+                '}';
+    }
 }

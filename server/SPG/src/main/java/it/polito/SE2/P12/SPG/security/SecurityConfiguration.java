@@ -45,7 +45,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //Go inside UsernamePasswordAuthenticationFilter class to set up login api path and method
         //In that case I override that variable
-
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(jwtUserHandlerService, spgUserService, authenticationManagerBean());
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.cors().and().csrf().disable();
@@ -55,6 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/token/refresh").permitAll()
+                .antMatchers("/api" + API.ALL_PRODUCT).permitAll()
                 .antMatchers("/api" + API.EXIST_CUSTOMER).permitAll()
                 .antMatchers("/api" + API.CREATE_CUSTOMER).permitAll()
                 .anyRequest()

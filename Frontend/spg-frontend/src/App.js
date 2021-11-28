@@ -99,7 +99,9 @@ function App() {
                             <TopUp/>
                         </Route>
                         <Route exact path="/NewCustomer">
-                            <NewCustomer/>
+                            <NewCustomer setLoggedUser={setLoggedUser} setLoggedFlag={setIsLogged}
+                                         setAccessToken={setAccessToken} accessToken={accessToken}
+                                         setLoggedUserRole={setLOggedUserRole}/>
                         </Route>
                         <Route exact path="/BrowseProducts">
                             <BrowseProducts setErrorMessage={setErrorMessage}
@@ -117,7 +119,8 @@ function App() {
                         </Route>
                         <Route exact path="/LoginComponent">
                             <Login setLoggedUser={setLoggedUser} setLoggedFlag={setIsLogged}
-                                   setAccessToken={setAccessToken} accessToken={accessToken}/>
+                                   setAccessToken={setAccessToken} accessToken={accessToken}
+                                   setLoggedUserRole={setLOggedUserRole}/>
                         </Route>
                         <Route exact path="/">
                             <Homepage/>
@@ -170,7 +173,7 @@ function App() {
                 : null}
         </div>
 
-  );
+    );
 }
 
 export default App;

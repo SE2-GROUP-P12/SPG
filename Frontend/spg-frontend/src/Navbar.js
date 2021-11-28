@@ -42,7 +42,11 @@ function Navbar(props) {
         console.log("successful logout");
         setRunRedirect(true);
     }
-    useEffect(() => { setRunRedirect(false) },);
+
+    useEffect(() => {
+        setRunRedirect(false)
+    },);
+
 
     function doLogin() {
         window.location.href = "http://localhost:8081/login";

@@ -173,6 +173,7 @@ async function topUp(data) {
         return undefined;
     }
 }
+
 //Check whether the customer exists or not by his/her email address, if error occurs it returns undefined, otherwise true
 async function customerExistsByMail(email) {
     try {
@@ -190,6 +191,7 @@ async function customerExistsByMail(email) {
         return undefined;
     }
 }
+
 //POST: place an order by the email address (data.email) of a customer (must be checked before), it returns boolean
 async function placeOrder(data) {
     try {
@@ -207,6 +209,7 @@ async function placeOrder(data) {
         return undefined;
     }
 }
+
 //DELETE: delete the order of a customer by his/her email (data.email), it returns a boolean
 //TODO: what happen if a customer has more than one order?
 async function dropOrder(data) {
@@ -240,8 +243,7 @@ async function getAllOrders() {
             if (data.length === 0)
                 return ([]);
             return data;
-        }
-        else {
+        } else {
             return null;
         }
     } catch (error) {
@@ -321,8 +323,8 @@ async function customerExists(data) {
             return answer.exist;
         else
             return undefined;
-    }
-    catch (err) {
+
+    } catch (err) {
         console.log(err);
         return undefined;
     }
@@ -330,7 +332,7 @@ async function customerExists(data) {
 
 //POST: register a new customer by sending all his/her info, it returns a boolean
 async function addCustomer(data) {
-    console.log(JSON.stringify(data));
+    //console.log(JSON.stringify(data));
     try {
         const response = await fetch("/api/customer/addCustomer",
             {
@@ -341,11 +343,15 @@ async function addCustomer(data) {
                 },
                 body: JSON.stringify(data)
             });
-        if (response.ok)
-            return true;
+        if (response.status === 201) {
+            let res = await response.json();
+            console.log(res);
+            return res;
+        }
         return undefined;
-    }
-    catch (err) {
+
+    } catch
+        (err) {
         console.log(err);
         return undefined;
     }

@@ -22,6 +22,16 @@ public class JWTProviderImpl implements JWTProvider {
 
     //TODO: maybe with ECDSA it's better -> non-repudiation
     private Algorithm algorithm = Algorithm.HMAC256(Constants.SERVER_SECRET.getBytes(StandardCharsets.UTF_8));
+    private static Integer expirationAccessToken = Constants.EXPIRED_INTERVAL_TIME_ACCESS_TOKEN;
+    private static Integer expirationRefreshToken = Constants.EXPIRED_INTERVAL_TIME_REFRESH_TOKEN;
+
+    public static void setExpirationAccessToken(Integer newValue) {
+        expirationAccessToken = newValue;
+    }
+
+    public static void setExpirationRefreshToken(Integer newValue) {
+        expirationAccessToken = newValue;
+    }
 
     public String getAlgorithmName() {
         return algorithm.toString();
@@ -45,7 +55,7 @@ public class JWTProviderImpl implements JWTProvider {
         String accessToken = this.generateAccessToken(userDetails, requestURL);
         responseBody.put("accessToken", accessToken);
         responseBody.put("refreshToken", refreshToken);
-        responseBody.put("roles", userDetails.getAuthorities().toString().split("_")[1].replaceAll("]",""));
+        responseBody.put("roles", userDetails.getAuthorities().toString().split("_")[1].replaceAll("]", ""));
         responseBody.put("email", username);
         return responseBody;
     }
@@ -78,7 +88,7 @@ public class JWTProviderImpl implements JWTProvider {
             throw new Exception("Invalid userDetails");
         return JWT.create()
                 .withSubject(userDetails.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + Constants.EXPIRED_INTERVAL_TIME_ACCESS_TOKEN))
+                .withExpiresAt(new Date(System.currentTimeMillis() + expirationAccessToken))
                 .withIssuer(requestURL)
                 .withClaim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
@@ -92,7 +102,7 @@ public class JWTProviderImpl implements JWTProvider {
             throw new Exception("Invalid userDetails");
         return JWT.create()
                 .withSubject(userDetails.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + Constants.EXPIRED_INTERVAL_TIME_REFRESH_TOKEN))
+                .withExpiresAt(new Date(System.currentTimeMillis() + expirationRefreshToken))
                 .withIssuer(requestURL)
                 .sign(algorithm);
     }
@@ -102,7 +112,7 @@ public class JWTProviderImpl implements JWTProvider {
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("accessToken", generateAccessToken(userDetails, requestURL));
         responseBody.put("refreshToken", generateRefreshToken(userDetails, requestURL));
-        responseBody.put("roles", userDetails.getAuthorities().toString().split("_")[1].replace("]","")); //Max 1 authority(?)
+        responseBody.put("roles", userDetails.getAuthorities().toString().split("_")[1].replaceAll("]", "")); //Max 1 authority(?)
         responseBody.put("email", userDetails.getUsername());
         return responseBody;
     }

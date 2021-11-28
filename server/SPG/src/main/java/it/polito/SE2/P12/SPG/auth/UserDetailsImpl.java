@@ -31,8 +31,8 @@ public class UserDetailsImpl implements UserDetails {
         else
             this.authorityList = ApplicationUserRole.USER.getGrantedAuthorities();
     }
-    
-    public String getName(){
+
+    public String getName() {
         return this.name;
     }
 

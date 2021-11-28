@@ -2,8 +2,10 @@ package it.polito.SE2.P12.SPG.authenticationInterfaceTest;
 
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
 import it.polito.SE2.P12.SPG.auth.UserDetailsServiceImpl;
+import it.polito.SE2.P12.SPG.entity.Admin;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,16 +22,18 @@ public class UserDetailsTest {
     private UserRepo userRepo;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private DBUtilsService dbUtilsService;
 
     @BeforeEach
     public void initContext() throws SQLException {
-        userRepo.deleteAll();
-        User tester = new User("tester", "tester", "tester_aaaaaaaaaaaa", "", "ADMIN", "tester@test.com", "password");
+        dbUtilsService.dropAll();
+        Admin tester = new Admin("tester", "tester", "tester_aaaaaaaaaaaa", "", "tester@test.com", "password");
         userRepo.save(tester);
     }
 
     @AfterEach
-    public void restDB(){
+    public void restDB() {
         userRepo.deleteAll();
     }
 
@@ -57,7 +61,7 @@ public class UserDetailsTest {
         Assertions.assertEquals("password", userDetails.getPassword());
         Assertions.assertEquals("tester@test.com", userDetails.getUsername());
         Assertions.assertEquals("tester", userDetails.getName());
-        Assertions.assertEquals("[customer:read, ROLE_ADMIN]", userDetails.getAuthorities().toString());
+        Assertions.assertEquals("[ROLE_ADMIN]", userDetails.getAuthorities().toString());
         Assertions.assertTrue(userDetails.isAccountNonLocked());
         Assertions.assertTrue(userDetails.isEnabled());
         Assertions.assertTrue(userDetails.isAccountNonExpired());

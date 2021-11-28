@@ -10,6 +10,7 @@ import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
 import it.polito.SE2.P12.SPG.utils.API;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,31 +43,28 @@ public class ProductControllerApiTest {
     private FarmerRepo farmerRepo;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private DBUtilsService dbUtilsService;
 
     @BeforeEach
     public void initContext() {
+        dbUtilsService.dropAll();
         //Empty all the product
         productRepo.deleteAll();
         userRepo.deleteAll();
         //Create a farmer
-        Farmer farmer = new Farmer("farmer_name","farmer_surname","ssn_faaaaaaarmer","12345667","far@mer.com","password");
+        Farmer farmer = new Farmer("farmer_name", "farmer_surname", "ssn_faaaaaaarmer", "12345667", "far@mer.com", "password");
         farmerRepo.save(farmer);
         //Create some testing product
-        Product prod1 = new Product("Prod1", "Producer1", "KG", 1000.0, 10.50F, farmer);
-        Product prod2 = new Product("Prod2", "Producer2", "KG", 100.0, 5.50F, farmer);
-        Product prod3 = new Product("Prod3", "Producer3", "KG", 20.0, 8.00F, farmer);
+        Product prod1 = new Product("Prod1", "KG", 1000.0, 10.50F, farmer);
+        Product prod2 = new Product("Prod2", "KG", 100.0, 5.50F, farmer);
+        Product prod3 = new Product("Prod3", "KG", 20.0, 8.00F, farmer);
         productRepo.save(prod1);
         productRepo.save(prod2);
         productRepo.save(prod3);
 
     }
 
-    @AfterEach
-    public void restDB() {
-        productRepo.deleteAll();
-        userRepo.deleteAll();
-
-    }
 
     @Test
     @WithUserDetails("tester@test.com")
@@ -75,25 +73,18 @@ public class ProductControllerApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
-        /*
-        List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>() {
-            
-        });
-        */
         String response = result.getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode tree = objectMapper.readTree(response);
         List<Product> productList = new ArrayList<>();
-        for(JsonNode i : tree) {
+        for (JsonNode i : tree) {
             productList.add(new Product(
                     i.get("name").textValue(),
-                    i.get("producer").textValue(),
                     i.get("unitOfMeasurement").textValue(),
                     i.get("totalQuantity").asDouble(),
                     i.get("price").asDouble()
             ));
         }
-
         Assertions.assertEquals(3, productList.size());
         Assertions.assertEquals("Prod1", productList.get(0).getName());
         Assertions.assertEquals(100.00, productList.get(1).getTotalQuantity());
@@ -109,16 +100,13 @@ public class ProductControllerApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
-        /*List<Product> productList = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Product>>() {
-        });*/
         String response = result.getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode tree = objectMapper.readTree(response);
         List<Product> productList = new ArrayList<>();
-        for(JsonNode i : tree) {
+        for (JsonNode i : tree) {
             productList.add(new Product(
                     i.get("name").textValue(),
-                    i.get("producer").textValue(),
                     i.get("unitOfMeasurement").textValue(),
                     i.get("totalQuantity").asDouble(),
                     i.get("price").asDouble()
@@ -128,13 +116,5 @@ public class ProductControllerApiTest {
         Assertions.assertEquals(0, productList.size());
     }
 
-    @Test
-    @WithUserDetails("user@test.com")
-    void unauthorizedUserGetProductTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/" + API.ALL_PRODUCT)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden()).andReturn();
-    }
 
 }
