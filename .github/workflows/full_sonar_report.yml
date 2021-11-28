@@ -40,11 +40,10 @@ jobs:
       
       - name: fe generate sonar report
         run: |
-        cd ./Frontend/spg-frontend
-        npm run test:ci
-        npm run coverage:ci
-      
-
+          cd ./Frontend/spg-frontend
+          npm run test:ci
+          npm run coverage:ci
+          
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
