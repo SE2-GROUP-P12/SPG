@@ -3,13 +3,14 @@
 =======
 .idea/
 
+
 ### Docker ###
 docker-compose.override.yml
 
 ### SERVER MAVEN + INTELLIJ IDEA ###
 
 server/SPG/HELP.md
-server/SPG/target/
+server/SPG/target/**
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -46,7 +47,7 @@ server/SPG/build/
 /Frontend/spg-frontend/.pnp.js
 
 # testing
-/Frontend/spg-frontend/coverage
+
 
 # production
 /Frontend/spg-frontend/build
@@ -61,3 +62,8 @@ server/SPG/build/
 /Frontend/spg-frontend/npm-debug.log*
 /Frontend/spg-frontend/yarn-debug.log*
 /Frontend/spg-frontend/yarn-error.log*
+
+### sonar jacoco ###
+Frontend/spg-frontend/coverage/**
+!Frontend/spg-frontend/coverage/lcov.info
+
