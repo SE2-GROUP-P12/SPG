@@ -1,24 +1,33 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert";
 
-import {Link, Redirect} from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import {Formik, Form, Field} from 'formik';
-import {buildLoginBody, getSalt} from './Utilities';
+import { Formik, Form, Field } from 'formik';
+import { buildLoginBody } from './Utilities';
+
+import Alert from "react-bootstrap/Alert";
+
 import * as Yup from 'yup';
-import {useState} from "react";
+import { useState, useEffect } from "react";
 
 const pbkdf2 = require('pbkdf2');
 
 
 function Login(props) {
+
+    const [redirectPage,setRedirectPage] = useState("/");
+
+
+    async function onClickSubmissionHandler(username, password) {
+    const [redirectPage,setRedirectPage] = useState("/");
     const [redirectRun, setRedirectRun] = useState(false);
     const [alertShow, setAlertShow] = useState(false);
     console.log(pbkdf2.pbkdf2Sync('password', getSalt(), 1, 32, 'sha512').toString('hex'));
     function onClickSubmissionHandler(username, password) {
+
         //event.preventDefault();
         fetch("/api/login", {
             method: 'POST',
@@ -50,6 +59,10 @@ function Login(props) {
         });
         return true;
     }
+    
+    useEffect(() => {
+        setRedirectRun(false)
+    },[redirectRun]);
 
     function ErrorCredentialAlert() {
         return (
@@ -75,9 +88,9 @@ function Login(props) {
 
     if (redirectRun == true) {
         return (
-            <Redirect to="/ShopEmployee"></Redirect>
+            <Redirect to={`/${localStorage.getItem('role')}`}></Redirect>
         );
-    }
+}
 
     return (
         <>
@@ -132,4 +145,4 @@ function Login(props) {
     )
 }
 
-export {Login}
+export { Login }

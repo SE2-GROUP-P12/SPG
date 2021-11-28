@@ -4,11 +4,11 @@ import logo from "./resources/logo.png";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
 import Grid from '@mui/material/Grid';
-import {buildLoginBody} from './Utilities';
-import {Link, Redirect} from 'react-router-dom';
-import {useState, useEffect} from "react";
+import { buildLoginBody } from './Utilities';
+import { Link, Redirect } from 'react-router-dom';
+import { useState, useEffect } from "react";
 
-import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 
 function Navbar(props) {
     const [runRedirect, setRunRedirect] = useState(false);
@@ -32,7 +32,7 @@ function Navbar(props) {
                 localStorage.removeItem("role");
                 localStorage.removeItem("username");
             } else {
-                console.log("usuccesfull logout");
+                console.log("unsuccesfull logout");
             }
         });
         props.setLoggedFlag(false);
@@ -42,9 +42,11 @@ function Navbar(props) {
         console.log("successful logout");
         setRunRedirect(true);
     }
+
     useEffect(() => {
         setRunRedirect(false)
     },);
+
 
     function doLogin() {
         window.location.href = "http://localhost:8081/login";
@@ -60,122 +62,41 @@ function Navbar(props) {
             <Switch>
                 <Route exact path="/LoginComponent">
                     <Nav className="navbar bg-success navbar-dark">
-                        <img src={logo} alt="logo" className="logo"/>
+                        <img src={logo} alt="logo" className="logo" />
                     </Nav>
                 </Route>
                 <Route exact path="/NewCustomer">
                     <Nav className="navbar bg-success navbar-dark">
-                        <img src={logo} alt="logo" className="logo"/>
-                        {props.isLoggedFlag !== true ?
-                            <Link to="/LoginComponent">
-                                <Button className="btn btn-outline-light" variant="success"> Log in </Button>
-                            </Link>
-                            :
-                            ""
-                        }
+                        <img src={logo} alt="logo" className="logo" />
+                        <div>
+                            {
+                                props.isLoggedFlag !== true ?
+                                    <Button className="btn btn-outline-light" variant="success" href="/LoginComponent"> Log in </Button>
+                                    :
+                                    ""
+                            }
+                        </div>
                     </Nav>
                 </Route>
                 <Route>
                     <Nav className="navbar bg-success navbar-dark">
-                        <img src={logo} alt="logo" className="logo"/>
-                        {
-                            props.isLoggedFlag === true ?
-                                <Button className="btn btn-danger" onClick={event => doLogOut(event)}>LOG OUT</Button>
-                                :
-                                <>
-                                    <Link style={{color: 'white'}} to='/NewCustomer'>Sign in</Link>
-                                    <Link to="/LoginComponent">
-                                        <Button className="btn btn-outline-light" variant="success"> Log in </Button>
-                                    </Link>
-                                </>
-                        }
+                        <img src={logo} alt="logo" className="logo" />
+                        <div>
+                            {
+                                props.isLoggedFlag === true ?
+                                    <Button className="btn btn-danger" onClick={event => doLogOut(event)}>LOG OUT</Button>
+                                    :
+                                    <div>
+                                        <Button className="btn btn-outline-light" variant="success" href='/NewCustomer'> Sign up </Button>
+                                        <Button className="btn btn-outline-light" variant="success" href='/LoginComponent'> Log in </Button>
+                                    </div>
+                            }
+                        </div>
                     </Nav>
                 </Route>
             </Switch>
         </>
-
     );
 }
 
-export {Navbar}
-
-//Navbar return by MARTI
-/*
-* return(
-           <Switch>
-           <Route exact path="/">
-                <Nav className="navbar bg-success navbar-dark" >
-                    <Grid container spacing={2}>
-                        <Grid item align='left' xs={4}>
-                            <img src={logo} alt="logo" className="logo"/>
-                        </Grid>
-                        <Grid item align='center' xs={4}>
-                            <Link to='/NewCustomer'><Button className="btn btn-outline-light" variant="success"> Sign in </Button></Link>
-                        </Grid>
-                        <Grid item align='right' xs={4}>
-                            <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
-                        </Grid>
-                    </Grid>
-                </Nav>
-            </Route>
-           <Route exact path="/Unauthorized">
-        <Nav className="navbar bg-success navbar-dark" >
-                    <Grid container spacing={2}>
-                        <Grid item align='left' xs={4}>
-                            <img src={logo} alt="logo" className="logo"/>
-                        </Grid>
-                        <Grid item align='center' xs={4}>
-                            <Link to='/NewCustomer'><Button className="btn btn-outline-light" variant="success"> Sign in </Button></Link>
-                        </Grid>
-                        <Grid item align='right' xs={4}>
-                            <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
-                        </Grid>
-                    </Grid>
-                </Nav>
-            </Route>
-            <Route exact path="/NewCustomer">
-            <Nav className="navbar bg-success navbar-dark" >
-                    <Grid container spacing={2}>
-                        <Grid item align='left' xs={4}>
-                            <img src={logo} alt="logo" className="logo"/>
-                        </Grid>
-                        <Grid item align='center' xs={8}/>
-                    </Grid>
-                </Nav>
-            </Route>
-            <Route>
-            <Nav className="navbar bg-success navbar-dark" >
-                    <Grid container spacing={2}>
-                        <Grid item align='left' xs={4}>
-                            <img src={logo} alt="logo" className="logo"/>
-                        </Grid>
-                        <Grid item xs={4}/>
-                        <Grid item align='right' xs={4}>
-                            <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
-                        </Grid>
-                    </Grid>
-                </Nav>
-            </Route>
-           </Switch>
-    );
-* */
-
-//Parte di giuseppe
-/*
-return (
-    <Nav className="navbar bg-success navbar-dark">
-        <img src={logo} alt="logo" className="logo" />
-        <div style={{ paddingBlock: "5px" }}>
-        { props.isLogged ?
-            <Button variant="outline-light" onClick={() => doLogOut()}>Log out</Button>
-            :
-            <div>
-            <Button className="btn btn-outline-light" variant="success" href='/NewCustomer'> Sign up </Button>
-            <Button className="btn btn-outline-light" variant="success" onClick={() => doLogin()}> Log in </Button>
-            }
-            </div>
-        </div>
-    </Nav>
-    )
-
-*/
+export { Navbar }

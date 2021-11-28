@@ -10,7 +10,7 @@ function ShopEmployee()
 {
     return(
         <div>
-            <h1>Shop Employee</h1>
+            <h1 style={{paddingBlock: "20px"}}>Shop Employee</h1>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} md={4}>
                     <Link to="/NewCustomer"><Button size='huge' variant="outline-success"> <h1>New Customer</h1> </Button> </Link> 

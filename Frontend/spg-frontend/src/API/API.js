@@ -67,9 +67,10 @@ async function createErrorHandlerObject(response, status) {
 //Create a succesfull object to pass to the Component
 //The object contains the status again in order to know if render or not the data and the requested data
 async function createSuccesfulHandlerObject(response) {
+    const data = await response.json()
     let successfulHandlerObject = {
         'status': response.status,
-        'data': await response.json()
+        'data': data
     };
     return successfulHandlerObject;
 }
@@ -197,7 +198,7 @@ async function placeOrder(data) {
         const response = await fetch("/api/customer/placeOrder", {
             method: 'POST',
             headers: getAuthenticationHeaders(),
-            body: JSON.stringify({'email': data.email, 'customer': data.customer})
+            body: JSON.stringify({ 'email': data.email, 'customer': data.customer })
         });
         if (response.ok)
             return true;
@@ -216,7 +217,7 @@ async function dropOrder(data) {
         const response = await fetch("/api/customer/dropOrder", {
             method: 'DELETE',
             headers: getAuthenticationHeaders(),
-            body: JSON.stringify({'email': data.email})
+            body: JSON.stringify({ 'email': data.email })
         });
         if (response.ok)
             return true;
@@ -322,6 +323,7 @@ async function customerExists(data) {
             return answer.exist;
         else
             return undefined;
+
     } catch (err) {
         console.log(err);
         return undefined;
@@ -389,5 +391,5 @@ const API = {
     addCustomer,
     sessionReloader
 };
-export {API}
+export { API }
 
