@@ -51,6 +51,11 @@ public class SpgUserService {
         return farmerRepo.findFarmerByUserId(farmerId);
     }
 
+    public Farmer getFarmerByName(String name) {
+        if(userRepo.findUserByName(name).getRole()!=UserRole.ROLE_FARMER) return null;
+        return farmerRepo.findFarmerByName(name);
+    }
+
     public User getUserByUserId(Long userId) {
         return userRepo.findUserByUserId(userId);
     }

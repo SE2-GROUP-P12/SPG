@@ -161,20 +161,12 @@ public class SpgController {
             if (requestMap.get("email").toString().isEmpty()) { //It is a customer order
                 BasketUserType user = userService.getBasketUserTypeByEmail(orderIssuer.getEmail());
                 Basket basket = user.getBasket();
-                if (orderIssuer.getRole() == UserRole.ROLE_CUSTOMER) {
-                    //the order is made for a customer----> reduce their wallet by the correct amount
-                    userService.payForProducts(basket, (Customer) orderIssuer);
-                }
                 basketService.dropBasket(basket);
                 return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
             }
             //It's an order provided by the shopEmployee
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
             Basket basket = user.getBasket();
-            if (orderIssuer.getRole() == UserRole.ROLE_CUSTOMER) {
-                //the order is made for a customer----> reduce their wallet by the correct amount
-                userService.payForProducts(basket, (Customer) orderIssuer);
-            }
             basketService.dropBasket(basket);
             return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
         }
@@ -321,14 +313,16 @@ public class SpgController {
         Double forecast;
         String start;
         String end;
+        String unit;
+        String name;
+        Double price;
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("productId")) {
             productId = (Long) requestMap.get("producerId");
         } else return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("producerId")) {
-            Long farmerId = (Long) requestMap.get("producerId");
-            farmer = userService.getFarmerById(farmerId);
+        if (requestMap.containsKey("producer")) {
+            farmer = userService.getFarmerByName((String)requestMap.get("producer"));
             if (farmer == null) return ResponseEntity.badRequest().build();
         } else return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("quantityForecast")) {
@@ -340,7 +334,19 @@ public class SpgController {
         if (requestMap.containsKey("endAvailability")) {
             end = (String) requestMap.get("endAvailability");
         } else return ResponseEntity.badRequest().build();
-        productService.setForecast(productId, farmer, forecast, start, end);
+        if (requestMap.containsKey("price")) {
+            price = (Double) requestMap.get("price");
+        } else return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("unitOfMeasurement")) {
+            unit = (String) requestMap.get("unitOfMeasurement");
+        } else return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("name")) {
+            name = (String) requestMap.get("name");
+        } else return ResponseEntity.badRequest().build();
+        if (!productService.setForecast(productId, farmer, forecast, start, end)){
+            Product product = new Product(name, unit,price, farmer,forecast);
+            productService.addProduct(product);
+        }
         return ResponseEntity.ok().build();
     }
 

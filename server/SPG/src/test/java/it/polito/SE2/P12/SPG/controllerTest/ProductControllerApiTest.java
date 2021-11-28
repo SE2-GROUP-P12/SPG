@@ -116,6 +116,8 @@ public class ProductControllerApiTest {
         Assertions.assertEquals(0, productList.size());
     }
 
+
+
     @Test
     @WithUserDetails("user@test.com")
     void unauthorizedUserGetProductTest() throws Exception {

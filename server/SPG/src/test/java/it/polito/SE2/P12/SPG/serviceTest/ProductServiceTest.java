@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 import java.util.List;
 
@@ -66,4 +67,17 @@ public class ProductServiceTest {
         Assertions.assertEquals(products.get(1).getName(), p2.getName());
         Assertions.assertEquals(products.get(2).getName(), p3.getName());
     }
+
+    @Test
+    public void forecastTest() throws Exception {
+        productService.setForecast(productRepo.findProductByName("Prod1").getProductId(),  farmerRepo.findFarmerByEmail("farmer@farmer.com"), 5.7, "aaa", "bbb");
+        Assertions.assertEquals(5.7,productRepo.findProductByName("Prod1").getQuantityForecast());
+    }
+
+    @Test
+    public void forecastOnNonExistingProduct(){
+        Assertions.assertFalse(productService.setForecast(productRepo.findProductByName("Prod1").getProductId()*-1,farmerRepo.findFarmerByEmail("farmer@farmer.com"), 5.7, "aaa", "bbb"));
+    }
+
+
 }
