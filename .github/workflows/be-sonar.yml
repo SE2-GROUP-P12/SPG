@@ -4,6 +4,8 @@ on:
     branches:
       - main
       - githubworkflow-*
+      - spg-v*
+      - BE/*
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
