@@ -32,7 +32,6 @@ public class SpgUserService {
     }
 
 
-
     public Long getUserIdByEmail(String email) {
         return userRepo.findUserByEmail(email).getUserId();
     }
@@ -40,13 +39,12 @@ public class SpgUserService {
     public User getUserByEmail(String email) {
         return userRepo.findUserByEmail(email);
     }
+
     public Customer getCustomerByEmail(String email) {
-        if(userRepo.findUserByEmail(email).getRole()!=UserRole.ROLE_CUSTOMER) return null;
         return customerRepo.findCustomerByEmail(email);
     }
 
     public Farmer getFarmerById(Long farmerId) {
-        if(userRepo.findUserByUserId(farmerId).getRole()!=UserRole.ROLE_FARMER) return null;
         return farmerRepo.findFarmerByUserId(farmerId);
     }
 
@@ -58,12 +56,19 @@ public class SpgUserService {
         return customerRepo.findCustomerByEmail(email).getWallet();
     }
 
-    public double topUp(String email, double value) {
+    public Boolean topUp(String email, double value) {
+        return topUp(getOrderUserTypeByEmail(email), value);
+    }
+
+    public Boolean topUp(OrderUserType user, double value) {
+        if (value <= 0 || Double.isInfinite(value) || Double.isNaN(value))
+            return false;
         //adds value to the user's wallet
-        Customer tmp = customerRepo.findCustomerByEmail(email);
-        tmp.setWallet(tmp.getWallet() + value);
-        customerRepo.save(tmp);
-        return tmp.getWallet();
+        if (user == null || getUserByEmail(((User) user).getEmail()) == null)
+            return false;
+        user.setWallet(user.getWallet() + value);
+        userRepo.save((User)user);
+        return true;
     }
 
     public Boolean checkPresenceOfUser(String email, String ssn) {
@@ -92,12 +97,19 @@ public class SpgUserService {
         return Objects.equals(userRepo.findUserByUserId(userId).getRole(), UserRole.ROLE_SHOP_EMPLOYEE);
     }
 
-    public BasketUserType getBasketUserTypeByEmail(String email){
+    public BasketUserType getBasketUserTypeByEmail(String email) {
         return (BasketUserType) userRepo.findByEmailAndRoleIn(email, UserRole.ROLE_BASKET_USER_TYPE);
     }
 
-    public OrderUserType getOrderUserTypeByEmail(String email){
+    public OrderUserType getOrderUserTypeByEmail(String email) {
         return (OrderUserType) userRepo.findByEmailAndRoleIn(email, UserRole.ROLE_ORDER_USER_TYPE);
     }
 
+    public Boolean isBasketUserType(User user) {
+        return UserRole.ROLE_BASKET_USER_TYPE.contains(user.getRole());
+    }
+
+    public Boolean isOrderUserType(User user) {
+        return UserRole.ROLE_ORDER_USER_TYPE.contains(user.getRole());
+    }
 }
