@@ -45,7 +45,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //Go inside UsernamePasswordAuthenticationFilter class to set up login api path and method
         //In that case I override that variable
-
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(jwtUserHandlerService, spgUserService, authenticationManagerBean());
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.cors().and().csrf().disable();

@@ -33,7 +33,7 @@ public class UserDetailsTest {
     }
 
     @AfterEach
-    public void restDB(){
+    public void restDB() {
         userRepo.deleteAll();
     }
 
@@ -61,7 +61,7 @@ public class UserDetailsTest {
         Assertions.assertEquals("password", userDetails.getPassword());
         Assertions.assertEquals("tester@test.com", userDetails.getUsername());
         Assertions.assertEquals("tester", userDetails.getName());
-        Assertions.assertEquals("[customer:read, ROLE_ADMIN]", userDetails.getAuthorities().toString());
+        Assertions.assertEquals("[ROLE_ADMIN]", userDetails.getAuthorities().toString());
         Assertions.assertTrue(userDetails.isAccountNonLocked());
         Assertions.assertTrue(userDetails.isEnabled());
         Assertions.assertTrue(userDetails.isAccountNonExpired());

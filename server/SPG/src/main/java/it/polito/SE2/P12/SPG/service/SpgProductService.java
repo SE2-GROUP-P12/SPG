@@ -26,11 +26,19 @@ public class SpgProductService {
         return productRepo.findProductByProductId(productId);
     }
 
-    public void setForecast(Long productId, Farmer farmer, Double forecast, String start, String end) {
+    public boolean setForecast(Long productId, Farmer farmer, Double forecast, String start, String end) {
         Product product = productRepo.findProductByProductId(productId);
+        if (product == null){
+            return false;
+        }
         product.setFarmer(farmer);
         product.setQuantityForecast(forecast);
         product.setStartAvailability(start);
         product.setEndAvailability(end);
+        productRepo.save(product);
+        return true;
+    }
+    public void addProduct(Product product){
+        productRepo.save(product);
     }
 }

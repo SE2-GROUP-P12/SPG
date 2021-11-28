@@ -126,6 +126,20 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public Product(String name, String unitOfMeasurement, double price, Farmer farmer , Double quantityForecast) {
+        this.name = name;
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.totalQuantity = 0.0;
+        this.quantityAvailable = 0.0;
+        this.quantityForecast = quantityForecast;
+        this.quantityBaskets = 0.0;
+        this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
+        this.price = price;
+        this.farmer = farmer;
+        this.imageUrl = imageUrl;
+    }
+
     public Boolean moveFromAvailableToBasket(Double quantity) {
         if (this.quantityAvailable < quantity)
             return false;

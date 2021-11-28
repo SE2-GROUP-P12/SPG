@@ -42,7 +42,9 @@ function Navbar(props) {
         console.log("successful logout");
         setRunRedirect(true);
     }
-    useEffect(() => {setRunRedirect(false)}, );
+    useEffect(() => {
+        setRunRedirect(false)
+    },);
 
     function doLogin() {
         window.location.href = "http://localhost:8081/login";
@@ -59,7 +61,18 @@ function Navbar(props) {
                 <Route exact path="/LoginComponent">
                     <Nav className="navbar bg-success navbar-dark">
                         <img src={logo} alt="logo" className="logo"/>
-                        <Link style={{color: 'white'}} to='/NewCustomer'>Sign in</Link>
+                    </Nav>
+                </Route>
+                <Route exact path="/NewCustomer">
+                    <Nav className="navbar bg-success navbar-dark">
+                        <img src={logo} alt="logo" className="logo"/>
+                        {props.isLoggedFlag !== true ?
+                            <Link to="/LoginComponent">
+                                <Button className="btn btn-outline-light" variant="success"> Log in </Button>
+                            </Link>
+                            :
+                            ""
+                        }
                     </Nav>
                 </Route>
                 <Route>
@@ -76,18 +89,6 @@ function Navbar(props) {
                                     </Link>
                                 </>
                         }
-                    </Nav>
-                </Route>
-                <Route exact path="/NewCustomer">
-                    <Nav className="navbar bg-success navbar-dark">
-                        <img src={logo} alt="logo" className="logo"/>
-                        <Link to="/LoginComponent">
-                            {props.isLoggedFlag !== true ?
-                                <Button className="btn btn-outline-light" variant="success"> Log in </Button>
-                                :
-                                ""
-                            }
-                        </Link>
                     </Nav>
                 </Route>
             </Switch>

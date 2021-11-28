@@ -9,10 +9,8 @@ import java.util.stream.Collectors;
 public enum ApplicationUserRole {
     CUSTOMER(Sets.newHashSet()),
     USER(Sets.newHashSet()),
-    ADMIN(Sets.newHashSet(
-    )),
-    EMPLOYEE(Sets.newHashSet(
-    )),
+    ADMIN(Sets.newHashSet()),
+    EMPLOYEE(Sets.newHashSet()),
     FARMER(Sets.newHashSet());
 
     private final Set<ApplicationUserPermission> permissions;
