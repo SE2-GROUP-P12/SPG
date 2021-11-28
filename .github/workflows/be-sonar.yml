@@ -1,4 +1,4 @@
-name: sonar
+name: be_sonarcloud
 on:
   push:
     branches:
