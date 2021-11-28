@@ -3,9 +3,11 @@ package it.polito.SE2.P12.SPG.jsonWebTokenTestSuite;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
+import it.polito.SE2.P12.SPG.entity.Admin;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -24,16 +26,18 @@ public class JWTProviderTest {
     private UserRepo userRepo;
     @Autowired
     private SpgUserService spgUserService;
+    @Autowired
+    private DBUtilsService dbUtilsService;
 
     @BeforeEach
     public void initContext() {
-        userRepo.deleteAll();
-        User tester = new User("tester", "tester", "tester_aaaaaaaaaaaa", "", "ADMIN", "tester@test.com", "password");
+        dbUtilsService.dropAll();
+        User tester = new Admin("tester", "tester", "tester_aaaaaaaaaaaa", "", "tester@test.com", "password");
         userRepo.save(tester);
     }
 
     @AfterEach
-    public void restDB(){
+    public void restDB() {
         userRepo.deleteAll();
     }
 

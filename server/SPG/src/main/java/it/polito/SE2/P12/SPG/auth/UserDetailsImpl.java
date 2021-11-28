@@ -22,12 +22,17 @@ public class UserDetailsImpl implements UserDetails {
         this.password = user.getPassword();
         if (user.getRole().equals("ADMIN"))
             this.authorityList = ApplicationUserRole.ADMIN.getGrantedAuthorities();
-        else if(user.getRole().equals("EMPLOYEE"))
+        else if (user.getRole().equals("EMPLOYEE"))
             this.authorityList = ApplicationUserRole.EMPLOYEE.getGrantedAuthorities();
+        else if (user.getRole().equals("CUSTOMER"))
+            this.authorityList = ApplicationUserRole.CUSTOMER.getGrantedAuthorities();
+        else if (user.getRole().equals("FARMER"))
+            this.authorityList = ApplicationUserRole.FARMER.getGrantedAuthorities();
         else
             this.authorityList = ApplicationUserRole.USER.getGrantedAuthorities();
     }
-    public String getName(){
+
+    public String getName() {
         return this.name;
     }
 

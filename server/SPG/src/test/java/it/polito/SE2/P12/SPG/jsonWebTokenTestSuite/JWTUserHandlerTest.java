@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.jsonWebTokenTestSuite;
 
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import it.polito.SE2.P12.SPG.utils.JWTUserHandlerImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -15,10 +16,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class JWTUserHandlerTest {
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    DBUtilsService dbUtilsService;
 
     @BeforeEach
     public void initContext() {
-        userRepo.deleteAll();
+        dbUtilsService.dropAll();
         User tester = new User("tester", "tester", "tester_aaaaaaaaaaaa", "", "ADMIN", "tester@test.com", "password");
         userRepo.save(tester);
     }

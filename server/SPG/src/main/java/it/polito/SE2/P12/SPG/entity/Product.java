@@ -21,8 +21,6 @@ public class Product {
     private Long productId;
     @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "producer", nullable = false)
-    private String producer;
     @Column(name = "unit_of_measurement", nullable = false)
     private String unitOfMeasurement;
     //Quantità ufficialmente messa a disposizione dal farmer a inizio settimana.
@@ -54,12 +52,11 @@ public class Product {
     private String endAvailability;
     @ManyToOne
     private Farmer farmer;
-    @Column (name= "image_url")
+    @Column(name = "image_url")
     private String imageUrl;
 
-    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price) {
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price) {
         this.name = name;
-        this.producer = producer;
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -69,12 +66,25 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = null;
-        this.imageUrl=null;
+        this.imageUrl = null;
+    }
+
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
+        this.name = name;
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.totalQuantity = totalQuantity;
+        this.quantityAvailable = totalQuantity;
+        this.quantityForecast = 0.0;
+        this.quantityBaskets = 0.0;
+        this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
+        this.price = price;
+        this.farmer = farmer;
+        this.imageUrl = null;
     }
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl) {
         this.name = name;
-        this.producer = "default producer";
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -84,12 +94,11 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = null;
-        this.imageUrl=imageUrl;
+        this.imageUrl = imageUrl;
     }
 
-    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
+    public Product(String name, Double totalQuantity, double price, Farmer farmer) {
         this.name = name;
-        this.producer = producer;
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -99,12 +108,12 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = farmer;
-        this.imageUrl=null;
+        this.imageUrl = null;
     }
 
-    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl ,Farmer farmer) {
+
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl, Farmer farmer) {
         this.name = name;
-        this.producer = producer;
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
@@ -114,18 +123,19 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = farmer;
-        this.imageUrl=imageUrl;
+        this.imageUrl = imageUrl;
     }
 
     public Boolean moveFromAvailableToBasket(Double quantity) {
-        if(this.quantityAvailable < quantity)
+        if (this.quantityAvailable < quantity)
             return false;
         this.quantityAvailable -= quantity;
         this.quantityBaskets += quantity;
         return true;
     }
+
     public Boolean moveFromBasketToOrdered(Double quantity) {
-        if(this.quantityBaskets < quantity)
+        if (this.quantityBaskets < quantity)
             return false;
         this.quantityOrdered += quantity;
         this.quantityBaskets -= quantity;
@@ -133,7 +143,7 @@ public class Product {
     }
 
     public Boolean moveFromBasketToAvailable(Double quantity) {
-        if(this.quantityBaskets < quantity)
+        if (this.quantityBaskets < quantity)
             return false;
         this.quantityAvailable += quantity;
         this.quantityBaskets -= quantity;
@@ -141,7 +151,7 @@ public class Product {
     }
 
     public Boolean moveFromAvailableToOrdered(Double quantity) {
-        if(this.quantityAvailable < quantity)
+        if (this.quantityAvailable < quantity)
             return false;
         this.quantityAvailable -= quantity;
         this.quantityOrdered += quantity;
@@ -149,7 +159,7 @@ public class Product {
     }
 
     public Boolean moveFromAvailableToDelivered(Double quantity) {
-        if(this.quantityAvailable < quantity)
+        if (this.quantityAvailable < quantity)
             return false;
         this.quantityAvailable -= quantity;
         this.quantityDelivered += quantity;
@@ -157,10 +167,30 @@ public class Product {
     }
 
     public Boolean moveFromOrderedToDelivered(Double quantity) {
-        if(this.quantityOrdered < quantity)
+        if (this.quantityOrdered < quantity)
             return false;
         this.quantityOrdered -= quantity;
         this.quantityDelivered += quantity;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", name='" + name + '\'' +
+                ", unitOfMeasurement='" + unitOfMeasurement + '\'' +
+                ", totalQuantity=" + totalQuantity +
+                ", quantityAvailable=" + quantityAvailable +
+                ", quantityForecast=" + quantityForecast +
+                ", quantityBaskets=" + quantityBaskets +
+                ", quantityOrdered=" + quantityOrdered +
+                ", quantityDelivered=" + quantityDelivered +
+                ", price=" + price +
+                ", startAvailability='" + startAvailability + '\'' +
+                ", endAvailability='" + endAvailability + '\'' +
+                ", farmer=" + (farmer == null ? "null" : farmer.getUserId()) +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }

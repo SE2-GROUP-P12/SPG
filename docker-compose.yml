@@ -40,5 +40,16 @@ services:
       #- ./opt/script/data/initialization/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
       - mysql-persistent-volume:/var/lib/mysql
 
+  database-test:    
+    image: mysql:5.7
+    environment: &mysql-default-environment
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: spg
+      MYSQL_USER: asparago
+      MYSQL_PASSWORD: asparago
+    ports:
+      - "13306:3306"
+    
 volumes:
   mysql-persistent-volume:

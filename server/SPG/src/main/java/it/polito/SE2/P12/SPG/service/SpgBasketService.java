@@ -2,14 +2,13 @@ package it.polito.SE2.P12.SPG.service;
 
 
 import it.polito.SE2.P12.SPG.entity.*;
-import it.polito.SE2.P12.SPG.interfaceEntity.BasketUser;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
 import org.springframework.stereotype.Service;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class SpgBasketService {
@@ -19,13 +18,13 @@ public class SpgBasketService {
         this.basketRepo = basketRepo;
     }
 
-    public Basket emptyBasket(BasketUser user){
+    public Basket emptyBasket(BasketUserType user){
         Basket output = user.getBasket();
         basketRepo.deleteById(output.getBasketId());
         return  output;
     }
 
-    public void dropBasket(BasketUser user) {
+    public void dropBasket(BasketUserType user) {
         this.dropBasket(user.getBasket());
     }
 
@@ -38,16 +37,17 @@ public class SpgBasketService {
         basketRepo.delete(basket);
     }
 
-    public Map<String, String> addProductToCart(Product product, Double quantity, BasketUser user) {
-        Map<String, String> response = new HashMap<>();
+    public Boolean addProductToCart(Product product, Double quantity, BasketUserType user) {
+        if(product.getQuantityAvailable() < quantity  || quantity <=0 || Double.isInfinite(quantity) || Double.isNaN(quantity))
+            return false;
+        product.moveFromAvailableToBasket(quantity);
         Basket basket = user.getBasket();
-        basket.addProduct(product, quantity);
+        basket.add(product, quantity);
         basketRepo.save(basket);
-        response.put("responseStatus", "200-OK");
-        return response;
+        return true;
     }
 
-    public List<Product> getProductsInBasket(BasketUser user) {
+    public List<Product> getProductsInBasket(BasketUserType user) {
         Basket basket = user.getBasket();
         List <Product> list = basket.getProductList();
         for (Product basketItem: list) {

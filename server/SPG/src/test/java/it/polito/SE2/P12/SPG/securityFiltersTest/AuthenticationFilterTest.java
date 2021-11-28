@@ -3,8 +3,11 @@ package it.polito.SE2.P12.SPG.securityFiltersTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.repository.JWTUserHandlerRepo;
+import it.polito.SE2.P12.SPG.repository.OrderRepo;
+import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,23 +35,24 @@ public class AuthenticationFilterTest {
     @Autowired
     private UserRepo userRepo;
     @Autowired
+    private OrderRepo orderRepo;
+    @Autowired
+    private DBUtilsService dbUtilsService;
+    @Autowired
     private JWTUserHandlerRepo jwtUserHandlerRepo;
 
 
     @BeforeEach
     public void initContext() {
-        userRepo.deleteAll();
+        dbUtilsService.dropAll();
         User tester = new User("tester", "tester", "tester_aaaaaaaaaaaa", "", "ADMIN", "tester@test.com", "password");
         userRepo.save(tester);
     }
 
     @AfterEach
-    public void restDB(){
-        userRepo.deleteAll();
+    public void resetDB(){
         jwtUserHandlerRepo.deleteAll();
     }
-
-
 
     @Test
     public void attemptAuthenticationTest() throws Exception {
