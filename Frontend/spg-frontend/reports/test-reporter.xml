@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
     <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/API/API.test.js">
-        <testCase name="Browse product should return 50 items, including Apples" duration="80"/>
-        <testCase name="Add to mario.rossi@gmail.com&apos;s cart 1kg of apples to cart and retrieve it afterwards" duration="15"/>
+        <testCase name="Browse product should return 50 items, including Apples" duration="58"/>
+        <testCase name="Add to mario.rossi@gmail.com&apos;s cart 1kg of apples to cart and retrieve it afterwards" duration="9"/>
         <testCase name="Add 10 euros to mario.rossi@gmail.com&apos;s wallet" duration="5"/>
         <testCase name="Place an order from a cart" duration="4"/>
-        <testCase name="Drop cart" duration="5"/>
-        <testCase name="Get all orders, then get only the orders for mario" duration="4"/>
-        <testCase name="Deliver order" duration="7"/>
-        <testCase name="Add customer" duration="4"/>
-    </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Homepage/Homepage.test.js">
-        <testCase name="renders correctly" duration="70"/>
-    </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/ShopEmployee/ShopEmployee.test.js">
-        <testCase name="renders correctly" duration="77"/>
+        <testCase name="Drop cart" duration="4"/>
+        <testCase name="Get all orders, then get only the orders for mario" duration="3"/>
+        <testCase name="Deliver order" duration="3"/>
+        <testCase name="Add customer" duration="3"/>
     </file>
     <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/DeliverOrder/DeliverOrder.test.js">
-        <testCase name="Renders Correctly" duration="177"/>
+        <testCase name="Renders Correctly" duration="155"/>
+    </file>
+    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Homepage/Homepage.test.js">
+        <testCase name="renders correctly" duration="71"/>
+    </file>
+    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/ShopEmployee/ShopEmployee.test.js">
+        <testCase name="renders correctly" duration="83"/>
     </file>
     <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/NewCustomer/NewCustomer.test.js">
-        <testCase name="renders correctly" duration="166"/>
-        <testCase name="empty fields" duration="174"/>
-        <testCase name="insecure password" duration="173"/>
-        <testCase name="create existing user" duration="339"/>
-        <testCase name="create new user" duration="1191">
+        <testCase name="renders correctly" duration="158"/>
+        <testCase name="empty fields" duration="164"/>
+        <testCase name="insecure password" duration="145"/>
+        <testCase name="create existing user" duration="310"/>
+        <testCase name="create new user" duration="1172">
             <failure message="Error: Unable to find an element with the text: Everything goes well, new client created.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible."><![CDATA[Error: Unable to find an element with the text: Everything goes well, new client created.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
 
 <body
@@ -281,10 +281,10 @@
     at runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:472:34)
     at Object.worker (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/testWorker.js:133:12)]]></failure>
         </testCase>
-        <testCase name="server error" duration="233"/>
+        <testCase name="server error" duration="205"/>
     </file>
     <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.test.js">
-        <testCase name="Renders correctly" duration="1080">
+        <testCase name="Renders correctly" duration="1075">
             <failure message="TypeError: Cannot read property &apos;map&apos; of undefined"><![CDATA[TypeError: Cannot read property 'map' of undefined
     at BrowseProducts (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:157:34)
     at renderWithHooks (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:14985:18)
@@ -335,7 +335,7 @@
     at runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:472:34)
     at Object.worker (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/testWorker.js:133:12)]]></failure>
         </testCase>
-        <testCase name="Add to cart" duration="1018">
+        <testCase name="Add to cart" duration="1012">
             <failure message="TypeError: Cannot read property &apos;map&apos; of undefined"><![CDATA[TypeError: Cannot read property 'map' of undefined
     at BrowseProducts (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:157:34)
     at renderWithHooks (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:14985:18)
@@ -384,7 +384,7 @@
     at runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:472:34)
     at Object.worker (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/testWorker.js:133:12)]]></failure>
         </testCase>
-        <testCase name="Failed to load products" duration="1012">
+        <testCase name="Failed to load products" duration="1018">
             <failure message="TypeError: Cannot read property &apos;data&apos; of undefined"><![CDATA[TypeError: Cannot read property 'data' of undefined
     at _browseProducts (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:33:29)
     at /Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:41:9]]></failure>
