@@ -28,7 +28,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -157,14 +156,14 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("email") && requestMap.containsKey("customer")) {
             User orderIssuer = userService.getUserByEmail(requestMap.get("customer").toString());
-            if(!userService.isOrderUserType(orderIssuer))
+            if (!userService.isOrderUserType(orderIssuer))
                 return ResponseEntity.badRequest().build();
             if (requestMap.get("email").toString().isEmpty()) { //It is a customer order
                 BasketUserType user = userService.getBasketUserTypeByEmail(orderIssuer.getEmail());
                 Basket basket = user.getBasket();
-                if(orderIssuer.getRole()== UserRole.ROLE_CUSTOMER){
+                if (orderIssuer.getRole() == UserRole.ROLE_CUSTOMER) {
                     //the order is made for a customer----> reduce their wallet by the correct amount
-                    userService.payForProducts(basket,(Customer)orderIssuer);
+                    userService.payForProducts(basket, (Customer) orderIssuer);
                 }
                 basketService.dropBasket(basket);
                 return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
@@ -172,9 +171,9 @@ public class SpgController {
             //It's an order provided by the shopEmployee
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
             Basket basket = user.getBasket();
-            if(orderIssuer.getRole()== UserRole.ROLE_CUSTOMER){
+            if (orderIssuer.getRole() == UserRole.ROLE_CUSTOMER) {
                 //the order is made for a customer----> reduce their wallet by the correct amount
-                userService.payForProducts(basket,(Customer)orderIssuer);
+                userService.payForProducts(basket, (Customer) orderIssuer);
             }
             basketService.dropBasket(basket);
             return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
@@ -193,7 +192,7 @@ public class SpgController {
             Product product = productService.getProductById(Long.valueOf((Integer) requestMap.get("productId")));
             Double quantity = Double.valueOf(requestMap.get("quantity").toString());
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
-            if (user == null || product == null || !basketService.addProductToCart(product, quantity, user))
+            if (user == null || product == null || !basketService.addProductToBasket(product, quantity, user))
                 return ResponseEntity.badRequest().build();
             response.put("responseStatus", "200-OK");
             return ResponseEntity.ok(response);
@@ -230,7 +229,7 @@ public class SpgController {
             Double value = Double.valueOf(requestMap.get("value").toString());
             if (!userService.checkPresenceOfMail(email) || value <= 0)
                 return ResponseEntity.badRequest().build();
-            if(!userService.topUp(email, value))
+            if (!userService.topUp(email, value))
                 return ResponseEntity.badRequest().build();
             return ResponseEntity.ok(userService.getWallet(email));
         }
@@ -287,22 +286,18 @@ public class SpgController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity retrieveError(@RequestParam String email) {
         //Warning! only customer have a wallet and therefore this will send an error
-        Customer user = userService.getCustomerByEmail(email);
+        OrderUserType user = userService.getOrderUserTypeByEmail(email);
         Map<String, String> response = new HashMap<String, String>();
         if (user == null) {
-            if (userService.getUserByEmail(email) == null) {
-                //the user doesn't exist
-                return ResponseEntity.badRequest().build();
-            }
             //the user isn't a customer and therefore has no wallet
-            response.put("exist", "false");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.badRequest().build();
         }
-        Double total = orderService.getTotalPrice(user.getUserId());
+        Double total = orderService.getTotalPrice(((User) user).getUserId());
         if (total > user.getWallet()) {
             response.put("exist", "true");
             response.put("message", "Balance insufficient, remember to top up!");
-        } else response.put("exist", "false");
+        } else
+            response.put("exist", "false");
         return ResponseEntity.ok(response);
     }
 

@@ -5,12 +5,10 @@ import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.repository.*;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
-import it.polito.SE2.P12.SPG.serviceTest.OrderServiceTest;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
 import it.polito.SE2.P12.SPG.utils.API;
 import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import it.polito.SE2.P12.SPG.utils.Utilities;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,11 +74,11 @@ public class OrderControllerApiTest {
         productRepo.save(prod3);
         //Add products to basket
         //done by shopEmployee (in test will be for customer1)
-        basketService.addProductToCart(prod1, 2.001, employee);
-        basketService.addProductToCart(prod3, 5.001, employee);
+        basketService.addProductToBasket(prod1, 2.001, employee);
+        basketService.addProductToBasket(prod3, 5.001, employee);
         //done by customer2
-        basketService.addProductToCart(prod1, 2.001, customer2);
-        basketService.addProductToCart(prod2, 5.001, customer2);
+        basketService.addProductToBasket(prod1, 2.001, customer2);
+        basketService.addProductToBasket(prod2, 5.001, customer2);
     }
 
     @Test

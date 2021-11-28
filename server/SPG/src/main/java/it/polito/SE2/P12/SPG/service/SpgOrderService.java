@@ -9,6 +9,7 @@ import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
+import it.polito.SE2.P12.SPG.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Example;
@@ -27,14 +28,16 @@ public class SpgOrderService {
     private BasketRepo basketRepo;
     private SpgUserService spgUserService;
     private ProductRepo productRepo;
+    private UserRepo userRepo;
 
 
     @Autowired
-    public SpgOrderService(OrderRepo orderRepo, BasketRepo basketRepo, SpgUserService spgUserService, ProductRepo productRepo) {
+    public SpgOrderService(OrderRepo orderRepo, BasketRepo basketRepo, SpgUserService spgUserService, ProductRepo productRepo, UserRepo userRepo) {
         this.orderRepo = orderRepo;
         this.basketRepo = basketRepo;
         this.spgUserService = spgUserService;
         this.productRepo = productRepo;
+        this.userRepo = userRepo;
     }
 
     public Boolean addNewOrder(Order order) {
@@ -113,6 +116,7 @@ public class SpgOrderService {
 
     public Double getTotalPrice(Long userId) {
         Double output = 0.00;
+        if(!userRepo.existsById(userId)) return -1.0;
         for (Order order : orderRepo.findAllByCust_UserId(userId)) {
             output += order.getValue();
         }
