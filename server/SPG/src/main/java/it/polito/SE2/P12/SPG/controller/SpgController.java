@@ -26,6 +26,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -65,6 +66,7 @@ public class SpgController {
         this.basketService = basketService;
         this.jwtUserHandlerService = jwtUserHandlerService1;
         this.dbUtilsService = dbUtilsService;
+        dbUtilsService.init();
     }
 
     @GetMapping("/")
@@ -73,14 +75,14 @@ public class SpgController {
     }
 
     @GetMapping(API.ALL_PRODUCT)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CUSTOMER')")
     public ResponseEntity<List<Product>> getAllProduct() {
         return ResponseEntity.ok(productService.getAllProduct());
     }
 
 
     @GetMapping(API.EXIST_CUSTOMER)
-    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')")
     public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestParam String email, @RequestParam String ssn) {
         Map<String, Boolean> response = new HashMap<>();
         if (email == null || ssn == null)
@@ -290,14 +292,15 @@ public class SpgController {
         Map<String, String> response = new HashMap<String, String>();
         if (user == null) {
             //the user isn't a customer and therefore has no wallet
-            return ResponseEntity.badRequest().build();
-        }
-        Double total = orderService.getTotalPrice(((User) user).getUserId());
-        if (total > user.getWallet()) {
-            response.put("exist", "true");
-            response.put("message", "Balance insufficient, remember to top up!");
-        } else
             response.put("exist", "false");
+        } else {
+            Double total = orderService.getTotalPrice(((User) user).getUserId());
+            if (total > user.getWallet()) {
+                response.put("exist", "true");
+                response.put("message", "Balance insufficient, remember to top up!");
+            } else
+                response.put("exist", "false");
+        }
         return ResponseEntity.ok(response);
     }
 

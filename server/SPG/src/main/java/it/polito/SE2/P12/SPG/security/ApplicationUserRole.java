@@ -10,12 +10,8 @@ public enum ApplicationUserRole {
     CUSTOMER(Sets.newHashSet()),
     USER(Sets.newHashSet()),
     ADMIN(Sets.newHashSet(
-            ApplicationUserPermission.CUSTOMER_READ,
-            ApplicationUserPermission.CUSTOMER_WRITE
     )),
     EMPLOYEE(Sets.newHashSet(
-            ApplicationUserPermission.CUSTOMER_READ,
-            ApplicationUserPermission.CUSTOMER_WRITE
     )),
     FARMER(Sets.newHashSet());
 
