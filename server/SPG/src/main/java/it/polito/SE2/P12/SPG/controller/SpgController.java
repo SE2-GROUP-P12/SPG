@@ -162,20 +162,12 @@ public class SpgController {
             if (requestMap.get("email").toString().isEmpty()) { //It is a customer order
                 BasketUserType user = userService.getBasketUserTypeByEmail(orderIssuer.getEmail());
                 Basket basket = user.getBasket();
-                if(orderIssuer.getRole()== UserRole.ROLE_CUSTOMER){
-                    //the order is made for a customer----> reduce their wallet by the correct amount
-                    userService.payForProducts(basket,(Customer)orderIssuer);
-                }
                 basketService.dropBasket(basket);
                 return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
             }
             //It's an order provided by the shopEmployee
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
             Basket basket = user.getBasket();
-            if(orderIssuer.getRole()== UserRole.ROLE_CUSTOMER){
-                //the order is made for a customer----> reduce their wallet by the correct amount
-                userService.payForProducts(basket,(Customer)orderIssuer);
-            }
             basketService.dropBasket(basket);
             return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
         }
