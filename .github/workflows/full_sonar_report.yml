@@ -38,13 +38,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -f /home/runner/work/SPG/SPG/server/SPG/pom.xml -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=SE2-GROUP-P12_SPG
       
-      - name: move in FE
-        run: cd ./Frontend/spg-frontend
-      - name: fe sonar test report generate
-        run: npm run test:ci
-      - name: fe sonar coverage report generate
-        run: npm run coverage:ci
-
+      - name: fe generate sonar report
+        run: |
+        cd ./Frontend/spg-frontend
+        npm run test:ci
+        npm run coverage:ci
+      
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
