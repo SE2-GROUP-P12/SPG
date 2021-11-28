@@ -1,4 +1,4 @@
-name: Build
+name: sonar
 on:
   push:
     branches:
@@ -7,8 +7,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  be_sonar:
-    name: be_sonar
+  be_sonarcloud:
+    name: be_sonarcloud
     runs-on: ubuntu-latest
     defaults:
       run:
