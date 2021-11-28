@@ -67,3 +67,5 @@ server/SPG/build/
 Frontend/spg-frontend/coverage/**
 !Frontend/spg-frontend/coverage/lcov.info
 
+### sonar-scanner ###
+.scannerwork/
