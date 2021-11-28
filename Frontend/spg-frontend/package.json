@@ -28,6 +28,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:ci": "react-scripts test --testResultsProcessor ./node_modules/jest-sonar-reporter",
+    "coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
+    "coverage:ci": "react-scripts test --env=jsdom --watchAll=false --coverage --testResultsProcessor ./node_modules/jest-sonar-reporter",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -47,5 +50,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^8.11.1",
+    "@testing-library/user-event": "^13.5.0",
+    "cypress": "^9.0.0",
+    "jest-sonar-reporter": "^2.0.0"
+  },
+  "jest": {},
+  "jestSonar": {
+    "reportPath": "reports",
+    "reportFile": "test-reporter.xml",
+    "indent": 4
   }
 }
