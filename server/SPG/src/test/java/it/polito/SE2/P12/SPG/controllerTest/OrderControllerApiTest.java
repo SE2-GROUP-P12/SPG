@@ -81,7 +81,6 @@ public class OrderControllerApiTest {
         //done by customer2
         basketService.addProductToCart(prod1, 2.001, customer2);
         basketService.addProductToCart(prod2, 5.001, customer2);
-
     }
 
     @Test
