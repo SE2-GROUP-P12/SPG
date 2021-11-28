@@ -1,5 +1,6 @@
 package it.polito.SE2.P12.SPG.serviceTest;
 
+import com.sun.source.tree.LabeledStatementTree;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
 import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
@@ -59,7 +60,7 @@ public class OrderServiceTest {
         //Create some product and then add them to the Customer Cart
         Product prod1 = new Product("Prod1", "KG", 1000.0, 10.50F);
         Product prod2 = new Product("Prod2", "KG", 100.0, 5.50F);
-        Product prod3 = new Product("Prod3", "KG", 20.0, 8.00F);
+        Product prod3 = new Product("Prod3", "KG", 100.0, 8.00F);
         productRepo.save(prod1);
         productRepo.save(prod2);
         productRepo.save(prod3);
@@ -168,49 +169,74 @@ public class OrderServiceTest {
         Assertions.assertFalse(orderService.addNewOrderFromBasket(b));
     }
 
-    //Non passano sebbene poi il programma funzioni
-    /*
     @Test
     public void deliverOrderTest() {
-        Customer c = customerRepo.findCustomerByEmail("customer1@foomail.com");
-        Basket b = c.getBasket();
+        BasketUserType user = userService.getBasketUserTypeByEmail("customer1@foomail.com");
+        Basket b = user.getBasket();
+
+        Assertions.assertNotNull(user);
+
+        basketService.dropBasket(b);
         orderService.addNewOrderFromBasket(b);
 
         Order order = orderRepo.findAll().get(0);
 
-        for (Product p : order.getProds().keySet()) {
+        for (Map.Entry<Product, Double> e: order.getProds().entrySet()) {
+            Product p = productRepo.findProductByName(e.getKey().getName());
+            Assertions.assertNotNull(p);
             Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
             Assertions.assertEquals(p.getQuantityDelivered(), 0.0);
         }
 
         Assertions.assertTrue(orderService.deliverOrder(order.getOrderId()));
 
-        for (Product p : order.getProds().keySet()) {
+        for (Map.Entry<Product, Double> e: order.getProds().entrySet()) {
+            Product p = productRepo.findProductByName(e.getKey().getName());
+            Assertions.assertNotNull(p);
             Assertions.assertEquals(p.getQuantityOrdered(), 0.0);
             Assertions.assertTrue(p.getQuantityDelivered() > 0.0);
         }
     }
 
     @Test
-    public void insufficientBalanceDeliverOrderTest(){
-        Customer c = customerRepo.findCustomerByEmail("customer2@foomail.com");
-        Basket b = c.getBasket();
+    public void insufficientBalanceDeliverOrderTest() {
+        BasketUserType user = userService.getBasketUserTypeByEmail("customer2@foomail.com");
+        Basket b = user.getBasket();
+
+        Assertions.assertNotNull(user);
+
+        basketService.dropBasket(b);
         orderService.addNewOrderFromBasket(b);
 
         Order order = orderRepo.findAll().get(0);
 
-        for (Product p : order.getProds().keySet()) {
+        for (Map.Entry<Product, Double> e: order.getProds().entrySet()) {
+            Product p = productRepo.findProductByName(e.getKey().getName());
+            Assertions.assertNotNull(p);
             Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
             Assertions.assertEquals(p.getQuantityDelivered(), 0.0);
         }
 
         Assertions.assertFalse(orderService.deliverOrder(order.getOrderId()));
 
-        for (Product p : order.getProds().keySet()) {
+        for (Map.Entry<Product, Double> e: order.getProds().entrySet()) {
+            Product p = productRepo.findProductByName(e.getKey().getName());
+            Assertions.assertNotNull(p);
             Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
             Assertions.assertEquals(p.getQuantityDelivered(), 0.0);
         }
     }
-    */
 
+    @Test
+    public void correctGetTotalPriceTest(){
+
+        BasketUserType user = userService.getBasketUserTypeByEmail("customer1@foomail.com");
+        Basket b = user.getBasket();
+
+        Assertions.assertNotNull(user);
+
+        basketService.dropBasket(b);
+        orderService.addNewOrderFromBasket(b);
+
+    }
 }

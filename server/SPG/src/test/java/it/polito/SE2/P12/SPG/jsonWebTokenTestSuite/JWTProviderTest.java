@@ -107,7 +107,7 @@ public class JWTProviderTest {
         Map<String, String> map = jwtProvider.getFrontEndUSerJWT(new UserDetailsImpl(userRepo.findUserByEmail("tester@test.com")), "requestURL");
         Assertions.assertEquals("tester@test.com", map.get("email"));
         Assertions.assertNotNull(map);
-        Assertions.assertEquals("[customer:read, ROLE_ADMIN]", map.get("roles"));
+        Assertions.assertEquals("ADMIN", map.get("roles"));
         Assertions.assertNotNull(map.get("accessToken"));
         Assertions.assertNotNull(map.get("refreshToken"));
     }
@@ -133,7 +133,7 @@ public class JWTProviderTest {
         Map<String, String> map = jwtProvider.verifyRefreshTokenAndRegenerateAccessToken(refreshToken, "requestURL", spgUserService);
         Assertions.assertNotNull(map);
         Assertions.assertEquals(refreshToken, map.get("refreshToken"));
-        Assertions.assertEquals("[customer:read, ROLE_ADMIN]", map.get("roles"));
+        Assertions.assertEquals("ADMIN", map.get("roles"));
         Assertions.assertNotNull(map.get("accessToken"));
     }
 

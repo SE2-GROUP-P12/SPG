@@ -28,7 +28,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -66,6 +65,7 @@ public class SpgController {
         this.basketService = basketService;
         this.jwtUserHandlerService = jwtUserHandlerService1;
         this.dbUtilsService = dbUtilsService;
+        dbUtilsService.init();
     }
 
     @GetMapping("/")
@@ -74,7 +74,7 @@ public class SpgController {
     }
 
     @GetMapping(API.ALL_PRODUCT)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    //@PreAuthorize("permitAll()")
     public ResponseEntity<List<Product>> getAllProduct() {
         return ResponseEntity.ok(productService.getAllProduct());
     }
@@ -157,7 +157,7 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("email") && requestMap.containsKey("customer")) {
             User orderIssuer = userService.getUserByEmail(requestMap.get("customer").toString());
-            if(!userService.isOrderUserType(orderIssuer))
+            if (!userService.isOrderUserType(orderIssuer))
                 return ResponseEntity.badRequest().build();
             if (requestMap.get("email").toString().isEmpty()) { //It is a customer order
                 BasketUserType user = userService.getBasketUserTypeByEmail(orderIssuer.getEmail());
@@ -185,7 +185,7 @@ public class SpgController {
             Product product = productService.getProductById(Long.valueOf((Integer) requestMap.get("productId")));
             Double quantity = Double.valueOf(requestMap.get("quantity").toString());
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
-            if (user == null || product == null || !basketService.addProductToCart(product, quantity, user))
+            if (user == null || product == null || !basketService.addProductToBasket(product, quantity, user))
                 return ResponseEntity.badRequest().build();
             response.put("responseStatus", "200-OK");
             return ResponseEntity.ok(response);
@@ -222,7 +222,7 @@ public class SpgController {
             Double value = Double.valueOf(requestMap.get("value").toString());
             if (!userService.checkPresenceOfMail(email) || value <= 0)
                 return ResponseEntity.badRequest().build();
-            if(!userService.topUp(email, value))
+            if (!userService.topUp(email, value))
                 return ResponseEntity.badRequest().build();
             return ResponseEntity.ok(userService.getWallet(email));
         }
@@ -279,22 +279,19 @@ public class SpgController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity retrieveError(@RequestParam String email) {
         //Warning! only customer have a wallet and therefore this will send an error
-        Customer user = userService.getCustomerByEmail(email);
+        OrderUserType user = userService.getOrderUserTypeByEmail(email);
         Map<String, String> response = new HashMap<String, String>();
         if (user == null) {
-            if (userService.getUserByEmail(email) == null) {
-                //the user doesn't exist
-                return ResponseEntity.badRequest().build();
-            }
             //the user isn't a customer and therefore has no wallet
             response.put("exist", "false");
-            return ResponseEntity.ok(response);
+        } else {
+            Double total = orderService.getTotalPrice(((User) user).getUserId());
+            if (total > user.getWallet()) {
+                response.put("exist", "true");
+                response.put("message", "Balance insufficient, remember to top up!");
+            } else
+                response.put("exist", "false");
         }
-        Double total = orderService.getTotalPrice(user.getUserId());
-        if (total > user.getWallet()) {
-            response.put("exist", "true");
-            response.put("message", "Balance insufficient, remember to top up!");
-        } else response.put("exist", "false");
         return ResponseEntity.ok(response);
     }
 
@@ -318,14 +315,16 @@ public class SpgController {
         Double forecast;
         String start;
         String end;
+        String unit;
+        String name;
+        Double price;
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("productId")) {
             productId = (Long) requestMap.get("producerId");
         } else return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("producerId")) {
-            Long farmerId = (Long) requestMap.get("producerId");
-            farmer = userService.getFarmerById(farmerId);
+        if (requestMap.containsKey("producer")) {
+            farmer = userService.getFarmerByName((String)requestMap.get("producer"));
             if (farmer == null) return ResponseEntity.badRequest().build();
         } else return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("quantityForecast")) {
@@ -337,7 +336,19 @@ public class SpgController {
         if (requestMap.containsKey("endAvailability")) {
             end = (String) requestMap.get("endAvailability");
         } else return ResponseEntity.badRequest().build();
-        productService.setForecast(productId, farmer, forecast, start, end);
+        if (requestMap.containsKey("price")) {
+            price = (Double) requestMap.get("price");
+        } else return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("unitOfMeasurement")) {
+            unit = (String) requestMap.get("unitOfMeasurement");
+        } else return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("name")) {
+            name = (String) requestMap.get("name");
+        } else return ResponseEntity.badRequest().build();
+        if (!productService.setForecast(productId, farmer, forecast, start, end)){
+            Product product = new Product(name, unit,price, farmer,forecast);
+            productService.addProduct(product);
+        }
         return ResponseEntity.ok().build();
     }
 

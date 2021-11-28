@@ -7,16 +7,12 @@ import it.polito.SE2.P12.SPG.entity.Basket;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
-import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.DBUtilsService;
-import org.hibernate.LazyInitializationException;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -73,7 +69,7 @@ public class BasketServiceTest {
         BasketUserType u = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u.getBasket();
         Product p = productRepo.findProductByName("Prod1");
-        basketService.addProductToCart(p, 10.0, u);
+        basketService.addProductToBasket(p, 10.0, u);
         basketRepo.save(b);
 
         Assertions.assertNotNull(basketRepo.getById(b.getBasketId()));
@@ -90,7 +86,7 @@ public class BasketServiceTest {
         BasketUserType u = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u.getBasket();
         Product p = productRepo.findProductByName("Prod1");
-        basketService.addProductToCart(p, 10.0, u);
+        basketService.addProductToBasket(p, 10.0, u);
         basketRepo.save(b);
 
         Assertions.assertNotNull(basketRepo.getById(b.getBasketId()));
@@ -113,25 +109,25 @@ public class BasketServiceTest {
     }
 
     @Test
-    public void addCorrectlyProductToBasketTest() {
+    public void addCorrectlyProductToBasketShopEmployeeTest() {
         Product p1 = productRepo.findAll().get(0);
         Product p2 = productRepo.findAll().get(1);
         Product p3 = productRepo.findAll().get(2);
-        Customer u1 = (Customer) userService.getUserByEmail("customer1@foomail.com");
+        BasketUserType u1 = userService.getBasketUserTypeByEmail("shop@employee.com");
         Basket b1 = u1.getBasket();
         basketRepo.save(b1);
 
         Assertions.assertEquals(u1.getBasket(), b1);
 
         Assertions.assertEquals(b1.getProductQuantityMap().size(), 0);
-        basketService.addProductToCart(p1, 10.0, u1);
+        basketService.addProductToBasket(p1, 10.0, u1);
         System.out.println(basketRepo.findAll());
         System.out.println(b1.getProds());
         Assertions.assertEquals(b1.getProductQuantityMap().size(), 1);
         Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p1));
         Assertions.assertEquals(b1.getProductQuantityMap().get(p1), 10.0);
-        basketService.addProductToCart(p2, 12.0, u1);
-        basketService.addProductToCart(p3, 15.0, u1);
+        basketService.addProductToBasket(p2, 12.0, u1);
+        basketService.addProductToBasket(p3, 15.0, u1);
         Assertions.assertEquals(b1.getProductQuantityMap().size(), 3);
         Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p2));
         Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p3));
@@ -148,53 +144,139 @@ public class BasketServiceTest {
     }
 
     @Test
-    public void addNotStoredProductToBasketTest() {
+    public void addCorrectlyProductToBasketCustomerTest() {
+        Product p1 = productRepo.findAll().get(0);
+        Product p2 = productRepo.findAll().get(1);
+        Product p3 = productRepo.findAll().get(2);
+        BasketUserType u1 = userService.getBasketUserTypeByEmail("customer1@foomail.com");
+        Basket b1 = u1.getBasket();
+        basketRepo.save(b1);
+
+        Assertions.assertEquals(u1.getBasket(), b1);
+
+        Assertions.assertEquals(b1.getProductQuantityMap().size(), 0);
+        basketService.addProductToBasket(p1, 10.0, u1);
+        System.out.println(basketRepo.findAll());
+        System.out.println(b1.getProds());
+        Assertions.assertEquals(b1.getProductQuantityMap().size(), 1);
+        Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p1));
+        Assertions.assertEquals(b1.getProductQuantityMap().get(p1), 10.0);
+        basketService.addProductToBasket(p2, 12.0, u1);
+        basketService.addProductToBasket(p3, 15.0, u1);
+        Assertions.assertEquals(b1.getProductQuantityMap().size(), 3);
+        Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p2));
+        Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p3));
+        Assertions.assertEquals(b1.getProductQuantityMap().get(p2), 12.0);
+        Assertions.assertEquals(b1.getProductQuantityMap().get(p3), 15);
+
+        Assertions.assertEquals(p1.getQuantityAvailable(), 990.0);
+        Assertions.assertEquals(p2.getQuantityAvailable(), 88.0);
+        Assertions.assertEquals(p3.getQuantityAvailable(), 5.0);
+
+        Assertions.assertEquals(p1.getQuantityBaskets(), 10.0);
+        Assertions.assertEquals(p2.getQuantityBaskets(), 12.0);
+        Assertions.assertEquals(p3.getQuantityBaskets(), 15.0);
+    }
+
+    @Test
+    public void addNotStoredProductToBasketCustomerTest() {
         Product notStored = new Product("Unicorn Powder", "gr", 10000.0, 10.0);
         BasketUserType u1 = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
         Assertions.assertThrows(InvalidDataAccessApiUsageException.class, () -> {
-            basketService.addProductToCart(notStored, 10.0, u1);
+            basketService.addProductToBasket(notStored, 10.0, u1);
         });
     }
 
     @Test
-    public void addNotAvailableProductToBasketTest() {
+    public void addNotAvailableProductToBasketCustomerTest() {
         Product p = productRepo.findAll().get(0);
         BasketUserType u1 = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
-        Assertions.assertFalse(basketService.addProductToCart(p, 100000000000.0, u1));
+        Assertions.assertFalse(basketService.addProductToBasket(p, 100000000000.0, u1));
         Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
     }
 
     @Test
-    public void addNegativeProductToBasketTest() {
+    public void addNegativeProductToBasketCustomerTest() {
         Product p = productRepo.findAll().get(0);
         BasketUserType u1 = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
-        Assertions.assertFalse(basketService.addProductToCart(p, -1.0, u1));
+        Assertions.assertFalse(basketService.addProductToBasket(p, -1.0, u1));
         Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
     }
 
     @Test
-    public void addInfiniteProductToBasketTest() {
+    public void addInfiniteProductToBasketCustomerTest() {
         Product p = productRepo.findAll().get(0);
         BasketUserType u1 = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
-        Assertions.assertFalse(basketService.addProductToCart(p, Double.POSITIVE_INFINITY, u1));
+        Assertions.assertFalse(basketService.addProductToBasket(p, Double.POSITIVE_INFINITY, u1));
         Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
     }
 
     @Test
-    public void addNaNProductToBasketTest() {
+    public void addNaNProductToBasketCustomerTest() {
         Product p = productRepo.findAll().get(0);
         BasketUserType u1 = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = u1.getBasket();
 
-        Assertions.assertFalse(basketService.addProductToCart(p, Double.NaN, u1));
+        Assertions.assertFalse(basketService.addProductToBasket(p, Double.NaN, u1));
+        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+    }
+
+    @Test
+    public void addNotStoredProductToBasketShopEmployeeTest() {
+        Product notStored = new Product("Unicorn Powder", "gr", 10000.0, 10.0);
+        BasketUserType u1 = userService.getBasketUserTypeByEmail("shop@employee.com");
+        Basket b = u1.getBasket();
+
+        Assertions.assertThrows(InvalidDataAccessApiUsageException.class, () -> {
+            basketService.addProductToBasket(notStored, 10.0, u1);
+        });
+    }
+
+    @Test
+    public void addNotAvailableProductToBasketShopEmployeeTest() {
+        Product p = productRepo.findAll().get(0);
+        BasketUserType u1 = userService.getBasketUserTypeByEmail("shop@employee.com");
+        Basket b = u1.getBasket();
+
+        Assertions.assertFalse(basketService.addProductToBasket(p, 100000000000.0, u1));
+        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+    }
+
+    @Test
+    public void addNegativeProductToBasketShopEmployeeTest() {
+        Product p = productRepo.findAll().get(0);
+        BasketUserType u1 = userService.getBasketUserTypeByEmail("shop@employee.com");
+        Basket b = u1.getBasket();
+
+        Assertions.assertFalse(basketService.addProductToBasket(p, -1.0, u1));
+        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+    }
+
+    @Test
+    public void addInfiniteProductToBasketShopEmployeeTest() {
+        Product p = productRepo.findAll().get(0);
+        BasketUserType u1 = userService.getBasketUserTypeByEmail("shop@employee.com");
+        Basket b = u1.getBasket();
+
+        Assertions.assertFalse(basketService.addProductToBasket(p, Double.POSITIVE_INFINITY, u1));
+        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+    }
+
+    @Test
+    public void addNaNProductToBasketShopEmployeeTest() {
+        Product p = productRepo.findAll().get(0);
+        BasketUserType u1 = userService.getBasketUserTypeByEmail("shop@employee.com");
+        Basket b = u1.getBasket();
+
+        Assertions.assertFalse(basketService.addProductToBasket(p, Double.NaN, u1));
         Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
     }
 

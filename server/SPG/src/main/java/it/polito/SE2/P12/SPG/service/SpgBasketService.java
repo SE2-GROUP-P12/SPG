@@ -5,6 +5,7 @@ import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
 import org.springframework.stereotype.Service;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
+import it.polito.SE2.P12.SPG.repository.ProductRepo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +15,10 @@ import java.util.Map;
 public class SpgBasketService {
 
     private BasketRepo basketRepo;
-    public SpgBasketService(BasketRepo basketRepo) {
+    private ProductRepo productRepo;
+    public SpgBasketService(BasketRepo basketRepo, ProductRepo productRepo) {
         this.basketRepo = basketRepo;
+        this.productRepo = productRepo;
     }
 
     public Basket emptyBasket(BasketUserType user){
@@ -33,11 +36,12 @@ public class SpgBasketService {
             Product p = e.getKey();
             Double q = e.getValue();
             p.moveFromBasketToAvailable(q);
+            productRepo.save(p);
         }
         basketRepo.delete(basket);
     }
 
-    public Boolean addProductToCart(Product product, Double quantity, BasketUserType user) {
+    public Boolean addProductToBasket(Product product, Double quantity, BasketUserType user) {
         if(product.getQuantityAvailable() < quantity  || quantity <=0 || Double.isInfinite(quantity) || Double.isNaN(quantity))
             return false;
         product.moveFromAvailableToBasket(quantity);

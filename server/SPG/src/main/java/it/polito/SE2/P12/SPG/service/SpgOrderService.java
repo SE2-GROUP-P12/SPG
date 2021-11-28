@@ -8,6 +8,8 @@ import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.repository.BasketRepo;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
+import it.polito.SE2.P12.SPG.repository.ProductRepo;
+import it.polito.SE2.P12.SPG.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Example;
@@ -25,13 +27,17 @@ public class SpgOrderService {
     private OrderRepo orderRepo;
     private BasketRepo basketRepo;
     private SpgUserService spgUserService;
+    private ProductRepo productRepo;
+    private UserRepo userRepo;
 
 
     @Autowired
-    public SpgOrderService(OrderRepo orderRepo, BasketRepo basketRepo, SpgUserService spgUserService) {
+    public SpgOrderService(OrderRepo orderRepo, BasketRepo basketRepo, SpgUserService spgUserService, ProductRepo productRepo, UserRepo userRepo) {
         this.orderRepo = orderRepo;
         this.basketRepo = basketRepo;
         this.spgUserService = spgUserService;
+        this.productRepo = productRepo;
+        this.userRepo = userRepo;
     }
 
     public Boolean addNewOrder(Order order) {
@@ -48,15 +54,17 @@ public class SpgOrderService {
 
     //Basket viene convertito in un ordine per user
     public Boolean addNewOrderFromBasket(Basket basket, OrderUserType user) {
-        //Controlla se la quantità ordinata è disponibile
+        //Controlla se le quantità ordinate sono disponibile
         for (Map.Entry<Product, Double> e : basket.getProductQuantityMap().entrySet()) {
             if (e.getValue() > e.getKey().getQuantityAvailable())
                 return false;
         }
+        //Sposta le diverse quantità su ordered
         for (Map.Entry<Product, Double> e : basket.getProductQuantityMap().entrySet()) {
             Product p = e.getKey();
             Double q = e.getValue();
             p.moveFromAvailableToOrdered(q);
+            productRepo.save(p);
         }
         Order order = new Order((OrderUserType) user, LocalDateTime.now(), basket.getProductQuantityMap());
         return addNewOrder(order);
@@ -78,8 +86,9 @@ public class SpgOrderService {
         for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
             Product p = e.getKey();
             Double q = e.getValue();
-            if (!p.moveFromOrderedToDelivered(q))
+            if(!p.moveFromOrderedToDelivered(q))
                 return false;
+            productRepo.save(p);
         }
         user.setWallet(user.getWallet() - order.getValue());
 
@@ -107,6 +116,7 @@ public class SpgOrderService {
 
     public Double getTotalPrice(Long userId) {
         Double output = 0.00;
+        if(!userRepo.existsById(userId)) return -1.0;
         for (Order order : orderRepo.findAllByCust_UserId(userId)) {
             output += order.getValue();
         }
