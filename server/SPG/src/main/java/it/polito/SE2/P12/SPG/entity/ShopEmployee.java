@@ -27,8 +27,8 @@ public class ShopEmployee extends User implements BasketUserType {
     }
 
     @Override
-    public Basket getBasket() {
-        if (this.basket == null) {
+    public Basket getBasket(){
+        if(this.basket == null) {
             this.basket = new Basket(this);
         }
         return this.basket;

@@ -16,6 +16,7 @@ public interface UserRepo
     User findUserByUserId(Long userId);
     Boolean existsByEmail(String email);
     Boolean existsBySsn(String ssn);
+    Boolean existsByName(String name);
     List<User> findAllByRoleIn(List<String> roles);
     List<User> findAllByRole(String role);
     User findByEmailAndRoleIn(String email, List<String> roles);

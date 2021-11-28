@@ -59,8 +59,8 @@ public class OrderControllerApiTest {
     @BeforeEach
     public void initContext() {
         dbUtilsService.dropAll();
-        Customer customer1 = new Customer("customer1", "", "123450001", "", "customer1@test.com", "password", "");
-        Customer customer2 = new Customer("customer2", "", "123450000", "", "customer2@test.com", "password", "");
+        Customer customer1 = new Customer("customer1", "", "123450001", "", "customer1@test.com", "password", "", 1000.0);
+        Customer customer2 = new Customer("customer2", "", "123450000", "", "customer2@test.com", "password", "", 1000.0);
         ShopEmployee employee = new ShopEmployee("employee", "", "employee_123456", "", "employee@test.com", "password");
         customerRepo.save(customer1);
         customerRepo.save(customer2);
@@ -81,7 +81,6 @@ public class OrderControllerApiTest {
         //done by customer2
         basketService.addProductToCart(prod1, 2.001, customer2);
         basketService.addProductToCart(prod2, 5.001, customer2);
-
     }
 
     @Test

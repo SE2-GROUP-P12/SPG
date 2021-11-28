@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
+import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgProductService;
@@ -156,6 +157,8 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("email") && requestMap.containsKey("customer")) {
             User orderIssuer = userService.getUserByEmail(requestMap.get("customer").toString());
+            if(!userService.isOrderUserType(orderIssuer))
+                return ResponseEntity.badRequest().build();
             if (requestMap.get("email").toString().isEmpty()) { //It is a customer order
                 BasketUserType user = userService.getBasketUserTypeByEmail(orderIssuer.getEmail());
                 Basket basket = user.getBasket();
@@ -164,7 +167,7 @@ public class SpgController {
                     userService.payForProducts(basket,(Customer)orderIssuer);
                 }
                 basketService.dropBasket(basket);
-                return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, orderIssuer));
+                return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
             }
             //It's an order provided by the shopEmployee
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
@@ -174,7 +177,7 @@ public class SpgController {
                 userService.payForProducts(basket,(Customer)orderIssuer);
             }
             basketService.dropBasket(basket);
-            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, orderIssuer));
+            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
         }
         return ResponseEntity.badRequest().build();
     }
@@ -227,7 +230,9 @@ public class SpgController {
             Double value = Double.valueOf(requestMap.get("value").toString());
             if (!userService.checkPresenceOfMail(email) || value <= 0)
                 return ResponseEntity.badRequest().build();
-            return ResponseEntity.ok(userService.topUp(email, value));
+            if(!userService.topUp(email, value))
+                return ResponseEntity.badRequest().build();
+            return ResponseEntity.ok(userService.getWallet(email));
         }
         return ResponseEntity.badRequest().build();
     }

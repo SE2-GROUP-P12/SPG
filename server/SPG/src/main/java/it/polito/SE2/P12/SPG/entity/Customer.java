@@ -32,6 +32,14 @@ public class Customer extends User implements BasketUserType, OrderUserType {
         this.address = address;
     }
 
+    public Customer(String name, String surname, String ssn,
+                    String phoneNumber, String email,
+                    String password,String address, Double wallet){
+        super(name, surname, ssn, phoneNumber,email,password);
+        this.address = address;
+        this.wallet = wallet;
+    }
+
     @Override
     public Basket getBasket(){
         if(this.basket == null) {

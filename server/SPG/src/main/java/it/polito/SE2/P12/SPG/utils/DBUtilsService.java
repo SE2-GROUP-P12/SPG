@@ -65,9 +65,9 @@ public class DBUtilsService {
         Admin admin = new Admin("admin", "admin", "ADMIN00000000000", "0000000000",
                 "admin@foomail.com", hashedPassword);
         //Customers
-        Customer temp1 = new Customer("Mario", "Rossi", "RSSMRA00D12N376V", "01234567892", "mario.rossi@gmail.com", hashedPassword, "Main street 1234");
+        Customer temp1 = new Customer("Mario", "Rossi", "RSSMRA00D12N376V", "01234567892", "mario.rossi@gmail.com", hashedPassword, "Main street 1234", 95.0);
         Customer temp2 = new Customer("Paolo", "Bianchi", "BNCPLA00D12N376V", "01234567892",
-                "paolo.bianchi@gmail.com", hashedPassword, "Main street 1456");
+                "paolo.bianchi@gmail.com", hashedPassword, "Main street 1456", 12.50);
         //Shop Employee
         ShopEmployee temp3 = new ShopEmployee("Francesco", "Conte", "CNTFRN00D12N376V", "01234567892",
                 "francesco.conte@gmail.com", hashedPassword);

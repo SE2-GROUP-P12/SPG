@@ -77,7 +77,7 @@ public class Basket {
         } else {
             prods.put(product, quantity);
         }
-        this.value += product.getPrice() * quantity;
+        this.value += price * quantity;
     }
 
     public Boolean remove(Product product) {

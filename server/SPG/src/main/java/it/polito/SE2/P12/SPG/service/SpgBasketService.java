@@ -38,7 +38,7 @@ public class SpgBasketService {
     }
 
     public Boolean addProductToCart(Product product, Double quantity, BasketUserType user) {
-        if(product.getQuantityAvailable() < quantity)
+        if(product.getQuantityAvailable() < quantity  || quantity <=0 || Double.isInfinite(quantity) || Double.isNaN(quantity))
             return false;
         product.moveFromAvailableToBasket(quantity);
         Basket basket = user.getBasket();

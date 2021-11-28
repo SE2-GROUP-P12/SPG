@@ -7,4 +7,6 @@ import java.util.List;
 //Questo dovrebbe essere implementato da tutte quelle classi che hanno una lista di ordini a proprio carico.
 public interface OrderUserType {
     public List<Order> getOrders();
+    public void setWallet(Double wallet);
+    public Double getWallet();
 }
