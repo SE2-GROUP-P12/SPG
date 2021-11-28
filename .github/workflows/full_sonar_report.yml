@@ -1,4 +1,4 @@
-name: Build
+name: full_sonar_report
 on:
   push:
     branches:
@@ -7,8 +7,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  build:
-    name: Build
+  full_sonar_report:
+    name: full_sonar_report
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
