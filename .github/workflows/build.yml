@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - githubworkflow-*
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
