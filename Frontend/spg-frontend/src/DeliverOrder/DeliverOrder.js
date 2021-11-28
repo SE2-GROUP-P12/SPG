@@ -39,7 +39,7 @@ function DeliverOrder(props) {
         console.log("DATA: "+data);
         setOrders(data);
     }
-    useEffect(async ()=>{
+    useEffect( () => {
         loadAllOrders();
     }, [])
 

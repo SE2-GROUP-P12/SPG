@@ -32,13 +32,15 @@ function BrowseProducts(props) {
         if (data !== null) {
             setProducts(data['data']);
             setLoadCompleted(true);
-        } else
+        } else{
+            console.log(data);
             setTriggerError(true);
+        }
         return;
     }
 
-    useEffect(async () => {
-        await _browseProducts();
+    useEffect( () => {
+         _browseProducts();
     }, []);
 
 

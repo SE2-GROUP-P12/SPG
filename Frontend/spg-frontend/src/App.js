@@ -10,7 +10,7 @@ import {BrowseProducts} from "./BrowseProducts/BrowseProducts";
 import {NewCustomer} from './NewCustomer/NewCustomer';
 import {TopUp} from "./TopUp";
 import {PlaceOrder} from './PlaceOrder';
-import {Customer} from './Customer'
+import {Customer} from './Customer';
 import { DeliverOrder } from './DeliverOrder/DeliverOrder';
 import {UnauthorizedComponent} from './UnauthorizedComponent';
 //import {NoTime} from './NoTime'; //non sono ancora sicura che serva (-Marti)
@@ -106,8 +106,11 @@ function App() {
                                             errorMessage={errorMessage}
                                             isLogged={isLogged}></BrowseProducts>
                         </Route>
+                        <Route exact path="/Employee">
+                            <ShopEmployee isLogged={isLogged}/>
+                        </Route>
                         <Route exact path="/ShopEmployee">
-                            <ShopEmployee/>
+                            <ShopEmployee isLogged={isLogged}/>
                         </Route>
                         <Route exact path="/Customer">
                             <Customer/>
