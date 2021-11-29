@@ -307,6 +307,20 @@ async function getWallet(email) {
     }
 }
 
+async function getWalletWarning(email){
+    try {
+        console.log("CHECKPOINT: "+email);
+        const response = await fetch("/api/customer/retrieveError?email="+email,{
+            method: 'GET',
+            headers: getAuthenticationHeaders()
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 //GET: check whther the customer exists by its email and its SSN code, it returns a boolean
 async function customerExists(data) {
     try {
@@ -329,6 +343,8 @@ async function customerExists(data) {
         return undefined;
     }
 }
+
+
 
 //POST: register a new customer by sending all his/her info, it returns a boolean
 async function addCustomer(data) {
@@ -372,19 +388,6 @@ async function sessionReloader() {
         }
     } catch (err) {
         console.log(err);
-    }
-}
-
-async function getWalletWarning(email){
-    try {
-        const response = await fetch("/api/customer/retrieveError?email="+email,{
-            method: 'GET',
-            headers: getSessionReloadHeaders(),
-        });
-        const data = await response.json();
-        return data.exist;
-    } catch (error) {
-        console.log(error);
     }
 }
 

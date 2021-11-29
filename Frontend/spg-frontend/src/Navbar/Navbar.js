@@ -1,16 +1,17 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import logo from "./resources/logo.png";
-import warning from "./resources/warning.png";
+import './../App.css';
+import logo from "./../resources/logo.png";
+import warning from "./../resources/warning.png";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
-import Grid from '@mui/material/Grid';
-import { buildLoginBody } from './Utilities';
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip  from 'react-bootstrap/Tooltip';
+import { buildLoginBody } from '../Utilities';
 import { Link, Redirect } from 'react-router-dom';
 import { useState, useEffect } from "react";
 
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
-import { API } from './API/API';
+import { API } from './../API/API';
 
 function Navbar(props) {
     const [runRedirect, setRunRedirect] = useState(false);
@@ -45,19 +46,20 @@ function Navbar(props) {
         setRunRedirect(true);
     }
 
-    /* async function _getWalletWarning(){
+    async function _getWalletWarning(){
         const data = await API.getWalletWarning(props.loggedUser);
         setWalletWarning(data);
+        console.log("CHECKPOINT "+JSON.stringify(data));
         return data;
-    } */
+    }
 
     useEffect(() => {
         setRunRedirect(false);
     }, [runRedirect]);
 
-   /*  useEffect(() => {
+    useEffect(() => {
         _getWalletWarning();
-    }, []); */
+    }, [props.logged]);
 
     function doLogin() {
         window.location.href = "http://localhost:8081/login";
@@ -67,6 +69,12 @@ function Navbar(props) {
     if (runRedirect === true) {
         return (<Redirect to="/"></Redirect>);
     }
+
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+          {walletWarning.message}
+        </Tooltip>
+      );
 
     return (
         <>
@@ -85,7 +93,15 @@ function Navbar(props) {
                                     <Button className="btn btn-outline-light" variant="success" href="/LoginComponent"> Log in </Button>
                                     :
                                     <>
-                                        {(walletWarning && (props.loggedUserRole === 'CUSTOMER')) ? <img src={warning} alt="warning" className="warning" /> : ""}
+                                    {(walletWarning.exist && (props.loggedUserRole === 'CUSTOMER')) ? 
+                                            <OverlayTrigger
+                                              delay={{ show: 250, hide: 400 }}
+                                              overlay={renderTooltip}
+                                              placement="left"
+                                            >
+                                              <img src={warning} alt="warning" className="warning" /> 
+                                            </OverlayTrigger>
+                                        : ""}
                                     </>
                                     
                             }
@@ -99,7 +115,15 @@ function Navbar(props) {
                             {
                                 props.isLoggedFlag === true ?
                                     <>
-                                        {(walletWarning && (props.loggedUserRole === 'CUSTOMER')) ? <img src={warning} alt="warning" className="warning"/> : ""}
+                                        {(walletWarning.exist && (props.loggedUserRole === 'CUSTOMER')) ? 
+                                            <OverlayTrigger
+                                              delay={{ show: 250, hide: 400 }}
+                                              overlay={renderTooltip}
+                                              placement="left"
+                                            >
+                                              <img src={warning} alt="warning" className="warning" /> 
+                                            </OverlayTrigger>
+                                        : ""}
                                         <Button className="btn btn-danger" onClick={event => doLogOut(event)}>LOG OUT</Button>
                                     </>
                                     :

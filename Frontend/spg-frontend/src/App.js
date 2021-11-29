@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import {API} from "./API/API";
 import Container from 'react-bootstrap/Container';
-import {Navbar} from "./Navbar";
+import {Navbar} from "./Navbar/Navbar";
 import {Homepage} from "./Homepage/Homepage";
 import {Login} from "./Login";
 import {ShopEmployee} from "./ShopEmployee/ShopEmployee";
