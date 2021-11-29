@@ -201,7 +201,10 @@ async function customerExistsByMail(email) {
     try {
         const response = await fetch("/api/customer/customerExistsByEmail?email=" + email, {
             method: 'GET',
-            headers: getAuthenticationHeaders(),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
         });
         let exists = await response.json();
         if (response.ok)

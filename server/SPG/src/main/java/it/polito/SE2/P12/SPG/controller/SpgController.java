@@ -79,7 +79,7 @@ public class SpgController {
         return ResponseEntity.ok(productService.getAllProduct());
     }
 
-    @GetMapping(API.BROWSE_PRODUCT)
+    @GetMapping(API.BROWSE_PRODUCT_BY_FARMER)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE' , 'ROLE_FARMER')")
     public ResponseEntity<List<Product>> getAllProductByFarmer(@RequestParam String farmer) {
         return ResponseEntity.ok(productService.getAllProductByFarmerEmail(farmer));
@@ -102,7 +102,7 @@ public class SpgController {
 
 
     @GetMapping(API.EXIST_CUSTOMER_BY_EMAIL)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE')")
     public ResponseEntity checkExistCustomerMail(@RequestParam String email) {
         if (email == null)
             return ResponseEntity.badRequest().build();
@@ -156,7 +156,7 @@ public class SpgController {
     }
 
     @PostMapping(API.PLACE_ORDER)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
     public ResponseEntity placeOrder(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)

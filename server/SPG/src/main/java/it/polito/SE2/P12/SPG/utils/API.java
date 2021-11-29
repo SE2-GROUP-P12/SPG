@@ -3,7 +3,7 @@ package it.polito.SE2.P12.SPG.utils;
 public class API {
     public static final String HOME = "/api"; //ok
     public static final String ALL_PRODUCT = "/product/all"; //ok
-    public static final String BROWSE_PRODUCT = "/product/"; //ok
+    public static final String BROWSE_PRODUCT_BY_FARMER = "/product/"; //ok
     public static final String EXIST_CUSTOMER = "/customer/customerExists"; //ok
     public static final String EXIST_CUSTOMER_BY_EMAIL = "/customer/customerExistsByEmail";//ok
     public static final String CREATE_CUSTOMER = "/customer/addCustomer";//ok/

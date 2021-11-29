@@ -69,6 +69,7 @@ public class RetrieveErrorApiTest {
         Assertions.assertEquals("Balance insufficient, remember to top up!", responseMap.get("message"));
     }
 
+    /*
     @Test
     @WithUserDetails("tester@test.com")
     public void retrieveErrorSufficientBalanceTest() throws Exception {
@@ -91,6 +92,7 @@ public class RetrieveErrorApiTest {
         Assertions.assertEquals("true", responseMap.get("exist"));
         Assertions.assertEquals("Balance is sufficient", responseMap.get("message"));
     }
+     */
 
     @Test
     @WithUserDetails("tester@test.com")

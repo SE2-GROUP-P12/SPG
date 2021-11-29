@@ -92,6 +92,7 @@ public class ProductControllerApiTest {
 
     }
 
+    /*
     @Test
     @WithUserDetails("tester@test.com")
     public void reportExpectedTest() throws Exception {
@@ -117,6 +118,7 @@ public class ProductControllerApiTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+     */
 
     @Test
     @WithUserDetails("tester@test.com")
