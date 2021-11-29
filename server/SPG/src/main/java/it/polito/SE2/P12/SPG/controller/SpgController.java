@@ -79,6 +79,12 @@ public class SpgController {
         return ResponseEntity.ok(productService.getAllProduct());
     }
 
+    @GetMapping(API.BROWSE_PRODUCT)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE' , 'ROLE_FARMER')")
+    public ResponseEntity<List<Product>> getAllProductByFarmer(@RequestParam String farmer) {
+        return ResponseEntity.ok(productService.getAllProductByFarmerEmail(farmer));
+    }
+
 
     @GetMapping(API.EXIST_CUSTOMER)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')")
@@ -310,45 +316,25 @@ public class SpgController {
     public ResponseEntity reportExpected(@RequestBody String jsonData) {
         // sets expected values for products
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
-        Long productId;
-        Farmer farmer;
+        Product product;
         Double forecast;
-        String start;
+        /*String start;
         String end;
-        String unit;
-        String name;
-        Double price;
-        if (requestMap == null)
+         */
+        if (requestMap == null ||
+                !requestMap.containsKey("productId") ||
+                !requestMap.containsKey("quantity")
+        )
             return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("productId")) {
-            productId = (Long) requestMap.get("producerId");
-        } else return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("producer")) {
-            farmer = userService.getFarmerByName((String)requestMap.get("producer"));
-            if (farmer == null) return ResponseEntity.badRequest().build();
-        } else return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("quantityForecast")) {
-            forecast = (Double) requestMap.get("quantityForecast");
-        } else return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("startAvailability")) {
-            start = (String) requestMap.get("startAvailability");
-        } else return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("endAvailability")) {
-            end = (String) requestMap.get("endAvailability");
-        } else return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("price")) {
-            price = (Double) requestMap.get("price");
-        } else return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("unitOfMeasurement")) {
-            unit = (String) requestMap.get("unitOfMeasurement");
-        } else return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("name")) {
-            name = (String) requestMap.get("name");
-        } else return ResponseEntity.badRequest().build();
-        if (!productService.setForecast(productId, farmer, forecast, start, end)){
-            Product product = new Product(name, unit,price, farmer,forecast);
-            productService.addProduct(product);
-        }
+        Long productId = Long.parseLong(requestMap.get("productId").toString());
+        product = productService.getProductById(productId);
+        if (product == null)
+            return ResponseEntity.badRequest().build();
+        forecast = Double.valueOf(requestMap.get("quantity").toString());
+        /*start = (Double) requestMap.get("quantityForecast");
+        end = (Double) requestMap.get("quantityForecast");*/
+        if (!productService.setForecast(product, forecast))
+            return ResponseEntity.badRequest().build();
         return ResponseEntity.ok().build();
     }
 

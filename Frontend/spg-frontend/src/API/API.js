@@ -107,6 +107,31 @@ async function browseProducts(setErrorMessage) {
     }
 }
 
+async function browseProductsByFarmer(data, setErrorMessage) {
+    try {
+        console.log(JSON.stringify(data))
+        let listProducts;
+        const response = await fetch("/api/product/?farmer=" + data.email, {
+            method: 'GET',
+            headers: getAuthenticationHeaders(),
+        });
+        if (response.ok) {
+            //response.json().then(body => console.log(body));
+            return createSuccesfulHandlerObject(response);
+        } else {
+            let error = await createErrorHandlerObject(response, null)
+            //console.log(error);
+            setErrorMessage(error);
+            return null;
+        }
+    } catch (err) {
+        let error = await createErrorHandlerObject(null, 500);
+        setErrorMessage(error);
+        console.log("error: " + err);
+        return null;
+    }
+}
+
 //GET the cart related to the requested user by his/her email address, if error occurs it returns undefined
 async function getCart(data, setErrorMessage) {
     //console.log("here");
@@ -354,6 +379,23 @@ async function addCustomer(data) {
     }
 }
 
+async function modifyForecast(data) {
+    console.log(JSON.stringify(data));
+    try {
+        const response = await fetch("/api/farmer/reportExpected",
+            {
+                method: 'POST',
+                headers: getAuthenticationHeaders(),
+                body: JSON.stringify(data)
+            });
+    } catch
+        (err) {
+        console.log(err);
+        return undefined;
+    }
+    return true;
+}
+
 
 async function sessionReloader() {
     try {
@@ -386,7 +428,9 @@ const API = {
     getOrdersByEmail,
     deliverOrder,
     addCustomer,
-    sessionReloader
+    sessionReloader,
+    browseProductsByFarmer,
+    modifyForecast
 };
 export { API }
 

@@ -22,10 +22,33 @@ public class SpgProductService {
         List<Product> listProduct = productRepo.findAll();
         return listProduct;
     }
+
+    public List<Product> getAllProductByFarmerEmail(String email){
+        List<Product> listProduct = productRepo.findProductsByFarmer_Email(email);
+        return listProduct;
+    }
+
     public Product getProductById(Long productId){
         return productRepo.findProductByProductId(productId);
     }
 
+    public Boolean setForecast(Product product, Double forecast) {
+        if(forecast < 0.0 || Double.isNaN(forecast) || Double.isInfinite(forecast))
+            return false;
+        product.setQuantityForecast(forecast);
+        productRepo.save(product);
+        return true;
+    }
+
+    public boolean setForecast(Product product, Farmer farmer, Double forecast, String start, String end) {
+        product.setQuantityForecast(forecast);
+        product.setStartAvailability(start);
+        product.setEndAvailability(end);
+        productRepo.save(product);
+        return true;
+    }
+
+    /*
     public boolean setForecast(Long productId, Farmer farmer, Double forecast, String start, String end) {
         Product product = productRepo.findProductByProductId(productId);
         if (product == null){
@@ -38,6 +61,7 @@ public class SpgProductService {
         productRepo.save(product);
         return true;
     }
+    */
     public void addProduct(Product product){
         productRepo.save(product);
     }
