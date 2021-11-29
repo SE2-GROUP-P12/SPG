@@ -94,6 +94,32 @@ public class ProductControllerApiTest {
 
     @Test
     @WithUserDetails("tester@test.com")
+    public void reportExpectedTest() throws Exception {
+        //Issue order for customer2@test.com
+        String stringa = productRepo.findProductByName("Prod1").getProductId().toString();
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/" + API.REPORT_EXPECTED)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"productId\":\""+stringa+"\",\n" +
+                                "                \"name\": \"Apples\",\n" +
+                                "                \"producer\" : \""+"farmer_name"+"\",\n" +
+                                "                \"unitOfMeasurement\":\"kg\",\n" +
+                                "                \"totalQuantity\": 50,\n" +
+                                "\t\t\"quantityForecast\": 50,\n" +
+                                "                \"quantityAvailable\": 0,\n" +
+                                "                \"quantityBaskets\": 0,\n" +
+                                "                \"quantityOrdered\": 0,\n" +
+                                "                \"quantityDelivered\": 0,\n" +
+                                "                \"price\": 5,\n" +
+                                "                \"imageUrl\" : \"http://...\",\n" +
+                                "\t\t\"startAvailability\" : \"20/11/2021\", \n" +
+                                "\t\t\"endAvailability\" : \"27/11/2021\"\n" +
+                                "}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("tester@test.com")
     void emptyListOfProduct() throws Exception {
         productRepo.deleteAll();
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/" + API.ALL_PRODUCT)

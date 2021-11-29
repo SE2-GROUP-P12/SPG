@@ -324,29 +324,53 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("productId")) {
             productId = (Long) requestMap.get("producerId");
-        } else return ResponseEntity.badRequest().build();
+        } else{
+            System.out.println("1");
+            return ResponseEntity.badRequest().build();
+        }
         if (requestMap.containsKey("producer")) {
             farmer = userService.getFarmerByName((String) requestMap.get("producer"));
             if (farmer == null) return ResponseEntity.badRequest().build();
-        } else return ResponseEntity.badRequest().build();
+        } else{
+            System.out.println("2");
+            return ResponseEntity.badRequest().build();
+        }
         if (requestMap.containsKey("quantityForecast")) {
             forecast = (Double) requestMap.get("quantityForecast");
-        } else return ResponseEntity.badRequest().build();
+        } else{
+            System.out.println("3");
+            return ResponseEntity.badRequest().build();
+        }
         if (requestMap.containsKey("startAvailability")) {
             start = (String) requestMap.get("startAvailability");
-        } else return ResponseEntity.badRequest().build();
+        } else{
+            System.out.println("4");
+            return ResponseEntity.badRequest().build();
+        }
         if (requestMap.containsKey("endAvailability")) {
             end = (String) requestMap.get("endAvailability");
-        } else return ResponseEntity.badRequest().build();
+        } else{
+            System.out.println("5");
+            return ResponseEntity.badRequest().build();
+        }
         if (requestMap.containsKey("price")) {
             price = (Double) requestMap.get("price");
-        } else return ResponseEntity.badRequest().build();
+        } else{
+            System.out.println("6");
+            return ResponseEntity.badRequest().build();
+        }
         if (requestMap.containsKey("unitOfMeasurement")) {
             unit = (String) requestMap.get("unitOfMeasurement");
-        } else return ResponseEntity.badRequest().build();
+        } else{
+            System.out.println("7");
+            return ResponseEntity.badRequest().build();
+        }
         if (requestMap.containsKey("name")) {
             name = (String) requestMap.get("name");
-        } else return ResponseEntity.badRequest().build();
+        } else{
+            System.out.println("8");
+            return ResponseEntity.badRequest().build();
+        }
         if (!productService.setForecast(productId, farmer, forecast, start, end)) {
             Product product = new Product(name, unit, price, farmer, forecast);
             productService.addProduct(product);
