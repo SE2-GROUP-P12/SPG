@@ -23,7 +23,7 @@ jobs:
         image: mattiariola/spg_frontend
         registry: docker.io
         # Directory to run `docker build` from, if not project root
-        directory: Frontend/spg-frontend
+        # directory: Frontend/spg-frontend
         # Docker registry username
         username: ${{ secrets.DOCKER_USERNAME }}
         # Docker registry password
@@ -44,7 +44,7 @@ jobs:
         image: mattiariola/spg_server
         registry: docker.io
         # Directory to run `docker build` from, if not project root
-        directory: server/SPG
+        # directory: server/SPG
         # Docker registry username
         username: ${{ secrets.DOCKER_USERNAME }}
         # Docker registry password
