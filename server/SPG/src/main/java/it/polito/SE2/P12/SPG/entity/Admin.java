@@ -20,6 +20,7 @@ public class Admin extends User{
                 String phoneNumber,
                 String email, String password) {
         super(name, surname, ssn, phoneNumber, email, password);
+        this.role = "ADMIN";
     }
 
     @Override

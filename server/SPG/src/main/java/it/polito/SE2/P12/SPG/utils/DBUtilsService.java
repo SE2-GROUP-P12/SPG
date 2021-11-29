@@ -185,9 +185,15 @@ public class DBUtilsService {
     }
 
     public void loadTestingProds() {
-        Product prod1 = new Product("Prod1", "KG", 1000.0, 10.50F);
-        Product prod2 = new Product("Prod2", "KG", 100.0, 5.50F);
-        Product prod3 = new Product("Prod3", "KG", 20.0, 8.00F);
+        Farmer farmer1 = new Farmer("farmer1", "farmer1Surname", "farmer_1234567890",
+                "1234567890", "farmer1@test.com", "password");
+        Farmer farmer2 = new Farmer("farmer2", "farmer2Surname", "farmer_1234567891",
+                "1234567891", "farmer2@test.com", "password");
+        farmerRepo.save(farmer1);
+        farmerRepo.save(farmer2);
+        Product prod1 = new Product("Prod1", "KG", 1000.0, 10.50F, farmer1);
+        Product prod2 = new Product("Prod2", "KG", 100.0, 5.50F, farmer2);
+        Product prod3 = new Product("Prod3", "KG", 20.0, 8.00F, farmer1);
         productRepo.save(prod1);
         productRepo.save(prod2);
         productRepo.save(prod3);

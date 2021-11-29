@@ -10,12 +10,12 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue(UserRole.ROLE_FARMER)
-@Table(name="farmer")
+@Table(name = "farmer")
 @Data
 @NoArgsConstructor
-public class Farmer extends User{
+public class Farmer extends User {
 
-    @Column(name="company_name")
+    @Column(name = "company_name")
     protected String companyName;
     @OneToMany(mappedBy = "farmer")
     protected List<Product> prods;
@@ -23,16 +23,17 @@ public class Farmer extends User{
 
     public Farmer(String name, String surname, String ssn,
                   String phoneNumber,
-                  String email, String password){
-        super(name, surname,ssn,phoneNumber,email, password);
-        this.companyName= name + " " + surname;
+                  String email, String password) {
+        super(name, surname, ssn, phoneNumber, email, password);
+        this.companyName = name + " " + surname;
     }
 
     public Farmer(String name, String surname, String ssn,
                   String phoneNumber,
-                  String email, String password, String companyName){
-        super(name, surname,ssn,phoneNumber,email, password);
-        this.companyName=companyName;
+                  String email, String password, String companyName) {
+        super(name, surname, ssn, phoneNumber, email, password);
+        this.companyName = companyName;
+        this.role = "FARMER";
     }
 
     @Override
@@ -53,7 +54,7 @@ public class Farmer extends User{
                 ", password='" + password + '\'' +
                 ", active=" + active +
                 ", role='" + role + '\'' +
-                ", products=" + (prods==null ? "null": prods.stream().mapToLong(p -> p.getProductId()).toString()) +
+                ", products=" + (prods == null ? "null" : prods.stream().mapToLong(p -> p.getProductId()).toString()) +
                 '}';
     }
 }

@@ -289,8 +289,10 @@ public class SpgController {
             if (total > user.getWallet()) {
                 response.put("exist", "true");
                 response.put("message", "Balance insufficient, remember to top up!");
-            } else
-                response.put("exist", "false");
+            } else {
+                response.put("exist", "true");
+                response.put("message", "Balance is sufficient");
+            }
         }
         return ResponseEntity.ok(response);
     }
@@ -324,7 +326,7 @@ public class SpgController {
             productId = (Long) requestMap.get("producerId");
         } else return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("producer")) {
-            farmer = userService.getFarmerByName((String)requestMap.get("producer"));
+            farmer = userService.getFarmerByName((String) requestMap.get("producer"));
             if (farmer == null) return ResponseEntity.badRequest().build();
         } else return ResponseEntity.badRequest().build();
         if (requestMap.containsKey("quantityForecast")) {
@@ -345,8 +347,8 @@ public class SpgController {
         if (requestMap.containsKey("name")) {
             name = (String) requestMap.get("name");
         } else return ResponseEntity.badRequest().build();
-        if (!productService.setForecast(productId, farmer, forecast, start, end)){
-            Product product = new Product(name, unit,price, farmer,forecast);
+        if (!productService.setForecast(productId, farmer, forecast, start, end)) {
+            Product product = new Product(name, unit, price, farmer, forecast);
             productService.addProduct(product);
         }
         return ResponseEntity.ok().build();
