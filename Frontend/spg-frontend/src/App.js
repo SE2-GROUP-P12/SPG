@@ -30,7 +30,7 @@ function App() {
     /*LOGGGED USER SESSION*/
     const [isLogged, setIsLogged] = useState(false);
     const [loggedUser, setLoggedUser] = useState("");
-    const [loggedUserRole, setLOggedUserRole] = useState("");
+    const [loggedUserRole, setLoggedUserRole] = useState("");
     const [accessToken, setAccessToken] = useState("");
     /*TIME MACHINE MANAGEMENT*/
     const [show, setShow] = useState(false);
@@ -54,7 +54,7 @@ function App() {
             setIsLogged(true);
             setAccessToken(data['accessToken']);
             setLoggedUser(data["email"]);
-            setLOggedUserRole(data["roles"]);
+            setLoggedUserRole(data["roles"]);
             sessionStorage.removeItem("accessToken");
             sessionStorage.removeItem("refreshTokem");
             localStorage.removeItem("role");
@@ -86,7 +86,7 @@ function App() {
                     <Navbar setLoggedFlag={setIsLogged} isLoggedFlag={isLogged}
                             setLoggedUser={setLoggedUser} loggedUser={loggedUser}
                             setAccessToken={setAccessToken}
-                            setLoggedUserRole={setLOggedUserRole} loggedUserRole={loggedUserRole}/>
+                            setLoggedUserRole={setLoggedUserRole} loggedUserRole={loggedUserRole}/>
                     <Switch>
                         <Route exact path="/DeliverOrder">
                             <DeliverOrder time={time}
@@ -97,7 +97,8 @@ function App() {
                                         date={date}
                                         setErrorMessage={setErrorMessage}
                                         loggedUser={loggedUser}
-                                        loggedUserRole={loggedUserRole}/>
+                                        loggedUserRole={loggedUserRole}
+                                        />
                         </Route>
                         <Route exact path="/TopUp">
                             <TopUp/>
@@ -105,21 +106,28 @@ function App() {
                         <Route exact path="/NewCustomer">
                             <NewCustomer setLoggedUser={setLoggedUser} setLoggedFlag={setIsLogged}
                                          setAccessToken={setAccessToken} accessToken={accessToken}
-                                         setLoggedUserRole={setLOggedUserRole}/>
+                                         setLoggedUserRole={setLoggedUserRole}/>
                         </Route>
                         <Route exact path="/BrowseProducts">
                             <BrowseProducts setErrorMessage={setErrorMessage}
                                             errorMessage={errorMessage}
-                                            isLogged={isLogged}></BrowseProducts>
+                                            isLogged={isLogged}
+                                            loggedUser={loggedUser}>
+                            </BrowseProducts>
                         </Route>
                         <Route exact path="/Employee">
-                            <ShopEmployee isLogged={isLogged}/>
+                            <ShopEmployee   isLogged={isLogged}
+                                            loggedUser={loggedUser}
+                                            loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/ShopEmployee">
-                            <ShopEmployee isLogged={isLogged}/>
+                            <ShopEmployee   isLogged={isLogged}
+                                            loggedUser={loggedUser}
+                                            loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/Customer">
-                            <Customer/>
+                            <Customer   loggedUser={loggedUser}
+                                        loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/Farmer">
                             <Farmer/>
@@ -127,10 +135,14 @@ function App() {
                         <Route exact path="/ProductsForecast">
                             <ProductsForecast/>
                         </Route>
+                        <Route exact path="/Admin">
+                            <Customer   loggedUser={loggedUser}
+                                        loggedUserRole={loggedUserRole}/>
+                        </Route>
                         <Route exact path="/LoginComponent">
                             <Login setLoggedUser={setLoggedUser} setLoggedFlag={setIsLogged}
                                    setAccessToken={setAccessToken} accessToken={accessToken}
-                                   setLoggedUserRole={setLOggedUserRole}/>
+                                   setLoggedUserRole={setLoggedUserRole}/>
                         </Route>
                         <Route exact path="/">
                             <Homepage/>

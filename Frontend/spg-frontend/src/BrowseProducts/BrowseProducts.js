@@ -25,6 +25,7 @@ function BrowseProducts(props) {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
     const [triggerError, setTriggerError] = useState(false);
+    const userRole = localStorage.getItem('role');
 
     async function _browseProducts() {
         const data = await API.browseProducts(props.setErrorMessage);
@@ -87,7 +88,7 @@ function BrowseProducts(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={fruit} alt="fruit" style={{width: '150px', height: '150px'}}/>
+                            <img src={props.product.imageUrl == null ? fruit : props.product.imageUrl} alt="fruit" style={{width: '150px', height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
                                     {props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}
@@ -158,7 +159,7 @@ function BrowseProducts(props) {
                     loadCompleted === true ?
                         products.map((prod, index) =>
                             <Grid item xs={12} sm={6} md={4} align="center">
-                                <ProductEntry key={index} product={prod}></ProductEntry>
+                                <ProductEntry key={index} product={prod} loggedUser={props.loggedUser}></ProductEntry>
                             </Grid>)
                         :
                         <Grid xs={12} item align="center">
@@ -168,7 +169,7 @@ function BrowseProducts(props) {
                         </Grid>
                 }
             </Grid>
-            <Link to='/ShopEmployee'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
+            <Link to={`/${userRole}`}><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
         </Container>
     );
 }

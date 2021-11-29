@@ -4,17 +4,20 @@ import Button from "react-bootstrap/Button"
 import Grid from '@mui/material/Grid';
 import { Redirect, Link } from "react-router-dom";
 
-function Customer() {
+function Admin() {
     return (
-        localStorage.getItem('role') === 'CUSTOMER' || localStorage.getItem('role') === 'ADMIN' ?
+        localStorage.getItem('role') === 'ADMIN' ?
             <div>
                 <h1 style={{ paddingBlock: "20px" }}>Customer</h1>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={4}>
-                        <Link to="/BrowseProducts"><Button size='huge' variant="outline-success"> <h1>Browse Products</h1> </Button> </Link>
+                        <Link to="/ShopEmployee"><Button size='huge' variant="outline-success"> <h1>ShopEmployee</h1> </Button> </Link>
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <Link to='/PlaceOrder'><Button size='huge' variant="outline-success"> <h1>Place Order</h1> </Button></Link>
+                        <Link to='/Customer'><Button size='huge' variant="outline-success"> <h1>Customer</h1> </Button></Link>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Link to='/Farmer'><Button size='huge' variant="outline-success"> <h1>Farmer</h1> </Button></Link>
                     </Grid>
                 </Grid>
             </div>
@@ -23,4 +26,4 @@ function Customer() {
     );
 }
 
-export { Customer }
+export { Admin }

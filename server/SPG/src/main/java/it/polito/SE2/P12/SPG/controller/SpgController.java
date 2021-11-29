@@ -74,7 +74,7 @@ public class SpgController {
     }
 
     @GetMapping(API.ALL_PRODUCT)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE', 'ROLE_CUSTOMER' , 'ROLE_FARMER')")
+    //@PreAuthorize("permitAll()")
     public ResponseEntity<List<Product>> getAllProduct() {
         return ResponseEntity.ok(productService.getAllProduct());
     }

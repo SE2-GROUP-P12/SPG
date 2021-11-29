@@ -332,6 +332,20 @@ async function getWallet(email) {
     }
 }
 
+async function getWalletWarning(email){
+    try {
+        console.log("CHECKPOINT: "+email);
+        const response = await fetch("/api/customer/retrieveError?email="+email,{
+            method: 'GET',
+            headers: getAuthenticationHeaders()
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 //GET: check whther the customer exists by its email and its SSN code, it returns a boolean
 async function customerExists(data) {
     try {
@@ -433,7 +447,8 @@ const API = {
     addCustomer,
     sessionReloader,
     browseProductsByFarmer,
-    modifyForecast
+    modifyForecast,
+    getWalletWarning
 };
 export { API }
 

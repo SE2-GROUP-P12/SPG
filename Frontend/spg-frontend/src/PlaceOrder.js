@@ -5,12 +5,14 @@ import {Link} from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 import {API} from './API/API';
 import {Redirect} from "react-router-dom";
+import { Collapse } from '@mui/material';
 
 function PlaceOrder(props) {
     const [customer, setCustomer] = useState("");
@@ -182,7 +184,7 @@ function printOrder(prod) {
 function OrderEntry(props) {
     return (
         <li className="list-group-item">
-            {props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement}<br/>
+            {props.product.name} : {props.product.quantityAvailable} {props.product.unitOfMeasurement}<br/>
             SUBTOTAL: {props.product.price * props.product.quantityAvailable}€
         </li>
     );
