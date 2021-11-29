@@ -18,6 +18,7 @@ jobs:
       with:
         # Name of the Docker image
         image: mattiariola/spg_frontend
+        registry: docker.io
         # Directory to run `docker build` from, if not project root
         directory: Frontend/spg-frontend
         # Docker registry username
@@ -35,6 +36,7 @@ jobs:
       with:
         # Name of the Docker image
         image: mattiariola/spg_server
+        registry: docker.io
         # Directory to run `docker build` from, if not project root
         directory: server/SPG
         # Docker registry username
