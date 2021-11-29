@@ -43,15 +43,14 @@ This is when you want to keep the changes in your local database, in fact the co
 
 ##### setup steps
 Launch the command `docker-compose up -d database`
-
 #### Local db in docker container without persistence
 
 ##### when to use it
 This is when you don't want to keep the changes in your local database, the container will not use a persistent volume and all the data will be cleaned when the container of the database is removed
 
-##### setup steps
-Launch the command `docker-compose up -d database`
-
+##### setup steps 
+Launch the command `docker-compose up -d database-test`
+*The database-test is on port 13306 and has no persistent volumes*
 #### Local db not in docker container
 
 ##### when to use it
