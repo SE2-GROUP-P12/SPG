@@ -88,10 +88,7 @@ async function browseProducts(setErrorMessage) {
         let listProducts;
         const response = await fetch("/api/product/all", {
             method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
+            headers: getAuthenticationHeaders(),
         });
         if (response.ok) {
             //response.json().then(body => console.log(body));
