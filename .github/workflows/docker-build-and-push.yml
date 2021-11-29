@@ -1,0 +1,44 @@
+name: FE Docker Image CI
+
+on:
+  push:
+    branches:
+    - main
+    - githubworkflow-*
+
+jobs:
+
+  fe_docker_build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Docker Build & Push Action
+      # You may pin to the exact commit or the version.
+      # uses: mr-smithers-excellent/docker-build-push@a7fe6652db5c7274374844e81692992f5a2befb9
+      uses: mr-smithers-excellent/docker-build-push@v5.6
+      with:
+        # Name of the Docker image
+        image: mattiariola/spg_frontend
+        # Directory to run `docker build` from, if not project root
+        directory: Frontend/spg-frontend
+        # Docker registry username
+        username: ${{ secrets.DOCKER_USERNAME }}
+        # Docker registry password
+        password: ${{ secrets.DOCKER_TOKEN }}
+        
+  be_docker_build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Docker Build & Push Action
+      # You may pin to the exact commit or the version.
+      # uses: mr-smithers-excellent/docker-build-push@a7fe6652db5c7274374844e81692992f5a2befb9
+      uses: mr-smithers-excellent/docker-build-push@v5.6
+      with:
+        # Name of the Docker image
+        image: mattiariola/spg_server
+        # Directory to run `docker build` from, if not project root
+        directory: server/SPG
+        # Docker registry username
+        username: ${{ secrets.DOCKER_USERNAME }}
+        # Docker registry password
+        password: ${{ secrets.DOCKER_TOKEN }}
+        
