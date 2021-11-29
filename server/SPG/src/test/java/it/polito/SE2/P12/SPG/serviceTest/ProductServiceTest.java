@@ -68,6 +68,7 @@ public class ProductServiceTest {
         Assertions.assertEquals(products.get(2).getName(), p3.getName());
     }
 
+    /*
     @Test
     public void forecastTest() throws Exception {
         productService.setForecast(productRepo.findProductByName("Prod1").getProductId(),  farmerRepo.findFarmerByEmail("farmer@farmer.com"), 5.7, "aaa", "bbb");
@@ -78,6 +79,6 @@ public class ProductServiceTest {
     public void forecastOnNonExistingProduct(){
         Assertions.assertFalse(productService.setForecast(productRepo.findProductByName("Prod1").getProductId()*-1,farmerRepo.findFarmerByEmail("farmer@farmer.com"), 5.7, "aaa", "bbb"));
     }
-
+    */
 
 }

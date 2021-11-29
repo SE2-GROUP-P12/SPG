@@ -11,6 +11,7 @@ import {NewCustomer} from './NewCustomer/NewCustomer';
 import {TopUp} from "./TopUp";
 import {PlaceOrder} from './PlaceOrder';
 import {Customer} from './Customer';
+import {Farmer} from './Farmer';
 import { DeliverOrder } from './DeliverOrder/DeliverOrder';
 import {UnauthorizedComponent} from './UnauthorizedComponent';
 //import {NoTime} from './NoTime'; //non sono ancora sicura che serva (-Marti)
@@ -19,6 +20,7 @@ import {useState, useEffect} from "react";
 import Modal from 'react-bootstrap/Modal';
 import {Formik, Form, Field} from 'formik';
 import Button from 'react-bootstrap/Button';
+import {ProductsForecast} from "./ProductsForecast";
 
 const DEBUG = true;
 
@@ -64,8 +66,8 @@ function App() {
         }
     }
 
-    useEffect(() => {
-        _reloadSession();
+    useEffect(async () => {
+        await _reloadSession();
     }, []);
 
     /*TIME HANDLER*/
@@ -116,6 +118,12 @@ function App() {
                         </Route>
                         <Route exact path="/Customer">
                             <Customer/>
+                        </Route>
+                        <Route exact path="/Farmer">
+                            <Farmer/>
+                        </Route>
+                        <Route exact path="/ProductsForecast">
+                            <ProductsForecast/>
                         </Route>
                         <Route exact path="/LoginComponent">
                             <Login setLoggedUser={setLoggedUser} setLoggedFlag={setIsLogged}
