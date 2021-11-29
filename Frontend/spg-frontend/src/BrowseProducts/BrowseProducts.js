@@ -100,7 +100,7 @@ function BrowseProducts(props) {
                                     onSubmit={async (values) => {
                                         let outcome = await API.addToCart({
                                             "productId": props.product.productId,
-                                            "email": 'mario.rossi@gmail.com',
+                                            "email": localStorage.getItem("username"),
                                             "quantity": values.amount
                                         });
                                         if (outcome === true)

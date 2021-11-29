@@ -93,7 +93,9 @@ function App() {
                         <Route exact path="/PlaceOrder">
                             <PlaceOrder time={time}
                                         date={date}
-                                        setErrorMessage={setErrorMessage}/>
+                                        setErrorMessage={setErrorMessage}
+                                        loggedUser={loggedUser}
+                                        loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/TopUp">
                             <TopUp/>

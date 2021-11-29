@@ -38,6 +38,7 @@ public class Customer extends User implements BasketUserType, OrderUserType {
         super(name, surname, ssn, phoneNumber,email,password);
         this.address = address;
         this.wallet = wallet;
+        this.role = "CUSTOMER";
     }
 
     @Override

@@ -40,8 +40,6 @@ public class OrderControllerApiTest {
     @Autowired
     private ShopEmployeeRepo shopEmployeeRepo;
     @Autowired
-    private OrderRepo orderRepo;
-    @Autowired
     private FarmerRepo farmerRepo;
     @Autowired
     private CustomerRepo customerRepo;
@@ -49,8 +47,6 @@ public class OrderControllerApiTest {
     private ProductRepo productRepo;
     @Autowired
     private SpgBasketService basketService;
-    @Autowired
-    private BasketRepo basketRepo;
     @Autowired
     private DBUtilsService dbUtilsService;
 
