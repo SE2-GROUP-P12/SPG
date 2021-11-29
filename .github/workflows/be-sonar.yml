@@ -1,18 +1,26 @@
-name: Build
+name: be_sonarcloud
 on:
   push:
     branches:
       - main
+      - githubworkflow-*
+      - spg-v*
+      - BE/*
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  build:
-    name: Build
+  be_sonarcloud:
+    name: be_sonarcloud
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server/SPG
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Start infra dependencies
+        run: docker-compose up -d database-test &
       - name: Set up JDK 17
         uses: actions/setup-java@v1
         with:
@@ -32,5 +40,5 @@ jobs:
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -f /home/runner/work/SPG/SPG/server/SPG/pom.xml -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=SE2-GROUP-P12_SPG
+          SONAR_TOKEN: ${{ secrets.BE_SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=BE_SPG

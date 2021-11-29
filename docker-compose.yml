@@ -42,12 +42,8 @@ services:
 
   database-test:    
     image: mysql:5.7
-    environment: &mysql-default-environment
-      MYSQL_ROOT_USER: root
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: spg
-      MYSQL_USER: asparago
-      MYSQL_PASSWORD: asparago
+    environment: 
+      *mysql-default-environment
     ports:
       - "13306:3306"
     
