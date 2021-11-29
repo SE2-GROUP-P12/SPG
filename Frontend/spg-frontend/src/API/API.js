@@ -375,6 +375,19 @@ async function sessionReloader() {
     }
 }
 
+async function getWalletWarning(email){
+    try {
+        const response = await fetch("/api/customer/retrieveError?email="+email,{
+            method: 'GET',
+            headers: getSessionReloadHeaders(),
+        });
+        const data = await response.json();
+        return data.exist;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const API = {
     browseProducts,
     placeOrder,
@@ -389,7 +402,8 @@ const API = {
     getOrdersByEmail,
     deliverOrder,
     addCustomer,
-    sessionReloader
+    sessionReloader,
+    getWalletWarning
 };
 export { API }
 

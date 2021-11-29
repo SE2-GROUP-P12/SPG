@@ -150,7 +150,7 @@ public class SpgController {
     }
 
     @PostMapping(API.PLACE_ORDER)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
     public ResponseEntity placeOrder(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
@@ -175,7 +175,7 @@ public class SpgController {
     }
 
     @PostMapping(API.ADD_TO_BASKET)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
     public ResponseEntity addToBasket(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         Map<String, String> response = new HashMap<>();
@@ -194,7 +194,7 @@ public class SpgController {
     }
 
     @GetMapping(API.GET_CART)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
     public ResponseEntity<List<Product>> getBasket(@RequestParam String email) {
         BasketUserType user = userService.getBasketUserTypeByEmail(email);
         if (user == null) {
@@ -204,7 +204,7 @@ public class SpgController {
     }
 
     @GetMapping(API.GET_WALLET)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
     public ResponseEntity<Double> getWallet(@RequestParam String email) {
         if (!Boolean.TRUE.equals(userService.checkPresenceOfMail(email)))
             return ResponseEntity.badRequest().build();
@@ -212,7 +212,7 @@ public class SpgController {
     }
 
     @PostMapping(API.TOP_UP)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE')")
     public ResponseEntity topUp(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
@@ -230,13 +230,13 @@ public class SpgController {
     }
 
     @PostMapping(API.DELIVER_ORDER)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
     public ResponseEntity deliverOrder(@RequestBody Long orderId) {
         return ResponseEntity.ok(orderService.deliverOrder(orderId));
     }
 
     @DeleteMapping(API.DROP_ORDER)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
     public ResponseEntity dropOrder(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
@@ -254,7 +254,7 @@ public class SpgController {
     }
 
     @GetMapping(API.GET_ORDERS_BY_EMAIL)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE')")
     public ResponseEntity getOrdersByEmail(@RequestParam String email) {
         if (email == null)
             return ResponseEntity.badRequest().build();
@@ -276,7 +276,7 @@ public class SpgController {
     }
 
     @GetMapping(API.RETRIEVE_ERROR)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER')")
     public ResponseEntity retrieveError(@RequestParam String email) {
         //Warning! only customer have a wallet and therefore this will send an error
         OrderUserType user = userService.getOrderUserTypeByEmail(email);

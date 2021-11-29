@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import logo from "./resources/logo.png";
+import warning from "./resources/warning.png";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
 import Grid from '@mui/material/Grid';
@@ -9,11 +10,12 @@ import { Link, Redirect } from 'react-router-dom';
 import { useState, useEffect } from "react";
 
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import { API } from './API/API';
 
 function Navbar(props) {
     const [runRedirect, setRunRedirect] = useState(false);
-
-
+    const [walletWarning, setWalletWarning] = useState(false);
+    
     const doLogOut = (event) => {
         event.preventDefault();
         //TODO: insert this fecth into the API file
@@ -43,10 +45,19 @@ function Navbar(props) {
         setRunRedirect(true);
     }
 
-    useEffect(() => {
-        setRunRedirect(false)
-    },);
+    /* async function _getWalletWarning(){
+        const data = await API.getWalletWarning(props.loggedUser);
+        setWalletWarning(data);
+        return data;
+    } */
 
+    useEffect(() => {
+        setRunRedirect(false);
+    }, [runRedirect]);
+
+   /*  useEffect(() => {
+        _getWalletWarning();
+    }, []); */
 
     function doLogin() {
         window.location.href = "http://localhost:8081/login";
@@ -73,7 +84,10 @@ function Navbar(props) {
                                 props.isLoggedFlag !== true ?
                                     <Button className="btn btn-outline-light" variant="success" href="/LoginComponent"> Log in </Button>
                                     :
-                                    ""
+                                    <>
+                                        {(walletWarning && (props.loggedUserRole === 'CUSTOMER')) ? <img src={warning} alt="warning" className="warning" /> : ""}
+                                    </>
+                                    
                             }
                         </div>
                     </Nav>
@@ -84,12 +98,15 @@ function Navbar(props) {
                         <div>
                             {
                                 props.isLoggedFlag === true ?
-                                    <Button className="btn btn-danger" onClick={event => doLogOut(event)}>LOG OUT</Button>
+                                    <>
+                                        {(walletWarning && (props.loggedUserRole === 'CUSTOMER')) ? <img src={warning} alt="warning" className="warning"/> : ""}
+                                        <Button className="btn btn-danger" onClick={event => doLogOut(event)}>LOG OUT</Button>
+                                    </>
                                     :
-                                    <div>
+                                    <>
                                         <Button className="btn btn-outline-light" variant="success" href='/NewCustomer'> Sign up </Button>
                                         <Button className="btn btn-outline-light" variant="success" href='/LoginComponent'> Log in </Button>
-                                    </div>
+                                    </>
                             }
                         </div>
                     </Nav>

@@ -1,14 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
 import Button from "react-bootstrap/Button"
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import Grid from '@mui/material/Grid';
 
 function ShopEmployee()
 {
     return(
+        localStorage.getItem('role') === 'EMPLOYEE' || localStorage.getItem('role') === 'ADMIN' ?
         <div>
             <h1 style={{paddingBlock: "20px"}}>Shop Employee</h1>
             <Grid container spacing={2}>
@@ -29,6 +28,8 @@ function ShopEmployee()
                 </Grid>
             </Grid>
         </div>
+        :
+        <Redirect to="/ErrorHandler"></Redirect>
     )
 }
 
