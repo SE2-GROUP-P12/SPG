@@ -1,4 +1,4 @@
-name: buildx_docker_build_push
+name: dockerhub_release
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'
 
 jobs:
-  buildx_docker:
+  dockerhub_release:
     runs-on: ubuntu-latest
     steps:
       -
@@ -34,11 +34,11 @@ jobs:
         with:
           context: ./Frontend/spg-frontend
           push: true
-          tags: mattiariola/spg_frontend:${{ steps.vars.outputs.tag }}
+          tags: mattiariola/spg_frontend:latest, mattiariola/spg_frontend:${{ steps.vars.outputs.tag }}
       -
         name: BE Build and push
         uses: docker/build-push-action@v2
         with:
           context: ./server/SPG
           push: true
-          tags: mattiariola/spg_server:${{ steps.vars.outputs.tag }}
+          tags: mattiariola/spg_server:latest, mattiariola/spg_server:${{ steps.vars.outputs.tag }}
