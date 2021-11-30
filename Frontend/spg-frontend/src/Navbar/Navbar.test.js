@@ -14,6 +14,8 @@ test("Alert Balance insufficient", async () =>
         "message": "Balance insufficient, remember to top up!"
     });
 
+    localStorage.setItem("username", "mario.rossi@gmail.com");
+
     const {getByText, getByAltText} = render(
         <Router>
             <Navbar isLoggedFlag = {true}
