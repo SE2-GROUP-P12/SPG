@@ -2,10 +2,8 @@ name: buildx_docker_build_push
 
 on:
   push:
-    branches:
-      - main
-      - spg-v*
-      - githubworkflow-*
+    tags:
+      - 'v*.*.*'
 
 jobs:
   buildx_docker:
@@ -15,9 +13,9 @@ jobs:
         name: Checkout
         uses: actions/checkout@v2
       - 
-        name: Set output
+        name: Set tag output
         id: vars
-        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -36,11 +34,11 @@ jobs:
         with:
           context: ./Frontend/spg-frontend
           push: true
-          tags: mattiariola/spg_frontend:${{ steps.vars.outputs.short_ref }}
+          tags: mattiariola/spg_frontend:${{ steps.vars.outputs.tag }}
       -
         name: BE Build and push
         uses: docker/build-push-action@v2
         with:
           context: ./server/SPG
           push: true
-          tags: mattiariola/spg_server:${{ steps.vars.outputs.short_ref }}
+          tags: mattiariola/spg_server:${{ steps.vars.outputs.tag }}
