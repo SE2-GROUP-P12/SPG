@@ -1,450 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/API/API.test.js">
-        <testCase name="Browse product should return 50 items, including Apples" duration="58"/>
-        <testCase name="Add to mario.rossi@gmail.com&apos;s cart 1kg of apples to cart and retrieve it afterwards" duration="9"/>
-        <testCase name="Add 10 euros to mario.rossi@gmail.com&apos;s wallet" duration="5"/>
-        <testCase name="Place an order from a cart" duration="4"/>
-        <testCase name="Drop cart" duration="4"/>
-        <testCase name="Get all orders, then get only the orders for mario" duration="3"/>
-        <testCase name="Deliver order" duration="3"/>
-        <testCase name="Add customer" duration="3"/>
-    </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/DeliverOrder/DeliverOrder.test.js">
-        <testCase name="Renders Correctly" duration="155"/>
-    </file>
     <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Homepage/Homepage.test.js">
-        <testCase name="renders correctly" duration="71"/>
+        <testCase name="renders correctly" duration="119"/>
+    </file>
+    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/API/API.test.js">
+        <testCase name="Browse product should return 50 items, including Apples" duration="131"/>
+        <testCase name="Add to mario.rossi@gmail.com&apos;s cart 1kg of apples to cart and retrieve it afterwards" duration="17"/>
+        <testCase name="Add 10 euros to mario.rossi@gmail.com&apos;s wallet" duration="18"/>
+        <testCase name="Place an order from a cart" duration="7"/>
+        <testCase name="Drop cart" duration="6"/>
+        <testCase name="Get all orders, then get only the orders for mario" duration="6"/>
+        <testCase name="Deliver order" duration="6"/>
+        <testCase name="Add customer" duration="7"/>
+    </file>
+    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Navbar/Navbar.test.js">
+        <testCase name="Alert Balance insufficient" duration="151">
+            <failure message="Error: expect(jest.fn()).toBeCalledWith(...expected)"><![CDATA[Error: expect(jest.fn()).toBeCalledWith(...expected)
+
+Expected: "mario.rossi@gmail.com"
+Received: null
+
+Number of calls: 1
+    at Object.<anonymous> (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Navbar/Navbar.test.js:31:23)
+    at _callCircusTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:212:5)
+    at _runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:149:3)
+    at _runTestsForDescribeBlock (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:63:9)
+    at run (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:25:3)
+    at runAndTransformResultsToJestFormat (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:176:21)
+    at jestAdapter (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:109:19)
+    at runTestInternal (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:380:16)
+    at runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:472:34)
+    at Object.worker (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/testWorker.js:133:12)]]></failure>
+        </testCase>
+    </file>
+    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Farmer/Farmer.test.js">
+        <testCase name="renders correctly" duration="74"/>
+    </file>
+    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Customer/Customer.test.js">
+        <testCase name="renders correctly" duration="81"/>
     </file>
     <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/ShopEmployee/ShopEmployee.test.js">
-        <testCase name="renders correctly" duration="83"/>
+        <testCase name="renders correctly" duration="93"/>
     </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/NewCustomer/NewCustomer.test.js">
-        <testCase name="renders correctly" duration="158"/>
-        <testCase name="empty fields" duration="164"/>
-        <testCase name="insecure password" duration="145"/>
-        <testCase name="create existing user" duration="310"/>
-        <testCase name="create new user" duration="1172">
-            <failure message="Error: Unable to find an element with the text: Everything goes well, new client created.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible."><![CDATA[Error: Unable to find an element with the text: Everything goes well, new client created.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
-
-<body
-  class=""
-  style="padding-right: 1024px;"
->
-  <div>
-    <h1>
-      Register
-    </h1>
-    <form
-      action="#"
-    >
-      <div
-        align="center"
-        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-undefined css-11lq3yg-MuiGrid-root"
-      >
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          align="left"
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4 MuiGrid-grid-sm-2 css-1hz1833-MuiGrid-root"
-        >
-          <label
-            for="email"
-          >
-            Email*
-          </label>
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-ayy8wd-MuiGrid-root"
-        >
-          <input
-            id="email"
-            label="Email"
-            name="email"
-            style="width: 100%;"
-            type="email"
-            value="customer@gmail.com"
-          />
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          align="left"
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4 MuiGrid-grid-sm-2 css-1hz1833-MuiGrid-root"
-        >
-          <label
-            for="password"
-          >
-            Password*
-          </label>
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-ayy8wd-MuiGrid-root"
-        >
-          <input
-            id="password"
-            label="Password"
-            name="password"
-            style="width: 100%;"
-            type="password"
-            value="Pa55word"
-          />
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          align="left"
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4 MuiGrid-grid-sm-2 css-1hz1833-MuiGrid-root"
-        >
-          <label
-            for="name"
-          >
-            Name*
-          </label>
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-ayy8wd-MuiGrid-root"
-        >
-          <input
-            id="name"
-            label="Name"
-            name="name"
-            style="width: 100%;"
-            type="text"
-            value="Mario"
-          />
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          align="left"
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4 MuiGrid-grid-sm-2 css-1hz1833-MuiGrid-root"
-        >
-          <label
-            for="surname"
-          >
-            Surname*
-          </label>
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-ayy8wd-MuiGrid-root"
-        >
-          <input
-            id="surname"
-            label="Surname"
-            name="surname"
-            style="width: 100%;"
-            type="text"
-            value="Mario"
-          />
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          align="left"
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4 MuiGrid-grid-sm-2 css-1hz1833-MuiGrid-root"
-        >
-          <label
-            for="address"
-          >
-            Address*
-          </label>
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-ayy8wd-MuiGrid-root"
-        >
-          <input
-            id="address"
-            label="Address"
-            name="address"
-            style="width: 100%;"
-            type="text"
-            value="Via Roma 15, Torino"
-          />
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          align="left"
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4 MuiGrid-grid-sm-2 css-1hz1833-MuiGrid-root"
-        >
-          <label
-            for="ssn"
-          >
-            SSN*
-          </label>
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-ayy8wd-MuiGrid-root"
-        >
-          <input
-            id="ssn"
-            label="SSN"
-            name="SSN"
-            style="width: 100%;"
-            type="text"
-            value="MRIMRA00D12N376V"
-          />
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          align="left"
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4 MuiGrid-grid-sm-2 css-1hz1833-MuiGrid-root"
-        >
-          <label
-            for="phoneNumber"
-          >
-            Phone Number
-          </label>
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-ayy8wd-MuiGrid-root"
-        >
-          <input
-            id="phoneNumber"
-            label="PhoneNumber"
-            name="phoneNumber"
-            style="width: 100%;"
-            type="text"
-            value="1234567890"
-          />
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 MuiGrid-grid-sm-2 css-cpemyc-MuiGrid-root"
-        />
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-ayy8wd-MuiGrid-root"
-        >
-          <a
-            href="/ShopEmployee"
-          >
-            <button
-              class="mt-4 btn btn-secondary btn-lg"
-              type="button"
-            >
-              Back
-            </button>
-          </a>
-        </div>
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-ayy8wd-MuiGrid-root"
-        >
-          <button
-            class="mt-4 btn btn-success btn-lg"
-            type="Submit"
-          >
-            Submit
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
-</body>
-    at waitForWrapper (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:173:27)
-    at Object.<anonymous> (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/NewCustomer/NewCustomer.test.js:111:11)
-    at Promise.then.completed (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/utils.js:276:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/utils.js:216:10)
-    at _callCircusTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:212:40)
-    at _runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:149:3)
-    at _runTestsForDescribeBlock (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:63:9)
-    at run (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:25:3)
-    at runAndTransformResultsToJestFormat (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:176:21)
-    at jestAdapter (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:109:19)
-    at runTestInternal (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:380:16)
-    at runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:472:34)
-    at Object.worker (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/testWorker.js:133:12)]]></failure>
-        </testCase>
-        <testCase name="server error" duration="205"/>
+    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/DeliverOrder/DeliverOrder.test.js">
+        <testCase name="Renders Correctly" duration="186"/>
     </file>
     <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.test.js">
-        <testCase name="Renders correctly" duration="1075">
-            <failure message="TypeError: Cannot read property &apos;map&apos; of undefined"><![CDATA[TypeError: Cannot read property 'map' of undefined
-    at BrowseProducts (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:157:34)
-    at renderWithHooks (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:14985:18)
-    at updateFunctionComponent (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:17356:20)
-    at beginWork (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:19063:16)
-    at HTMLUnknownElement.callCallback (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:3945:14)
-    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
-    at innerInvokeEventListeners (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
-    at invokeEventListeners (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
-    at HTMLUnknownElementImpl._dispatch (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
-    at HTMLUnknownElementImpl.dispatchEvent (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
-    at HTMLUnknownElement.dispatchEvent (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
-    at Object.invokeGuardedCallbackDev (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:3994:16)
-    at invokeGuardedCallback (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:4056:31)
-    at beginWork$1 (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:23964:7)
-    at performUnitOfWork (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:22779:12)
-    at workLoopSync (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:22707:5)
-    at renderRootSync (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:22670:7)
-    at performSyncWorkOnRoot (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:22293:18)
-    at /Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:11327:26
-    at unstable_runWithPriority (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/scheduler/cjs/scheduler.development.js:468:12)
-    at runWithPriority$1 (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:11276:10)
-    at flushSyncCallbackQueueImpl (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:11322:9)
-    at flushSyncCallbackQueue (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:11309:3)
-    at scheduleUpdateOnFiber (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:21893:9)
-    at setLoadCompleted (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:16139:5)
-    at _browseProducts (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:34:13)
-    at processTicksAndRejections (internal/process/task_queues.js:93:5)
-    at /Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:41:9]]></failure>
-            <failure message="Error: Unable to find an element with the text: Apples. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible."><![CDATA[Error: Unable to find an element with the text: Apples. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
-
-<body>
-  <div />
-</body>
-    at waitForWrapper (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:173:27)
-    at Object.<anonymous> (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.test.js:38:11)
-    at Promise.then.completed (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/utils.js:276:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/utils.js:216:10)
-    at _callCircusTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:212:40)
-    at processTicksAndRejections (internal/process/task_queues.js:93:5)
-    at _runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:149:3)
-    at _runTestsForDescribeBlock (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:63:9)
-    at run (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:25:3)
-    at runAndTransformResultsToJestFormat (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:176:21)
-    at jestAdapter (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:109:19)
-    at runTestInternal (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:380:16)
-    at runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:472:34)
-    at Object.worker (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/testWorker.js:133:12)]]></failure>
-        </testCase>
-        <testCase name="Add to cart" duration="1012">
-            <failure message="TypeError: Cannot read property &apos;map&apos; of undefined"><![CDATA[TypeError: Cannot read property 'map' of undefined
-    at BrowseProducts (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:157:34)
-    at renderWithHooks (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:14985:18)
-    at updateFunctionComponent (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:17356:20)
-    at beginWork (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:19063:16)
-    at HTMLUnknownElement.callCallback (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:3945:14)
-    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
-    at innerInvokeEventListeners (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
-    at invokeEventListeners (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
-    at HTMLUnknownElementImpl._dispatch (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
-    at HTMLUnknownElementImpl.dispatchEvent (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
-    at HTMLUnknownElement.dispatchEvent (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
-    at Object.invokeGuardedCallbackDev (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:3994:16)
-    at invokeGuardedCallback (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:4056:31)
-    at beginWork$1 (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:23964:7)
-    at performUnitOfWork (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:22779:12)
-    at workLoopSync (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:22707:5)
-    at renderRootSync (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:22670:7)
-    at performSyncWorkOnRoot (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:22293:18)
-    at /Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:11327:26
-    at unstable_runWithPriority (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/scheduler/cjs/scheduler.development.js:468:12)
-    at runWithPriority$1 (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:11276:10)
-    at flushSyncCallbackQueueImpl (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:11322:9)
-    at flushSyncCallbackQueue (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:11309:3)
-    at scheduleUpdateOnFiber (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:21893:9)
-    at setLoadCompleted (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/react-dom/cjs/react-dom.development.js:16139:5)
-    at _browseProducts (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:34:13)
-    at /Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:41:9]]></failure>
-            <failure message="Error: Unable to find an element with the text: Apples. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible."><![CDATA[Error: Unable to find an element with the text: Apples. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
-
-<body>
-  <div />
-</body>
-    at waitForWrapper (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:173:27)
-    at Object.<anonymous> (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.test.js:76:11)
-    at Promise.then.completed (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/utils.js:276:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/utils.js:216:10)
-    at _callCircusTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:212:40)
-    at _runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:149:3)
-    at _runTestsForDescribeBlock (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:63:9)
-    at run (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:25:3)
-    at runAndTransformResultsToJestFormat (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:176:21)
-    at jestAdapter (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:109:19)
-    at runTestInternal (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:380:16)
-    at runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:472:34)
-    at Object.worker (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/testWorker.js:133:12)]]></failure>
-        </testCase>
-        <testCase name="Failed to load products" duration="1018">
-            <failure message="TypeError: Cannot read property &apos;data&apos; of undefined"><![CDATA[TypeError: Cannot read property 'data' of undefined
-    at _browseProducts (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:33:29)
-    at /Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.js:41:9]]></failure>
-            <failure message="Error: Unable to find an element with the text: There has been an error contacting the server. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible."><![CDATA[Error: Unable to find an element with the text: There has been an error contacting the server. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
-
-<body>
-  <div>
-    <div
-      class="container-fluid"
-    >
-      <h1>
-        Products List
-      </h1>
-      <div
-        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-mhc70k-MuiGrid-root"
-      >
-        <div
-          align="center"
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1em9ut6-MuiGrid-root"
-        >
-          <div
-            class="spinner-border"
-            role="status"
-          >
-            <span
-              class="visually-hidden"
-            >
-              Loading...
-            </span>
-          </div>
-        </div>
-      </div>
-      <a
-        href="/ShopEmployee"
-      >
-        <button
-          class="btn btn-secondary"
-          style="margin: 20px;"
-          type="button"
-        >
-          Back
-        </button>
-      </a>
-    </div>
-  </div>
-</body>
-    at waitForWrapper (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:173:27)
-    at Object.<anonymous> (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.test.js:109:11)
-    at Promise.then.completed (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/utils.js:276:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/utils.js:216:10)
-    at _callCircusTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:212:40)
-    at _runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:149:3)
-    at _runTestsForDescribeBlock (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:63:9)
-    at run (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:25:3)
-    at runAndTransformResultsToJestFormat (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:176:21)
-    at jestAdapter (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:109:19)
-    at runTestInternal (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:380:16)
-    at runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:472:34)
-    at Object.worker (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/testWorker.js:133:12)]]></failure>
-        </testCase>
+        <testCase name="mock" duration="3"/>
+    </file>
+    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/NewCustomer/NewCustomer.test.js">
+        <testCase name="renders correctly" duration="162"/>
+        <testCase name="empty fields" duration="170"/>
+        <testCase name="insecure password" duration="150"/>
+        <testCase name="create existing user" duration="329"/>
+        <testCase name="create new user" duration="295"/>
+        <testCase name="server error" duration="212"/>
+    </file>
+    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/PlaceOrder/PlaceOrder.test.js">
+        <testCase name="renders correctly" duration="150"/>
     </file>
 </testExecutions>
