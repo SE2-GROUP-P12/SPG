@@ -97,7 +97,11 @@ test("create new user", async() => {
     
     const {getByText, getByLabelText} = render(
         <Router>
-            <NewCustomer/>
+            <NewCustomer
+            setLoggedUser={ (x)=>x } setLoggedFlag={ (x)=>x }
+            setAccessToken={ (x)=>x } accessToken={ (x)=>x }
+            setLoggedUserRole={ (x)=>x }
+            />
         </Router>
     );
     fireEvent.change(getByLabelText("Email*"), { target: { value: "customer@gmail.com" } });
@@ -130,9 +134,14 @@ test("server error", async() => {
 
     const mockCustomerExists = (API.customerExists = jest.fn());
     mockCustomerExists.mockResolvedValueOnce(undefined);
+
     const {getByText, getByLabelText} = render(
         <Router>
-            <NewCustomer/>
+            <NewCustomer
+            setLoggedUser={ (x)=>x } setLoggedFlag={ (x)=>x }
+            setAccessToken={ (x)=>x } accessToken={ (x)=>x }
+            setLoggedUserRole={ (x)=>x }
+            />
         </Router>
     );
     fireEvent.change(getByLabelText("Email*"), { target: { value: "mario.rossi@gmail.com" } });

@@ -156,7 +156,7 @@ function BrowseProducts(props) {
             <h1>Products List</h1>
             <Grid container spacing={2}>
                 {
-                    loadCompleted === true ?
+                    loadCompleted===true && products!=undefined ?
                         products.map((prod, index) =>
                             <Grid item xs={12} sm={6} md={4} align="center">
                                 <ProductEntry key={index} product={prod} loggedUser={props.loggedUser}></ProductEntry>

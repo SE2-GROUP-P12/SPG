@@ -59,7 +59,7 @@ function Navbar(props) {
 
     useEffect(() => {
         _getWalletWarning();
-    }, [props.logged]);
+    }, [props.loggedUser]);
 
     function doLogin() {
         window.location.href = "http://localhost:8081/login";

@@ -13,6 +13,7 @@ function render(comp) {
 
 test ("renders correctly", () => {
 
+    localStorage.setItem("role", "EMPLOYEE");
     const {getByText, getByAltText} = render(
         <Router>
             <ShopEmployee/>

@@ -8,6 +8,8 @@ import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import { API } from '../API/API.js'
 
+/*LOADING ALL ORDERS WHEN NO MAIL IS SET*/
+
 function DeliverOrder(props) {
     const [customer, setCustomer] = useState(null);
     const [orders, setOrders] = useState([]);
@@ -26,12 +28,9 @@ function DeliverOrder(props) {
         checkTime(props.time, props.date);
     }, [props.date, props.time])
 
-    /*LOADING ALL ORDERS WHEN NO MAIL IS SET*/
-    async function _getAllOrders()
-    {
-        const data = await API.getAllOrders();
-        return data;
-    }
+    useEffect( () => {
+        loadAllOrders();
+    }, [])
 
     async function loadAllOrders()
     {
@@ -39,9 +38,12 @@ function DeliverOrder(props) {
         console.log("DATA: "+data);
         setOrders(data);
     }
-    useEffect( () => {
-        loadAllOrders();
-    }, [])
+
+    async function _getAllOrders()
+{
+    const data = await API.getAllOrders();
+    return data;
+}
 
     async function customerExistsByMail(email) {
         const data = await API.customerExistsByMail(email);
@@ -150,12 +152,13 @@ function Orders(props) {
     async function handleDelivery(e, orderId) {
         e.preventDefault();
         const data = await deliverOrder(orderId);
-        if (data !== null) {
+        if (data === true) {
             window.location.reload(false);
+            //loadAllOrders();
+            //return(<Alert variant='success'>Order delivered successfully</Alert>);
         }
-        else {
-            return (<Alert variant='danger'>Some error occourred</Alert>);
-        }
+        else
+            return (<Alert variant='danger'>Balance insufficient</Alert>);
     }
     //console.log(props.orderList);
     if (props.orderList !== []) {
