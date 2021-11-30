@@ -88,7 +88,7 @@ function ProductsForecast(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={fruit} alt="fruit" style={{width: '150px', height: '150px'}}/>
+                        <img src={props.product.imageUrl == null ? fruit : props.product.imageUrl} alt="fruit" style={{width: '150px', height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
                                     {props.product.name} : {props.product.quantityForecast}{props.product.unitOfMeasurement} currently forecasted
