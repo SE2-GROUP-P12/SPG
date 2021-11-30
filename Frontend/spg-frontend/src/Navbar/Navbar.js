@@ -47,7 +47,7 @@ function Navbar(props) {
     }
 
     async function _getWalletWarning(){
-        const data = await API.getWalletWarning(props.loggedUser);
+        const data = await API.getWalletWarning(localStorage.getItem("username"));
         setWalletWarning(data);
         console.log("CHECKPOINT "+JSON.stringify(data));
         return data;
@@ -59,7 +59,7 @@ function Navbar(props) {
 
     useEffect(() => {
         _getWalletWarning();
-    }, [props.logged]);
+    }, []);
 
     function doLogin() {
         window.location.href = "http://localhost:8081/login";
@@ -93,7 +93,7 @@ function Navbar(props) {
                                     <Button className="btn btn-outline-light" variant="success" href="/LoginComponent"> Log in </Button>
                                     :
                                     <>
-                                    {(walletWarning.exist && (props.loggedUserRole === 'CUSTOMER')) ? 
+                                    {(walletWarning.exist === "true" && (props.loggedUserRole === 'CUSTOMER')) ?
                                             <OverlayTrigger
                                               delay={{ show: 250, hide: 400 }}
                                               overlay={renderTooltip}
@@ -115,7 +115,7 @@ function Navbar(props) {
                             {
                                 props.isLoggedFlag === true ?
                                     <>
-                                        {(walletWarning.exist && (props.loggedUserRole === 'CUSTOMER')) ? 
+                                        {(walletWarning.exist === "true" && (props.loggedUserRole === 'CUSTOMER')) ?
                                             <OverlayTrigger
                                               delay={{ show: 250, hide: 400 }}
                                               overlay={renderTooltip}

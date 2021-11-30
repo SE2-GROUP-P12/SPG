@@ -12,7 +12,7 @@ import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 import {API} from './API/API';
 import {Redirect} from "react-router-dom";
-import { Collapse } from '@mui/material';
+import {Collapse} from '@mui/material';
 
 function PlaceOrder(props) {
     const [customer, setCustomer] = useState("");
@@ -154,7 +154,12 @@ function PlaceOrder(props) {
                     ""}
             </div>
             <Row>
-                <Col xs={4}><Link to='/ShopEmployee'><Button variant='secondary'>Back</Button></Link></Col>
+                {props.loggedUserRole === "EMPLOYEE" ?
+                    <Col xs={4}><Link to='/ShopEmployee'><Button variant='secondary'>Back</Button></Link></Col>
+                    :
+                    <Col xs={4}><Link to='/Customer'><Button variant='secondary'>Back</Button></Link></Col>
+
+                }
                 <Col xs={4}><Button disabled={order === null ? true : false} variant='danger' onClick={dropOrder}>Delete
                     order</Button></Col>
                 <Col xs={4}><Button disabled={(!itsTime || order === null || customer === null) ? true : false}
