@@ -116,7 +116,7 @@ function Navbar(props) {
                             {
                                 props.isLoggedFlag === true ?
                                     <>
-                                        {(walletWarning.exist && (props.loggedUserRole === 'CUSTOMER')) ? 
+                                        {(walletWarning.exist==="true" && (props.loggedUserRole === 'CUSTOMER')) ? 
                                             <OverlayTrigger
                                               delay={{ show: 250, hide: 400 }}
                                               overlay={renderTooltip}
