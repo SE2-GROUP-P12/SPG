@@ -42,17 +42,17 @@ public class SpgUserService {
     }
 
     public Customer getCustomerByEmail(String email) {
-        if(userRepo.findUserByEmail(email).getRole()!=UserRole.ROLE_CUSTOMER) return null;
+        if(!userRepo.findUserByEmail(email).getRole().equals(UserRole.ROLE_CUSTOMER)) return null;
         return customerRepo.findCustomerByEmail(email);
     }
 
     public Farmer getFarmerById(Long farmerId) {
-        if(userRepo.findUserByUserId(farmerId).getRole()!=UserRole.ROLE_FARMER) return null;
+        if(!userRepo.findUserByUserId(farmerId).getRole().equals(UserRole.ROLE_FARMER)) return null;
         return farmerRepo.findFarmerByUserId(farmerId);
     }
 
     public Farmer getFarmerByName(String name) {
-        if(userRepo.findUserByName(name).getRole()!=UserRole.ROLE_FARMER) return null;
+        if(!userRepo.findUserByName(name).getRole().equals(UserRole.ROLE_FARMER)) return null;
         return farmerRepo.findFarmerByName(name);
     }
 
