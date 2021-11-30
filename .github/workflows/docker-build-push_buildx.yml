@@ -31,4 +31,4 @@ jobs:
         with:
           context: ./Frontend/spg-frontend
           push: true
-          tags: mattiariola/spg_frontend:$GITHUB_REF_NAME
+          tags: mattiariola/spg_frontend:ci
