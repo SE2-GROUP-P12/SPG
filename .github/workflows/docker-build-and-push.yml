@@ -14,6 +14,12 @@ jobs:
       run:
         working-directory: Frontend/spg-frontend
     steps:
+    - name: start cwd
+      run: ls
+    - name: change cwd
+      run: cd Frontend/spg-frontend
+    - name: print cwd
+      run: ls
     - name: Login to DockerHub
       uses: docker/login-action@v1
       with:
