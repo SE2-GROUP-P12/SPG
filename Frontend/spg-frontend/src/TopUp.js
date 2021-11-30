@@ -8,8 +8,9 @@ import Modal from 'react-bootstrap/Modal';
 import {Formik, Form, Field} from "formik";
 import * as Yup from "yup";
 import {Link} from 'react-router-dom';
-import {API} from "./API";
+import {API} from "./API/API";
 import Alert from 'react-bootstrap/Alert';
+import Grid from '@mui/material/Grid';
 
 function TopUp()
 {
@@ -64,26 +65,28 @@ function TopUp()
                 {error ? <Alert variant='danger'>User not found</Alert> : null}
                 {success ? <Alert variant='success'>User correctly found</Alert> : null}
                 {modalError ? <Alert variant='danger'>Something went wrong during the top up</Alert> : null}
-                {modalSuccess ? <Alert variant='success'>Top us correctly performed</Alert> : null}
+                {modalSuccess ? <Alert variant='success'>Top up correctly performed</Alert> : null}
                 </Form>
             </div>
             }
         </Formik>
         <h2>User's wallet: {wallet}€</h2>
-        <div id="container" className="dashboard">
             { user===null ? 
-            <Row>
-            <Col ><Button disabled onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Cash</h1> </Button></Col>
-            <Col ><Button disabled onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Bancomat</h1> </Button></Col>
-            <Col ><Button disabled onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Gift Card</h1> </Button></Col>
-            </Row> :
-            <Row>
-            <Col ><Button onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Cash</h1> </Button></Col>
-            <Col ><Button onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Bancomat</h1> </Button></Col>
-            <Col ><Button onClick={handleShow} className="dashButton" variant="outline-success"> <h1>Gift Card</h1> </Button></Col>
-            </Row>}
-    </div>
-    <Link to='/ShopEmployee'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
+            <Grid container spacing={2}>
+            <Grid item xs={6} sm={4}><Button disabled onClick={handleShow} size='huge' variant="outline-success"> <h1>Cash</h1> </Button></Grid>
+            <Grid item xs={6} sm={4}><Button disabled onClick={handleShow} size='huge' variant="outline-success"> <h1>Credit Card</h1> </Button></Grid>
+            <Grid item xs={6} sm={4}><Button disabled onClick={handleShow} size='huge' variant="outline-success"> <h1>Gift Card</h1> </Button></Grid>
+            </Grid>
+             :
+            <Grid container spacing={2}>
+            <Grid item xs={6} sm={4}><Button onClick={handleShow} size='huge' variant="outline-success"> <h1>Cash</h1> </Button></Grid>
+            <Grid item xs={6} sm={4}><Button onClick={handleShow} size='huge' variant="outline-success"> <h1>Credit Card</h1> </Button></Grid>
+            <Grid item xs={6} sm={4}><Button onClick={handleShow} size='huge' variant="outline-success"> <h1>Gift Card</h1> </Button></Grid>
+            </Grid>
+            }
+        <Row>
+            <Link to='/ShopEmployee'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
+        </Row>
     <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Top Up</Modal.Title>

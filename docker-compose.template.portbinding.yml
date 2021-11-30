@@ -1,0 +1,18 @@
+---
+version: '3.4'
+services:
+
+  my_personal_db:
+    ports:
+      - "13306:3306"
+    
+  spg_frontend:
+    ports:
+      - "13000:3000"
+    
+  spg_server:
+    ports:
+      - "18080:8080"
+    
+volumes:
+  mysql-persistent-volume:

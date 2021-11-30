@@ -1,5 +1,6 @@
 package it.polito.SE2.P12.SPG.entity;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,56 +21,135 @@ public class Product {
     private Long productId;
     @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "producer", nullable = false)
-    private String producer;
     @Column(name = "unit_of_measurement", nullable = false)
     private String unitOfMeasurement;
+    //Quantità ufficialmente messa a disposizione dal farmer a inizio settimana.
+    //È la somma di quantityAvailable, quantityBasket, quantityOrdered e quantityDelivered
     @Column(name = "total_quantity", nullable = false)
     private Double totalQuantity;
+    //Quantità disponibile all'acquisto (non impegnata in basket, ordini o consegnata)
     @Column(name = "quantity_available", nullable = false)
     private Double quantityAvailable;
+    //Quantità prevista per la settimana seguente dal farmer. Da confermare.
+    @Column(name = "quantity_forecast", nullable = false)
+    private Double quantityForecast;
+    //Quantità di totalQuantity inserita nei carelli degli user
     @Column(name = "quantity_baskets", nullable = false)
     private Double quantityBaskets;
+    //Quantità di totalQuantity inserita negli ordini degli user
     @Column(name = "quantity_ordered", nullable = false)
     private Double quantityOrdered;
+    //Quantità di totalQuantity consegnata agli acquirenti tramite deliverOrder
     @Column(name = "quantity_delivered", nullable = false)
     private Double quantityDelivered;
     @Column(name = "price", nullable = false)
     private Double price;
+    //start time for last prediction given
+    @Column(name = "startAvailability", nullable = true)
+    private String startAvailability;
+    //end time for last prediction given
+    @Column(name = "endAvailability", nullable = true)
+    private String endAvailability;
+    @ManyToOne
+    private Farmer farmer;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price) {
         this.name = name;
-        this.producer = "default produces";
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
+        this.quantityForecast = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
         this.price = price;
+        this.farmer = null;
+        this.imageUrl = null;
     }
 
-    public Product(String name, String producer, String unitOfMeasurement, Double totalQuantity, double price) {
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
         this.name = name;
-        this.producer = producer;
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
+        this.quantityForecast = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
         this.price = price;
+        this.farmer = farmer;
+        this.imageUrl = null;
+    }
+
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl) {
+        this.name = name;
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.totalQuantity = totalQuantity;
+        this.quantityAvailable = totalQuantity;
+        this.quantityForecast = 0.0;
+        this.quantityBaskets = 0.0;
+        this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
+        this.price = price;
+        this.farmer = null;
+        this.imageUrl = imageUrl;
+    }
+
+    public Product(String name, Double totalQuantity, double price, Farmer farmer) {
+        this.name = name;
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.totalQuantity = totalQuantity;
+        this.quantityAvailable = totalQuantity;
+        this.quantityForecast = 0.0;
+        this.quantityBaskets = 0.0;
+        this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
+        this.price = price;
+        this.farmer = farmer;
+        this.imageUrl = null;
+    }
+
+
+    public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl, Farmer farmer) {
+        this.name = name;
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.totalQuantity = totalQuantity;
+        this.quantityAvailable = totalQuantity;
+        this.quantityForecast = 0.0;
+        this.quantityBaskets = 0.0;
+        this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
+        this.price = price;
+        this.farmer = farmer;
+        this.imageUrl = imageUrl;
+    }
+
+    public Product(String name, String unitOfMeasurement, double price, Farmer farmer , Double quantityForecast) {
+        this.name = name;
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.totalQuantity = 0.0;
+        this.quantityAvailable = 0.0;
+        this.quantityForecast = quantityForecast;
+        this.quantityBaskets = 0.0;
+        this.quantityOrdered = 0.0;
+        this.quantityDelivered = 0.0;
+        this.price = price;
+        this.farmer = farmer;
+        this.imageUrl = null;
     }
 
     public Boolean moveFromAvailableToBasket(Double quantity) {
-        if(this.quantityAvailable < quantity)
+        if (this.quantityAvailable < quantity)
             return false;
         this.quantityAvailable -= quantity;
         this.quantityBaskets += quantity;
         return true;
     }
+
     public Boolean moveFromBasketToOrdered(Double quantity) {
-        if(this.quantityBaskets < quantity)
+        if (this.quantityBaskets < quantity)
             return false;
         this.quantityOrdered += quantity;
         this.quantityBaskets -= quantity;
@@ -77,7 +157,7 @@ public class Product {
     }
 
     public Boolean moveFromBasketToAvailable(Double quantity) {
-        if(this.quantityBaskets < quantity)
+        if (this.quantityBaskets < quantity)
             return false;
         this.quantityAvailable += quantity;
         this.quantityBaskets -= quantity;
@@ -85,7 +165,7 @@ public class Product {
     }
 
     public Boolean moveFromAvailableToOrdered(Double quantity) {
-        if(this.quantityAvailable < quantity)
+        if (this.quantityAvailable < quantity)
             return false;
         this.quantityAvailable -= quantity;
         this.quantityOrdered += quantity;
@@ -93,7 +173,7 @@ public class Product {
     }
 
     public Boolean moveFromAvailableToDelivered(Double quantity) {
-        if(this.quantityAvailable < quantity)
+        if (this.quantityAvailable < quantity)
             return false;
         this.quantityAvailable -= quantity;
         this.quantityDelivered += quantity;
@@ -101,10 +181,30 @@ public class Product {
     }
 
     public Boolean moveFromOrderedToDelivered(Double quantity) {
-        if(this.quantityOrdered < quantity)
+        if (this.quantityOrdered < quantity)
             return false;
         this.quantityOrdered -= quantity;
         this.quantityDelivered += quantity;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", name='" + name + '\'' +
+                ", unitOfMeasurement='" + unitOfMeasurement + '\'' +
+                ", totalQuantity=" + totalQuantity +
+                ", quantityAvailable=" + quantityAvailable +
+                ", quantityForecast=" + quantityForecast +
+                ", quantityBaskets=" + quantityBaskets +
+                ", quantityOrdered=" + quantityOrdered +
+                ", quantityDelivered=" + quantityDelivered +
+                ", price=" + price +
+                ", startAvailability='" + startAvailability + '\'' +
+                ", endAvailability='" + endAvailability + '\'' +
+                ", farmer=" + (farmer == null ? "null" : farmer.getUserId()) +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }

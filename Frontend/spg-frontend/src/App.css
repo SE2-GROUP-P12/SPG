@@ -1,75 +1,77 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .header {
-  padding: 0px;
+    padding: 0px;
 }
 
 .logo {
-  height: 50px;
+    height: 50px;
 }
 
 .farmer {
-  width: 100%;
-  padding: 0px;
+    width: 100%;
+    padding: 0px;
 }
 
 .italymap {
-  width: 75%;
+    width: 75%;
 }
 
 .findus {
-  padding: 15px;
-  text-align: left;
+    padding: 15px;
+    text-align: left;
 }
 
-.dashboard{
-  padding: 20px;
+.dashboard {
+    padding: 20px;
 }
 
-.dashButton{
-  width: 90%;
-  height: 90%;
-  margin: 10%;
+.btn-huge {
+    width: 90%;
+    height: 90%;
+    padding: 10%;
 }
 
-.pagecontent{
-  margin: 5%;
-  align-self: center;
+.pagecontent {
+    margin: 5%;
+    margin-bottom: 0%;
+    align-self: center;
 }
+

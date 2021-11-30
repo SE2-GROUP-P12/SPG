@@ -1,6 +1,10 @@
 package it.polito.SE2.P12.SPG.security;
 
 import it.polito.SE2.P12.SPG.auth.UserDetailsServiceImpl;
+import it.polito.SE2.P12.SPG.filter.CustomAuthenticationFilter;
+import it.polito.SE2.P12.SPG.filter.CustomAuthorizationFilter;
+import it.polito.SE2.P12.SPG.service.JWTUserHandlerService;
+import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -19,95 +24,59 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static Boolean testContext = false;
     private final PasswordEncoder passwordEncoder;
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Autowired
-    public SecurityConfiguration(PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsServiceImpl) {
+    private final JWTUserHandlerService jwtUserHandlerService;
+    @Autowired
+    private final SpgUserService spgUserService;
+
+    @Autowired
+    public SecurityConfiguration(PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsServiceImpl, JWTUserHandlerService jwtUserHandlerService, SpgUserService spgUserService) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsServiceImpl = userDetailsServiceImpl;
-    }
-
-    public static void setTestContext(){
-        testContext = true;
-    }
-
-    public void setTestContext(Boolean flag) {
-        this.testContext = flag;
-    }
-
-    public Boolean getTestContext() {
-        return this.testContext;
+        this.jwtUserHandlerService = jwtUserHandlerService;
+        this.spgUserService = spgUserService;
     }
 
     //whitelist approach
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        if (this.testContext == Boolean.TRUE)
-            http
-                    .cors().and()
-                    .csrf().disable()
-                    .authorizeRequests().antMatchers("/**").permitAll();
-        else
-            http
-                    .cors().and()
-                    .csrf().disable()
-                    .authorizeRequests()
-                    .antMatchers("/api"+ API.EXIST_CUSTOMER).permitAll()
-                    .antMatchers("/api"+API.CREATE_CUSTOMER).permitAll()
-                    .anyRequest()
-                    .authenticated()
-                    .and()
-                    .exceptionHandling()//.accessDeniedHandler(restAccessDeniedHandler())
-                    .authenticationEntryPoint(restAuthEntryPoint())
-                    .and()
-                    .formLogin()
-                    .loginPage("/login").permitAll()
-                    .defaultSuccessUrl("http://localhost:3000/ShopEmployee")
-                    .and()
-                    .logout()
-                    .logoutSuccessUrl("http://localhost:3000/")
-                    .deleteCookies("JSESSIONID").invalidateHttpSession(true);
+        //Go inside UsernamePasswordAuthenticationFilter class to set up login api path and method
+        //In that case I override that variable
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(jwtUserHandlerService, spgUserService, authenticationManagerBean());
+        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
+        http.cors().and().csrf().disable();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilter(customAuthenticationFilter);
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtUserHandlerService, spgUserService), UsernamePasswordAuthenticationFilter.class);
+        http.authorizeRequests()
+                .antMatchers("/api/login").permitAll()
+                .antMatchers("/api/token/refresh").permitAll()
+                .antMatchers("/api" + API.EXIST_CUSTOMER_BY_EMAIL).permitAll()
+                .antMatchers("/api" + API.EXIST_CUSTOMER).permitAll()
+                .antMatchers("/api" + API.CREATE_CUSTOMER).permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(restAuthEntryPoint())
+                .and()
+                .logout()
+                .logoutSuccessUrl("http://localhost:3000/")
+                .deleteCookies("JSESSIONID", "Authorization").invalidateHttpSession(true);
     }
 
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsServiceImpl);
+        auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder);
     }
 
     @Bean
     public RestAuthEntryPoint restAuthEntryPoint() {
         return new RestAuthEntryPoint();
     }
-
-
-
-    /* HARDCODED USER */
-    /*
-    @Override
-    @Bean
-    protected UserDetailsService userDetailsService(){
-        //ADMIN USER: ADMIN
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder.encode("password"))
-                .authorities(ApplicationUserRole.ADMIN.getGrantedAuthorities()) //Here I get the authorities
-                //based on the match between role and permissions
-                //.roles(ApplicationUserRole.ADMIN.name()) //Internally is ROLE_ADMIN
-                .build();
-        //SIMPLE USER: USER
-        UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder.encode("password"))
-                .authorities(ApplicationUserRole.USER.getGrantedAuthorities()) //similar to above
-                //.roles("USER") //Internally is ROLE_USER
-                .build();
-        return new InMemoryUserDetailsManager(user, admin);
-    }
-
-     */
-
 
 }

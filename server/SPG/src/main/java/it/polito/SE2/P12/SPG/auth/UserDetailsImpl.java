@@ -12,16 +12,28 @@ public class UserDetailsImpl implements UserDetails {
     private String username;
     private String password;
     private Set<SimpleGrantedAuthority> authorityList;
+    private String name;
+    private Boolean active;
 
     public UserDetailsImpl(User user) {
+        this.active = true;
+        this.name = user.getName();
         this.username = user.getEmail();
         this.password = user.getPassword();
         if (user.getRole().equals("ADMIN"))
             this.authorityList = ApplicationUserRole.ADMIN.getGrantedAuthorities();
-        else if(user.getRole().equals("EMPLOYEE"))
+        else if (user.getRole().equals("EMPLOYEE"))
             this.authorityList = ApplicationUserRole.EMPLOYEE.getGrantedAuthorities();
+        else if (user.getRole().equals("CUSTOMER"))
+            this.authorityList = ApplicationUserRole.CUSTOMER.getGrantedAuthorities();
+        else if (user.getRole().equals("FARMER"))
+            this.authorityList = ApplicationUserRole.FARMER.getGrantedAuthorities();
         else
             this.authorityList = ApplicationUserRole.USER.getGrantedAuthorities();
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     @Override
@@ -56,7 +68,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.active;
     }
 
 }
