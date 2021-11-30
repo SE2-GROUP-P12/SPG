@@ -137,7 +137,7 @@ public class Product {
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = farmer;
-        this.imageUrl = imageUrl;
+        this.imageUrl = null;
     }
 
     public Boolean moveFromAvailableToBasket(Double quantity) {

@@ -5,18 +5,18 @@ import warning from "./../resources/warning.png";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip  from 'react-bootstrap/Tooltip';
-import { buildLoginBody } from '../Utilities';
-import { Link, Redirect } from 'react-router-dom';
-import { useState, useEffect } from "react";
+import Tooltip from 'react-bootstrap/Tooltip';
+import {buildLoginBody} from '../Utilities';
+import {Link, Redirect} from 'react-router-dom';
+import {useState, useEffect} from "react";
 
-import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
-import { API } from './../API/API';
+import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
+import {API} from './../API/API';
 
 function Navbar(props) {
     const [runRedirect, setRunRedirect] = useState(false);
     const [walletWarning, setWalletWarning] = useState(false);
-    
+
     const doLogOut = (event) => {
         event.preventDefault();
         //TODO: insert this fecth into the API file
@@ -46,10 +46,10 @@ function Navbar(props) {
         setRunRedirect(true);
     }
 
-    async function _getWalletWarning(){
-        const data = await API.getWalletWarning(props.loggedUser);
+    async function _getWalletWarning() {
+        const data = await API.getWalletWarning(localStorage.getItem("username"));
         setWalletWarning(data);
-        console.log("CHECKPOINT "+JSON.stringify(data));
+        console.log("CHECKPOINT " + JSON.stringify(data));
         return data;
     }
 
@@ -72,28 +72,29 @@ function Navbar(props) {
 
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
-          {walletWarning.message}
+            {walletWarning.message}
         </Tooltip>
-      );
+    );
 
     return (
         <>
             <Switch>
                 <Route exact path="/LoginComponent">
                     <Nav className="navbar bg-success navbar-dark">
-                        <img src={logo} alt="logo" className="logo" />
+                        <img src={logo} alt="logo" className="logo"/>
                     </Nav>
                 </Route>
                 <Route exact path="/NewCustomer">
                     <Nav className="navbar bg-success navbar-dark">
-                        <img src={logo} alt="logo" className="logo" />
+                        <img src={logo} alt="logo" className="logo"/>
                         <div>
                             {
                                 props.isLoggedFlag !== true ?
-                                    <Button className="btn btn-outline-light" variant="success" href="/LoginComponent"> Log in </Button>
+                                    <Button className="btn btn-outline-light" variant="success"
+                                            href="/LoginComponent"> Log in </Button>
                                     :
                                     <>
-                                    {(walletWarning.exist && (props.loggedUserRole === 'CUSTOMER')) ? 
+                                        {(walletWarning.exist === "true" && (props.loggedUserRole === 'CUSTOMER')) ?
                                             <OverlayTrigger
                                               delay={{ show: 250, hide: 400 }}
                                               overlay={renderTooltip}
