@@ -14,39 +14,16 @@ jobs:
       run:
         working-directory: Frontend/spg-frontend
     steps:
-    - name: Docker Build & Push Action
-      # You may pin to the exact commit or the version.
-      # uses: mr-smithers-excellent/docker-build-push@a7fe6652db5c7274374844e81692992f5a2befb9
-      uses: mr-smithers-excellent/docker-build-push@v5.6
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
       with:
-        # Name of the Docker image
-        image: mattiariola/spg_frontend
-        registry: docker.io
-        # Directory to run `docker build` from, if not project root
-        # directory: Frontend/spg-frontend
-        # Docker registry username
         username: ${{ secrets.DOCKER_USERNAME }}
-        # Docker registry password
         password: ${{ secrets.DOCKER_TOKEN }}
+
+    - name: Docker Build & Push Action
+      uses: mr-smithers-excellent/docker-build-push@v5.6
+      run: |
+        docker build --tag mattiariola/spg_frontend:${{ GITHUB_REF_NAME }} .
+        docker push mattiariola/spg_frontend:${{ GITHUB_REF_NAME }}
         
-  be_docker_build_and_push:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: server/SPG
-    steps:
-    - name: Docker Build & Push Action
-      # You may pin to the exact commit or the version.
-      # uses: mr-smithers-excellent/docker-build-push@a7fe6652db5c7274374844e81692992f5a2befb9
-      uses: mr-smithers-excellent/docker-build-push@v5.6
-      with:
-        # Name of the Docker image
-        image: mattiariola/spg_server
-        registry: docker.io
-        # Directory to run `docker build` from, if not project root
-        # directory: server/SPG
-        # Docker registry username
-        username: ${{ secrets.DOCKER_USERNAME }}
-        # Docker registry password
-        password: ${{ secrets.DOCKER_TOKEN }}
         
