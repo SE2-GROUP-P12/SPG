@@ -84,8 +84,8 @@ Definition of Done:
     - Total hours spent:
         - 17h20m
     - Nr of automated unit test cases
-        -  BE: 100 unit cases
-        -  FE: x unit cases
+        -  BE: 100 unit test cases
+        -  FE: 22 unit test cases
     - Coverage (if available):
         - BE: 70.1% (lines of code)
         - FE: 24.0% (lines of code)
@@ -124,7 +124,7 @@ Definition of Done:
 
 **Note:** 
     - We introduced the SonarQube estimation on both sides during this sprint, since the frontend wasn't subject to analysis. Our technical debt came mainly from personal      considerations. 
-    - The testing time estimation is based on an euristics evaluation. Since we have some test operations to pay in the TD we estimate to spent 55% of totoal time in testing routines.
+    - The testing time estimation is based on an euristics evaluation. Since we had some test operations to pay in the TD (Sprint-1) we estimate to spend 55% of total time in testing routines.
 
 ## ASSESSMENT
 
