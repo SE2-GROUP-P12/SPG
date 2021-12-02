@@ -1,25 +1,26 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import '../App.css';
 import Button from "react-bootstrap/Button";
 import { Link, Redirect } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Formik, Form, Field } from 'formik';
-import { buildLoginBody, getSalt } from './Utilities';
+import { buildLoginBody, getSalt } from '../Utilities';
 import Alert from "react-bootstrap/Alert";
 import * as Yup from 'yup';
 import { useState } from "react";
-import {API} from "./API/API";
+import Grid from '@mui/material/Grid';
+import {API} from "../API/API";
+
 
 const pbkdf2 = require('pbkdf2');
-
 
 function Login(props) {
     const [redirectRun, setRedirectRun] = useState(false);
     const [alertShow, setAlertShow] = useState(false);
-    console.log(pbkdf2.pbkdf2Sync('password', getSalt(), 1, 32, 'sha512').toString('hex'));
-    function onClickSubmissionHandler(username, password) {
+    //console.log(pbkdf2.pbkdf2Sync('password', getSalt(), 1, 32, 'sha512').toString('hex'));
 
+    async function onClickSubmissionHandler(username, password) {
         fetch("/api/login", {
             method: 'POST',
             headers: {
@@ -53,27 +54,24 @@ function Login(props) {
         return true;
     }
 
-    function ErrorCredentialAlert() {
+    /*function ErrorCredentialAlert() {
+        return (
+                <Alert variant="danger">
+                    Wrong Credentials, please recheck your credentials.
+                </Alert>);
         return (
             <Row className="justify-content-md-center">
                 <Alert xs variant="danger" onClose={() => setAlertShow(false)} dismissible>
                     <Alert.Heading>Wrong Credentials</Alert.Heading>
-                    <p>
-                        Please recheck your credentials.
-                    </p>
+                    <p>Please recheck your credentials.</p>
                     <hr />
                     <div className="d-flex justify-content-end">
-                        <Row>
-                            <Button variant="outline-danger">
-                                RESET
-                                PASSWORD
-                            </Button>
-                        </Row>
+                        <Row><Button variant="outline-danger">RESET PASSWORD</Button></Row>
                     </div>
                 </Alert>
             </Row>
         );
-    }
+    }*/
 
     if (redirectRun) {
         return (
@@ -84,11 +82,6 @@ function Login(props) {
     return (
         <>
             <h1>Login</h1>
-            <Row>
-                <Col>
-                    {alertShow === true ? <ErrorCredentialAlert /> : ""}
-                </Col>
-            </Row>
             <Formik
                 initialValues={{
                     email: "",
@@ -98,34 +91,40 @@ function Login(props) {
                     email: Yup.string().email('Invalid email address').required('Email is required'),
                     password: Yup.string().required('Password is required').min(6, "Password is too short")
                 })}
-                onSubmit={(values) => {onClickSubmissionHandler(values.email, values.password)}}
+                onSubmit={(values) =>
+                    {
+                        setAlertShow(false);
+                        onClickSubmissionHandler(values.email, values.password);
+                    }
+                }
                 validateOnChange={false}
                 validateOnBlur={false}>
                 {({ values, errors, touched }) =>
-                    <div id="container" className="pagecontent">
                         <Form>
-                            <Row>
-                                Email: <Field name="email" label="Email" />
-                            </Row>
-                            <Row className="mt-5">
-                                Password: <Field name="password" label="Password" type="password" />
-                            </Row>
-                            <Row className="mt-5" style={{ padding: "20px" }}>
-                                <Col xs={6}><Link to="/"><Button variant="secondary">
-                                    Back</Button></Link></Col>
-                                <Col xs={6}>
-                                    <Button type="submit" variant="success"
-                                    >Login</Button>
-                                </Col>
-                            </Row>
-                            <Row>
-                                {errors.email && touched.email ? (
-                                    <div>{errors.email}</div>) : null}
-                                {errors.password && touched.password ? (
-                                    <div>{errors.password}</div>) : null}
-                            </Row>
+                            <Grid container spacing={2}>
+                                <Grid item xs={3}/>
+                                <Grid item xs={2} align="left"><label htmlFor="email">Email:</label></Grid>
+                                <Grid item xs={4} align="center"><Field id="email" name="email" label="Email" style={{width: '100%'}}/></Grid>
+                                <Grid item xs={3}/>
+                                <Grid item xs={3}/>
+                                <Grid item xs={2} align="left"><label htmlFor="password">Password:</label></Grid>
+                                <Grid item xs={4} align="center"><Field id="password" name="password" label="Password" type="password" style={{width: '100%'}}/></Grid>
+                                <Grid item xs={3}/>
+                                <Grid item xs={3}/>
+                                <Grid item xs={3}><Link to="/"><Button variant="secondary">Back</Button></Link></Grid>
+                                <Grid item xs={3} align="center"><Button type="submit" variant="success">Login</Button></Grid>
+                                <Grid item xs={3}/>
+                                <Grid item xs={1}/>
+                                <Grid item xs={10}>{errors.email && touched.email ? <Alert variant='warning'>{errors.email}</Alert> : null}</Grid>
+                                <Grid item xs={1}/>
+                                <Grid item xs={1}/>
+                                <Grid item xs={10}>{errors.password && touched.password ? <Alert variant='warning'>{errors.password}</Alert> : null}</Grid>
+                                <Grid item xs={1}/>
+                                <Grid item xs={1}/>
+                                <Grid item xs={10}>{alertShow === true ? <Alert variant="danger">Wrong Credentials, please recheck your credentials.</Alert> : ""}</Grid>
+                                <Grid item xs={1}/>
+                            </Grid>
                         </Form>
-                    </div>
                 }
             </Formik>
         </>
