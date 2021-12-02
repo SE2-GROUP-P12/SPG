@@ -87,7 +87,7 @@ public class SpgController {
 
 
     @PostMapping(API.ADD_PRODUCT)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE', ROLE_FARMER)")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE', 'ROLE_FARMER')")
     public ResponseEntity addProduct(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
