@@ -1,19 +1,15 @@
 import * as React from "react";
 import {render, fireEvent, waitFor } from '@testing-library/react';
 import {BrowserRouter as Router} from "react-router-dom";
-
 import {BrowseProducts} from "./BrowseProducts";
 import {API} from "./../API/API";
 
 const mockBrowseProducts = (API.browseProducts = jest.fn());
 const mockAddToCard = (API.addToCart = jest.fn());
+const mockGetCart = (API.getCart =jest.fn());
 const buttonText = "Add to cart";
 
-test ("mock", () => {
-    expect(true).toBeTruthy();
-})
-
-/*test ("Renders correctly", async () => {
+test ("Renders correctly", async () => {
 
     mockBrowseProducts.mockResolvedValueOnce([
         {
@@ -30,8 +26,10 @@ test ("mock", () => {
           "imageUrl" : ""
         }
       ]);
-    
-    localStorage.setItem("role", "EMPLOYEE");
+    mockGetCart.mockResolvedValueOnce([]);
+
+    localStorage.setItem("role", "CUSTOMER");
+    localStorage.setItem("username", "mario.rossi@gmail.com");
 
     const {getByText, getByAltText} = render(
     <Router>
@@ -46,14 +44,17 @@ test ("mock", () => {
 
     getByText("Products List");
     getByText("Loading...");
-    await waitFor(()=>{
+    getByText("🛒 0 item(s)");
+    waitFor(()=>{
         getByText("Apples");
         getByAltText("fruit");
         getByText(buttonText);
     })
 
     expect(mockBrowseProducts).toBeCalledTimes(1);
-    expect(mockBrowseProducts).toBeCalledWith();
+    expect(mockBrowseProducts).toBeCalledWith(null);
+    expect(mockGetCart).toBeCalledTimes(1);
+    expect(mockGetCart).toBeCalledWith({"email":"mario.rossi@gmail.com"}, null);
 });
 
 test("Add to cart", async () => {
@@ -73,57 +74,68 @@ test("Add to cart", async () => {
           "imageUrl" : ""
         }
       ]);
-    
+    mockGetCart.mockResolvedValueOnce([]);
+    mockGetCart.mockResolvedValueOnce([{
+        "endAvailability": null,
+        "farmer": 5,
+        "imageUrl": "",
+        "name": "Apples",
+        "price": 2.5,
+        "productId": 5,
+        "quantityAvailable": 1,
+        "quantityBaskets": 1,
+        "quantityDelivered": 0,
+        "quantityForecast": 0,
+        "quantityOrdered": 25,
+        "startAvailability": null,
+        "totalQuantity": 50,
+        "unitOfMeasurement": "Kg"}])
     mockAddToCard.mockResolvedValueOnce(true);
-    localStorage.setItem("role", "EMPLOYEE");
+    localStorage.setItem("role", "CUSTOMER");
+    localStorage.setItem("username", "mario.rossi@gmail.com");
 
     const {getByText, getByAltText, getByLabelText, getAllByText} = render(
     <Router>
-        <BrowseProducts/>
+        <BrowseProducts
+            setErrorMessage={null}
+            errorMessage={null}
+            isLogged={()=>true}
+            loggedUser={()=>"mario.rossi@gmail.com"}
+        />
     </Router>
     );
 
     getByText("Products List");
     getByText("Loading...");
-    await waitFor(async ()=>{
+    waitFor(async ()=>{
         getByText("Apples");
         getByText(buttonText);
         getByAltText("fruit");
         fireEvent.click(getByText(buttonText));
     });
-    await waitFor(async ()=>{
+    waitFor(async ()=>{
         const input = getByLabelText("Amount:");
         fireEvent.change(input, { target: { value: 1 } });
         fireEvent.click(getAllByText(buttonText)[1]);
     });
-    await waitFor(async () => {
+    waitFor(async () => {
         getByText("Product added successfully");
         fireEvent.click(getByText("Close"));
     })
-    
-    expect(mockBrowseProducts).toBeCalledTimes(1);
-    expect(mockBrowseProducts).toBeCalledWith();
-    expect(mockAddToCard).toBeCalledTimes(1);
-    expect(mockAddToCard).toBeCalledWith({"productId":5 ,"email": 'mario.rossi@gmail.com',"quantity": 1});
-});
-
-test ("Failed to load products", async() => {
-    mockBrowseProducts.mockResolvedValueOnce(undefined);
-    localStorage.setItem("role", "EMPLOYEE");
-
-    const {getByText, getByAltText} = render(
-        <Router>
-            <BrowseProducts/>
-        </Router>
-    );
-
-    getByText("Products List");
-    getByText("Loading...");
-    await waitFor(()=>{
-        getByText("There has been an error contacting the server");
+    waitFor(async() => {
+        fireEvent.click(getByText("🛒 1 item(s)"));
+        getByText("Your Cart");
+        getByText("Apples");
+        getByText("1");
+        fireEvent.click(getByText("Close"));
     })
-
-    expect(mockBrowseProducts).toBeCalledTimes(1);
-    expect(mockBrowseProducts).toBeCalledWith();
-});*/
+    
+    /*expect(mockBrowseProducts).toBeCalledTimes(1);
+    expect(mockBrowseProducts).toBeCalledWith(null);
+    expect(mockAddToCard).toBeCalledTimes(0);
+    expect(mockAddToCard).toBeCalledWith({"productId":5 ,"email": 'mario.rossi@gmail.com',"quantity": 1});
+    expect(mockGetCart).toBeCalledTimes(2);
+    expect(mockGetCart).toBeCalledWith({"email":"mario.rossi@gmail.com"}, null);
+     */
+});
 

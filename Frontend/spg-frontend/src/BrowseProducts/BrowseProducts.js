@@ -9,7 +9,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
-import {Modal} from "react-bootstrap";
+import {Modal, Offcanvas} from "react-bootstrap";
 import {Link, Redirect} from "react-router-dom";
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
@@ -21,31 +21,45 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 
 
+import {printOrder} from "../PlaceOrder/PlaceOrder";
+
 function BrowseProducts(props) {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
     const [triggerError, setTriggerError] = useState(false);
+    const [cart, setCart] = useState([]);
+    const [error, setError] = useState(false);
     const userRole = localStorage.getItem('role');
 
     async function _browseProducts() {
         const data = await API.browseProducts(props.setErrorMessage);
-        //console.log(data);
-        if (data !== null) {
+        if (data != null) {
             setProducts(data['data']);
             setLoadCompleted(true);
         } else{
             console.log(data);
             setTriggerError(true);
         }
-        return;
     }
 
     useEffect( () => {
          _browseProducts();
     }, []);
 
+    async function _getCart() {
+        const prod = await API.getCart({'email': localStorage.getItem("username")}, props.setErrorMessage);
+        if (prod === undefined) {
+            setError(true);
+            setCart([]);
+        } else
+            setCart(prod);
+    }
 
-    function ProductEntry(props) {
+    useEffect(async () => {
+        await _getCart();
+    }, []);
+
+    function ProductEntry(pe_props) {
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
@@ -58,16 +72,16 @@ function BrowseProducts(props) {
                     <CardMedia
                         component="img"
                         height="140"
-                        image={props.product.imageUrl == null ? fruit : props.product.imageUrl}
+                        image={pe_props.product.imageUrl == null ? fruit : pe_props.product.imageUrl}
                         alt="fruit"
                     />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
-                            {props.product.name}
+                            {pe_props.product.name}
                         </Typography>
                         <Typography variant="body">
-                            {props.product.quantityAvailable}{props.product.unitOfMeasurement} available <br/>
-                            {props.product.price}€/{props.product.unitOfMeasurement}
+                            {pe_props.product.quantityAvailable}{pe_props.product.unitOfMeasurement} available <br/>
+                            {pe_props.product.price}€/{pe_props.product.unitOfMeasurement}
                         </Typography>
                     </CardContent>
                     <CardActions>
@@ -88,24 +102,26 @@ function BrowseProducts(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={props.product.imageUrl == null ? fruit : props.product.imageUrl} alt="fruit" style={{width: '150px', height: '150px'}}/>
+                            <img src={pe_props.product.imageUrl == null ? fruit : pe_props.product.imageUrl} alt="fruit" style={{width: '150px', height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
-                                    {props.product.name} : {props.product.quantityAvailable}{props.product.unitOfMeasurement} available, {props.product.price}€/{props.product.unitOfMeasurement}
+                                    {pe_props.product.name} : {pe_props.product.quantityAvailable}{pe_props.product.unitOfMeasurement} available, {pe_props.product.price}€/{pe_props.product.unitOfMeasurement}
                                 </Col>
                             </Row>
                             <Row>
                                 <Formik
                                     initialValues={{amount: 0}}
-                                    validationSchema={Yup.object({amount: Yup.number().min(0).max(props.product.quantityAvailable).required('Amount required!')})}
+                                    validationSchema={Yup.object({amount: Yup.number().min(0).max(pe_props.product.quantityAvailable).required('Amount required!')})}
                                     onSubmit={async (values) => {
                                         let outcome = await API.addToCart({
-                                            "productId": props.product.productId,
+                                            "productId": pe_props.product.productId,
                                             "email": localStorage.getItem("username"),
                                             "quantity": values.amount
                                         });
-                                        if (outcome === true)
+                                        if (outcome === true) {
                                             setShowSuccess("Product added successfully");
+                                            await _getCart();
+                                        }
                                         else
                                             setShowError("Something went wrong");
                                     }}
@@ -116,8 +132,8 @@ function BrowseProducts(props) {
                                         <Form>
                                             <label htmlFor='amount'>Amount:</label>
                                             <Field type="number" id="amount" name="amount"
-                                                   max={props.product.quantityAvailable}
-                                                   min={0}/> {props.product.unitOfMeasurement}
+                                                   max={pe_props.product.quantityAvailable}
+                                                   min={0}/> {pe_props.product.unitOfMeasurement}
                                             <br/>
                                             <Button style={{margin: '20px'}} type="submit" variant="success">Add to
                                                 cart</Button>
@@ -136,7 +152,6 @@ function BrowseProducts(props) {
                             handleClose();
                             setShowError(null);
                             setShowSuccess(null);
-                            //TODO: Check correctness
                             _browseProducts();
                         }}>
                             Close
@@ -149,6 +164,26 @@ function BrowseProducts(props) {
 
     if (triggerError === true) {
         return (<Redirect to="/ErrorHandler"></Redirect>);
+    }
+
+    function CartView(){
+        const [show, setShow] = useState(false);
+        const handleClose = () => setShow(false);
+        const handleShow = () => setShow(true);
+
+        return (<>
+        <Button variant="success" size="lg" onClick={handleShow} style={{position: 'fixed', bottom: '10px', left: '10px'}}>
+            🛒 {cart.length} item(s)
+        </Button>
+        <Offcanvas show={show} onHide={handleClose}>
+            <Offcanvas.Header><h2>Your Cart</h2></Offcanvas.Header>
+            <Offcanvas.Body>
+            { error === true ? <Alert variant='danger'>Something went wrong</Alert> : printOrder(cart)}
+                <Button style={{margin: '20px'}} variant="secondary" onClick={handleClose}>Close</Button>
+                <Link to="/PlaceOrder"><Button style={{margin: '20px'}} variant="success">Check out</Button></Link>
+            </Offcanvas.Body>
+        </Offcanvas>
+            </>);
     }
 
     return (
@@ -169,9 +204,12 @@ function BrowseProducts(props) {
                         </Grid>
                 }
             </Grid>
-            <Link to={`/${userRole}`}><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
+            <CartView/>
+            <Link to={`/${userRole}`}><Button style={{position: 'fixed', bottom: '10px', right: '10px'}} variant='secondary'>Back</Button></Link>
         </Container>
     );
 }
+
+
 
 export {BrowseProducts}
