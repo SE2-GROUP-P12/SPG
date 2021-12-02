@@ -178,6 +178,24 @@ async function addToCart(product) {
     }
 }
 
+//POST: the request body contains a farmer email and some data for the new product
+async function addProduct(product) {
+    try {
+        const response = await fetch("/api/product/addProduct", {
+            method: 'POST',
+            headers: getAuthenticationHeaders(),
+            body: JSON.stringify(product)
+        });
+        if (response.ok)
+            return true;
+        else
+            return false;
+    } catch (err) {
+        console.log("Some error occourred");
+        return undefined;
+    }
+}
+
 //POST: increase the amount of money (data.value) in the wallet of a customer (data.email), it returns a boolean
 async function topUp(data) {
     try {
@@ -448,7 +466,8 @@ const API = {
     sessionReloader,
     browseProductsByFarmer,
     modifyForecast,
-    getWalletWarning
+    getWalletWarning,
+    addProduct
 };
 export { API }
 

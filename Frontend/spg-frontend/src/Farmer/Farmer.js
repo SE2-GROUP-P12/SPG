@@ -13,6 +13,9 @@ function Farmer() {
                     <Grid item xs={12} sm={6} md={4}>
                         <Link to="/ProductsForecast"><Button size='huge' variant="outline-success"> <h1>Communicate Products Prevision</h1> </Button> </Link>
                     </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Link to='/AddProduct'><Button size='huge' variant="outline-success"> <h1>Add New Product</h1> </Button></Link>
+                    </Grid>
                 </Grid>
             </div>
             :

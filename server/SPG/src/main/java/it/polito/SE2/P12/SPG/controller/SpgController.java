@@ -86,6 +86,29 @@ public class SpgController {
     }
 
 
+    @PostMapping(API.ADD_PRODUCT)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE', ROLE_FARMER)")
+    public ResponseEntity addProduct(@RequestBody String jsonData) {
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if (requestMap == null)
+            return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("email") && requestMap.containsKey("productName") &&
+        requestMap.containsKey("price") && requestMap.containsKey("unitOfMeasurement")) {
+            String email = (String) requestMap.get("email");
+            Farmer farmer = userService.getFarmerByEmail(email);
+            if(farmer == null)
+                return ResponseEntity.badRequest().build();
+            String productName = (String) requestMap.get("productName");
+            Double value = Double.valueOf(requestMap.get("price").toString());
+            String uom = (String) requestMap.get("unitOfMeasurement");
+            String imageUrl = "";
+            if(requestMap.containsKey("imageUrl"))
+                imageUrl = (String) requestMap.get("imageUrl");
+            return ResponseEntity.ok(productService.addProduct(productName, value, uom, imageUrl, farmer));
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
     @GetMapping(API.EXIST_CUSTOMER)
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')")
     public ResponseEntity<Map<String, Boolean>> checkExistCustomerMailAndSsn(@RequestParam String email, @RequestParam String ssn) {
