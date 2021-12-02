@@ -40,7 +40,7 @@ Definition of Done:
 | \-         | SPG-115| \-      | \-     | 1d        | \-        |
 | \-         | SPG-99 | \-      | \-     | 3h        | 7h20m     |
 | \-         | SPG-103| \-      | \-     | 40m       | 1h        |
-| \-         | SPG-112| \-      | \-     | \-        | 6h10m     |
+| \-         | SPG-112| \-      | \-     | 7h        | 6h10m     |
 | \-         | SPG-114| \-      | \-     | 15m       | 1h        |
 | \-         | SPG-111| \-      | \-     | 5h        | 5h30m     |
 | _SPG-100_  | SPG-101| \-      | \-     | 15m       | 12m       |
@@ -66,7 +66,7 @@ Definition of Done:
 - SPG-91: issues from stakeholders
 - SPG-100: bugfix
 
-**Total est:** 9d 5h 15m (= 77h 15m + planning ) 
+**Total est:** 10d 4h 15m (= 84h 15m + planning ) 
 
 **Total actual:** 12d 2h 46m (= 98h 46m including planning )
 
@@ -74,28 +74,29 @@ Definition of Done:
     - Average: 3h 47m
     - Standard deviation: 8h 2m
 - Total task estimation error ratio: 
-  - sum of total hours estimation / sum of total hours spent from previous table: 77.25/98.75 = 0.78
+  - sum of total hours estimation / sum of total hours spent from previous table: 84.25/98.75 = 0.85
     
 ## QUALITY MEASURES
 
 - Unit Testing:
     - Total hours estimated:
-        - ???
+        - 14h 45m 
     - Total hours spent:
         - 17h20m
     - Nr of automated unit test cases
-        -  ???
+        -  BE: 100 unit cases
+        -  FE: x unit cases
     - Coverage (if available):
         - BE: 70.1% (lines of code)
         - FE: 24.0% (lines of code)
 - E2E testing:
     - Total hours estimated:
-        - ???
+        - 3h
     - Total hours spent
         - 4h
 - Code review
     - Total hours estimated:
-        -  ???
+        -  3h 20m
     - Total hours spent:
         - 3h 25m
         
@@ -121,7 +122,9 @@ Definition of Done:
         - Security: A
         - Maintainability: A
 
-**Note:** We introduced the SonarQube estimation on both sides during this sprint, since the frontend wasn't subject to analysis. Our technical debt came mainly from personal considerations. 
+**Note:** 
+    - We introduced the SonarQube estimation on both sides during this sprint, since the frontend wasn't subject to analysis. Our technical debt came mainly from personal      considerations. 
+    - The testing time estimation is based on an euristics evaluation. Since we have some test operations to pay in the TD we estimate to spent 55% of totoal time in testing routines.
 
 ## ASSESSMENT
 
