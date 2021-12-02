@@ -8,19 +8,18 @@ import { Formik, Form, Field } from 'formik';
 import { buildLoginBody, getSalt } from './Utilities';
 import Alert from "react-bootstrap/Alert";
 import * as Yup from 'yup';
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import {API} from "./API/API";
 
 const pbkdf2 = require('pbkdf2');
 
 
 function Login(props) {
-    const [redirectPage, setRedirectPage] = useState("/");
     const [redirectRun, setRedirectRun] = useState(false);
     const [alertShow, setAlertShow] = useState(false);
     console.log(pbkdf2.pbkdf2Sync('password', getSalt(), 1, 32, 'sha512').toString('hex'));
     function onClickSubmissionHandler(username, password) {
 
-        //event.preventDefault();
         fetch("/api/login", {
             method: 'POST',
             headers: {
@@ -33,7 +32,7 @@ function Login(props) {
             })
         }).then(response => {
             if (response.ok) {
-                response.json().then(body => {
+                response.json().then(async body => {
                     props.setAccessToken(body['accessToken']);
                     sessionStorage.setItem('accessToken', body['accessToken']);
                     sessionStorage.setItem('refreshToken', body['refreshToken']);
@@ -42,6 +41,8 @@ function Login(props) {
                     props.setLoggedFlag(true);
                     props.setLoggedUser(localStorage.getItem('username'));
                     props.setLoggedUserRole(body['roles']);
+                    let warning = await API.getWalletWarning(localStorage.getItem("username"));
+                    props.setTopUpWarning(warning);
                     setRedirectRun(true);
                 }
                 )
@@ -74,7 +75,7 @@ function Login(props) {
         );
     }
 
-    if (redirectRun == true) {
+    if (redirectRun) {
         return (
             <Redirect to={`/${localStorage.getItem('role')}`}></Redirect>
         );
@@ -97,9 +98,7 @@ function Login(props) {
                     email: Yup.string().email('Invalid email address').required('Email is required'),
                     password: Yup.string().required('Password is required').min(6, "Password is too short")
                 })}
-                onSubmit={async (values) => {
-                    let r = await onClickSubmissionHandler(values.email, values.password);
-                }}
+                onSubmit={(values) => {onClickSubmissionHandler(values.email, values.password)}}
                 validateOnChange={false}
                 validateOnBlur={false}>
                 {({ values, errors, touched }) =>
