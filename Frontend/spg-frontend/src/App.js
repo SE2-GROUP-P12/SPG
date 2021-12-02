@@ -14,7 +14,6 @@ import {Customer} from './Customer/Customer';
 import {Farmer} from './Farmer/Farmer';
 import { DeliverOrder } from './DeliverOrder/DeliverOrder';
 import {UnauthorizedComponent} from './UnauthorizedComponent';
-//import {NoTime} from './NoTime'; //non sono ancora sicura che serva (-Marti)
 import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
 import {useState, useEffect} from "react";
 import Modal from 'react-bootstrap/Modal';
@@ -42,10 +41,8 @@ function App() {
         let d = new Date();
         return d.getHours() + ":" + d.getMinutes();
     });
-    /*ERROR HANDLER ROUTINE*/
-    // useEffect(()=> {
-    //     setErrorMessage(undefined);
-    // },);
+    /*TOP UP WARNING MANAGEMENT*/
+    const [topUpWarning, setTopUpWarning] = useState({'exist': "false"});
 
     /*SESSION RELOAD ROUTINE*/
     async function _reloadSession() {
@@ -73,11 +70,10 @@ function App() {
     /*TIME HANDLER*/
     function printDays() {
         let output = [<option value='' label='Select a day'/>];
-        for (let i = 0; i < days.length; i++)
-            output.push(<option value={days[i]} label={days[i]}/>);
+        for (let d of days)
+            output.push(<option value={d} label={d}/>);
         return output;
     }
-
 
     return (
         <div className="App">
@@ -86,7 +82,8 @@ function App() {
                     <Navbar setLoggedFlag={setIsLogged} isLoggedFlag={isLogged}
                             setLoggedUser={setLoggedUser} loggedUser={loggedUser}
                             setAccessToken={setAccessToken}
-                            setLoggedUserRole={setLoggedUserRole} loggedUserRole={loggedUserRole}/>
+                            setLoggedUserRole={setLoggedUserRole} loggedUserRole={loggedUserRole}
+                            topUpWarning={topUpWarning} setTopUpWarning={setTopUpWarning}/>
                     <Switch>
                         <Route exact path="/DeliverOrder">
                             <DeliverOrder time={time}
@@ -98,6 +95,7 @@ function App() {
                                         setErrorMessage={setErrorMessage}
                                         loggedUser={loggedUser}
                                         loggedUserRole={loggedUserRole}
+                                        setTopUpWarning={setTopUpWarning}
                                         />
                         </Route>
                         <Route exact path="/TopUp">
@@ -142,7 +140,8 @@ function App() {
                         <Route exact path="/LoginComponent">
                             <Login setLoggedUser={setLoggedUser} setLoggedFlag={setIsLogged}
                                    setAccessToken={setAccessToken} accessToken={accessToken}
-                                   setLoggedUserRole={setLoggedUserRole}/>
+                                   setLoggedUserRole={setLoggedUserRole}
+                                   setTopUpWarning={setTopUpWarning}/>
                         </Route>
                         <Route exact path="/">
                             <Homepage/>
@@ -152,6 +151,7 @@ function App() {
                         </Route>
                     </Switch>
                 </Router>
+
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Time machine</Modal.Title>

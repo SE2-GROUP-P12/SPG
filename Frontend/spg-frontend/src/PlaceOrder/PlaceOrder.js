@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './../App.css';
 import {useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import Col from 'react-bootstrap/Col';
@@ -9,9 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
-import {API} from './../API/API';
-import {Redirect} from "react-router-dom";
-import { Collapse } from '@mui/material';
+import {API} from '../API/API';
 
 function PlaceOrder(props) {
     const [customer, setCustomer] = useState("");
@@ -24,12 +22,6 @@ function PlaceOrder(props) {
     const [sendSuccess, setSendSuccess] = useState(false);
     const [triggerError, setTriggerError] = useState(false);
     const [loading, setLoading] = useState(true);
-
-    /***************************************************************************/
-    //let email = 'mario.rossi@gmail.com' //dovrebbe essere recuperata dalla sessione
-    //const username = localStorage.getItem("username");
-    //const username = props.loggedUser; //requires hooks system from App.js (where loggedUser state is located)
-    /***************************************************************************/
 
     async function _getCart() {
         const prod = await API.getCart({'email': localStorage.getItem("username")}, props.setErrorMessage);
@@ -70,6 +62,10 @@ function PlaceOrder(props) {
         if (outcome) {
             setOrder(null);
             setSendSuccess(true);
+            /* NEW */
+            let warning = await API.getWalletWarning(localStorage.getItem("username"));
+            props.setTopUpWarning(warning);
+            /* NEW */
         } else
             setSendError(true);
     }
@@ -88,7 +84,7 @@ function PlaceOrder(props) {
 
     if (triggerError === true) {
         return (
-            <Redirect to="/ErrorHandler"></Redirect>
+            <Redirect to="/ErrorHandler" />
         );
     }
 

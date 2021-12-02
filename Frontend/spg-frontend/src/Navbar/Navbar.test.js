@@ -3,32 +3,56 @@ import {render, fireEvent, waitFor, getByText } from '@testing-library/react';
 import {BrowserRouter as Router} from "react-router-dom";
 
 import {Navbar} from "./Navbar";
-import {API} from "./../API/API";
 
-const mockAlert = (API.getWalletWarning = jest.fn());
-
-test("Alert Balance insufficient", async () => 
+test("Alert Balance insufficient", async() =>
 {
-    mockAlert.mockResolvedValueOnce({
-        "exist": "true",
-        "message": "Balance insufficient, remember to top up!"
-    });
-
-    localStorage.setItem("username", "mario.rossi@gmail.com");
 
     const {getByText, getByAltText} = render(
         <Router>
             <Navbar isLoggedFlag = {true}
                     loggedUser={"mario.rossi@gmail.com"}
                     loggedUserRole={"CUSTOMER"}
+                    topUpWarning={
+                        {"exist": "true",
+                        "message": "Balance insufficient, remember to top up!"}}
             />
         </Router>
         );
 
-    await waitFor(()=>{
-        getByAltText("warning");
-    })
+        let warning = getByAltText("warning");
+        getByText("LOG OUT");
+        fireEvent.mouseOver(warning);
+        await waitFor (() => {
+            getByText("Balance insufficient, remember to top up!")
+        });
+})
 
-    expect(mockAlert).toBeCalledTimes(1);
-    expect(mockAlert).toBeCalledWith("mario.rossi@gmail.com");
+test("No balance insufficient", async() =>
+{
+
+    const {getByText, getByAltText} = render(
+        <Router>
+            <Navbar isLoggedFlag = {true}
+                    loggedUser={"mario.rossi@gmail.com"}
+                    loggedUserRole={"CUSTOMER"}
+                    topUpWarning={{"exist": "false"}}
+            />
+        </Router>
+    );
+    getByText("LOG OUT");
+    expect(() => getByAltText('warning')).toThrow();
+})
+
+test ("No user logged in", async () =>{
+    const {getByText, getByAltText} = render(
+        <Router>
+            <Navbar isLoggedFlag = {false}
+                    loggedUser={""}
+                    loggedUserRole={""}
+            />
+        </Router>
+    );
+    getByText("Log in");
+    getByText("Sign up");
+    expect(() => getByAltText('warning')).toThrow();
 })
