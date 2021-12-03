@@ -102,4 +102,71 @@ public class FarmerControllerApiTest {
                         .content(jsonBodyMissingFieldRequest))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @WithUserDetails("tester@test.com")
+    public void addNewProductTest() throws Exception {
+        //Correct execution
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/" + API.ADD_PRODUCT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content("{\"email\" : \"farmer1@test.com\"," +
+                                "\"productName\" : \"newProduct\"," +
+                                "\"price\" : 2.00," +
+                                "\"unitOfMeasurement\" : \"KG\"," +
+                                "\"imageUrl\" : \"http://localhost/foo.png\"" +
+                                "}")
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+        String response = result.getResponse().getContentAsString();
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals("true", response);
+    }
+
+    @Test
+    @WithUserDetails("tester@test.com")
+    public void addNewProductErrorHandlerTest() throws Exception {
+        //not present mail
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/" + API.ADD_PRODUCT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content("{\"email\" : \"invalidMail@test.com\"," +
+                                "\"productName\" : \"newProduct\"," +
+                                "\"price\" : 2.00," +
+                                "\"unitOfMeasurement\" : \"KG\"," +
+                                "\"imageUrl\" : \"http://localhost/foo.png\"" +
+                                "}")
+                )
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        String response = result.getResponse().getContentAsString();
+        Assertions.assertNotNull(response);
+        //No content present in request
+        result = mockMvc.perform(MockMvcRequestBuilders.post("/api/" + API.ADD_PRODUCT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content("")
+                )
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        response = result.getResponse().getContentAsString();
+        Assertions.assertNotNull(response);
+    }
+
+    @Test
+    public void addNewProductPermissionErrorTest() throws Exception {
+        //not logged user
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/" + API.ADD_PRODUCT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content("{\"email\" : \"invalidMail@test.com\"," +
+                                "\"productName\" : \"newProduct\"," +
+                                "\"price\" : 2.00," +
+                                "\"unitOfMeasurement\" : \"KG\"," +
+                                "\"imageUrl\" : \"http://localhost/foo.png\"" +
+                                "}")
+                )
+                .andExpect(status().isForbidden());
+    }
 }
