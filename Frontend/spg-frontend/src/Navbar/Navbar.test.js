@@ -9,6 +9,7 @@ const mockAlert = (API.getWalletWarning = jest.fn());
 
 test("Alert Balance insufficient", async () => 
 {
+    localStorage.setItem("username", "mario.rossi@gmail.com");
     mockAlert.mockResolvedValueOnce({
         "exist": "true",
         "message": "Balance insufficient, remember to top up!"
