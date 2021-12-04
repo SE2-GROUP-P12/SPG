@@ -170,8 +170,7 @@ async function addToCart(product) {
         });
         if (response.ok)
             return true;
-        else
-            return false;
+        return false;
     } catch (err) {
         console.log("Some error occourred");
         return undefined;
@@ -188,8 +187,7 @@ async function addProduct(product) {
         });
         if (response.ok)
             return true;
-        else
-            return false;
+        return false;
     } catch (err) {
         console.log("Some error occourred");
         return undefined;
