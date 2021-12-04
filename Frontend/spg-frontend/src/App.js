@@ -20,6 +20,7 @@ import Modal from 'react-bootstrap/Modal';
 import {Formik, Form, Field} from 'formik';
 import Button from 'react-bootstrap/Button';
 import {ProductsForecast} from "./ProductsForecast";
+import {AddProduct} from "./AddProduct/AddProduct";
 
 const DEBUG = true;
 
@@ -132,6 +133,9 @@ function App() {
                         </Route>
                         <Route exact path="/ProductsForecast">
                             <ProductsForecast/>
+                        </Route>
+                        <Route exact path="/AddProduct">
+                            <AddProduct/>
                         </Route>
                         <Route exact path="/Admin">
                             <Customer   loggedUser={loggedUser}

@@ -4,6 +4,7 @@ import it.polito.SE2.P12.SPG.entity.Farmer;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,7 +63,14 @@ public class SpgProductService {
         return true;
     }
     */
-    public void addProduct(Product product){
-        productRepo.save(product);
+
+    public boolean addProduct(String productName, Double price, String unitOfMeasurement, String imageUrl, Farmer farmer) {
+        Product p;
+        if(imageUrl.isEmpty() || imageUrl.isBlank() || imageUrl == null)
+            p = new Product(productName, unitOfMeasurement, 0.0, price, farmer);
+        else
+            p = new Product(productName, unitOfMeasurement, 0.0, price, imageUrl, farmer);
+        productRepo.save(p);
+        return true;
     }
 }
