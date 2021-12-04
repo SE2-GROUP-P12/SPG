@@ -17,7 +17,6 @@ import it.polito.SE2.P12.SPG.service.*;
 import it.polito.SE2.P12.SPG.utils.API;
 import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
 import it.polito.SE2.P12.SPG.utils.DBUtilsService;
-import it.polito.SE2.P12.SPG.utils.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -55,17 +54,19 @@ public class SpgController {
     private final SpgBasketService basketService;
     private final JWTUserHandlerService jwtUserHandlerService;
     private final DBUtilsService dbUtilsService;
+    private final WalletOperationService walletOperationService;
 
 
     @Autowired
-    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService) {
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService) {
         this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
         this.jwtUserHandlerService = jwtUserHandlerService1;
+        this.walletOperationService = walletOperationService;
         this.dbUtilsService = dbUtilsService;
-        dbUtilsService.init();
+        this.dbUtilsService.init();
     }
 
     @GetMapping("/")
@@ -230,6 +231,7 @@ public class SpgController {
                 return ResponseEntity.badRequest().build();
             if (!userService.topUp(email, value))
                 return ResponseEntity.badRequest().build();
+            walletOperationService.recordTopUp(email, value);
             return ResponseEntity.ok(userService.getWallet(email));
         }
         return ResponseEntity.badRequest().build();
@@ -238,6 +240,9 @@ public class SpgController {
     @PostMapping(API.DELIVER_ORDER)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE')")
     public ResponseEntity deliverOrder(@RequestBody Long orderId) {
+        //record payment
+        walletOperationService.recordPayment(orderId);
+        //Process order
         return ResponseEntity.ok(orderService.deliverOrder(orderId));
     }
 
@@ -279,6 +284,12 @@ public class SpgController {
         if (response.isEmpty())
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(API.GET_WALLET_OPERATIONS)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
+    public ResponseEntity getWalletOperation(@RequestParam String email) {
+        return ResponseEntity.ok(walletOperationService.getWalletOperationsByEmail(email));
     }
 
     @GetMapping(API.RETRIEVE_ERROR)

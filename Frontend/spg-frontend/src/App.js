@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import {Navbar} from "./Navbar/Navbar";
 import {Homepage} from "./Homepage/Homepage";
 import {Login} from "./Login/Login";
+import {CustomerPage} from "./CustomerPage";
 import {ShopEmployee} from "./ShopEmployee/ShopEmployee";
 import {BrowseProducts} from "./BrowseProducts/BrowseProducts";
 import {NewCustomer} from './NewCustomer/NewCustomer';
@@ -12,7 +13,7 @@ import {TopUp} from "./TopUp";
 import {PlaceOrder} from './PlaceOrder/PlaceOrder';
 import {Customer} from './Customer/Customer';
 import {Farmer} from './Farmer/Farmer';
-import { DeliverOrder } from './DeliverOrder/DeliverOrder';
+import {DeliverOrder} from './DeliverOrder/DeliverOrder';
 import {UnauthorizedComponent} from './UnauthorizedComponent';
 import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
 import {useState, useEffect} from "react";
@@ -20,10 +21,15 @@ import Modal from 'react-bootstrap/Modal';
 import {Formik, Form, Field} from 'formik';
 import Button from 'react-bootstrap/Button';
 import {ProductsForecast} from "./ProductsForecast";
+import {getCustomerServices} from './Utilities';
+import {WalletOperation} from "./WallettOperation";
+
 
 const DEBUG = true;
 
 function App() {
+    /*SERVICES*/
+    const [allServices, setAllservices] = useState(getCustomerServices());
     /*BACK END ERROR HANDLER*/
     const [errorMessage, setErrorMessage] = useState(undefined);
     /*LOGGGED USER SESSION*/
@@ -96,7 +102,7 @@ function App() {
                                         loggedUser={loggedUser}
                                         loggedUserRole={loggedUserRole}
                                         setTopUpWarning={setTopUpWarning}
-                                        />
+                            />
                         </Route>
                         <Route exact path="/TopUp">
                             <TopUp/>
@@ -114,18 +120,18 @@ function App() {
                             </BrowseProducts>
                         </Route>
                         <Route exact path="/Employee">
-                            <ShopEmployee   isLogged={isLogged}
-                                            loggedUser={loggedUser}
-                                            loggedUserRole={loggedUserRole}/>
+                            <ShopEmployee isLogged={isLogged}
+                                          loggedUser={loggedUser}
+                                          loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/ShopEmployee">
-                            <ShopEmployee   isLogged={isLogged}
-                                            loggedUser={loggedUser}
-                                            loggedUserRole={loggedUserRole}/>
+                            <ShopEmployee isLogged={isLogged}
+                                          loggedUser={loggedUser}
+                                          loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/Customer">
-                            <Customer   loggedUser={loggedUser}
-                                        loggedUserRole={loggedUserRole}/>
+                            <Customer loggedUser={loggedUser}
+                                      loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/Farmer">
                             <Farmer/>
@@ -134,8 +140,8 @@ function App() {
                             <ProductsForecast/>
                         </Route>
                         <Route exact path="/Admin">
-                            <Customer   loggedUser={loggedUser}
-                                        loggedUserRole={loggedUserRole}/>
+                            <Customer loggedUser={loggedUser}
+                                      loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/LoginComponent">
                             <Login setLoggedUser={setLoggedUser} setLoggedFlag={setIsLogged}
@@ -143,11 +149,17 @@ function App() {
                                    setLoggedUserRole={setLoggedUserRole}
                                    setTopUpWarning={setTopUpWarning}/>
                         </Route>
+                        <Route exact path="/Customer/WalletOperations">
+                            <WalletOperation/>
+                        </Route>
                         <Route exact path="/">
                             <Homepage/>
                         </Route>
                         <Route exact path="/ErrorHandler">
                             <UnauthorizedComponent errorMessage={errorMessage}/>
+                        </Route>
+                        <Route exact path="/Dashboard">
+                            <CustomerPage loggedUser={loggedUser} services={allServices}/>
                         </Route>
                     </Switch>
                 </Router>

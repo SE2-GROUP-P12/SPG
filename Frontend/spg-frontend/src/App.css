@@ -75,3 +75,7 @@
     align-self: center;
 }
 
+.imageCard{
+    object-fit: cover;
+}
+
