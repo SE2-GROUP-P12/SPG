@@ -153,8 +153,58 @@ test("server error", async() => {
     fireEvent.click(getByText("Submit"));
     await waitFor(()=>{
         getByText("Something went wrong during the server processment, please retry. (500 Internal Server Error)");
-    })
+    });
+
 
     expect(mockCustomerExists).toBeCalledTimes(1);
     expect(mockCustomerExists).toBeCalledWith({"email": 'mario.rossi@gmail.com', "ssn": 'RSSMRA00D12N376V'});
 })
+
+test("Registration Bug fix", async() => {
+
+    const mockCustomerExists = (API.customerExists = jest.fn());
+    const mockAddCustomer = (API.addCustomer =jest.fn());
+    localStorage.setItem("role", "EMPLOYEE");
+    localStorage.setItem("username", "francesco.conte@gmail.com");
+
+    mockCustomerExists.mockResolvedValueOnce(false);
+    mockAddCustomer.mockResolvedValueOnce(true);
+
+    const {getByText, getByLabelText} = render(
+        <Router>
+            <NewCustomer
+                setLoggedUser={ (x)=>x } setLoggedFlag={ (x)=>x }
+                setAccessToken={ (x)=>x } accessToken={ (x)=>x }
+                setLoggedUserRole={ (x)=>x }
+            />
+        </Router>
+    );
+    expect(localStorage.getItem("role")).toBe("EMPLOYEE");
+    expect(localStorage.getItem("username")).toBe("francesco.conte@gmail.com");
+    fireEvent.change(getByLabelText("Email*"), { target: { value: "customer@gmail.com" } });
+    fireEvent.change(getByLabelText("Password*"), { target: { value: "Pa55word" } });
+    fireEvent.change(getByLabelText("Name*"), { target: { value: "Mario" } });
+    fireEvent.change(getByLabelText("Surname*"), { target: { value: "Mario" } });
+    fireEvent.change(getByLabelText("Address*"), { target: { value: "Via Roma 15, Torino" } });
+    fireEvent.change(getByLabelText("SSN*"), { target: { value: "MRIMRA00D12N376V" } });
+    fireEvent.change(getByLabelText("Phone Number"), {target: {value: "1234567890" }});
+    fireEvent.click(getByText("Submit"));
+    await waitFor(()=>{
+        getByText("Everything goes well, new client created.");
+    })
+    expect(localStorage.getItem("role")).toBe("EMPLOYEE");
+    expect(localStorage.getItem("username")).toBe("francesco.conte@gmail.com");
+
+    expect(mockCustomerExists).toBeCalledTimes(1);
+    expect(mockCustomerExists).toBeCalledWith({"email": 'customer@gmail.com', "ssn": 'MRIMRA00D12N376V'});
+    expect(mockAddCustomer).toBeCalledTimes(1);
+    expect(mockAddCustomer).toBeCalledWith({
+        'address': "Via Roma 15, Torino",
+        'email': "customer@gmail.com",
+        'name': "Mario",
+        'password': expect.anything(),
+        'phoneNumber': "1234567890",
+        'role': "CUSTOMER",
+        'ssn': "MRIMRA00D12N376V",
+        'surname': "Mario" } );
+} );
