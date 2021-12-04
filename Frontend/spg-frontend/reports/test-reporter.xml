@@ -1,58 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Navbar\Navbar.test.js">
+        <testCase name="Alert Balance insufficient" duration="436"/>
+        <testCase name="No balance insufficient" duration="16"/>
+        <testCase name="No user logged in" duration="11"/>
+    </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\BrowseProducts\BrowseProducts.test.js">
-        <testCase name="Renders correctly" duration="242"/>
+        <testCase name="Renders correctly" duration="221"/>
         <testCase name="Add to cart" duration="21"/>
     </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\AddProduct\AddProduct.test.js">
-        <testCase name="renders correctly" duration="305"/>
-        <testCase name="empty fields" duration="128"/>
-        <testCase name="successful add" duration="167"/>
-        <testCase name="unsuccessful add" duration="106"/>
-    </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\NewCustomer\NewCustomer.test.js">
-        <testCase name="renders correctly" duration="126"/>
-        <testCase name="empty fields" duration="145"/>
-        <testCase name="insecure password" duration="137"/>
-        <testCase name="create existing user" duration="278"/>
-        <testCase name="create new user" duration="317"/>
-        <testCase name="server error" duration="207"/>
-    </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\DeliverOrder\DeliverOrder.test.js">
-        <testCase name="Renders Correctly" duration="85"/>
-    </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Farmer\Farmer.test.js">
-        <testCase name="renders correctly" duration="22"/>
-    </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Navbar\Navbar.test.js">
-        <testCase name="Alert Balance insufficient" duration="412"/>
-        <testCase name="No balance insufficient" duration="15"/>
-        <testCase name="No user logged in" duration="15"/>
+        <testCase name="renders correctly" duration="290"/>
+        <testCase name="empty fields" duration="107"/>
+        <testCase name="successful add" duration="139"/>
+        <testCase name="unsuccessful add" duration="105"/>
     </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Login\Login.test.js">
-        <testCase name="Renders properly" duration="44"/>
-        <testCase name="Missing credentials" duration="95"/>
+        <testCase name="Renders properly" duration="57"/>
+        <testCase name="Missing credentials" duration="81"/>
+    </file>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Admin\Admin.test.js">
+        <testCase name="renders correctly" duration="30"/>
     </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\PlaceOrder\PlaceOrder.test.js">
         <testCase name="" duration="1"/>
     </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\ShopEmployee\ShopEmployee.test.js">
-        <testCase name="renders correctly" duration="43"/>
-    </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Customer\Customer.test.js">
-        <testCase name="renders correctly" duration="15"/>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\DeliverOrder\DeliverOrder.test.js">
+        <testCase name="Renders Correctly" duration="100"/>
     </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Homepage\Homepage.test.js">
         <testCase name="renders correctly" duration="27"/>
     </file>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\NewCustomer\NewCustomer.test.js">
+        <testCase name="renders correctly" duration="101"/>
+        <testCase name="empty fields" duration="188"/>
+        <testCase name="insecure password" duration="165"/>
+        <testCase name="create existing user" duration="284"/>
+        <testCase name="create new user" duration="271"/>
+        <testCase name="server error" duration="200"/>
+        <testCase name="Registration Bug fix" duration="219"/>
+    </file>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Customer\Customer.test.js">
+        <testCase name="renders correctly" duration="19"/>
+    </file>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Farmer\Farmer.test.js">
+        <testCase name="renders correctly" duration="28"/>
+    </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\API\API.test.js">
-        <testCase name="Browse product should return 50 items, including Apples" duration="59"/>
-        <testCase name="Add to mario.rossi@gmail.com&apos;s cart 1kg of apples to cart and retrieve it afterwards" duration="8"/>
-        <testCase name="Add 10 euros to mario.rossi@gmail.com&apos;s wallet" duration="4"/>
-        <testCase name="Place an order from a cart" duration="4"/>
+        <testCase name="Browse product should return 50 items, including Apples" duration="9"/>
+        <testCase name="Add to mario.rossi@gmail.com&apos;s cart 1kg of apples to cart and retrieve it afterwards" duration="5"/>
+        <testCase name="Add 10 euros to mario.rossi@gmail.com&apos;s wallet" duration="5"/>
+        <testCase name="Place an order from a cart" duration="3"/>
         <testCase name="Drop cart" duration="3"/>
         <testCase name="Get all orders, then get only the orders for mario" duration="3"/>
-        <testCase name="Deliver order" duration="3"/>
-        <testCase name="Add customer" duration="4"/>
+        <testCase name="Deliver order" duration="2"/>
+        <testCase name="Add customer" duration="2"/>
+    </file>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\ShopEmployee\ShopEmployee.test.js">
+        <testCase name="renders correctly" duration="23"/>
     </file>
 </testExecutions>
