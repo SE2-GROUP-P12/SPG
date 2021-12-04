@@ -77,11 +77,13 @@ public class FarmerControllerApiTest {
     @Test
     @WithUserDetails("tester@test.com")
     public void reportExpectedProductTest() throws Exception {
+        Long prodId = dbUtilsService.getProd1Object().getProductId();
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/" + API.REPORT_EXPECTED)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(""))
-                //.andExpect(status().isOk())
+                        .content("{\"productId\": "+ prodId.toString()+
+                                ",\n\"quantity\": 1}"))
+                .andExpect(status().isOk())
                 .andReturn();
         String response = result.getResponse().getContentAsString();
     }

@@ -15,9 +15,9 @@ import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.service.*;
 import it.polito.SE2.P12.SPG.utils.API;
+import it.polito.SE2.P12.SPG.utils.Constants;
 import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
 import it.polito.SE2.P12.SPG.utils.DBUtilsService;
-import it.polito.SE2.P12.SPG.utils.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -69,7 +69,7 @@ public class SpgController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<?> home() {
+    public ResponseEntity home() {
         return ResponseEntity.ok().build();
     }
 
@@ -92,9 +92,9 @@ public class SpgController {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("email") && requestMap.containsKey("productName") &&
+        if (requestMap.containsKey(Constants.JSON_EMAIL) && requestMap.containsKey("productName") &&
         requestMap.containsKey("price") && requestMap.containsKey("unitOfMeasurement")) {
-            String email = (String) requestMap.get("email");
+            String email = (String) requestMap.get(Constants.JSON_EMAIL);
             Farmer farmer = userService.getFarmerByEmail(email);
             if(farmer == null)
                 return ResponseEntity.badRequest().build();
@@ -116,9 +116,9 @@ public class SpgController {
         if (email == null || ssn == null)
             return ResponseEntity.badRequest().build();
         if (Boolean.TRUE.equals(userService.checkPresenceOfUser(email, ssn)))
-            response.put("exist", true);
+            response.put(Constants.JSON_EXIST, true);
         else {
-            response.put("exist", false);
+            response.put(Constants.JSON_EXIST, false);
         }
         return ResponseEntity.ok(response);
     }
@@ -140,24 +140,24 @@ public class SpgController {
         Map<String, String> responseMap;
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/" + API.CREATE_CUSTOMER).toUriString());
         if (userJsonData == null || userJsonData.equals("")) {
-            error.put("errorMessage", "Body is not valid");
+            error.put(Constants.JSON_ERROR_MESSAGE, "Body is not valid");
             return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(error);
         }
         Map<String, Object> requestMap = extractMapFromJsonString(userJsonData);
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("email") && requestMap.containsKey("ssn")
+        if (requestMap.containsKey(Constants.JSON_EMAIL) && requestMap.containsKey("ssn")
                 && requestMap.containsKey("name") && requestMap.containsKey("surname")
                 && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")
                 && requestMap.containsKey("address")
-                && Boolean.FALSE.equals(userService.checkPresenceOfMail(requestMap.get("email").toString()))
+                && Boolean.FALSE.equals(userService.checkPresenceOfMail(requestMap.get(Constants.JSON_EMAIL).toString()))
                 && Boolean.FALSE.equals(userService.checkPresenceOfSSN(requestMap.get("ssn").toString()))
         ) {
             userService.addNewCustomer(new Customer(requestMap.get("name").toString(), requestMap.get("surname").toString(),
                     requestMap.get("ssn").toString(), requestMap.get("phoneNumber").toString(),
-                    requestMap.get("email").toString(),
+                    requestMap.get(Constants.JSON_EMAIL).toString(),
                     requestMap.get("password").toString(), requestMap.get("address").toString()));
-            tmp = userService.getUserByEmail(requestMap.get("email").toString());
+            tmp = userService.getUserByEmail(requestMap.get(Constants.JSON_EMAIL).toString());
             tmp.setRole("CUSTOMER");
             try {
                 JWTProviderImpl jwtProvider = new JWTProviderImpl();
@@ -166,13 +166,13 @@ public class SpgController {
                 jwtUserHandlerService.addRelationUserTokens(tmp, responseMap.get("accessToken"), responseMap.get("refreshToken"));
                 return ResponseEntity.created(uri).body(responseMap);
             } catch (Exception e) {
-                error.put("errorMessage", e.getMessage());
+                error.put(Constants.JSON_ERROR_MESSAGE, e.getMessage());
                 ResponseEntity.badRequest()
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(error);
             }
         }
-        error.put("errorMessage", "email/ssn already present in the system");
+        error.put(Constants.JSON_ERROR_MESSAGE, "email/ssn already present in the system");
         return ResponseEntity.badRequest()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(error);
@@ -184,18 +184,18 @@ public class SpgController {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("email") && requestMap.containsKey("customer")) {
+        if (requestMap.containsKey(Constants.JSON_EMAIL) && requestMap.containsKey("customer")) {
             User orderIssuer = userService.getUserByEmail(requestMap.get("customer").toString());
             if (!userService.isOrderUserType(orderIssuer))
                 return ResponseEntity.badRequest().build();
-            if (requestMap.get("email").toString().isEmpty()) { //It is a customer order
+            if (requestMap.get(Constants.JSON_EMAIL).toString().isEmpty()) { //It is a customer order
                 BasketUserType user = userService.getBasketUserTypeByEmail(orderIssuer.getEmail());
                 Basket basket = user.getBasket();
                 basketService.dropBasket(basket);
                 return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
             }
             //It's an order provided by the shopEmployee
-            BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
+            BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get(Constants.JSON_EMAIL));
             Basket basket = user.getBasket();
             basketService.dropBasket(basket);
             return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
@@ -210,10 +210,10 @@ public class SpgController {
         Map<String, String> response = new HashMap<>();
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("productId") && requestMap.containsKey("email") && requestMap.containsKey("quantity")) {
-            Product product = productService.getProductById(Long.valueOf((Integer) requestMap.get("productId")));
-            Double quantity = Double.valueOf(requestMap.get("quantity").toString());
-            BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get("email"));
+        if (requestMap.containsKey(Constants.JSON_PRODUCT_ID) && requestMap.containsKey(Constants.JSON_EMAIL) && requestMap.containsKey(Constants.JSON_QUANTITY)) {
+            Product product = productService.getProductById(Long.valueOf((Integer) requestMap.get(Constants.JSON_PRODUCT_ID)));
+            Double quantity = Double.valueOf(requestMap.get(Constants.JSON_QUANTITY).toString());
+            BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get(Constants.JSON_EMAIL));
             if (user == null || product == null || !basketService.addProductToBasket(product, quantity, user))
                 return ResponseEntity.badRequest().build();
             response.put("responseStatus", "200-OK");
@@ -246,8 +246,8 @@ public class SpgController {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("email") && requestMap.containsKey("value")) {
-            String email = (String) requestMap.get("email");
+        if (requestMap.containsKey(Constants.JSON_EMAIL) && requestMap.containsKey("value")) {
+            String email = (String) requestMap.get(Constants.JSON_EMAIL);
             Double value = Double.valueOf(requestMap.get("value").toString());
             if (!userService.checkPresenceOfMail(email) || value <= 0)
                 return ResponseEntity.badRequest().build();
@@ -270,8 +270,8 @@ public class SpgController {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null)
             return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("email")) {
-            String email = (String) requestMap.get("email");
+        if (requestMap.containsKey(Constants.JSON_EMAIL)) {
+            String email = (String) requestMap.get(Constants.JSON_EMAIL);
             BasketUserType user = userService.getBasketUserTypeByEmail(email);
             if (user == null) {
                 return ResponseEntity.badRequest().build();
@@ -312,14 +312,14 @@ public class SpgController {
         Map<String, String> response = new HashMap<String, String>();
         if (user == null) {
             //the user isn't a customer and therefore has no wallet
-            response.put("exist", "false");
+            response.put(Constants.JSON_EXIST, "false");
         } else {
             Double total = orderService.getTotalPrice(((User) user).getUserId());
             if (total > user.getWallet()) {
-                response.put("exist", "true");
+                response.put(Constants.JSON_EXIST, "true");
                 response.put("message", "Balance insufficient, remember to top up!");
             } else
-                response.put("exist", "false");
+                response.put(Constants.JSON_EXIST, "false");
         }
         return ResponseEntity.ok(response);
     }
@@ -345,15 +345,15 @@ public class SpgController {
         String end;
          */
         if (requestMap == null ||
-                !requestMap.containsKey("productId") ||
-                !requestMap.containsKey("quantity")
+                !requestMap.containsKey(Constants.JSON_PRODUCT_ID) ||
+                !requestMap.containsKey(Constants.JSON_QUANTITY)
         )
             return ResponseEntity.badRequest().build();
-        Long productId = Long.parseLong(requestMap.get("productId").toString());
+        Long productId = Long.parseLong(requestMap.get(Constants.JSON_PRODUCT_ID).toString());
         product = productService.getProductById(productId);
         if (product == null)
             return ResponseEntity.badRequest().build();
-        forecast = Double.valueOf(requestMap.get("quantity").toString());
+        forecast = Double.valueOf(requestMap.get(Constants.JSON_QUANTITY).toString());
         /*start = (Double) requestMap.get("quantityForecast");
         end = (Double) requestMap.get("quantityForecast");*/
         if (!productService.setForecast(product, forecast))
@@ -364,26 +364,26 @@ public class SpgController {
     @GetMapping(API.REFRESH_TOKEN)
     public void getRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String refreshToken = authorizationHeader.substring("Bearer ".length());
+        if (authorizationHeader != null && authorizationHeader.startsWith(Constants.HEADER_BEARER)) {
+            String refreshToken = authorizationHeader.substring(Constants.HEADER_BEARER.length());
             JWTProviderImpl jwtProvider = new JWTProviderImpl();
             try {
                 Map<String, String> responseBody = jwtProvider.verifyRefreshTokenAndRegenerateAccessToken(refreshToken, request.getRequestURL().toString(), this.userService);
                 response.setContentType(APPLICATION_JSON_VALUE);
-                jwtUserHandlerService.invalidateByUserRefreshTokens(userService.getUserByEmail(responseBody.get("email")), refreshToken);
+                jwtUserHandlerService.invalidateByUserRefreshTokens(userService.getUserByEmail(responseBody.get(Constants.JSON_EMAIL)), refreshToken);
                 String accessToken = responseBody.get("accessToken");
-                jwtUserHandlerService.addRelationUserTokens(userService.getUserByEmail(responseBody.get("email")),
+                jwtUserHandlerService.addRelationUserTokens(userService.getUserByEmail(responseBody.get(Constants.JSON_EMAIL)),
                         accessToken, refreshToken);
                 new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
             } catch (Exception e) {
                 log.error("Error  refreshing token: " + e.getMessage());
-                response.setHeader("error", e.getMessage());
+                response.setHeader(Constants.HEADER_ERROR, e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), jwtProvider.setErrorMessage(e));
             }
         } else {
-            response.setHeader("error", "Headers value does not match!");
+            response.setHeader(Constants.HEADER_ERROR, "Headers value does not match!");
             response.setStatus(BAD_REQUEST.value());
             response.setContentType(APPLICATION_JSON_VALUE);
         }
@@ -393,8 +393,8 @@ public class SpgController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER', 'ROLE_EMPLOYEE','ROLE_FARMER')")
     public void doLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String accessToken = authorizationHeader.substring("Bearer ".length());
+        if (authorizationHeader != null && authorizationHeader.startsWith(Constants.HEADER_BEARER)) {
+            String accessToken = authorizationHeader.substring(Constants.HEADER_BEARER.length());
             JWTProviderImpl jwtProvider = new JWTProviderImpl();
             try {
                 Map<String, String> okResponseBody = new HashMap<>();
@@ -407,13 +407,13 @@ public class SpgController {
                 new ObjectMapper().writeValue(response.getOutputStream(), okResponseBody);
             } catch (Exception e) {
                 log.error("Error logging out: " + e.getMessage());
-                response.setHeader("error", e.getMessage());
+                response.setHeader(Constants.HEADER_ERROR, e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), jwtProvider.setErrorMessage(e));
             }
         } else {
-            response.setHeader("error", "Headers value does not match!");
+            response.setHeader(Constants.HEADER_ERROR, "Headers value does not match!");
             response.setStatus(BAD_REQUEST.value());
             response.setContentType(APPLICATION_JSON_VALUE);
         }
