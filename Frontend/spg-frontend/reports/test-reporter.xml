@@ -1,62 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Homepage/Homepage.test.js">
-        <testCase name="renders correctly" duration="119"/>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\PlaceOrder\PlaceOrder.test.js">
+        <testCase name="" duration="2"/>
     </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/API/API.test.js">
-        <testCase name="Browse product should return 50 items, including Apples" duration="131"/>
-        <testCase name="Add to mario.rossi@gmail.com&apos;s cart 1kg of apples to cart and retrieve it afterwards" duration="17"/>
-        <testCase name="Add 10 euros to mario.rossi@gmail.com&apos;s wallet" duration="18"/>
-        <testCase name="Place an order from a cart" duration="7"/>
-        <testCase name="Drop cart" duration="6"/>
-        <testCase name="Get all orders, then get only the orders for mario" duration="6"/>
-        <testCase name="Deliver order" duration="6"/>
-        <testCase name="Add customer" duration="7"/>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\DeliverOrder\DeliverOrder.test.js">
+        <testCase name="Renders Correctly" duration="148"/>
     </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Navbar/Navbar.test.js">
-        <testCase name="Alert Balance insufficient" duration="151">
-            <failure message="Error: expect(jest.fn()).toBeCalledWith(...expected)"><![CDATA[Error: expect(jest.fn()).toBeCalledWith(...expected)
-
-Expected: "mario.rossi@gmail.com"
-Received: null
-
-Number of calls: 1
-    at Object.<anonymous> (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Navbar/Navbar.test.js:31:23)
-    at _callCircusTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:212:5)
-    at _runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:149:3)
-    at _runTestsForDescribeBlock (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:63:9)
-    at run (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/run.js:25:3)
-    at runAndTransformResultsToJestFormat (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:176:21)
-    at jestAdapter (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:109:19)
-    at runTestInternal (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:380:16)
-    at runTest (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/runTest.js:472:34)
-    at Object.worker (/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/node_modules/jest-runner/build/testWorker.js:133:12)]]></failure>
-        </testCase>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\BrowseProducts\BrowseProducts.test.js">
+        <testCase name="Renders correctly" duration="482"/>
+        <testCase name="Add to cart" duration="40"/>
     </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Farmer/Farmer.test.js">
-        <testCase name="renders correctly" duration="74"/>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\NewCustomer\NewCustomer.test.js">
+        <testCase name="renders correctly" duration="133"/>
+        <testCase name="empty fields" duration="140"/>
+        <testCase name="insecure password" duration="528"/>
+        <testCase name="create existing user" duration="537"/>
+        <testCase name="create new user" duration="411"/>
+        <testCase name="server error" duration="210"/>
     </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/Customer/Customer.test.js">
-        <testCase name="renders correctly" duration="81"/>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Homepage\Homepage.test.js">
+        <testCase name="renders correctly" duration="29"/>
     </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/ShopEmployee/ShopEmployee.test.js">
-        <testCase name="renders correctly" duration="93"/>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Navbar\Navbar.test.js">
+        <testCase name="Alert Balance insufficient" duration="404"/>
+        <testCase name="No balance insufficient" duration="13"/>
+        <testCase name="No user logged in" duration="8"/>
     </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/DeliverOrder/DeliverOrder.test.js">
-        <testCase name="Renders Correctly" duration="186"/>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Farmer\Farmer.test.js">
+        <testCase name="renders correctly" duration="15"/>
     </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/BrowseProducts/BrowseProducts.test.js">
-        <testCase name="mock" duration="3"/>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Login\Login.test.js">
+        <testCase name="Renders properly" duration="87"/>
+        <testCase name="Missing credentials" duration="72"/>
     </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/NewCustomer/NewCustomer.test.js">
-        <testCase name="renders correctly" duration="162"/>
-        <testCase name="empty fields" duration="170"/>
-        <testCase name="insecure password" duration="150"/>
-        <testCase name="create existing user" duration="329"/>
-        <testCase name="create new user" duration="295"/>
-        <testCase name="server error" duration="212"/>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Customer\Customer.test.js">
+        <testCase name="renders correctly" duration="18"/>
     </file>
-    <file path="/Users/mattia/MattiaWorkspace/SoftEngWorkspace/SPG/Frontend/spg-frontend/src/PlaceOrder/PlaceOrder.test.js">
-        <testCase name="renders correctly" duration="150"/>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\API\API.test.js">
+        <testCase name="Browse product should return 50 items, including Apples" duration="52"/>
+        <testCase name="Add to mario.rossi@gmail.com&apos;s cart 1kg of apples to cart and retrieve it afterwards" duration="8"/>
+        <testCase name="Add 10 euros to mario.rossi@gmail.com&apos;s wallet" duration="6"/>
+        <testCase name="Place an order from a cart" duration="3"/>
+        <testCase name="Drop cart" duration="3"/>
+        <testCase name="Get all orders, then get only the orders for mario" duration="3"/>
+        <testCase name="Deliver order" duration="3"/>
+        <testCase name="Add customer" duration="2"/>
+    </file>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\ShopEmployee\ShopEmployee.test.js">
+        <testCase name="renders correctly" duration="69"/>
     </file>
 </testExecutions>
