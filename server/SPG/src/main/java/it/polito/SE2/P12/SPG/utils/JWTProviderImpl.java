@@ -108,6 +108,7 @@ public class JWTProviderImpl implements JWTProvider {
                 .sign(algorithm);
     }
 
+
     @Override
     public Map<String, String> getFrontEndUSerJWT(UserDetailsImpl userDetails, String requestURL) throws Exception {
         Map<String, String> responseBody = new HashMap<>();
