@@ -396,6 +396,23 @@ async function modifyForecast(data) {
     return true;
 }
 
+//POST: the request body contains a farmer email and some data for the new product
+async function addProduct(product) {
+    try {
+        const response = await fetch("/api/product/addProduct", {
+            method: 'POST',
+            headers: getAuthenticationHeaders(),
+            body: JSON.stringify(product)
+        });
+        if (response.ok)
+            return true;
+        return false;
+    } catch (err) {
+        console.log("Some error occourred");
+        return undefined;
+    }
+}
+
 async function sessionReloader() {
     try {
         const response = await fetch("/api/token/refresh", {
@@ -429,6 +446,7 @@ const API = {
     sessionReloader,
     browseProductsByFarmer,
     modifyForecast,
+    addProduct,
     getWalletWarning
 };
 export { API }
