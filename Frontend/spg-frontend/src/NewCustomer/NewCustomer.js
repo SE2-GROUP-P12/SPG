@@ -90,7 +90,7 @@ function NewCustomer(props) {
                         phoneNumber: Yup.string()
                     })
                 }
-                onSubmit={async (values) => {
+                onSubmit={async (values, {resetForm}) => {
                     let requestBodyObject = {
                         name: values.name,
                         surname: values.surname,
@@ -112,14 +112,18 @@ function NewCustomer(props) {
                         if (body === undefined) //registration failed
                             setModalMessage(errorModalMessage);
                         else { //registration successful
-                            props.setAccessToken(body['accessToken']);
-                            sessionStorage.setItem('accessToken', body['accessToken']);
-                            sessionStorage.setItem('refreshToken', body['refreshToken']);
-                            localStorage.setItem('username', body['email']);
-                            localStorage.setItem('role', body['roles']);
-                            props.setLoggedFlag(true);
-                            props.setLoggedUser(localStorage.getItem('username'));
-                            props.setLoggedUserRole(body['roles']);
+                            if(localStorage.getItem("role")==='EMPLOYEE')
+                                resetForm();
+                            else {
+                                props.setAccessToken(body['accessToken']);
+                                sessionStorage.setItem('accessToken', body['accessToken']);
+                                sessionStorage.setItem('refreshToken', body['refreshToken']);
+                                localStorage.setItem('username', body['email']);
+                                localStorage.setItem('role', body['roles']);
+                                props.setLoggedFlag(true);
+                                props.setLoggedUser(localStorage.getItem('username'));
+                                props.setLoggedUserRole(body['roles']);
+                            }
                             setModalMessage(okModalMessage);
                         }
                     }
