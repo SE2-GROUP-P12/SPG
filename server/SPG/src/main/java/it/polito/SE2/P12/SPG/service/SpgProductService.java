@@ -41,7 +41,7 @@ public class SpgProductService {
         return true;
     }
 
-    public boolean setForecast(Product product, Farmer farmer, Double forecast, String start, String end) {
+    public boolean setForecast(Product product,  Double forecast, String start, String end) {
         product.setQuantityForecast(forecast);
         product.setStartAvailability(start);
         product.setEndAvailability(end);

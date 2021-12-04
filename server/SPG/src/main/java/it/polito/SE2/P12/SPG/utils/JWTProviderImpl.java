@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
+import it.polito.SE2.P12.SPG.utils.Constants;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -55,8 +56,8 @@ public class JWTProviderImpl implements JWTProvider {
         String accessToken = this.generateAccessToken(userDetails, requestURL);
         responseBody.put("accessToken", accessToken);
         responseBody.put("refreshToken", refreshToken);
-        responseBody.put("roles", userDetails.getAuthorities().toString().split("_")[1].replaceAll("]", ""));
-        responseBody.put("email", username);
+        responseBody.put(Constants.JSON_ROLES, userDetails.getAuthorities().toString().split("_")[1].replace("]", ""));
+        responseBody.put(Constants.JSON_EMAIL, username);
         return responseBody;
     }
 
@@ -72,7 +73,7 @@ public class JWTProviderImpl implements JWTProvider {
         JWTVerifier jwtVerifier = JWT.require(this.algorithm).build();
         DecodedJWT jwtDecoded = jwtVerifier.verify(token);
         String username = jwtDecoded.getSubject();
-        String[] roles = jwtDecoded.getClaim("roles").asArray(String.class);
+        String[] roles = jwtDecoded.getClaim(Constants.JSON_ROLES).asArray(String.class);
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
@@ -90,7 +91,7 @@ public class JWTProviderImpl implements JWTProvider {
                 .withSubject(userDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationAccessToken))
                 .withIssuer(requestURL)
-                .withClaim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim(Constants.JSON_ROLES, userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                 .sign(algorithm);
     }
 
@@ -107,13 +108,14 @@ public class JWTProviderImpl implements JWTProvider {
                 .sign(algorithm);
     }
 
+
     @Override
     public Map<String, String> getFrontEndUSerJWT(UserDetailsImpl userDetails, String requestURL) throws Exception {
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("accessToken", generateAccessToken(userDetails, requestURL));
         responseBody.put("refreshToken", generateRefreshToken(userDetails, requestURL));
-        responseBody.put("roles", userDetails.getAuthorities().toString().split("_")[1].replaceAll("]", "")); //Max 1 authority(?)
-        responseBody.put("email", userDetails.getUsername());
+        responseBody.put(Constants.JSON_ROLES, userDetails.getAuthorities().toString().split("_")[1].replace("]", "")); //Max 1 authority(?)
+        responseBody.put(Constants.JSON_EMAIL, userDetails.getUsername());
         return responseBody;
     }
 

@@ -73,11 +73,11 @@ public class BasketServiceTest {
         basketRepo.save(b);
 
         Assertions.assertNotNull(basketRepo.getById(b.getBasketId()));
-        Assertions.assertEquals(b.getProductQuantityMap().get(p), 10.0);
-        Assertions.assertEquals(p.getQuantityAvailable(),990.0);
-        Assertions.assertEquals(p.getQuantityBaskets(), 10.0);
+        Assertions.assertEquals(10.0,b.getProductQuantityMap().get(p));
+        Assertions.assertEquals(990.0,p.getQuantityAvailable());
+        Assertions.assertEquals(10.0,p.getQuantityBaskets());
         basketService.dropBasket(b);
-        Assertions.assertEquals(p.getQuantityAvailable(),1000.0);
+        Assertions.assertEquals(1000.0,p.getQuantityAvailable());
         Assertions.assertNotNull(basketRepo.getById(b.getBasketId()));
     }
 
@@ -90,11 +90,11 @@ public class BasketServiceTest {
         basketRepo.save(b);
 
         Assertions.assertNotNull(basketRepo.getById(b.getBasketId()));
-        Assertions.assertEquals(b.getProductQuantityMap().get(p), 10.0);
-        Assertions.assertEquals(p.getQuantityAvailable(),990.0);
-        Assertions.assertEquals(p.getQuantityBaskets(), 10.0);
+        Assertions.assertEquals(10.0,b.getProductQuantityMap().get(p));
+        Assertions.assertEquals(990.0,p.getQuantityAvailable());
+        Assertions.assertEquals(10.0,p.getQuantityBaskets());
         basketService.dropBasket(u);
-        Assertions.assertEquals(p.getQuantityAvailable(),1000.0);
+        Assertions.assertEquals(1000.0,p.getQuantityAvailable());
         Assertions.assertNotNull(basketRepo.getById(b.getBasketId()));
     }
 
@@ -105,7 +105,7 @@ public class BasketServiceTest {
         basketRepo.save(b);
 
         Assertions.assertEquals(b.getBasketId(), u.getBasket().getBasketId());
-        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+        Assertions.assertEquals(0,b.getProductQuantityMap().size());
     }
 
     @Test
@@ -117,22 +117,22 @@ public class BasketServiceTest {
         Basket b1 = u1.getBasket();
         basketRepo.save(b1);
 
-        Assertions.assertEquals(u1.getBasket(), b1);
+        Assertions.assertEquals(b1,u1.getBasket());
 
-        Assertions.assertEquals(b1.getProductQuantityMap().size(), 0);
+        Assertions.assertEquals(0,b1.getProductQuantityMap().size());
         basketService.addProductToBasket(p1, 10.0, u1);
         System.out.println(basketRepo.findAll());
         System.out.println(b1.getProds());
-        Assertions.assertEquals(b1.getProductQuantityMap().size(), 1);
+        Assertions.assertEquals(1,b1.getProductQuantityMap().size());
         Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p1));
-        Assertions.assertEquals(b1.getProductQuantityMap().get(p1), 10.0);
+        Assertions.assertEquals(10.0,b1.getProductQuantityMap().get(p1));
         basketService.addProductToBasket(p2, 12.0, u1);
         basketService.addProductToBasket(p3, 15.0, u1);
-        Assertions.assertEquals(b1.getProductQuantityMap().size(), 3);
+        Assertions.assertEquals(3,b1.getProductQuantityMap().size());
         Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p2));
         Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p3));
-        Assertions.assertEquals(b1.getProductQuantityMap().get(p2), 12.0);
-        Assertions.assertEquals(b1.getProductQuantityMap().get(p3), 15);
+        Assertions.assertEquals(12.0,b1.getProductQuantityMap().get(p2));
+        Assertions.assertEquals(15,b1.getProductQuantityMap().get(p3));
 
         Assertions.assertEquals(p1.getQuantityAvailable(), 990.0);
         Assertions.assertEquals(p2.getQuantityAvailable(), 88.0);
@@ -152,30 +152,30 @@ public class BasketServiceTest {
         Basket b1 = u1.getBasket();
         basketRepo.save(b1);
 
-        Assertions.assertEquals(u1.getBasket(), b1);
+        Assertions.assertEquals(b1,u1.getBasket());
 
-        Assertions.assertEquals(b1.getProductQuantityMap().size(), 0);
+        Assertions.assertEquals(0,b1.getProductQuantityMap().size());
         basketService.addProductToBasket(p1, 10.0, u1);
         System.out.println(basketRepo.findAll());
         System.out.println(b1.getProds());
-        Assertions.assertEquals(b1.getProductQuantityMap().size(), 1);
+        Assertions.assertEquals(1,b1.getProductQuantityMap().size());
         Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p1));
-        Assertions.assertEquals(b1.getProductQuantityMap().get(p1), 10.0);
+        Assertions.assertEquals(10.0,b1.getProductQuantityMap().get(p1));
         basketService.addProductToBasket(p2, 12.0, u1);
         basketService.addProductToBasket(p3, 15.0, u1);
-        Assertions.assertEquals(b1.getProductQuantityMap().size(), 3);
+        Assertions.assertEquals(3,b1.getProductQuantityMap().size());
         Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p2));
         Assertions.assertTrue(b1.getProductQuantityMap().containsKey(p3));
-        Assertions.assertEquals(b1.getProductQuantityMap().get(p2), 12.0);
-        Assertions.assertEquals(b1.getProductQuantityMap().get(p3), 15);
+        Assertions.assertEquals(12.0,b1.getProductQuantityMap().get(p2));
+        Assertions.assertEquals(15,b1.getProductQuantityMap().get(p3));
 
-        Assertions.assertEquals(p1.getQuantityAvailable(), 990.0);
-        Assertions.assertEquals(p2.getQuantityAvailable(), 88.0);
-        Assertions.assertEquals(p3.getQuantityAvailable(), 5.0);
+        Assertions.assertEquals(990.0,p1.getQuantityAvailable());
+        Assertions.assertEquals(88.0,p2.getQuantityAvailable());
+        Assertions.assertEquals(5.0,p3.getQuantityAvailable());
 
-        Assertions.assertEquals(p1.getQuantityBaskets(), 10.0);
-        Assertions.assertEquals(p2.getQuantityBaskets(), 12.0);
-        Assertions.assertEquals(p3.getQuantityBaskets(), 15.0);
+        Assertions.assertEquals(10.0,p1.getQuantityBaskets());
+        Assertions.assertEquals(12.0,p2.getQuantityBaskets());
+        Assertions.assertEquals(15.0,p3.getQuantityBaskets());
     }
 
     @Test
@@ -196,7 +196,7 @@ public class BasketServiceTest {
         Basket b = u1.getBasket();
 
         Assertions.assertFalse(basketService.addProductToBasket(p, 100000000000.0, u1));
-        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+        Assertions.assertEquals(0,b.getProductQuantityMap().size());
     }
 
     @Test
@@ -206,7 +206,7 @@ public class BasketServiceTest {
         Basket b = u1.getBasket();
 
         Assertions.assertFalse(basketService.addProductToBasket(p, -1.0, u1));
-        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+        Assertions.assertEquals(0,b.getProductQuantityMap().size());
     }
 
     @Test
@@ -226,7 +226,7 @@ public class BasketServiceTest {
         Basket b = u1.getBasket();
 
         Assertions.assertFalse(basketService.addProductToBasket(p, Double.NaN, u1));
-        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+        Assertions.assertEquals(0,b.getProductQuantityMap().size());
     }
 
     @Test
@@ -247,7 +247,7 @@ public class BasketServiceTest {
         Basket b = u1.getBasket();
 
         Assertions.assertFalse(basketService.addProductToBasket(p, 100000000000.0, u1));
-        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+        Assertions.assertEquals(0,b.getProductQuantityMap().size());
     }
 
     @Test
@@ -257,7 +257,7 @@ public class BasketServiceTest {
         Basket b = u1.getBasket();
 
         Assertions.assertFalse(basketService.addProductToBasket(p, -1.0, u1));
-        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+        Assertions.assertEquals(0,b.getProductQuantityMap().size());
     }
 
     @Test
@@ -267,7 +267,7 @@ public class BasketServiceTest {
         Basket b = u1.getBasket();
 
         Assertions.assertFalse(basketService.addProductToBasket(p, Double.POSITIVE_INFINITY, u1));
-        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+        Assertions.assertEquals(0,b.getProductQuantityMap().size());
     }
 
     @Test
@@ -277,7 +277,7 @@ public class BasketServiceTest {
         Basket b = u1.getBasket();
 
         Assertions.assertFalse(basketService.addProductToBasket(p, Double.NaN, u1));
-        Assertions.assertEquals(b.getProductQuantityMap().size(), 0);
+        Assertions.assertEquals(0,b.getProductQuantityMap().size());
     }
 
 

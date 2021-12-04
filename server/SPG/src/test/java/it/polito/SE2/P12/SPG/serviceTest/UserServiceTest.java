@@ -61,11 +61,11 @@ public class UserServiceTest {
         User user = userService.getUserByEmail("customer1@foomail.com");
         Assertions.assertNotNull(user);
 
-        Assertions.assertEquals(user.getName(), "customer1");
-        Assertions.assertEquals(user.getSurname(), "surname1");
-        Assertions.assertEquals(user.getSsn(), "ssn_aaaaaaaaaaaa");
-        Assertions.assertEquals(user.getPhoneNumber(), "123456789");
-        Assertions.assertEquals(user.getPassword(), "password1223ABC");
+        Assertions.assertEquals("customer1",user.getName());
+        Assertions.assertEquals("surname1",user.getSurname());
+        Assertions.assertEquals("ssn_aaaaaaaaaaaa",user.getSsn());
+        Assertions.assertEquals("123456789",user.getPhoneNumber());
+        Assertions.assertEquals("password1223ABC",user.getPassword());
 
     }
 
@@ -78,14 +78,14 @@ public class UserServiceTest {
         Customer fromRepo = customerRepo.findCustomerByEmail("customer3@foomail.com");
         Assertions.assertNotNull(fromRepo);
 
-        Assertions.assertEquals(fromRepo.getName(), "customer3");
-        Assertions.assertEquals(fromRepo.getSurname(), "surname3");
-        Assertions.assertEquals(fromRepo.getSsn(), "ssn_ccccccccccc");
-        Assertions.assertEquals(fromRepo.getPhoneNumber(),"123456789");
-        Assertions.assertEquals(fromRepo.getEmail(),"customer3@foomail.com");
-        Assertions.assertEquals(fromRepo.getPassword(),"password1223ABC");
-        Assertions.assertEquals(fromRepo.getAddress(),"address3");
-        Assertions.assertEquals(fromRepo.getWallet(),15.3);
+        Assertions.assertEquals("customer3",fromRepo.getName());
+        Assertions.assertEquals("surname3",fromRepo.getSurname());
+        Assertions.assertEquals("ssn_ccccccccccc",fromRepo.getSsn());
+        Assertions.assertEquals("123456789",fromRepo.getPhoneNumber());
+        Assertions.assertEquals("customer3@foomail.com",fromRepo.getEmail());
+        Assertions.assertEquals("password1223ABC",fromRepo.getPassword());
+        Assertions.assertEquals("address3",fromRepo.getAddress());
+        Assertions.assertEquals(15.3,fromRepo.getWallet());
     }
 
     @Test
@@ -103,14 +103,14 @@ public class UserServiceTest {
         Customer fromRepo = customerRepo.findCustomerByEmail("customer3@foomail.com");
         Assertions.assertNotNull(fromRepo);
 
-        Assertions.assertEquals(fromRepo.getName(), "customer3");
-        Assertions.assertEquals(fromRepo.getSurname(), "surname3");
-        Assertions.assertEquals(fromRepo.getSsn(), "ssn_ccccccccccc");
-        Assertions.assertEquals(fromRepo.getPhoneNumber(),"123456789");
-        Assertions.assertEquals(fromRepo.getEmail(),"customer3@foomail.com");
-        Assertions.assertEquals(fromRepo.getPassword(),"password1223ABC");
-        Assertions.assertEquals(fromRepo.getAddress(),"address3");
-        Assertions.assertEquals(fromRepo.getWallet(),15.3);
+        Assertions.assertEquals("customer3",fromRepo.getName());
+        Assertions.assertEquals("surname3",fromRepo.getSurname());
+        Assertions.assertEquals("ssn_ccccccccccc",fromRepo.getSsn());
+        Assertions.assertEquals("123456789",fromRepo.getPhoneNumber());
+        Assertions.assertEquals("customer3@foomail.com",fromRepo.getEmail());
+        Assertions.assertEquals("password1223ABC",fromRepo.getPassword());
+        Assertions.assertEquals("address3",fromRepo.getAddress());
+        Assertions.assertEquals(15.3,fromRepo.getWallet());
     }
 
     @Test
@@ -128,14 +128,15 @@ public class UserServiceTest {
         Customer fromRepo = customerRepo.findCustomerByEmail("customer3@foomail.com");
         Assertions.assertNotNull(fromRepo);
 
-        Assertions.assertEquals(fromRepo.getName(), "customer3");
-        Assertions.assertEquals(fromRepo.getSurname(), "surname3");
-        Assertions.assertEquals(fromRepo.getSsn(), "ssn_ccccccccccc");
-        Assertions.assertEquals(fromRepo.getPhoneNumber(),"123456789");
-        Assertions.assertEquals(fromRepo.getEmail(),"customer3@foomail.com");
-        Assertions.assertEquals(fromRepo.getPassword(),"password1223ABC");
-        Assertions.assertEquals(fromRepo.getAddress(),"address3");
-        Assertions.assertEquals(fromRepo.getWallet(),15.3);
+
+        Assertions.assertEquals("customer3",fromRepo.getName());
+        Assertions.assertEquals("surname3",fromRepo.getSurname());
+        Assertions.assertEquals("ssn_ccccccccccc",fromRepo.getSsn());
+        Assertions.assertEquals("123456789",fromRepo.getPhoneNumber());
+        Assertions.assertEquals("customer3@foomail.com",fromRepo.getEmail());
+        Assertions.assertEquals("password1223ABC",fromRepo.getPassword());
+        Assertions.assertEquals("address3",fromRepo.getAddress());
+        Assertions.assertEquals(15.3,fromRepo.getWallet());
     }
 
     @Test
@@ -153,14 +154,14 @@ public class UserServiceTest {
         Customer fromRepo = customerRepo.findCustomerByEmail("customer3@foomail.com");
         Assertions.assertNotNull(fromRepo);
 
-        Assertions.assertEquals(fromRepo.getName(), "customer3");
-        Assertions.assertEquals(fromRepo.getSurname(), "surname3");
-        Assertions.assertEquals(fromRepo.getSsn(), "ssn_ccccccccccc");
-        Assertions.assertEquals(fromRepo.getPhoneNumber(),"123456789");
-        Assertions.assertEquals(fromRepo.getEmail(),"customer3@foomail.com");
-        Assertions.assertEquals(fromRepo.getPassword(),"password1223ABC");
-        Assertions.assertEquals(fromRepo.getAddress(),"address3");
-        Assertions.assertEquals(fromRepo.getWallet(),15.3);
+        Assertions.assertEquals("customer3",fromRepo.getName());
+        Assertions.assertEquals("surname3",fromRepo.getSurname());
+        Assertions.assertEquals("ssn_ccccccccccc",fromRepo.getSsn());
+        Assertions.assertEquals("123456789",fromRepo.getPhoneNumber());
+        Assertions.assertEquals("customer3@foomail.com",fromRepo.getEmail());
+        Assertions.assertEquals("password1223ABC",fromRepo.getPassword());
+        Assertions.assertEquals("address3",fromRepo.getAddress());
+        Assertions.assertEquals(15.3,fromRepo.getWallet());
     }
 
     @Test //Il test tenta di convertire il basket di un employee in un ordine per un farmer
@@ -189,8 +190,8 @@ public class UserServiceTest {
         Customer cust1 = customerRepo.findCustomerByEmail("customer1@foomail.com");
         Customer cust2 = customerRepo.findCustomerByEmail("customer2@foomail.com");
 
-        Assertions.assertEquals(cust1.getWallet(), 92.5);
-        Assertions.assertEquals(cust2.getWallet(), 12.82);
+        Assertions.assertEquals(92.5,cust1.getWallet());
+        Assertions.assertEquals(12.82,cust2.getWallet());
     }
 
     @Test
@@ -199,34 +200,34 @@ public class UserServiceTest {
         Assertions.assertTrue(userService.topUp("customer1@foomail.com", 10.0));
         Assertions.assertTrue(userService.topUp("customer2@foomail.com", 15.5));
 
-        Assertions.assertEquals(userService.getWallet("customer1@foomail.com"), 102.5);
-        Assertions.assertEquals(userService.getWallet("customer2@foomail.com"), 28.32);
+        Assertions.assertEquals(102.5,userService.getWallet("customer1@foomail.com"));
+        Assertions.assertEquals(28.32,userService.getWallet("customer2@foomail.com"));
     }
 
     @Test
     public void zeroTopUpTest() {
         Assertions.assertFalse(userService.topUp("customer1@foomail.com", 0.0));
-        Assertions.assertEquals(userService.getWallet("customer1@foomail.com"), 92.5);
+        Assertions.assertEquals(92.5,userService.getWallet("customer1@foomail.com"));
     }
 
     @Test
     public void negativeTopUpTest() {
         Assertions.assertFalse(userService.topUp("customer1@foomail.com", -1.0));
-        Assertions.assertEquals(userService.getWallet("customer1@foomail.com"), 92.5);
+        Assertions.assertEquals(92.5,userService.getWallet("customer1@foomail.com"));
     }
 
     @Test
     public void infiniteTopUpTest() {
         Assertions.assertFalse(userService.topUp("customer1@foomail.com", Double.POSITIVE_INFINITY));
         Assertions.assertFalse(userService.topUp("customer2@foomail.com", Double.NEGATIVE_INFINITY));
-        Assertions.assertEquals(userService.getWallet("customer1@foomail.com"), 92.5);
-        Assertions.assertEquals(userService.getWallet("customer2@foomail.com"), 12.82);
+        Assertions.assertEquals(92.5,userService.getWallet("customer1@foomail.com"));
+        Assertions.assertEquals(12.82,userService.getWallet("customer2@foomail.com"));
     }
 
     @Test
     public void nanTopUpTest() {
         Assertions.assertFalse(userService.topUp("customer1@foomail.com", Double.NaN));
-        Assertions.assertEquals(userService.getWallet("customer1@foomail.com"), 92.5);
+        Assertions.assertEquals(92.5,userService.getWallet("customer1@foomail.com"));
     }
 
 }

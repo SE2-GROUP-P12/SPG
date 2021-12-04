@@ -99,7 +99,6 @@ public class Product {
 
     public Product(String name, Double totalQuantity, double price, Farmer farmer) {
         this.name = name;
-        this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityForecast = 0.0;
