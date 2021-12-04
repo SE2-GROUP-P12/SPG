@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SpgApplication {
 
 	public static void main(String[] args) {
-		System.out.println("~~~ SPG server v0.0.4 ~~~");
+		System.err.println("~~~ SPG server v0.0.4 ~~~");
 		SpringApplication.run(SpgApplication.class, args);
 	}
 

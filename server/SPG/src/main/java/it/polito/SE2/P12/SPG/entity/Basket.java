@@ -92,8 +92,8 @@ public class Basket {
     @Override
     public String toString() {
         StringBuilder prodString = new StringBuilder("");
-        for (Product p : this.prods.keySet()) {
-            prodString.append("[(id=" + p.getProductId() + ")" + p.getName() + ", " + prods.get(p) + "],");
+        for (Map.Entry<Product,Double> entry : this.prods.entrySet()) {
+            prodString.append("[(id=" + entry.getKey().getProductId() + ")" + entry.getKey().getName() + ", " + entry.getValue() + "],");
         }
         prodString.deleteCharAt(prodString.lastIndexOf(","));
         return "Basket{" +

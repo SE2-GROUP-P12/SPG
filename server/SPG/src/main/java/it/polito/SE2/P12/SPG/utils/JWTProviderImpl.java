@@ -91,7 +91,7 @@ public class JWTProviderImpl implements JWTProvider {
                 .withSubject(userDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationAccessToken))
                 .withIssuer(requestURL)
-                .withClaim(Constants.JSON_ROLES, userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim(Constants.JSON_ROLES, userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                 .sign(algorithm);
     }
 
