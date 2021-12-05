@@ -27,7 +27,7 @@ jobs:
         java-version: 17
     
     - name: Start server
-      run: mvn spring-boot:run -f ./server/SPG/pom.xml
+      run: mvn spring-boot:run -f ./server/SPG/pom.xml &
 
     # install npm dependencies
     - name: front end dependencies
