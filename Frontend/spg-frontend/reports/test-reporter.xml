@@ -1,58 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Farmer\Farmer.test.js">
+        <testCase name="renders correctly" duration="59"/>
+    </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\BrowseProducts\BrowseProducts.test.js">
-        <testCase name="Renders correctly" duration="242"/>
-        <testCase name="Add to cart" duration="21"/>
+        <testCase name="Renders correctly" duration="224"/>
+        <testCase name="Add to cart" duration="27"/>
     </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\AddProduct\AddProduct.test.js">
-        <testCase name="renders correctly" duration="305"/>
-        <testCase name="empty fields" duration="128"/>
-        <testCase name="successful add" duration="167"/>
-        <testCase name="unsuccessful add" duration="106"/>
-    </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\NewCustomer\NewCustomer.test.js">
-        <testCase name="renders correctly" duration="126"/>
-        <testCase name="empty fields" duration="145"/>
-        <testCase name="insecure password" duration="137"/>
-        <testCase name="create existing user" duration="278"/>
-        <testCase name="create new user" duration="317"/>
-        <testCase name="server error" duration="207"/>
-    </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\DeliverOrder\DeliverOrder.test.js">
-        <testCase name="Renders Correctly" duration="85"/>
-    </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Farmer\Farmer.test.js">
-        <testCase name="renders correctly" duration="22"/>
+        <testCase name="renders correctly" duration="320"/>
+        <testCase name="empty fields" duration="127"/>
+        <testCase name="successful add" duration="120"/>
+        <testCase name="unsuccessful add" duration="98"/>
     </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Navbar\Navbar.test.js">
-        <testCase name="Alert Balance insufficient" duration="412"/>
-        <testCase name="No balance insufficient" duration="15"/>
-        <testCase name="No user logged in" duration="15"/>
+        <testCase name="Alert Balance insufficient" duration="399"/>
+        <testCase name="No balance insufficient" duration="13"/>
+        <testCase name="No user logged in" duration="7"/>
     </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Login\Login.test.js">
-        <testCase name="Renders properly" duration="44"/>
-        <testCase name="Missing credentials" duration="95"/>
+        <testCase name="Renders properly" duration="52"/>
+        <testCase name="Missing credentials" duration="72"/>
+    </file>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\NewCustomer\NewCustomer.test.js">
+        <testCase name="renders correctly" duration="112"/>
+        <testCase name="empty fields" duration="151"/>
+        <testCase name="insecure password" duration="143"/>
+        <testCase name="create existing user" duration="296"/>
+        <testCase name="create new user" duration="255"/>
+        <testCase name="server error" duration="206"/>
+        <testCase name="Registration Bug fix" duration="199"/>
+    </file>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Homepage\Homepage.test.js">
+        <testCase name="renders correctly" duration="22"/>
+    </file>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Customer\Customer.test.js">
+        <testCase name="renders correctly" duration="18"/>
+    </file>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\DeliverOrder\DeliverOrder.test.js">
+        <testCase name="Renders Correctly" duration="105"/>
     </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\PlaceOrder\PlaceOrder.test.js">
         <testCase name="" duration="1"/>
     </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\ShopEmployee\ShopEmployee.test.js">
-        <testCase name="renders correctly" duration="43"/>
-    </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Customer\Customer.test.js">
-        <testCase name="renders correctly" duration="15"/>
-    </file>
-    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Homepage\Homepage.test.js">
-        <testCase name="renders correctly" duration="27"/>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\Admin\Admin.test.js">
+        <testCase name="renders correctly" duration="18"/>
     </file>
     <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\API\API.test.js">
-        <testCase name="Browse product should return 50 items, including Apples" duration="59"/>
-        <testCase name="Add to mario.rossi@gmail.com&apos;s cart 1kg of apples to cart and retrieve it afterwards" duration="8"/>
-        <testCase name="Add 10 euros to mario.rossi@gmail.com&apos;s wallet" duration="4"/>
-        <testCase name="Place an order from a cart" duration="4"/>
-        <testCase name="Drop cart" duration="3"/>
-        <testCase name="Get all orders, then get only the orders for mario" duration="3"/>
-        <testCase name="Deliver order" duration="3"/>
-        <testCase name="Add customer" duration="4"/>
+        <testCase name="browseProducts ok" duration="1"/>
+        <testCase name="browseProducts catch" duration="21"/>
+        <testCase name="browseProducts err" duration="1"/>
+        <testCase name="placeOrder ok" duration="0"/>
+        <testCase name="placeOrder catch" duration="2"/>
+        <testCase name="placeOrder err" duration="0"/>
+        <testCase name="addToCart ok" duration="0"/>
+        <testCase name="addToCart catch" duration="9"/>
+        <testCase name="addToCart err" duration="0"/>
+        <testCase name="getWallet ok" duration="1"/>
+        <testCase name="getWallet catch" duration="1"/>
+        <testCase name="addToCart err" duration="39"/>
+        <testCase name="topUp ok" duration="1"/>
+        <testCase name="topUp catch" duration="1"/>
+        <testCase name="topUp err" duration="0"/>
+        <testCase name="getCart ok" duration="2"/>
+        <testCase name="getCart catch" duration="1"/>
+        <testCase name="getCart err404" duration="0"/>
+        <testCase name="getCart err400" duration="0"/>
+        <testCase name="customerExists ok" duration="0"/>
+        <testCase name="customerExists catch" duration="1"/>
+        <testCase name="customerExists err" duration="0"/>
+        <testCase name="customerExistsByMail ok" duration="0"/>
+        <testCase name="customerExistsByMail catch" duration="1"/>
+        <testCase name="customerExistsByMail err" duration="0"/>
+        <testCase name="dropOrder ok" duration="1"/>
+        <testCase name="dropOrder catch" duration="6"/>
+        <testCase name="dropOrder err" duration="1"/>
+        <testCase name="getAllOrders ok" duration="0"/>
+        <testCase name="getAllOrders empty" duration="0"/>
+        <testCase name="getAllOrders catch" duration="0"/>
+        <testCase name="getAllOrders err" duration="1"/>
+        <testCase name="getOrdersByEmail ok" duration="1"/>
+        <testCase name="getAllOrders empty" duration="1"/>
+        <testCase name="getAllOrders catch" duration="1"/>
+        <testCase name="getAllOrders err" duration="0"/>
+        <testCase name="deliverOrder ok" duration="1"/>
+        <testCase name="deliverOrder catch" duration="0"/>
+        <testCase name="deliverOrder err" duration="1"/>
+        <testCase name="addCustomer ok" duration="0"/>
+        <testCase name="addCustomer catch" duration="1"/>
+        <testCase name="addCustomer err" duration="0"/>
+        <testCase name="sessionReloader ok" duration="1"/>
+        <testCase name="sessionReloader catch" duration="1"/>
+        <testCase name="sessionReloader err" duration="1"/>
+        <testCase name="browseProductsByFarmer ok" duration="1"/>
+        <testCase name="browseProductsByFarmer catch" duration="1"/>
+        <testCase name="browseProductsByFarmer err" duration="1"/>
+        <testCase name="modifyForecast ok" duration="1"/>
+        <testCase name="modifyForecast catch" duration="1"/>
+        <testCase name="addProduct ok" duration="0"/>
+        <testCase name="addProduct catch" duration="1"/>
+        <testCase name="addProduct err" duration="0"/>
+        <testCase name="getWalletWarning ok" duration="0"/>
+        <testCase name="getWalletWarning catch" duration="1"/>
+    </file>
+    <file path="D:\_uni\magistrale\softeng2\SPG\Frontend\spg-frontend\src\ShopEmployee\ShopEmployee.test.js">
+        <testCase name="renders correctly" duration="25"/>
     </file>
 </testExecutions>

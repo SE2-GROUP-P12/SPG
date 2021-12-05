@@ -87,7 +87,6 @@ async function browseProducts(setErrorMessage) {
             headers: getAuthenticationHeaders(),
         });
         if (response.ok) {
-
             return createSuccesfulHandlerObject(response);
         } else {
             let error = await createErrorHandlerObject(response, null)
@@ -197,8 +196,7 @@ async function customerExistsByMail(email) {
         let exists = await response.json();
         if (response.ok)
             return exists;
-        else
-            return undefined;
+        return undefined;
     } catch (err) {
         console.log(err);
         return undefined;
