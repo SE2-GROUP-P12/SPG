@@ -1,0 +1,80 @@
+name: sonarcloud
+on:
+  push:
+    branches:
+      - main
+      - githubworkflow-*
+      - spg-v*
+      - BE/*
+      - FE/*
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  sonarcloud:
+    name: sonarcloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      # Start infrastructure (database)
+      - name: Start infra dependencies
+        run: docker-compose up -d database-test database &
+      # setup java 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      # caching
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # build analyze BE and report to sonar
+      - name: BE Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.BE_SONAR_TOKEN }}
+        run: mvn -B verify -f ./server/SPG/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=BE_SPG
+
+      # start server for frontend tests
+      - name: Start server
+        run: mvn spring-boot:run -f ./server/SPG/pom.xml &
+
+      # install npm dependencies
+      - name: front end dependencies
+        run: npm install --prefix ./Frontend/spg-frontend/
+      
+      # generate reports for sonarcloud
+      - name: generate fe test report
+        run: npm run --prefix ./Frontend/spg-frontend/ test:ci
+      - name: generate fe coverage report
+        run: npm run --prefix ./Frontend/spg-frontend/ coverage:ci
+
+      # sonar scan FE reports
+      - name: FE SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: Frontend/spg-frontend    
+          args: >
+            -Dsonar.organization=se2-group-p12
+            -Dsonar.projectKey=FE_SPG
+            -Dsonar.testExecutionReportPaths=reports/test-reporter.xml
+            -Dsonar.sources=.
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.coverage.exclusions=**/*.test.js
+            -Dsonar.projectName=SPG
+            -Dsonar.projectVersion=1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.FE_SONAR_TOKEN }}
+
