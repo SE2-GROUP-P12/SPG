@@ -50,9 +50,18 @@ jobs:
       - name: Start server
         run: mvn spring-boot:run -f ./server/SPG/pom.xml &
 
+      # Cache npm
+      - name: Cache NPM dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-npm-cache-
       # install npm dependencies
-      - name: front end dependencies
+      - name: front end install NPM dependencies
         run: npm install --prefix ./Frontend/spg-frontend/
+      
       
       # generate reports for sonarcloud
       - name: generate fe test report
