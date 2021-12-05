@@ -36,7 +36,7 @@ services:
       MYSQL_PASSWORD: asparago
     ports:
       - "3306:3306"
-    volumes:
+    # volumes:
       #- ./opt/script/data/initialization/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
       # - mysql-persistent-volume:/var/lib/mysql
 
