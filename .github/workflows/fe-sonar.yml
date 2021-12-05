@@ -26,6 +26,14 @@ jobs:
       with:
         java-version: 17
     
+    # cache BE dependencies
+    - name: Cache Maven packages
+      uses: actions/cache@v1
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
     - name: Start server
       run: mvn spring-boot:run -f ./server/SPG/pom.xml &
 
