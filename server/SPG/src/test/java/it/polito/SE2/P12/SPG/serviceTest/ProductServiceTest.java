@@ -62,7 +62,7 @@ public class ProductServiceTest {
 
         List<Product> products = productService.getAllProduct();
 
-        Assertions.assertEquals(products.size(), 3);
+        Assertions.assertEquals(3,products.size());
         Assertions.assertEquals(products.get(0).getName(), p1.getName());
         Assertions.assertEquals(products.get(1).getName(), p2.getName());
         Assertions.assertEquals(products.get(2).getName(), p3.getName());

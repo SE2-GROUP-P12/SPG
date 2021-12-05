@@ -6,22 +6,20 @@
 
 const getAuthenticationHeaders = () => {
     let accessToken = "Bearer " + sessionStorage.getItem("accessToken");
-    let headers = {
+    return {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': accessToken
     };
-    return headers;
 };
 
 const getSessionReloadHeaders = () => {
     let refreshToken = "Bearer " + sessionStorage.getItem("refreshToken");
-    let headers = {
+    return {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': refreshToken
     };
-    return headers;
 };
 
 
@@ -68,11 +66,10 @@ async function createErrorHandlerObject(response, status) {
 //The object contains the status again in order to know if render or not the data and the requested data
 async function createSuccesfulHandlerObject(response) {
     const data = await response.json()
-    let successfulHandlerObject = {
+    return {
         'status': response.status,
         'data': data
     };
-    return successfulHandlerObject;
 }
 
 
@@ -85,17 +82,14 @@ async function createSuccesfulHandlerObject(response) {
 // GET the list of all the products, if error occurs it returns undefined
 async function browseProducts(setErrorMessage) {
     try {
-        let listProducts;
         const response = await fetch("/api/product/all", {
             method: 'GET',
             headers: getAuthenticationHeaders(),
         });
         if (response.ok) {
-            //response.json().then(body => console.log(body));
             return createSuccesfulHandlerObject(response);
         } else {
             let error = await createErrorHandlerObject(response, null)
-            //console.log(error);
             setErrorMessage(error);
             return null;
         }
@@ -110,17 +104,14 @@ async function browseProducts(setErrorMessage) {
 async function browseProductsByFarmer(data, setErrorMessage) {
     try {
         console.log(JSON.stringify(data))
-        let listProducts;
         const response = await fetch("/api/product/?farmer=" + data.email, {
             method: 'GET',
             headers: getAuthenticationHeaders(),
         });
         if (response.ok) {
-            //response.json().then(body => console.log(body));
             return createSuccesfulHandlerObject(response);
         } else {
             let error = await createErrorHandlerObject(response, null)
-            //console.log(error);
             setErrorMessage(error);
             return null;
         }
@@ -134,15 +125,13 @@ async function browseProductsByFarmer(data, setErrorMessage) {
 
 //GET the cart related to the requested user by his/her email address, if error occurs it returns undefined
 async function getCart(data, setErrorMessage) {
-    //console.log("here");
     try {
         const response = await fetch("/api/customer/getCart?email=" + data.email, {
             method: 'GET',
             headers: getAuthenticationHeaders(),
         });
         if (response.ok) {
-            let cart = await response.json();
-            return cart;
+            return await response.json();
         } else if (response.status === 404) {
             console.log("404");
             return undefined
@@ -170,8 +159,7 @@ async function addToCart(product) {
         });
         if (response.ok)
             return true;
-        else
-            return false;
+        return false;
     } catch (err) {
         console.log("Some error occourred");
         return undefined;
@@ -188,8 +176,7 @@ async function topUp(data) {
         });
         if (response.ok)
             return true;
-        else
-            return false;
+        return false;
     } catch (err) {
         console.log("Some error occourred");
         return undefined;
@@ -209,8 +196,7 @@ async function customerExistsByMail(email) {
         let exists = await response.json();
         if (response.ok)
             return exists;
-        else
-            return undefined;
+        return undefined;
     } catch (err) {
         console.log(err);
         return undefined;
@@ -227,8 +213,7 @@ async function placeOrder(data) {
         });
         if (response.ok)
             return true;
-        else
-            return false;
+        return false;
     } catch (err) {
         console.log(err);
         return undefined;
@@ -246,8 +231,7 @@ async function dropOrder(data) {
         });
         if (response.ok)
             return true;
-        else
-            return false;
+        return false;
     } catch (err) {
         console.log(err);
         return undefined;
@@ -323,7 +307,6 @@ async function getWallet(email) {
             headers: getAuthenticationHeaders()
         });
         const data = await response.json();
-        //console.log(JSON.stringify(data));
         if (response.ok) {
             return data;
         }
@@ -339,8 +322,7 @@ async function getWalletWarning(email){
             method: 'GET',
             headers: getAuthenticationHeaders()
         });
-        const data = await response.json();
-        return data;
+        return await response.json();
     } catch (error) {
         console.log(error);
     }
@@ -371,7 +353,6 @@ async function customerExists(data) {
 
 //POST: register a new customer by sending all his/her info, it returns a boolean
 async function addCustomer(data) {
-    //console.log(JSON.stringify(data));
     try {
         const response = await fetch("/api/customer/addCustomer",
             {
@@ -399,7 +380,7 @@ async function addCustomer(data) {
 async function modifyForecast(data) {
     console.log(JSON.stringify(data));
     try {
-        const response = await fetch("/api/farmer/reportExpected",
+        await fetch("/api/farmer/reportExpected",
             {
                 method: 'POST',
                 headers: getAuthenticationHeaders(),
@@ -413,6 +394,22 @@ async function modifyForecast(data) {
     return true;
 }
 
+//POST: the request body contains a farmer email and some data for the new product
+async function addProduct(product) {
+    try {
+        const response = await fetch("/api/product/addProduct", {
+            method: 'POST',
+            headers: getAuthenticationHeaders(),
+            body: JSON.stringify(product)
+        });
+        if (response.ok)
+            return true;
+        return false;
+    } catch (err) {
+        console.log("Some error occourred");
+        return undefined;
+    }
+}
 
 async function sessionReloader() {
     try {
@@ -421,7 +418,6 @@ async function sessionReloader() {
             headers: getSessionReloadHeaders(),
         });
         if (response.ok) {
-            //console.log("done!");
             return (await response.json());
         } else {
             return null;
@@ -448,6 +444,7 @@ const API = {
     sessionReloader,
     browseProductsByFarmer,
     modifyForecast,
+    addProduct,
     getWalletWarning
 };
 export { API }

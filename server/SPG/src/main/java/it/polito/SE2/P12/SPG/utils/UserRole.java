@@ -4,6 +4,10 @@ import java.util.List;
 
 public class UserRole {
 
+    private UserRole() {
+        throw new IllegalStateException("User role utility class");
+    }
+
     public static final String ROLE_SHOP_EMPLOYEE = "EMPLOYEE";
     public static final String ROLE_CUSTOMER = "CUSTOMER";
     public static final String ROLE_ADMIN = "ADMIN";

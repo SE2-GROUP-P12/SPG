@@ -1,212 +1,602 @@
-var docapi = require('./API.js');
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import {API} from "./API";
 
-test ('Browse product should return 50 items, including Apples',
-async() => {
-    docapi.API.browseProducts().then(
-        data => {
-            //assume that we retrieved 50 items
-            expect(data).toHaveLength(50);
-            //assume that we received data as an array and that inside of it there is an item with name 'Apples'
-            expect(data).arrayContaining([
-                expect.objectContaining({name: 'Apples'})
-            ]);
-        }
-    );
-});
+global.fetch = jest.fn();
+
+beforeEach(()=>fetch.mockClear() );
+
+test("browseProducts ok", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => [{name: 'Apples'}]
+        })
+    )
+    const resp = await API.browseProducts((x)=>x);
+    expect(resp).toStrictEqual(expect.objectContaining({"status": 200}));
+    expect(resp).toStrictEqual(expect.objectContaining({"data": [{"name": "Apples"}]}));
+})
+
+test ("browseProducts catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.browseProducts((x)=>x);
+    expect(resp).toBe(null);
+})
+
+test ("browseProducts err", async() => {
+    const mockSetErrorMessage = jest.fn();
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            status: 500
+        })
+    )
+    const resp = await API.browseProducts(mockSetErrorMessage);
+    expect(resp).toBe(null);
+    expect(mockSetErrorMessage).toBeCalledTimes(1);
+})
+
+test("placeOrder ok", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200
+        })
+    )
+    const resp = await API.placeOrder({'email': 'mario.rossi@gmail.com', 'customer': 'mario.rossi@gmail.com'});
+    expect(resp).toBe(true);
+})
+
+test ("placeOrder catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.placeOrder({'email': 'mario.rossi@gmail.com', 'customer': 'mario.rossi@gmail.com'});
+    expect(resp).toBe(undefined);
+})
+
+test ("placeOrder err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false ,
+            status: 500
+        })
+    )
+    const resp = await API.placeOrder({'email': 'nobody@gmail.com', 'customer': 'nobody@gmail.com'});
+    expect(resp).toBe(false);
+})
+
+test("addToCart ok", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200
+        })
+    )
+    const resp = await API.addToCart();
+    expect(resp).toBe(true);
+})
+
+test ("addToCart catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.addToCart();
+    expect(resp).toBe(undefined);
+})
+
+test ("addToCart err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false ,
+            status: 500
+        })
+    )
+    const resp = await API.addToCart();
+    expect(resp).toBe(false);
+})
+
+test("getWallet ok", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => 10
+        })
+    )
+    const resp = await API.getWallet('mario.rossi@gmail.com');
+    expect(resp).toBe(10);
+})
+
+test ("getWallet catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.getWallet('mario.rossi@gmail.com');
+    expect(resp).toBe(undefined);
+})
+
+test ("addToCart err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false ,
+            status: 500
+        })
+    )
+    const resp = await API.getWallet('mario.rossi@gmail.com');
+    expect(resp).toBe(undefined);
+})
+
+test("topUp ok", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+        })
+    )
+    const resp = await API.topUp();
+    expect(resp).toBe(true);
+})
+
+test ("topUp catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.topUp();
+    expect(resp).toBe(undefined);
+})
+
+test ("topUp err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false ,
+            status: 500
+        })
+    )
+    const resp = await API.topUp();
+    expect(resp).toBe(false);
+})
 
 
-test ("Add to mario.rossi@gmail.com's cart 1kg of apples to cart and retrieve it afterwards",
-async () => {
-    docapi.API.addToCart({productId: 5, email: "mario.rossi@gmail.com", quantity: 1}).then(
-        async (data) => {
-            //assume that the process of adding the item inside the cart was successful
-            expect(data).toBeTruthy();
-            //retrieve mario's cart
-            docapi.API.getCart({'email': 'mario.rossi@gmail.com'}).then(
-                data => {
-                    //expect the cart to contain only one item...
-                    expect(data).toHaveLength(1);
-                    // ... and that item being 1kg of apples
-                    expect(data).arrayContaining([
-                        expect.objectContaining({name: 'Apples', quantityAvailable: 1})
-                    ]);
-                }
-            );
-        }
-    );
-});
+test("getCart ok", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => [{name: 'Apples'}]
+        })
+    )
+    const resp = await API.getCart('some@mail.com', x=>x);
+    expect(resp).toStrictEqual([{name: 'Apples'}]);
+})
 
-test ("Add 10 euros to mario.rossi@gmail.com's wallet", 
-    async () => {
-        //assume that mario.rossi@gmail.com exists
-        docapi.API.customerExistsByMail('mario.rossi@gmail.com').then(
-            data => {
-                expect(data).toBeTruthy();
-                //get mario.rossi@gmail.com's wallet
-                docapi.API.getWallet('mario.rossi@gmail.com').then(
-                    wallet => {
-                        expect(wallet).toBe(0);
-                        //add 10 euros to the wallet
-                        docapi.API.topUp({email: "mario.rossi@gmail.com", value: 10}).then(
-                            newWallet => {
-                                //confirm the modification
-                                expect(newWallet).toBe(10);
-                            }
-                        );
-                    }
-                );
-            }
-        );
-    }
-);
+test ("getCart catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.getCart('some@mail.com', x=>x);
+    expect(resp).toBe(null);
+})
 
-test ("Place an order from a cart", 
-    async () => {
-        //add a product to mario's cart (if you wanted more products you'd need to make more calls to this very same api, one for each product)
-        docapi.API.addToCart({productId: 5, email: "mario.rossi@gmail.com", quantity: 1}).then(
-            data => {
-                expect(data).toBeTruthy();
-                //place the order for mario.rossi@gmail.com's cart
-                docapi.API.placeOrder({email: "mario.rossi@gmail.com", customer: "mario.rossi@gmail.com"}).then(
-                    answer => {
-                        //expect it to be successful
-                        expect(answer).toBeTruthy();
-                        //look for the order in the orders list
-                        docapi.API.getAllOrders().then(
-                            orders =>{
-                            expect(orders).toHaveLength(1);
-                            expect(orders).arrayContaining([expect.objectContaining({email: 'mario.rossi@gmail.com'})]);
-                        });
-                    });
-            });
-    }
-);
+test ("getCart err404", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false ,
+            status: 404
+        })
+    )
+    const resp = await API.getCart('some@mail.com', x=>x)
+    expect(resp).toBe(undefined);
+})
 
-//Marti: Si regà, è brutto impestato ma se ci metto l'await manda tutto in vacca per nessuna apparente ragione
+test ("getCart err400", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false ,
+            status: 400
+        })
+    )
+    const resp = await API.getCart('some@mail.com', x=>x)
+    expect(resp).toBe(null);
+})
 
-test ("Drop cart", 
-    async() => {
-        //add products to a cart
-        docapi.API.addToCart({productId: 5, email: "mario.rossi@gmail.com", quantity: 1}).then( () => {
-            docapi.API.addToCart({productId: 6, email: "mario.rossi@gmail.com", quantity: 2}).then( () => {
-                docapi.API.addToCart({productId: 7, email: "mario.rossi@gmail.com", quantity: 3}).then(
-                    () => {
-                    //retrieve the cart
-                    docapi.API.getCart({'email': 'mario.rossi@gmail.com'}).then(
-                        cart => {
-                            //expect the cart to contain 3 items
-                            expect(cart).toHaveLength(3);
-                            //then drop its content
-                            docapi.API.dropOrder({'email': 'mario.rossi@gmail.com'}).then(
-                                deleted => {
-                                    //expect the drop to be successful
-                                    expect(deleted).toBeTruthy();
-                                    docapi.API.getCart({'email': 'mario.rossi@gmail.com'}).then(
-                                        //expect the cart to be now empty
-                                        newCart => expect(newCart).toHaveLength(0)
-                                    );
-                                });
-                        })
-                    });
-            });
-        }
-    );}
-);
+test("customerExists ok", async() => {
 
-test ("Get all orders, then get only the orders for mario",
-async () => {
-    //create an order (at this point we've seen how it's done)
-    docapi.API.addToCart({productId: 5, email: "mario.rossi@gmail.com", quantity: 1}).then(
-        () => {
-            docapi.API.placeOrder({email: "mario.rossi@gmail.com", customer: "mario.rossi@gmail.com"}).then(
-                //let's add another order, this time for paolo.bianchi@gmail.com (the cart is still mario.rossi because he acts in a shopemployee-like way -for now)
-                docapi.API.addToCart({productId: 6, email: "mario.rossi@gmail.com", quantity: 5}).then(
-                    () => {
-                        docapi.API.placeOrder({email: "mario.rossi@gmail.com", customer: "paolo.bianchi@gmail.com"}).then(
-                            () => {
-                                //retireve all orders and find both customers
-                                docapi.API.getAllOrders().then(
-                                    orders => {
-                                        expect(orders).toHaveLength(2);
-                                        expect(orders).arrayContaining(expect.objectContaining({email: 'mario.rossi@gmail.com'}));
-                                        expect(orders).arrayContaining(expect.objectContaining({email: 'paolo.bianchi@gmail.com'}));
-                                        //retrieve orders by mail and find onli mario's
-                                        docapi.API.getOrdersByEmail("mario.rossi@gmail.com").then(
-                                            newOrders => {
-                                                expect(newOrders).toHaveLength(1);
-                                                expect(newOrders).arrayContaining(expect.objectContaining({email: 'mario.rossi@gmail.com'}));
-                                                expect(newOrders).not.arrayContaining(expect.objectContaining({email: 'paolo.bianchi@gmail.com'}));
-                                            }
-                                        );
-                                    }
-                                );
-                            }
-                        )
-                    }   
-                )
-            );
-        });
-    
-});
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => {return ({'exist':true});}
+        })
+    )
+    const resp = await API.customerExists({'email':'mario.rossi@gmail.com','ssn':'idksomepersonaldata'});
+    expect(resp).toBe(true);
+})
 
-test ("Deliver order", 
-    async () => {
-        //create an order
-        docapi.API.addToCart({productId: 5, email: "mario.rossi@gmail.com", quantity: 1}).then(
-            () => {
-                docapi.API.placeOrder({email: "mario.rossi@gmail.com", customer: "mario.rossi@gmail.com"}).then(
-                    () => {
-                        docapi.API.getAllOrders().then(
-                            orders=>{
-                                //get the list of orders
-                                expect(orders).toHaveLength(1).arrayContaining(expect.objectContaining({email: 'mario.rossi@gmail.com'}));
-                                let orderId = orders[email = 'mario.rossi@gmail.com'].orderId; 
-                                //NOTE: the orderId is actually retrieved from the very element on the page, 
-                                //in this only case we assume for simplicity that there are no other orders for mario and so we can retrieve the orderId like this
+test ("customerExists catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.customerExists({'email':'some@mail.com','ssn':'idksomepersonaldata'});
+    expect(resp).toBe(undefined);
+})
 
-                                //deliver an order
-                                docapi.API.deliverOrder(orderId).then(
-                                    answer => {
-                                        //assume the delivery was successful
-                                        expect(answer).toBeTruthy();
-                                        //and that the order is no more in the orders list
-                                        docapi.API.getAllOrders.then(
-                                            newOrders => expect(newOrders).toHaveLength(0)
-                                        );
-                                    }
-                                );
-                            }
-                        );
-                    }
-                );}
-        );
-});
+test ("customerExists err", async() => {
 
-test ("Add customer", async() => {
-    //check existence of customer
-    docapi.API.customerExistsByMail("levi.ackerman@gmail.com").then(
-        answer => 
-        {
-            //assume that the customer doesn't exist yet
-            expect(answer).toBeFalsey();
-            //add the customer
-            docapi.API.addCustomer({"name":"Levi",
-                                    "surname":"Ackermann",
-                                    "address":"Via Eren da Qui 12, Milano",
-                                    "ssn":"lvickm80a01l840f",
-                                    "phoneNumber":"1234567890",
-                                    "role":"CUSTOMER",
-                                    "email":"levi.ackerman@gmail.com",
-                                    "password":"0e9584fba2dbbe7ddd67f50241cb3b36cc24fc15fc7d06e1d9f3d37f3776a46d"}).then(
-                                        answer => {
-                                            //assume that the creation was successful
-                                            expect(answer).toBeTruthy();
-                                            docapi.API.customerExistsByMail("levi.ackerman@gmail.com").then(
-                                                //check that the customer exists
-                                                answer => expect(answer).toBeTruthy()
-                                            );
-                                        }
-                                    );
-        }
-    );
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 500,
+            json: () => {return ({'exist':false});}
+        })
+    )
+    const resp = await API.customerExists({'email':'some@mail.com','ssn':'idksomepersonaldata'});
+    expect(resp).toBe(undefined);
+})
+
+test("customerExistsByMail ok", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => true
+        })
+    )
+    const resp = await API.customerExistsByMail('mario.rossi@gmail.com');
+    expect(resp).toBe(true);
+})
+
+test ("customerExistsByMail catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.customerExistsByMail('some@mail.com');
+    expect(resp).toBe(undefined);
+})
+
+test ("customerExistsByMail err", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 500,
+            json: () => false
+        })
+    )
+    const resp = await API.customerExistsByMail('some@mail.com');
+    expect(resp).toBe(undefined);
+})
+
+test("dropOrder ok", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200
+        })
+    )
+    const resp = await API.dropOrder('mario.rossi@gmail.com');
+    expect(resp).toBe(true);
+})
+
+test ("dropOrder catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.dropOrder();
+    expect(resp).toBe(undefined);
+})
+
+test ("dropOrder err", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false
+        })
+    )
+    const resp = await API.dropOrder('mario.rossi@gmail.com');
+    expect(resp).toBe(false);
+})
+
+test("getAllOrders ok", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => [{name: 'Apples'}]
+        })
+    )
+    const resp = await API.getAllOrders();
+    expect(resp).toStrictEqual([{"name": "Apples"}]);
+})
+
+test("getAllOrders empty", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => []
+        })
+    )
+    const resp = await API.getAllOrders();
+    expect(resp).toStrictEqual(expect.objectContaining([]));
+})
+
+test ("getAllOrders catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.getAllOrders();
+    expect(resp).toBe(undefined);
+})
+
+test ("getAllOrders err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            json: () => null
+        })
+    )
+    const resp = await API.getAllOrders()
+    expect(resp).toBe(null);
+})
+
+test("getOrdersByEmail ok", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => [{name: 'Apples'}]
+        })
+    )
+    const resp = await API.getOrdersByEmail('mario.rossi@gmail.com');
+    expect(resp).toStrictEqual([{"name": "Apples"}]);
+})
+
+test("getAllOrders empty", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => []
+        })
+    )
+    const resp = await API.getOrdersByEmail('mario.rossi@gmail.com');
+    expect(resp).toStrictEqual(expect.objectContaining([]));
+})
+
+test ("getAllOrders catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.getOrdersByEmail('mario.rossi@gmail.com');
+    expect(resp).toBe(undefined);
+})
+
+test ("getAllOrders err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            json: () => null
+        })
+    )
+    const resp = await API.getOrdersByEmail('mario.rossi@gmail.com');
+    expect(resp).toBe(null);
+})
+
+test("deliverOrder ok", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => true
+        })
+    )
+    const resp = await API.deliverOrder();
+    expect(resp).toBe(true);
+})
+
+test ("deliverOrder catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.deliverOrder();
+    expect(resp).toBe(undefined);
+})
+
+test ("deliverOrder err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 500,
+            json: () => false
+        })
+    )
+    const resp = await API.deliverOrder();
+    expect(resp).toBe(false);
+})
+
+test("addCustomer ok", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 201,
+            json: () => true
+        })
+    )
+    const resp = await API.addCustomer();
+    expect(resp).toBe(true);
+})
+
+test ("addCustomer catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.addCustomer();
+    expect(resp).toBe(undefined);
+})
+
+test ("addCustomer err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 500,
+            json: () => false
+        })
+    )
+    const resp = await API.addCustomer();
+    expect(resp).toBe(undefined);
+})
+
+test("sessionReloader ok", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 201,
+            json: () => 'some token'
+        })
+    )
+    const resp = await API.sessionReloader();
+    expect(resp).toBe('some token');
+})
+
+test ("sessionReloader catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.sessionReloader();
+    expect(resp).toBe(undefined);
+})
+
+test ("sessionReloader err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 500,
+            json: () => 'bad things happened'
+        })
+    )
+    const resp = await API.sessionReloader();
+    expect(resp).toBe(null);
+})
+
+test("browseProductsByFarmer ok", async() => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => [{name: 'Apples'}]
+        })
+    )
+    const resp = await API.browseProductsByFarmer({'email':'nothing@important.com'},(x)=>x);
+    expect(resp).toStrictEqual(expect.objectContaining({"status": 200}));
+    expect(resp).toStrictEqual(expect.objectContaining({"data": [{"name": "Apples"}]}));
+})
+
+test ("browseProductsByFarmer catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.browseProductsByFarmer({'email':'nothing@important.com'},(x)=>x);
+    expect(resp).toBe(null);
+})
+
+test ("browseProductsByFarmer err", async() => {
+    const mockSetErrorMessage = jest.fn();
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            status: 500
+        })
+    )
+    const resp = await API.browseProductsByFarmer({'email':'nothing@important.com'},mockSetErrorMessage);
+    expect(resp).toBe(null);
+    expect(mockSetErrorMessage).toBeCalledTimes(1);
+})
+
+
+test("modifyForecast ok", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => true
+        })
+    )
+    const resp = await API.modifyForecast();
+    expect(resp).toBe(true);
+})
+
+test ("modifyForecast catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.modifyForecast();
+    expect(resp).toBe(undefined);
+})
+
+
+test("addProduct ok", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 201,
+            json: () => true
+        })
+    )
+    const resp = await API.addProduct();
+    expect(resp).toBe(true);
+})
+
+test ("addProduct catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.addProduct()
+    expect(resp).toBe(undefined);
+})
+
+test ("addProduct err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 500,
+            json: () => false
+        })
+    )
+    const resp = await API.addProduct();
+    expect(resp).toBe(false);
+})
+
+test("getWalletWarning ok", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 201,
+            json: () => 'warning'
+        })
+    )
+    const resp = await API.getWalletWarning('mario.rossi@gmail.com');
+    expect(resp).toBe('warning');
+})
+
+test ("getWalletWarning catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.getWalletWarning('mario.rossi@gmail.com');
+    expect(resp).toBe(undefined);
 })

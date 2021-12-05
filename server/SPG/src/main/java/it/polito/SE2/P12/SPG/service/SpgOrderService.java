@@ -25,7 +25,6 @@ import java.util.*;
 public class SpgOrderService {
 
     private OrderRepo orderRepo;
-    private BasketRepo basketRepo;
     private SpgUserService spgUserService;
     private ProductRepo productRepo;
     private UserRepo userRepo;
@@ -34,7 +33,6 @@ public class SpgOrderService {
     @Autowired
     public SpgOrderService(OrderRepo orderRepo, BasketRepo basketRepo, SpgUserService spgUserService, ProductRepo productRepo, UserRepo userRepo) {
         this.orderRepo = orderRepo;
-        this.basketRepo = basketRepo;
         this.spgUserService = spgUserService;
         this.productRepo = productRepo;
         this.userRepo = userRepo;
@@ -104,14 +102,14 @@ public class SpgOrderService {
     public String getUserOrdersProductsJson(Long userId) {
         List<Order> orders = orderRepo.findAllByCust_UserId(userId);
         ObjectMapper mapper = new ObjectMapper();
-        String response = new String();
+        String response=null;
         try {
             response = mapper.writeValueAsString(orders);
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return response.toString();
+        return response;
     }
 
     public Double getTotalPrice(Long userId) {
@@ -126,13 +124,13 @@ public class SpgOrderService {
     public String getAllOrdersProductJson() {
         List<Order> orders = orderRepo.findAll();
         ObjectMapper mapper = new ObjectMapper();
-        String response = new String();
+        String response = null;
         try {
             response = mapper.writeValueAsString(orders);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return response.toString();
+        return response;
     }
 }
 

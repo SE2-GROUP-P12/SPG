@@ -118,7 +118,7 @@ public class OrderServiceTest {
         orders = orderRepo.findAll();
         Assertions.assertEquals(1, orders.size());
         Assertions.assertEquals(orders.get(0).getCust().getUserId(), ((User) user).getUserId());
-        Assertions.assertEquals(orders.get(0).getProds().entrySet().size(), 3);
+        Assertions.assertEquals(3,orders.get(0).getProds().entrySet().size());
 
         Product p1 = productRepo.findProductByName("Prod1");
         Product p2 = productRepo.findProductByName("Prod2");
@@ -148,7 +148,7 @@ public class OrderServiceTest {
         orders = orderRepo.findAll();
         Assertions.assertEquals(1, orders.size());
         Assertions.assertEquals(orders.get(0).getCust().getUserId(), ((User) customer).getUserId());
-        Assertions.assertEquals(orders.get(0).getProds().entrySet().size(), 2);
+        Assertions.assertEquals(2,orders.get(0).getProds().entrySet().size());
 
         Product p1 = productRepo.findProductByName("Prod1");
         Product p2 = productRepo.findProductByName("Prod2");
@@ -165,7 +165,7 @@ public class OrderServiceTest {
         BasketUserType shopEmployee = userService.getBasketUserTypeByEmail("shop@employee.com");
         Basket b = shopEmployee.getBasket();
 
-        Assertions.assertEquals(b.getProductQuantityMap().size(), 2);
+        Assertions.assertEquals(2,b.getProductQuantityMap().size());
         Assertions.assertFalse(orderService.addNewOrderFromBasket(b));
     }
 
@@ -185,7 +185,7 @@ public class OrderServiceTest {
             Product p = productRepo.findProductByName(e.getKey().getName());
             Assertions.assertNotNull(p);
             Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
-            Assertions.assertEquals(p.getQuantityDelivered(), 0.0);
+            Assertions.assertEquals(0.0,p.getQuantityDelivered());
         }
 
         Assertions.assertTrue(orderService.deliverOrder(order.getOrderId()));
@@ -193,7 +193,7 @@ public class OrderServiceTest {
         for (Map.Entry<Product, Double> e: order.getProds().entrySet()) {
             Product p = productRepo.findProductByName(e.getKey().getName());
             Assertions.assertNotNull(p);
-            Assertions.assertEquals(p.getQuantityOrdered(), 0.0);
+            Assertions.assertEquals(0.0,p.getQuantityOrdered());
             Assertions.assertTrue(p.getQuantityDelivered() > 0.0);
         }
     }
@@ -214,7 +214,7 @@ public class OrderServiceTest {
             Product p = productRepo.findProductByName(e.getKey().getName());
             Assertions.assertNotNull(p);
             Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
-            Assertions.assertEquals(p.getQuantityDelivered(), 0.0);
+            Assertions.assertEquals(0.0,p.getQuantityDelivered());
         }
 
         Assertions.assertFalse(orderService.deliverOrder(order.getOrderId()));
@@ -223,7 +223,7 @@ public class OrderServiceTest {
             Product p = productRepo.findProductByName(e.getKey().getName());
             Assertions.assertNotNull(p);
             Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
-            Assertions.assertEquals(p.getQuantityDelivered(), 0.0);
+            Assertions.assertEquals(0.0,p.getQuantityDelivered());
         }
     }
 
