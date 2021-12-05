@@ -16,6 +16,23 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+    # start infra dependencies
+    - name: Start database conainer
+      run: docker-compose up -d database database-test &
+    - name: Start server
+      run: mvn spring-boot:run -f ./server/SPG/pom.xml
+
+    # install npm dependencies
+    - name: front end dependencies
+      run: npm install --prefix ./Frontend/spg-frontend/
+    
+    # generate reports for sonarcloud
+    - name: generate fe test report
+      run: npm run --prefix ./Frontend/spg-frontend/ test:ci
+    - name: generate fe coverage report
+      run: npm run --prefix ./Frontend/spg-frontend/ coverage:ci
+
+    # sonar 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       with:
