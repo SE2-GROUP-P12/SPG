@@ -1,9 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import '../App.css';
 import Container from "react-bootstrap/Container";
 import {useState, useEffect} from "react";
-import {API} from "./API/API";
-import fruit from "./resources/fruits.png" //Recheck the original filename
+import {API} from "../API/API";
+import fruit from "../resources/fruits.png" //Recheck the original filename
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -67,7 +67,7 @@ function ProductsForecast(props) {
                         </Typography>
                         <Typography variant="body">
                             {props.product.quantityForecast} {props.product.unitOfMeasurement} currently forecasted <br/>
-                            {props.product.price}€/{props.product.unitOfMeasurement}
+                            {props.product.price.toFixed(2)}€/{props.product.unitOfMeasurement}
                         </Typography>
                     </CardContent>
                     <CardActions>

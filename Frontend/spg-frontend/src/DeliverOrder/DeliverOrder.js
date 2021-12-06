@@ -134,7 +134,7 @@ function Orders(props) {
         }
         output.push(
             <li className='list-group-item'>
-                <h2>Total: {total} €</h2>
+                <h2>Total: {total.toFixed(2)} €</h2>
             </li>
         )
         return output;
@@ -143,8 +143,8 @@ function Orders(props) {
     function OrderEntry(props) {
         return (
             <li className="list-group-item">
-                {props.product.name} : {props.product.amount}{props.product.unit}<br />
-                SUBTOTAL: {props.product["unit price"] * props.product.amount}€
+                {props.product.name} : {props.product.amount} {props.product.unit}<br />
+                SUBTOTAL: {(props.product["unit price"] * props.product.amount).toFixed(2)}€
             </li>
         );
     }

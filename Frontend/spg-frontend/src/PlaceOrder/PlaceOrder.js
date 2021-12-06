@@ -170,7 +170,7 @@ function printOrder(prod) {
     }
     output.push(
         <li className='list-group-item'>
-            <h2>Total: {total} €</h2>
+            <h2>Total: {total.toFixed(2)} €</h2>
         </li>
     )
     return output;
@@ -180,7 +180,7 @@ function OrderEntry(props) {
     return (
         <li className="list-group-item">
             {props.product.name} : {props.product.quantityAvailable} {props.product.unitOfMeasurement}<br/>
-            SUBTOTAL: {props.product.price * props.product.quantityAvailable}€
+            SUBTOTAL: {(props.product.price * props.product.quantityAvailable).toFixed(2)}€
         </li>
     );
 }

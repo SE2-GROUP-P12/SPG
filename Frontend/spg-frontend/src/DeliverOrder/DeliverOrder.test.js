@@ -20,6 +20,34 @@ test ("Renders Correctly", () => {
     getByText("Submit customer");
     
 });
+
+test ("double decimal digits", async() => {
+
+    const mockGetOrders = (API.getAllOrders = jest.fn());
+    mockGetOrders.mockResolvedValueOnce([
+        {   "orderId":68,
+            "email":"mario.rossi@gmail.com",
+            "value":225.0,
+            "productList":
+                [
+                    {"productId":"9","name":"Eggs","producer":"Thomas Jefferson","unit":"Units","unit price":"6.25","amount":"36.0"}
+                ]
+        }]);
+    localStorage.setItem("role", "EMPLOYEE");
+    const {getByText} = render(
+        <Router>
+            <DeliverOrder/>
+        </Router>
+    );
+
+    getByText("Deliver Order");
+    getByText("Email:");
+    getByText("Submit customer");
+    await waitFor(()=>{
+        getByText(/225.00€/);
+    })
+});
+
 /* 
 const mockGetAllOrders = (API.getAllOrders = jest.fn());
 const mockCustomerExistsByMail = (API.customerExistsByMail = jest.fn());
