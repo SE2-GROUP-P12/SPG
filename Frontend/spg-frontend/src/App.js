@@ -8,7 +8,7 @@ import {Login} from "./Login/Login";
 import {ShopEmployee} from "./ShopEmployee/ShopEmployee";
 import {BrowseProducts} from "./BrowseProducts/BrowseProducts";
 import {NewCustomer} from './NewCustomer/NewCustomer';
-import {TopUp} from "./TopUp";
+import {TopUp} from "./TopUp/TopUp";
 import {PlaceOrder} from './PlaceOrder/PlaceOrder';
 import {Customer} from './Customer/Customer';
 import {Farmer} from './Farmer/Farmer';
@@ -19,7 +19,7 @@ import {useState, useEffect} from "react";
 import Modal from 'react-bootstrap/Modal';
 import {Formik, Form, Field} from 'formik';
 import Button from 'react-bootstrap/Button';
-import {ProductsForecast} from "./ProductsForecast";
+import {ProductsForecast} from "./ProductsForecast/ProductsForecast";
 import {AddProduct} from "./AddProduct/AddProduct";
 
 const DEBUG = true;

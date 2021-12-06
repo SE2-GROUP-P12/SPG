@@ -81,7 +81,7 @@ function BrowseProducts(props) {
                         </Typography>
                         <Typography variant="body">
                             {pe_props.product.quantityAvailable}{pe_props.product.unitOfMeasurement} available <br/>
-                            {pe_props.product.price}€/{pe_props.product.unitOfMeasurement}
+                            {pe_props.product.price.toFixed(2)}€/{pe_props.product.unitOfMeasurement}
                         </Typography>
                     </CardContent>
                     <CardActions>
@@ -105,7 +105,7 @@ function BrowseProducts(props) {
                             <img src={pe_props.product.imageUrl == null ? fruit : pe_props.product.imageUrl} alt="fruit" style={{width: '150px', height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
-                                    {pe_props.product.name} : {pe_props.product.quantityAvailable}{pe_props.product.unitOfMeasurement} available, {pe_props.product.price}€/{pe_props.product.unitOfMeasurement}
+                                    {pe_props.product.name} : {pe_props.product.quantityAvailable}{pe_props.product.unitOfMeasurement} available, {pe_props.product.price.toFixed(2)}€/{pe_props.product.unitOfMeasurement}
                                 </Col>
                             </Row>
                             <Row>

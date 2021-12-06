@@ -162,3 +162,77 @@ test("Bad browse product", async () => {
     });
 
 })
+
+test ("Double digits decimals", async () => {
+    mockBrowseProducts.mockResolvedValueOnce([
+        {
+            "productId":5,
+            "name": "Apples",
+            "producer" : "Tonio Cartonio s.p.a.",
+            "unitOfMeasurement":"kg",
+            "totalQuantity": 10,
+            "quantityAvailable": 10,
+            "quantityBaskets": 0,
+            "quantityOrdered": 0,
+            "quantityDelivered": 0,
+            "price": 2,
+            "imageUrl" : ""
+        }
+    ]);
+    mockGetCart.mockResolvedValueOnce([]);
+    mockGetCart.mockResolvedValueOnce([{
+        "endAvailability": null,
+        "farmer": 5,
+        "imageUrl": "",
+        "name": "Apples",
+        "price": 2,
+        "productId": 5,
+        "quantityAvailable": 1,
+        "quantityBaskets": 1,
+        "quantityDelivered": 0,
+        "quantityForecast": 0,
+        "quantityOrdered": 25,
+        "startAvailability": null,
+        "totalQuantity": 50,
+        "unitOfMeasurement": "Kg"}])
+    mockAddToCard.mockResolvedValueOnce(true);
+    localStorage.setItem("role", "CUSTOMER");
+    localStorage.setItem("username", "mario.rossi@gmail.com");
+
+    const {getByText, getByAltText, getByLabelText, getAllByText} = render(
+        <Router>
+            <BrowseProducts
+                setErrorMessage={null}
+                errorMessage={null}
+                isLogged={()=>true}
+                loggedUser={()=>"mario.rossi@gmail.com"}
+            />
+        </Router>
+    );
+
+    getByText("Products List");
+    getByText("Loading...");
+    waitFor(async ()=>{
+        getByText("2.00");
+        fireEvent.click(getByText(buttonText));
+    });
+    waitFor(async ()=>{
+        getByText("2.00");
+        const input = getByLabelText("Amount:");
+        fireEvent.change(input, { target: { value: 1 } });
+        fireEvent.click(getAllByText(buttonText)[1]);
+    });
+    waitFor(async () => {
+        getByText("Product added successfully");
+        fireEvent.click(getByText("Close"));
+    })
+
+    waitFor(async() => {
+        fireEvent.click(getByText("🛒 1 item(s)"));
+        getByText("Your Cart");
+        getByText("Apples");
+        getByText("1");
+        getByText("2.00");
+        fireEvent.click(getByText("Close"));
+    })
+})
