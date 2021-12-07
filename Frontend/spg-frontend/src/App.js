@@ -169,7 +169,12 @@ function App() {
                                 date: '',
                                 time: ''
                             }}
-                            onSubmit={(values) => {
+                            onSubmit={async (values)=> {
+                                let requestBody ={
+                                    time : values.time,
+                                    date :values.date
+                                };
+                                await API.timeTravel(requestBody);
                                 console.log("CHECKTIME APP:" + values.date + " " + values.time)
                                 setDate(values.date);
                                 setTime(values.time);

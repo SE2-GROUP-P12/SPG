@@ -427,6 +427,22 @@ async function sessionReloader() {
     }
 }
 
+async function timeTravel(data) {
+    try {
+        const response = await fetch("/api/timeTravel", {
+            method: 'POST',
+            headers: getAuthenticationHeaders(),
+            body: JSON.stringify(data)
+        });
+        if (response.ok)
+            return true;
+        return false;
+    } catch (err) {
+        console.log("Some error occourred");
+        return undefined;
+    }
+}
+
 const API = {
     browseProducts,
     placeOrder,
