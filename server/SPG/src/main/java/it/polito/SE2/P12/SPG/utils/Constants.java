@@ -25,6 +25,8 @@ public class Constants {
     public static final String JSON_PRODUCT_ID = "productId";
     public static final String JSON_QUANTITY = "quantity";
     public static final String JSON_ROLES = "roles";
+    public static final String JSON_DATE = "date";
+    public static final String JSON_TIME = "time";
 
     /**
      * User emails in database

@@ -22,6 +22,9 @@ import Button from 'react-bootstrap/Button';
 import {ProductsForecast} from "./ProductsForecast/ProductsForecast";
 import {AddProduct} from "./AddProduct/AddProduct";
 
+
+
+
 const DEBUG = true;
 
 function App() {
@@ -175,7 +178,8 @@ function App() {
                         >
                             {({values, handleChange, handleBlur}) =>
                                 <Form>
-                                    <select
+                                    <div className="row ml-4 mr-4">
+                                        <select
                                         name="date"
                                         value={values.date}
                                         onChange={handleChange}
@@ -186,6 +190,7 @@ function App() {
                                     </select>
                                     <Field type='time' name='time'/>
                                     <Button type='submit' variant='danger'>Time travel!</Button>
+                                    </div>
                                 </Form>
                             }
                         </Formik>

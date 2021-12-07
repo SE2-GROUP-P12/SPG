@@ -54,7 +54,7 @@ public class SpgController {
     private final SpgOrderService orderService;
     private final SpgBasketService basketService;
     private final JWTUserHandlerService jwtUserHandlerService;
-
+    private long timeOffset;
 
 
     @Autowired
@@ -64,6 +64,7 @@ public class SpgController {
         this.orderService = orderService;
         this.basketService = basketService;
         this.jwtUserHandlerService = jwtUserHandlerService1;
+        this.timeOffset=0;
         dbUtilsService.init();
     }
 
@@ -385,6 +386,55 @@ public class SpgController {
             response.setStatus(BAD_REQUEST.value());
             response.setContentType(APPLICATION_JSON_VALUE);
         }
+    }
+
+    @GetMapping(API.TIME_TRAVEL)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER', 'ROLE_EMPLOYEE','ROLE_FARMER')")
+    public ResponseEntity<Boolean> timeTravel(@RequestBody String jsonData){
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if (requestMap == null ||
+                !requestMap.containsKey(Constants.JSON_DATE) ||
+                !requestMap.containsKey(Constants.JSON_TIME)
+        )
+            return ResponseEntity.badRequest().build();
+        String travelDayOfWeek = requestMap.get(Constants.JSON_DATE).toString();
+        String hhmm = requestMap.get(Constants.JSON_TIME).toString();
+        int hh = Integer.parseInt(hhmm.split(":")[0]);
+        int mm = Integer.parseInt(hhmm.split(":")[1]);
+        java.util.Date time=new java.util.Date((long)System.currentTimeMillis()+this.timeOffset);
+        Calendar c = Calendar.getInstance();
+        c.setTime(time);
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+        int dayToTravel=0;
+        switch (travelDayOfWeek){
+            case "Sun":
+                dayToTravel=1;
+                break;
+            case "Mon":
+                dayToTravel=2;
+                break;
+            case "Tue":
+                dayToTravel=3;
+                break;
+            case "Wed":
+                dayToTravel=4;
+                break;
+            case "Thu":
+                dayToTravel=5;
+                break;
+            case "Fri":
+                dayToTravel=6;
+                break;
+            case "Sat":
+                dayToTravel=7;
+                break;
+        }
+        timeOffset+= ((7+dayToTravel-dayOfWeek)%7)*24*60*60*1000;
+        int currentHH=c.get(Calendar.HOUR_OF_DAY);
+        int currentMM=c.get(Calendar.MINUTE);
+        timeOffset+= ((hh-currentHH))*60*60*1000;
+        timeOffset+= ((mm-currentMM))*60*1000;
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(API.LOGOUT)
