@@ -55,8 +55,8 @@ function Navbar(props) {
             <Nav className="navbar bg-success navbar-dark">
             <img src={logo} alt="logo" className="logo"/>
             <div>
-                <Button className="btn btn-outline-light" variant="success" href='/NewCustomer'> Sign up </Button>
-                <Button className="btn btn-outline-light" variant="success" href='/LoginComponent'> Log in </Button>
+                <Button id="signup" className="btn btn-outline-light" variant="success" href='/NewCustomer'> Sign up </Button>
+                <Button id="login" className="btn btn-outline-light" variant="success" href='/LoginComponent'> Log in </Button>
             </div>
         </Nav>);
     else
@@ -72,7 +72,7 @@ function Navbar(props) {
                             <img src={warning} alt="warning" className="warning" />
                         </OverlayTrigger>
                         : ""}
-                    <Button className="btn btn-danger" onClick={event => doLogOut(event)}>LOG OUT</Button>
+                    <Button id="logout" className="btn btn-danger" onClick={event => doLogOut(event)}>LOG OUT</Button>
                 </div>
             </Nav>
         );
