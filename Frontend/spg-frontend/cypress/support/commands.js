@@ -23,3 +23,62 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add('checkUrl', (url) => {
+    const escapeRegExp = (string) => {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    const regex = new RegExp(escapeRegExp(Cypress.env('baseUrl')+url), 'i');
+    cy.url().should('match', regex)
+})
+
+Cypress.Commands.add('checkHomepage', () => {
+    cy.checkUrl('/');
+    cy.contains('Come and find us!').should('exist');
+    cy.contains('We are in:').should('exist');
+    cy.contains('Roma').should('exist');
+    cy.contains('Vicenza').should('exist');
+    cy.contains('Biella').should('exist');
+    cy.contains('Caserta').should('exist');
+    cy.contains('Torino').should('exist');
+    cy.contains('Catania').should('exist');
+    cy.get('[alt=italymap]').should('exist');
+});
+
+Cypress.Commands.add('login', (email, password) => {
+    cy.get('[id=logout]').then(()=>{
+        cy.get('[id=logout]').click();
+        cy.checkUrl('/');
+        cy.get('[id=login]').should('exist');
+    }).then(()=>{
+        cy.get('[id=login]').then(() => {
+            cy.get('[id=login]').click();
+            cy.checkUrl('/LoginComponent');
+            cy.contains('Login').should('exist');
+            cy.contains('Email:').should('exist');
+            cy.contains('Password:').should('exist');
+            cy.contains('Back').should('exist');
+            cy.get('[type=submit]').should('exist');
+            
+            cy.get('[id=email]').type(email);
+            cy.get('[id=password]').type(password);
+            cy.get('[type=submit]').click();
+
+            cy.get('[id=logout]').should('exist');
+        })
+    })
+})
+
+Cypress.Commands.add('checkCustomer', () => {
+    cy.checkUrl('/Customer');
+    cy.contains('Customer').should('exist');
+    cy.contains('Browse Products').should('exist');
+    cy.contains('Place Order').should('exist');
+})
+
+Cypress.Commands.add('checkBrowseProducts', () => {
+    cy.checkUrl('/BrowseProducts')
+    cy.contains('Products List').should('exist');
+    cy.get('[role=status]').should('exist');
+    cy.get('[id=basket]').should('exist');
+    cy.contains('Back').should('exist');
+})
