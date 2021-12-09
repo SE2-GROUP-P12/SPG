@@ -51,7 +51,7 @@ public class EmailController {
         mailMessage.setSubject(EMAIL_SUBJECT_TOP_UP_REMINDER);
         mailMessage.setText(EMAIL_MESSAGE_TOP_UP_REMINDER(feedback.getRecipient(), feedback.getSender()));
         //Send email
-        //mailSender.send(mailMessage); //TODO: enable to reset mail trap interaction and disable system log print
+        mailSender.send(mailMessage); //TODO: enable to reset mail trap interaction and disable system log print
         log.info("mail from: " + feedback.getSender() + ", to: " + feedback.getRecipient());
         return ResponseEntity.ok().build();
     }
