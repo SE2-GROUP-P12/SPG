@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {render, fireEvent, waitFor } from '@testing-library/react';
+import {render, fireEvent, waitFor} from '@testing-library/react';
 
 import {Dashboard} from "./Dashboard";
-import { BrowserRouter as Router} from "react-router-dom";
+import {BrowserRouter as Router} from "react-router-dom";
 
 
 const allServices = [
@@ -71,6 +71,14 @@ const allServices = [
         "linkUrl": "/ProductsForecast",
         "rolesPermitted": ['ADMIN', 'FARMER']
     },
+    /*ADD PRODUCT*/
+    {
+        "type": "Add Product",
+        "description": "Add new products in our inventory: propose something new to your customers",
+        "buttonLabel": "Add Product",
+        "linkUrl": "/AddProduct",
+        "rolesPermitted": ['FARMER', 'ADMIN']
+    },
     /*USER SETTINGS*/
     {
         "type": "Settings",
@@ -81,7 +89,7 @@ const allServices = [
     },
 ];
 
-test ("CUSTOMER - renders correctly", () => {
+test("CUSTOMER - renders correctly", () => {
 
     localStorage.setItem("role", "CUSTOMER")
     const loggedUser = "mario.rossi@gmail.com";
@@ -100,7 +108,7 @@ test ("CUSTOMER - renders correctly", () => {
 
 });
 
-test ("FARMER - renders correctly", () => {
+test("FARMER - renders correctly", () => {
 
     localStorage.setItem("role", "FARMER")
     const loggedUser = "thomas.jefferson@gmail.com";
@@ -112,10 +120,11 @@ test ("FARMER - renders correctly", () => {
 
     getByText(/thomas.jefferson/);
     getByText("Forecast Product");
+    getAllByText("Add Product");
     getAllByText("Settings");
 });
 
-test ("EMPLOYEE - renders correctly", () => {
+test("EMPLOYEE - renders correctly", () => {
 
     localStorage.setItem("role", "EMPLOYEE")
     const loggedUser = "francesco.conte@gmail.com";

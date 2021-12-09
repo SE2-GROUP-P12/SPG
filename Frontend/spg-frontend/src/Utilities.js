@@ -7,6 +7,7 @@ import topUp from './resources/topUp.jpg'
 import handleOrders from './resources/handleOrders.jpg'
 import registration from './resources/registration.jpg'
 import estimations from './resources/estimations.jpg'
+import addProd from './resources/addProd.jpg'
 
 /**
  * Mapped an object type {key:value,...} on a form body for the login request
@@ -120,6 +121,15 @@ function getAllServices() {
             "linkUrl": "/ProductsForecast",
             "rolesPermitted": ['ADMIN', 'FARMER']
         },
+        /*ADD PRODUCT*/
+        {
+            "type": "Add Product",
+            "description": "Add new products in our inventory: propose something new to your customers",
+            "imageUrl": addProd,
+            "buttonLabel": "Add Product",
+            "linkUrl": "/AddProduct",
+            "rolesPermitted": ['FARMER', 'ADMIN']
+        },
         /*USER SETTINGS*/
         {
             "type": "Settings",
@@ -128,7 +138,7 @@ function getAllServices() {
             "buttonLabel": "Settings",
             "linkUrl": "/Settings",
             "rolesPermitted": ['CUSTOMER', 'ADMIN', 'FARMER', 'EMPLOYEE']
-        },
+        }
     ];
     return customerServices;
 }
