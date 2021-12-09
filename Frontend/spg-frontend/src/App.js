@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container';
 import {Navbar} from "./Navbar/Navbar";
 import {Homepage} from "./Homepage/Homepage";
 import {Login} from "./Login/Login";
-import {Dashboard} from "./Dashboard";
+import {Dashboard} from "./Dashboard/Dashboard";
 import {ShopEmployee} from "./ShopEmployee/ShopEmployee";
 import {BrowseProducts} from "./BrowseProducts/BrowseProducts";
 import {NewCustomer} from './NewCustomer/NewCustomer';

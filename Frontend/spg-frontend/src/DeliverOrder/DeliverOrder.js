@@ -7,7 +7,7 @@ import {Field, Form, Formik} from 'formik';
 import * as Yup from 'yup';
 import {Link} from 'react-router-dom';
 import {API} from '../API/API.js';
-import {MailServerAPI} from '../MailServerAPI';
+import {MailServerAPI} from '../MailServerAPI/MailServerAPI';
 
 /*LOADING ALL ORDERS WHEN NO MAIL IS SET*/
 let statusByIndex = [];
@@ -50,7 +50,7 @@ function DeliverOrder(props) {
 
     async function loadAllOrders() {
         const data = await _getAllOrders();
-        console.log("DATA: " + data);
+        //console.log("DATA: " + JSON.stringify(data));
         setOrders(data);
     }
 
