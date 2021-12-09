@@ -149,7 +149,7 @@ function PlaceOrder(props) {
                     ""}
             </div>
             <Row>
-                <Col xs={4}><Link to={'/'+localStorage.getItem("role")}><Button variant='secondary'>Back</Button></Link></Col>
+                <Col xs={4}><Link to="/Dashboard"><Button variant='secondary'>Back</Button></Link></Col>
                 <Col xs={4}><Button disabled={order === null ? true : false} variant='danger' onClick={dropOrder}>Delete
                     order</Button></Col>
                 <Col xs={4}><Button disabled={(!itsTime || order === null || customer === null) ? true : false}

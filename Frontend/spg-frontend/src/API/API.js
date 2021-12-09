@@ -418,7 +418,7 @@ async function getWalletOperation(email) {
     try {
         const response = await fetch("/api/customer/getWalletOperations?email=" + email, {
             method: 'GET',
-            headers: getSessionReloadHeaders(),
+            headers: getAuthenticationHeaders(),
         });
         if (response.ok) {
             const responseBody = await response.json();

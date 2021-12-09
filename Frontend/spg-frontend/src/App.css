@@ -79,3 +79,8 @@
     object-fit: cover;
 }
 
+.scroll-down-modal {
+    height: 250px;
+    overflow-y: scroll;
+}
+
