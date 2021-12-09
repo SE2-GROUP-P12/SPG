@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface WalletOperationRepo extends JpaRepository<WalletOperation, Long> {
-    List<WalletOperation> findWalletOperationsByWalletEmail(String email);
+    List<WalletOperation> findWalletOperationsByCust_Email(String email);
 }

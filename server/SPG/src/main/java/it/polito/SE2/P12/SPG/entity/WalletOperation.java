@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "farmer")
+@Table(name = "wallet_operation")
 @Data
 public class WalletOperation {
     @Id
@@ -24,11 +24,11 @@ public class WalletOperation {
     private Long walletOperationId;
     @ManyToOne
     private User cust;
-    @Column
+    @Column(name = "operation_type")
     private String operationType;
-    @Column
+    @Column(name = "time")
     private Long time;
-    @Column
+    @Column(name = "amount")
     private Double amount;
 
     public WalletOperation(WalletUserType user, String operationType, Long time, Double amount) {
@@ -37,6 +37,5 @@ public class WalletOperation {
         this.time = time;
         this.amount = amount;
     }
-
 
 }

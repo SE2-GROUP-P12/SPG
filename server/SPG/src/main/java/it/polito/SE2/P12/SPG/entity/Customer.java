@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -41,7 +42,7 @@ public class Customer extends User implements BasketUserType, OrderUserType, Wal
         super(name, surname, ssn, phoneNumber, email, password);
         this.address = address;
         this.wallet = wallet;
-        this.role = "CUSTOMER";
+        this.role = UserRole.ROLE_CUSTOMER;
     }
 
     @Override
@@ -50,6 +51,14 @@ public class Customer extends User implements BasketUserType, OrderUserType, Wal
             this.basket = new Basket(this);
         }
         return this.basket;
+    }
+
+    @Override
+    public List<Order> getOrders() {
+        if (this.orders == null) {
+            this.orders = new ArrayList<>();
+        }
+        return this.orders;
     }
 
     @Override
@@ -76,10 +85,4 @@ public class Customer extends User implements BasketUserType, OrderUserType, Wal
     }
 
 
-    @Override
-    public List<WalletOperation> getWalletOperations() {
-        if (this.walletOperations == null)
-            this.walletOperations = new ArrayList<>();
-        return this.walletOperations;
-    }
 }

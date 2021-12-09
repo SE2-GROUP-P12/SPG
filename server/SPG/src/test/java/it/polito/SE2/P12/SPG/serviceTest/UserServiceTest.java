@@ -4,6 +4,7 @@ import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.repository.*;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
+import it.polito.SE2.P12.SPG.service.WalletOperationService;
 import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,23 +37,24 @@ public class UserServiceTest {
     @Autowired
     private AdminRepo adminRepo;
 
+
     @BeforeEach
     public void initContext() {
         dbUtilsService.dropAll();
         //Create 2 user to issue some order
         Customer cust1 = new Customer("customer1", "surname1", "ssn_aaaaaaaaaaaa", "123456789", "customer1@foomail.com", "password1223ABC", "address1", 92.5);
         Customer cust2 = new Customer("customer2", "surname2", "ssn_bbbbbbbbbbbb", "123456789", "customer2@foomail.com", "password1223ABC", "address2", 12.82);
-        customerRepo.save(cust1);
-        customerRepo.save(cust2);
+        dbUtilsService.saveCustomer(cust1);
+        dbUtilsService.saveCustomer(cust2);
         //Create a ShopEmployee
         ShopEmployee se1 = new ShopEmployee("shopE", "Mployee", "ssn_shooooooopemp", "123456789", "shop@employee.com", "password");
-        shopEmployeeRepo.save(se1);
+        dbUtilsService.saveShopEmployee(se1);
         //Create a farmer
         Farmer farm1 = new Farmer("aaa", "bbb", "ssn_faaarmer", "42342342", "farmer@farmer.com", "password");
-        farmerRepo.save(farm1);
+        dbUtilsService.saveFarmer(farm1);
         //Create an admin
         Admin admin = new Admin("admin", "aaa", "ssn-admin", "43848234892", "admin@admin.com", "password");
-        adminRepo.save(admin);
+        dbUtilsService.saveAdmin(admin);
     }
 
     @Test

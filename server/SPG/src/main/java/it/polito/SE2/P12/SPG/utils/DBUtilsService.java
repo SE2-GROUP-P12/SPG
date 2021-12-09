@@ -2,11 +2,8 @@ package it.polito.SE2.P12.SPG.utils;
 
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.repository.*;
-import it.polito.SE2.P12.SPG.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
 
 @Service
 public class DBUtilsService {
@@ -20,6 +17,7 @@ public class DBUtilsService {
     private final OrderRepo orderRepo;
     private final ProductRepo productRepo;
     private final JWTUserHandlerRepo jwtUserHandlerRepo;
+    private final WalletOperationRepo walletOperationRepo;
 
     @Autowired
     public DBUtilsService(UserRepo userRepo,
@@ -30,7 +28,7 @@ public class DBUtilsService {
                           BasketRepo basketRepo,
                           OrderRepo orderRepo,
                           ProductRepo productRepo,
-                          JWTUserHandlerRepo jwtUserHandlerRepo) {
+                          JWTUserHandlerRepo jwtUserHandlerRepo, WalletOperationRepo walletOperationRepo) {
         this.userRepo = userRepo;
         this.customerRepo = customerRepo;
         this.farmerRepo = farmerRepo;
@@ -40,6 +38,7 @@ public class DBUtilsService {
         this.orderRepo = orderRepo;
         this.productRepo = productRepo;
         this.jwtUserHandlerRepo = jwtUserHandlerRepo;
+        this.walletOperationRepo = walletOperationRepo;
     }
 
     public void init() {
@@ -50,6 +49,7 @@ public class DBUtilsService {
     public void dropAll() {
         basketRepo.deleteAll();
         orderRepo.deleteAll();
+        walletOperationRepo.deleteAll();
         productRepo.deleteAll();
         userRepo.deleteAll();
         jwtUserHandlerRepo.deleteAll();

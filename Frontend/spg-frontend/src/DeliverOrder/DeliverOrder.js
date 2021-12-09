@@ -1,19 +1,35 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
-import Button from 'react-bootstrap/Button';
+import {Button, Form as reactForm, Modal, Spinner} from 'react-bootstrap';
 import Alert from 'react-bootstrap/Alert';
-import { useState, useEffect } from 'react';
-import { Formik, Form, Field } from 'formik';
+import {useEffect, useState} from 'react';
+import {Field, Form, Formik} from 'formik';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
-import { API } from '../API/API.js'
+import {Link} from 'react-router-dom';
+import {API} from '../API/API.js';
+import {MailServerAPI} from '../MailServerAPI';
 
 /*LOADING ALL ORDERS WHEN NO MAIL IS SET*/
+let statusByIndex = [];
 
 function DeliverOrder(props) {
     const [customer, setCustomer] = useState(null);
     const [orders, setOrders] = useState([]);
     const [errUser, setErrUser] = useState(false);
+    const [show, setShow] = useState(false);
+    const handleClose = () => {
+        setShow(false);
+        setMailLoadCompleted(false)
+    };
+    const [mailLoadCompleted, setMailLoadCompleted] = useState(false);
+    const [showSentMailSpinner, setShowSentMailSpinner] = useState(false);
+    const [mailSentAlert, setMailSentAlert] = useState(false);
+
+
+    const handleShow = () => {
+        setShow(true)
+    };
+
 
     /*TIME MACHINE MANAGEMENT*/
     const [itsTime, setItsTime] = useState(false)
@@ -28,59 +44,204 @@ function DeliverOrder(props) {
         checkTime(props.time, props.date);
     }, [props.date, props.time])
 
-    useEffect( () => {
+    useEffect(() => {
         loadAllOrders();
     }, [])
 
-    async function loadAllOrders()
-    {
+    async function loadAllOrders() {
         const data = await _getAllOrders();
-        console.log("DATA: "+data);
+        console.log("DATA: " + data);
         setOrders(data);
     }
 
-    async function _getAllOrders()
-{
-    const data = await API.getAllOrders();
-    return data;
-}
+    async function _getAllOrders() {
+        const data = await API.getAllOrders();
+        return data;
+    }
 
     async function customerExistsByMail(email) {
         const data = await API.customerExistsByMail(email);
         if (data) {
             setCustomer(email);
             return true;
-        }
-        else {
+        } else {
             setCustomer(undefined);
             return false;
         }
     }
 
-    {/* TODO: introduce a method to get the order list of an user by its email*/ }
-    async function _getOrdersByEmail(email) {
-        const data = await API.getOrdersByEmail(email);
-        console.log(data);
-        return data;
-    }
 
     async function handleSubmit(email) {
         setErrUser(false);
         const okay = await customerExistsByMail(email);
         if (okay) {
             const data = await API.getOrdersByEmail(email);
-            setOrders(old => data);
+            setOrders(() => data);
             console.log(orders);
-        }
-        else {
+        } else {
             setErrUser(true);
         }
     }
 
+
+    const getPendingOrdersMail = async () => {
+        const data = await MailServerAPI.getPendingOrdersMail();
+        let parsedData = [];
+        const ret = await Object.keys(data).forEach((email) => parsedData.push({"email": email, "status": "LOADED"}));
+        //console.log(...mailList, parsedData);
+        //Static array creation
+        statusByIndex = [...parsedData];
+        setMailLoadCompleted(true);
+
+        console.log(statusByIndex);
+    }
+
+    function PendingOrdersMailAction(props) {
+        const [checkBox, setCheckBox] = useState(true);
+
+        const setOnChangeCheckBoxStatus = () => {
+            const res = !checkBox;
+            setCheckBox(res);
+            if (res)
+                statusByIndex[props.index].status = "LOADED";
+            else
+                statusByIndex[props.index].status = "DISABLED";
+
+        }
+
+
+        switch (props.value.status) {
+            case 'SENT':
+                return (
+                    <ul className="border-bottom">
+                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
+                                         checked={checkBox} type='switch' isValid={true}
+                                         onChange={() => setOnChangeCheckBoxStatus(props.index)}>
+                        </reactForm.Check>
+                    </ul>
+                );
+
+            case 'DISABLED':
+                return (
+                    <ul className="border-bottom">
+                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
+                                         checked={checkBox}
+                                         type='switch' isValid={false}
+                                         onChange={() => setOnChangeCheckBoxStatus(props.index)}>
+                        </reactForm.Check>
+                    </ul>);
+            default:
+                return (
+                    <ul className="border-bottom">
+                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
+                                         checked={checkBox}
+                                         type='switch'
+                                         onChange={() => setOnChangeCheckBoxStatus(props.value)}>
+                        </reactForm.Check>
+                    </ul>
+                );
+        }
+    }
+
+
+    function SendAllMailModal() {
+
+        function MailSentCounter(props1) {
+            return (<div className="mx-5">
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>)
+        }
+
+
+        function CustomModalFooter() {
+            const [disabledButton, setDisabledButton] = useState(false);
+
+            async function sendAllMailRoutine(event) {
+                setDisabledButton(true);
+
+                async function sendMail(index) {
+                    const data = await MailServerAPI.solicitCustomerTopUp(localStorage.getItem("username"), statusByIndex[index].email);
+                    if (data) {
+                        statusByIndex[index].status = "SENT";
+                    } else {
+                        statusByIndex[index].status = "ERROR_SENDING";
+                    }
+                }
+
+                setShowSentMailSpinner(true);
+                event.preventDefault();
+                for (let i = 0; i < statusByIndex.length; i++) {
+                    if (statusByIndex[i].status === 'LOADED')
+                        await sendMail(i);
+                }
+                setShowSentMailSpinner(false);
+                setMailSentAlert(true);
+            }
+
+
+            return (
+                <Modal.Footer>
+                    {
+                        showSentMailSpinner === true ?
+                            <MailSentCounter/>
+                            :
+                            ""
+                    }
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    {
+                        mailSentAlert === true ?
+                            <Alert variant="success">ALL MAILs WERE SENT</Alert>
+                            :
+                            <Button variant="success" onClick={(event) => {
+                                sendAllMailRoutine(event)
+                            }}>
+                                Send mail
+                            </Button>
+                    }
+
+                </Modal.Footer>
+            );
+        }
+
+        return (
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header>
+                    <Modal.Title>Send all pending orders reminder mail</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="scroll-down-modal">
+                    {
+                        mailLoadCompleted === true ?
+                            statusByIndex.map((mailInfo, index) =>
+                                <PendingOrdersMailAction key={index} index={index} value={mailInfo}/>
+                            )
+                            :
+                            <Spinner animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner>
+                    }
+                </Modal.Body>
+                <CustomModalFooter/>
+            </Modal>
+        );
+    }
+
+
     return (
         <>
             <h1>Deliver Order</h1>
-            {itsTime ? null : <Alert variant='warning'> It's possible to deliver orders only from Wednesday at 9am to Friday at 11pm</Alert>}
+            <SendAllMailModal/>
+            {itsTime ? null :
+                <Alert variant='warning'> It's possible to deliver orders only from Wednesday at 9am to Friday at
+                    11pm</Alert>}
+            <div className="mt-5">
+                <h4>Send all pending orders reminder mail</h4>
+                <Button className="mt-3" variant="success" onClick={() => handleShow(getPendingOrdersMail())}>
+                    Send Mail</Button>
+            </div>
             <div id="container" className="pagecontent">
                 <Formik
                     initialValues={{
@@ -90,46 +251,57 @@ function DeliverOrder(props) {
                         email: Yup.string().email()
                     })}
                     onSubmit={(values) => {
-                        if(values.email!="") 
-                            handleSubmit(values.email) 
-                        else    
+                        if (values.email !== "")
+                            handleSubmit(values.email)
+                        else
                             loadAllOrders();
                     }}
                     validateOnChange={false}
                     validateOnBlur={false}
                 >
-                    {({ values, errors, touched }) =>
+                    {({values, errors, touched}) =>
                         <Form>
-                            <label htmlFor='email'>Email:</label><Field id='email' style={{ margin: '20px' }} name="email" type="text" />
-                            <Button style={{ margin: '20px' }} type="submit" variant="success" disabled={itsTime ? false : true} >Submit customer</Button>
+                            <label htmlFor='email'>Email:</label><Field id='email' style={{margin: '20px'}} name="email"
+                                                                        type="text"/>
+                            <Button style={{margin: '20px'}} type="submit" variant="success"
+                                    disabled={!itsTime ? false : true}>Submit customer</Button>
                             {errors.email && touched.email ? errors.email : null}
                         </Form>}
                 </Formik>
                 {errUser ? <Alert variant='danger'>Customer not found</Alert> : null}
-                {orders != null && orders.length === 0 ? <h2>No orders to display yet</h2> : <Orders itsTime={itsTime} orderList={orders} />}
+                {orders != null && orders.length === 0 ? <h2>No orders to display yet</h2> :
+                    <Orders itsTime={itsTime} orderList={orders}/>}
             </div>
-            <Link to='/ShopEmployee'><Button style={{ margin: '20px' }} variant='secondary'>Back</Button></Link>
+            <Link to='/Dashboard'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
         </>
     );
 }
 
 function Orders(props) {
     const [showAlert, setShowAlert] = useState(false);
-    const [orders, setOrders] = useState(props.orderList);
+    const [show, setShow] = useState(false);
+    const [manageOrderCustmer, setManageOrderCustomer] = useState("");
+
+
+    const handleClose = () => setShow(false);
+    const handleShow = (email) => {
+        setManageOrderCustomer(email);
+        setShow(true);
+    };
 
     let output = [];
-    async function deliverOrder(orderId) 
-    {
-        const data = await API.deliverOrder(orderId);
-        return data;
+
+    async function deliverOrder(orderId) {
+        return await API.deliverOrder(orderId);
     }
+
     function printOrder(prod) {
         let output = [];
         let total = 0;
         if (prod === null)
             return (<h2>The order is empty </h2>);
         for (let p of prod) {
-            output.push(<OrderEntry product={p} />);
+            output.push(<OrderEntry product={p}/>);
             total += p["unit price"] * p.amount;
         }
         output.push(
@@ -143,12 +315,12 @@ function Orders(props) {
     function OrderEntry(props) {
         return (
             <li className="list-group-item">
-                {props.product.name} : {props.product.amount}{props.product.unit}<br />
+                {props.product.name} : {props.product.amount}{props.product.unit}<br/>
                 SUBTOTAL: {props.product["unit price"] * props.product.amount}€
             </li>
         );
     }
-    
+
     async function handleDelivery(e, orderId) {
         e.preventDefault();
         const data = await deliverOrder(orderId);
@@ -156,21 +328,85 @@ function Orders(props) {
             window.location.reload(false);
             //loadAllOrders();
             //return(<Alert variant='success'>Order delivered successfully</Alert>);
-        }
-        else
+        } else
             return (<Alert variant='danger'>Balance insufficient</Alert>);
     }
+
+    //Modal to handle error in orders
+    function ModalManageOrder() {
+        const [alertShow, setAlertShow] = useState(false);
+        const [data, setData] = useState(undefined);
+
+        //Send mail button handler
+        const solicitButtonHandler = async () => {
+            const responseData = await MailServerAPI.solicitCustomerTopUp(localStorage.getItem("username"), manageOrderCustmer);
+            await setData(responseData);
+            //fetch executed, based on data response we'll set all the UI components up
+            setAlertShow(true);
+        }
+
+        return (
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header className="bg-success">
+                    <Modal.Title style={{color: 'white'}}>Handle unpaid order</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>The customer has not paid the order, do you want to solicit the customer via email? <br/>Press
+                    Solicit to send an automatically generated email to {manageOrderCustmer}
+                    {alertShow === true ?
+                        data === true ? <Alert className="mt-3" variant="success">Mail sent correctly</Alert>
+                            :
+                            <Alert className="mt-3" variant="danger">Can not send the mail</Alert> : ""}
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="success" disabled={data ? true : false}
+                            onClick={(event) => solicitButtonHandler(event)}>
+                        Solicit!
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
     //console.log(props.orderList);
     if (props.orderList !== []) {
         for (let o of props.orderList) {
-            //console.log(o);
-            output.push(
-                <li className="list-group-item">
-                    {printOrder(o.productList)}
-                    Customer: {o.email}<Button style={{ margin: '20px' }} onClick={(e) => handleDelivery(e, o.orderId)} variant='success' disabled={props.itsTime ? false : true} >Deliver</Button>
-                    {showAlert ? <Alert variant="danger">Something went wrong</Alert> : ""}
-                </li>
-            )
+            if (o.status === "CONFIRMED")
+                output.push(
+                    <Alert variant="success">
+                        <li className="list-group-item">
+                            {printOrder(o.productList)}
+                            Customer: {o.email}
+                            <Button style={{margin: '20px'}} onClick={(e) => handleDelivery(e, o.orderId)}
+                                    variant='success'
+                                    disabled={props.itsTime ? false : true}>Deliver</Button>
+                            {showAlert ? <Alert variant="danger">Something went wrong</Alert> : ""}
+                        </li>
+                    </Alert>
+                )
+            else if (o.status === "OPEN")
+                output.push(
+                    <>
+                        <ModalManageOrder email={o.email}/>
+                        <Alert variant="warning">
+                            <li className="list-group-item">
+                                {printOrder(o.productList)}
+                                Customer: {o.email}
+                                <Button style={{margin: '20px'}} onClick={() => handleShow(o.email)}
+                                        variant='outline-warning'
+                                >Manage Order</Button>
+                                <Button style={{margin: '20px'}}
+                                        variant='outline-danger'
+                                >Cancel Order</Button>
+                                {showAlert ? <Alert variant="danger">Something went wrong</Alert> : ""}
+                            </li>
+                        </Alert>
+                    </>
+                )
+
         }
     } else {
         output.push(
@@ -180,4 +416,4 @@ function Orders(props) {
     return output;
 }
 
-export { DeliverOrder }
+export {DeliverOrder}

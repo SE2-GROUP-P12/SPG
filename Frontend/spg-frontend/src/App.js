@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container';
 import {Navbar} from "./Navbar/Navbar";
 import {Homepage} from "./Homepage/Homepage";
 import {Login} from "./Login/Login";
-import {CustomerPage} from "./CustomerPage";
+import {Dashboard} from "./Dashboard";
 import {ShopEmployee} from "./ShopEmployee/ShopEmployee";
 import {BrowseProducts} from "./BrowseProducts/BrowseProducts";
 import {NewCustomer} from './NewCustomer/NewCustomer';
@@ -21,7 +21,7 @@ import Modal from 'react-bootstrap/Modal';
 import {Formik, Form, Field} from 'formik';
 import Button from 'react-bootstrap/Button';
 import {ProductsForecast} from "./ProductsForecast";
-import {getCustomerServices} from './Utilities';
+import {getAllServices} from './Utilities';
 import {WalletOperation} from "./WallettOperation";
 
 
@@ -29,7 +29,7 @@ const DEBUG = true;
 
 function App() {
     /*SERVICES*/
-    const [allServices, setAllservices] = useState(getCustomerServices());
+    const [allServices, setAllservices] = useState(getAllServices());
     /*BACK END ERROR HANDLER*/
     const [errorMessage, setErrorMessage] = useState(undefined);
     /*LOGGGED USER SESSION*/
@@ -159,7 +159,7 @@ function App() {
                             <UnauthorizedComponent errorMessage={errorMessage}/>
                         </Route>
                         <Route exact path="/Dashboard">
-                            <CustomerPage loggedUser={loggedUser} services={allServices}/>
+                            <Dashboard loggedUser={loggedUser} services={allServices}/>
                         </Route>
                     </Switch>
                 </Router>

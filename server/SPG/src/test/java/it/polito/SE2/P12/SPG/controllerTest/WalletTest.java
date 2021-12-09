@@ -119,5 +119,12 @@ public class WalletTest {
         Assertions.assertEquals("", result.getResponse().getContentAsString());
     }
 
+//
+//    @Test
+//    @WithUserDetails("tester@test.com")
+//    public void getWalletOperationsTest() {
+//
+//    }
+
 
 }

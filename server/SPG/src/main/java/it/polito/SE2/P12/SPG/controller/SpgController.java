@@ -289,7 +289,14 @@ public class SpgController {
     @GetMapping(API.GET_WALLET_OPERATIONS)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
     public ResponseEntity getWalletOperation(@RequestParam String email) {
-        return ResponseEntity.ok(walletOperationService.getWalletOperationsByEmail(email));
+        if (Boolean.FALSE.equals(userService.checkPresenceOfMail(email)))
+            return ResponseEntity.badRequest().body("Invalid email");
+        //List<WalletOperation> walletOperations = walletOperationService.getWalletOperationsByEmail(email);
+        Double walletValue = userService.getWallet(email);
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("walletValue", walletValue);
+        responseMap.put("operations", walletOperationService.getWalletOperationsByEmail(email));
+        return ResponseEntity.ok(responseMap);
     }
 
     @GetMapping(API.RETRIEVE_ERROR)
@@ -406,6 +413,7 @@ public class SpgController {
             response.setContentType(APPLICATION_JSON_VALUE);
         }
     }
+
 
     public Map<String, Object> extractMapFromJsonString(String jsonData) {
         ObjectMapper mapper = new ObjectMapper();

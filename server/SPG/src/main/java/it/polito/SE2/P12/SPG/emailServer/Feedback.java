@@ -13,15 +13,14 @@ import javax.validation.constraints.NotNull;
 public class Feedback {
 
     @NotNull
-    private String name;
+    private String sender;
 
     @NotNull
-    @Email()
-    private String email;
+    private String recipient;
 
     @NotNull
     @Min(10)
-    private String feedback;
+    private String mailBody;
 
 
 }
