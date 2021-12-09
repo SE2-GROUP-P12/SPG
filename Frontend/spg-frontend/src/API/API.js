@@ -484,7 +484,8 @@ const API = {
     getWalletWarning,
     getWalletOperation,
     addProduct,
-    getWalletWarning
+    getWalletWarning,
+    timeTravel,
 };
 export { API }
 
