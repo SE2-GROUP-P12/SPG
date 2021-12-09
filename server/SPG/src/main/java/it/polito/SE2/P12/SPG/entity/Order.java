@@ -41,7 +41,7 @@ public class Order {
 
     public Order(OrderUserType cust, long date, Map<Product, Double> prods) {
         this.cust = (User) cust;
-        this.date = date;
+        this.date = new java.util.Date(date);;
         this.prods = prods;
         this.value = 0.0;
         for (Map.Entry<Product, Double> e : prods.entrySet()) {
