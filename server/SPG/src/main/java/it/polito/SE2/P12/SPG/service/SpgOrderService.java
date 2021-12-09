@@ -51,7 +51,7 @@ public class SpgOrderService {
     }
 
     //Basket viene convertito in un ordine per user
-    public Boolean addNewOrderFromBasket(Basket basket, OrderUserType user,long epcoh) {
+    public Boolean addNewOrderFromBasket(Basket basket, OrderUserType user,long epoch) {
         //Controlla se le quantità ordinate sono disponibile
         for (Map.Entry<Product, Double> e : basket.getProductQuantityMap().entrySet()) {
             if (e.getValue() > e.getKey().getQuantityAvailable())
