@@ -75,7 +75,7 @@ function Login(props) {
 
     if (redirectRun) {
         return (
-            <Redirect to={`/${localStorage.getItem('role')}`}></Redirect>
+            <Redirect to="/Dashboard"></Redirect>
         );
     }
 

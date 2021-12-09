@@ -33,7 +33,7 @@ public class Farmer extends User {
                   String email, String password, String companyName) {
         super(name, surname, ssn, phoneNumber, email, password);
         this.companyName = companyName;
-        this.role = "FARMER";
+        this.role = UserRole.ROLE_FARMER;
     }
 
     @Override

@@ -87,6 +87,7 @@ async function browseProducts(setErrorMessage) {
             headers: getAuthenticationHeaders(),
         });
         if (response.ok) {
+
             return createSuccesfulHandlerObject(response);
         } else {
             let error = await createErrorHandlerObject(response, null)
@@ -209,7 +210,7 @@ async function placeOrder(data) {
         const response = await fetch("/api/customer/placeOrder", {
             method: 'POST',
             headers: getAuthenticationHeaders(),
-            body: JSON.stringify({ 'email': data.email, 'customer': data.customer })
+            body: JSON.stringify({'email': data.email, 'customer': data.customer})
         });
         if (response.ok)
             return true;
@@ -227,7 +228,7 @@ async function dropOrder(data) {
         const response = await fetch("/api/customer/dropOrder", {
             method: 'DELETE',
             headers: getAuthenticationHeaders(),
-            body: JSON.stringify({ 'email': data.email })
+            body: JSON.stringify({'email': data.email})
         });
         if (response.ok)
             return true;
@@ -443,6 +444,26 @@ async function timeTravel(data) {
     }
 }
 
+//Get wallet opertions based on logged user email
+async function getWalletOperation(email) {
+    try {
+        const response = await fetch("/api/customer/getWalletOperations?email=" + email, {
+            method: 'GET',
+            headers: getAuthenticationHeaders(),
+        });
+        if (response.ok) {
+            const responseBody = await response.json();
+            return responseBody;
+        } else
+            return undefined;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * Exporting all functions
+ */
 const API = {
     browseProducts,
     placeOrder,
@@ -460,6 +481,8 @@ const API = {
     sessionReloader,
     browseProductsByFarmer,
     modifyForecast,
+    getWalletWarning,
+    getWalletOperation,
     addProduct,
     getWalletWarning
 };

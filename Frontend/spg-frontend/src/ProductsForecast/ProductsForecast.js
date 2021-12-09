@@ -168,7 +168,7 @@ function ProductsForecast(props) {
                             </Grid>
                     }
                 </Grid>
-                <Link to={`/${localStorage.getItem("role")}`}><Button style={{position: 'fixed', bottom: '10px', right: '10px'}} variant='secondary'>Back</Button></Link>
+                <Link to='/Dashboard'><Button style={{position: 'fixed', bottom: '10px', right: '10px'}} variant='secondary'>Back</Button></Link>
             </Container> : <></>
     );
 }

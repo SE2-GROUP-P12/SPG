@@ -14,15 +14,16 @@ import java.util.List;
 @Service
 public class DBUtilsService {
 
-    private UserRepo userRepo;
-    private CustomerRepo customerRepo;
-    private FarmerRepo farmerRepo;
-    private AdminRepo adminRepo;
-    private ShopEmployeeRepo shopEmployeeRepo;
-    private BasketRepo basketRepo;
-    private OrderRepo orderRepo;
-    private ProductRepo productRepo;
-    private JWTUserHandlerRepo jwtUserHandlerRepo;
+    private final UserRepo userRepo;
+    private final CustomerRepo customerRepo;
+    private final FarmerRepo farmerRepo;
+    private final AdminRepo adminRepo;
+    private final ShopEmployeeRepo shopEmployeeRepo;
+    private final BasketRepo basketRepo;
+    private final OrderRepo orderRepo;
+    private final ProductRepo productRepo;
+    private final JWTUserHandlerRepo jwtUserHandlerRepo;
+    private final WalletOperationRepo walletOperationRepo;
 
     @Autowired
     public DBUtilsService(UserRepo userRepo,
@@ -33,7 +34,7 @@ public class DBUtilsService {
                           BasketRepo basketRepo,
                           OrderRepo orderRepo,
                           ProductRepo productRepo,
-                          JWTUserHandlerRepo jwtUserHandlerRepo) {
+                          JWTUserHandlerRepo jwtUserHandlerRepo, WalletOperationRepo walletOperationRepo) {
         this.userRepo = userRepo;
         this.customerRepo = customerRepo;
         this.farmerRepo = farmerRepo;
@@ -43,6 +44,7 @@ public class DBUtilsService {
         this.orderRepo = orderRepo;
         this.productRepo = productRepo;
         this.jwtUserHandlerRepo = jwtUserHandlerRepo;
+        this.walletOperationRepo = walletOperationRepo;
     }
 
     public void init() {
@@ -53,6 +55,7 @@ public class DBUtilsService {
     public void dropAll() {
         basketRepo.deleteAll();
         orderRepo.deleteAll();
+        walletOperationRepo.deleteAll();
         productRepo.deleteAll();
         userRepo.deleteAll();
         jwtUserHandlerRepo.deleteAll();
