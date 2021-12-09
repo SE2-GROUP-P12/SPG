@@ -114,7 +114,7 @@ public class OrderServiceTest {
 
         List<Order> orders = orderRepo.findAll();
         Assertions.assertEquals(0, orders.size());
-        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1));
+        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1,(long)System.currentTimeMillis()));
         orders = orderRepo.findAll();
         Assertions.assertEquals(1, orders.size());
         Assertions.assertEquals(orders.get(0).getCust().getUserId(), ((User) user).getUserId());
@@ -144,7 +144,7 @@ public class OrderServiceTest {
 
         List<Order> orders = orderRepo.findAll();
         Assertions.assertEquals(0, orders.size());
-        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1, customer));
+        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1, customer,(long)System.currentTimeMillis()));
         orders = orderRepo.findAll();
         Assertions.assertEquals(1, orders.size());
         Assertions.assertEquals(orders.get(0).getCust().getUserId(), ((User) customer).getUserId());
@@ -166,7 +166,7 @@ public class OrderServiceTest {
         Basket b = shopEmployee.getBasket();
 
         Assertions.assertEquals(2,b.getProductQuantityMap().size());
-        Assertions.assertFalse(orderService.addNewOrderFromBasket(b));
+        Assertions.assertFalse(orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis()));
     }
 
     @Test
@@ -177,7 +177,7 @@ public class OrderServiceTest {
         Assertions.assertNotNull(user);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b);
+        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis());
 
         Order order = orderRepo.findAll().get(0);
 
@@ -206,7 +206,7 @@ public class OrderServiceTest {
         Assertions.assertNotNull(user);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b);
+        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis());
 
         Order order = orderRepo.findAll().get(0);
 
@@ -236,7 +236,7 @@ public class OrderServiceTest {
         Assertions.assertNotNull(user);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b);
+        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis());
 
     }
 }

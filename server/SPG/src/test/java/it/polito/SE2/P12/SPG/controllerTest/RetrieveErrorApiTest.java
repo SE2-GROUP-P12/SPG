@@ -49,7 +49,7 @@ public class RetrieveErrorApiTest {
         dbUtilsService.saveCustomer(customer);
         basketService.addProductToBasket(dbUtilsService.getProd1Object(), 2.00, customer);
         basketService.addProductToBasket(dbUtilsService.getProd2Object(), 4.00, customer);
-        orderService.addNewOrderFromBasket(customer.getBasket());
+        orderService.addNewOrderFromBasket(customer.getBasket(), (long)System.currentTimeMillis());
     }
 
     @Test

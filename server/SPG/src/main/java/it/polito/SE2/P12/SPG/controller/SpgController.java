@@ -192,13 +192,13 @@ public class SpgController {
                 BasketUserType user = userService.getBasketUserTypeByEmail(orderIssuer.getEmail());
                 Basket basket = user.getBasket();
                 basketService.dropBasket(basket);
-                return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
+                return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer, (long)System.currentTimeMillis()+this.timeOffset));
             }
             //It's an order provided by the shopEmployee
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get(Constants.JSON_EMAIL));
             Basket basket = user.getBasket();
             basketService.dropBasket(basket);
-            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer));
+            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer,(long)System.currentTimeMillis()+this.timeOffset));
         }
         return ResponseEntity.badRequest().build();
     }
@@ -389,10 +389,9 @@ public class SpgController {
     }
 
 
-    @GetMapping(API.TIME_TRAVEL)
+    @PostMapping(API.TIME_TRAVEL)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER', 'ROLE_EMPLOYEE','ROLE_FARMER')")
     public ResponseEntity<Boolean> timeTravel(@RequestBody String jsonData){
-        System.out.println(jsonData);
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null ||
                 !requestMap.containsKey(Constants.JSON_DATE) ||
@@ -436,7 +435,6 @@ public class SpgController {
         int currentMM=c.get(Calendar.MINUTE);
         timeOffset+= ((hh-currentHH))*60*60*1000;
         timeOffset+= ((mm-currentMM))*60*1000;
-        System.out.println(timeOffset);
         return ResponseEntity.ok().build();
     }
 

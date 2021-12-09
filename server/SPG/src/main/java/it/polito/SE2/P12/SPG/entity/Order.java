@@ -31,7 +31,7 @@ public class Order {
     @ManyToOne
     private User cust;
     @Column(name = "date")
-    private LocalDateTime date;
+    private Date date;
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "product_id")
     @Column(name = "quantity")
@@ -39,7 +39,7 @@ public class Order {
     @Column(name = "value")
     private Double value;
 
-    public Order(OrderUserType cust, LocalDateTime date, Map<Product, Double> prods) {
+    public Order(OrderUserType cust, long date, Map<Product, Double> prods) {
         this.cust = (User) cust;
         this.date = date;
         this.prods = prods;
