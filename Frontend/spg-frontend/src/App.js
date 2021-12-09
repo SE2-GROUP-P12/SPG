@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import {Navbar} from "./Navbar/Navbar";
 import {Homepage} from "./Homepage/Homepage";
 import {Login} from "./Login/Login";
+import {Dashboard} from "./Dashboard/Dashboard";
 import {ShopEmployee} from "./ShopEmployee/ShopEmployee";
 import {BrowseProducts} from "./BrowseProducts/BrowseProducts";
 import {NewCustomer} from './NewCustomer/NewCustomer';
@@ -21,13 +22,15 @@ import {Formik, Form, Field} from 'formik';
 import Button from 'react-bootstrap/Button';
 import {ProductsForecast} from "./ProductsForecast/ProductsForecast";
 import {AddProduct} from "./AddProduct/AddProduct";
-
-
+import {getAllServices} from './Utilities';
+import {WalletOperation} from "./WallettOperation";
 
 
 const DEBUG = true;
 
 function App() {
+    /*SERVICES*/
+    const [allServices, setAllservices] = useState(getAllServices());
     /*BACK END ERROR HANDLER*/
     const [errorMessage, setErrorMessage] = useState(undefined);
     /*LOGGGED USER SESSION*/
@@ -150,11 +153,17 @@ function App() {
                                    setLoggedUserRole={setLoggedUserRole}
                                    setTopUpWarning={setTopUpWarning}/>
                         </Route>
+                        <Route exact path="/Customer/WalletOperations">
+                            <WalletOperation/>
+                        </Route>
                         <Route exact path="/">
                             <Homepage/>
                         </Route>
                         <Route exact path="/ErrorHandler">
                             <UnauthorizedComponent errorMessage={errorMessage}/>
+                        </Route>
+                        <Route exact path="/Dashboard">
+                            <Dashboard loggedUser={loggedUser} services={allServices}/>
                         </Route>
                     </Switch>
                 </Router>

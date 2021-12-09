@@ -18,6 +18,7 @@ import it.polito.SE2.P12.SPG.utils.API;
 import it.polito.SE2.P12.SPG.utils.Constants;
 import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
 import it.polito.SE2.P12.SPG.utils.DBUtilsService;
+import it.polito.SE2.P12.SPG.utils.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -54,18 +55,22 @@ public class SpgController {
     private final SpgOrderService orderService;
     private final SpgBasketService basketService;
     private final JWTUserHandlerService jwtUserHandlerService;
+    private final DBUtilsService dbUtilsService;
+    private final WalletOperationService walletOperationService;
     private long timeOffset;
 
 
     @Autowired
-    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService) {
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService) {
         this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
         this.jwtUserHandlerService = jwtUserHandlerService1;
         this.timeOffset=0;
-        dbUtilsService.init();
+        this.walletOperationService = walletOperationService;
+        this.dbUtilsService = dbUtilsService;
+        this.dbUtilsService.init();
     }
 
     @GetMapping("/")
@@ -261,6 +266,9 @@ public class SpgController {
     @PostMapping(API.DELIVER_ORDER)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE')")
     public ResponseEntity<Boolean> deliverOrder(@RequestBody Long orderId) {
+        //record payment
+        walletOperationService.recordPayment(orderId);
+        //Process order
         return ResponseEntity.ok(orderService.deliverOrder(orderId));
     }
 
@@ -302,6 +310,19 @@ public class SpgController {
         if (response.isEmpty())
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(API.GET_WALLET_OPERATIONS)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
+    public ResponseEntity getWalletOperation(@RequestParam String email) {
+        if (Boolean.FALSE.equals(userService.checkPresenceOfMail(email)))
+            return ResponseEntity.badRequest().body("Invalid email");
+        //List<WalletOperation> walletOperations = walletOperationService.getWalletOperationsByEmail(email);
+        Double walletValue = userService.getWallet(email);
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("walletValue", walletValue);
+        responseMap.put("operations", walletOperationService.getWalletOperationsByEmail(email));
+        return ResponseEntity.ok(responseMap);
     }
 
     @GetMapping(API.RETRIEVE_ERROR)
@@ -467,6 +488,7 @@ public class SpgController {
             response.setContentType(APPLICATION_JSON_VALUE);
         }
     }
+
 
     public Map<String, Object> extractMapFromJsonString(String jsonData) {
         ObjectMapper mapper = new ObjectMapper();

@@ -52,6 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(jwtUserHandlerService, spgUserService), UsernamePasswordAuthenticationFilter.class);
         http.authorizeRequests()
+                .antMatchers("/api/feedback").permitAll() //TODO: implement security config for that pai
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/token/refresh").permitAll()
                 .antMatchers("/api" + API.EXIST_CUSTOMER_BY_EMAIL).permitAll()

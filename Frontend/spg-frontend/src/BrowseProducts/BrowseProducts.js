@@ -36,14 +36,14 @@ function BrowseProducts(props) {
         if (data != null) {
             setProducts(data['data']);
             setLoadCompleted(true);
-        } else{
+        } else {
             console.log(data);
             setTriggerError(true);
         }
     }
 
-    useEffect( () => {
-         _browseProducts();
+    useEffect(() => {
+        _browseProducts();
     }, []);
 
     async function _getCart() {
@@ -102,7 +102,8 @@ function BrowseProducts(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={pe_props.product.imageUrl == null ? fruit : pe_props.product.imageUrl} alt="fruit" style={{width: '150px', height: '150px'}}/>
+                            <img src={pe_props.product.imageUrl == null ? fruit : pe_props.product.imageUrl} alt="fruit"
+                                 style={{width: '150px', height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
                                     {pe_props.product.name} : {pe_props.product.quantityAvailable}{pe_props.product.unitOfMeasurement} available, {pe_props.product.price.toFixed(2)}€/{pe_props.product.unitOfMeasurement}
@@ -121,8 +122,7 @@ function BrowseProducts(props) {
                                         if (outcome === true) {
                                             setShowSuccess("Product added successfully");
                                             await _getCart();
-                                        }
-                                        else
+                                        } else
                                             setShowError("Something went wrong");
                                     }}
                                     validateOnChange={false}
@@ -166,24 +166,25 @@ function BrowseProducts(props) {
         return (<Redirect to="/ErrorHandler"></Redirect>);
     }
 
-    function CartView(){
+    function CartView() {
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
 
         return (<>
-        <Button variant="success" size="lg" onClick={handleShow} style={{position: 'fixed', bottom: '10px', left: '10px'}}>
-            🛒 {cart.length} item(s)
-        </Button>
-        <Offcanvas show={show} onHide={handleClose}>
-            <Offcanvas.Header><h2>Your Cart</h2></Offcanvas.Header>
-            <Offcanvas.Body>
-            { error === true ? <Alert variant='danger'>Something went wrong</Alert> : printOrder(cart)}
-                <Button style={{margin: '20px'}} variant="secondary" onClick={handleClose}>Close</Button>
-                <Link to="/PlaceOrder"><Button style={{margin: '20px'}} variant="success">Check out</Button></Link>
-            </Offcanvas.Body>
-        </Offcanvas>
-            </>);
+            <Button variant="success" size="lg" onClick={handleShow}
+                    style={{position: 'fixed', bottom: '10px', left: '10px'}}>
+                🛒 {cart.length} item(s)
+            </Button>
+            <Offcanvas show={show} onHide={handleClose}>
+                <Offcanvas.Header><h2>Your Cart</h2></Offcanvas.Header>
+                <Offcanvas.Body>
+                    {error === true ? <Alert variant='danger'>Something went wrong</Alert> : printOrder(cart)}
+                    <Button style={{margin: '20px'}} variant="secondary" onClick={handleClose}>Close</Button>
+                    <Link to="/PlaceOrder"><Button style={{margin: '20px'}} variant="success">Check out</Button></Link>
+                </Offcanvas.Body>
+            </Offcanvas>
+        </>);
     }
 
     return (
@@ -191,7 +192,7 @@ function BrowseProducts(props) {
             <h1>Products List</h1>
             <Grid container spacing={2}>
                 {
-                    loadCompleted===true && products!=undefined ?
+                    loadCompleted === true && products != undefined ?
                         products.map((prod, index) =>
                             <Grid item xs={12} sm={6} md={4} align="center">
                                 <ProductEntry key={index} product={prod} loggedUser={props.loggedUser}></ProductEntry>
@@ -205,11 +206,11 @@ function BrowseProducts(props) {
                 }
             </Grid>
             <CartView/>
-            <Link to={`/${userRole}`}><Button style={{position: 'fixed', bottom: '10px', right: '10px'}} variant='secondary'>Back</Button></Link>
+            <Link to="/Dashboard"><Button style={{position: 'fixed', bottom: '10px', right: '10px'}}
+                                          variant='secondary'>Back</Button></Link>
         </Container>
     );
 }
-
 
 
 export {BrowseProducts}

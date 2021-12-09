@@ -189,7 +189,7 @@ function NewCustomer(props) {
                             <Grid item xs={1} sm={2}/>
                             {/*BUTTONs COMPONENT*/}
                             <Grid item xs={6}>
-                                <Link to="/ShopEmployee"><Button variant="secondary" size="lg"
+                                <Link to="/Dashboard"><Button variant="secondary" size="lg"
                                                                  className="mt-4">Back</Button></Link>
                             </Grid>
                             <Grid item xs={6}>

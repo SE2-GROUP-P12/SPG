@@ -24,4 +24,5 @@ public class API {
     public static final String TEST = "test";
     public static final String REFRESH_TOKEN = "/token/refresh"; //ok
     public static final String LOGOUT = "/logout"; //ok
+    public static final String GET_WALLET_OPERATIONS = "/customer/getWalletOperations";
 }
