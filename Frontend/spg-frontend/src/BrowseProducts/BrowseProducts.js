@@ -29,7 +29,6 @@ function BrowseProducts(props) {
     const [triggerError, setTriggerError] = useState(false);
     const [cart, setCart] = useState([]);
     const [error, setError] = useState(false);
-    const userRole = localStorage.getItem('role');
 
     async function _browseProducts() {
         const data = await API.browseProducts(props.setErrorMessage);
@@ -42,8 +41,8 @@ function BrowseProducts(props) {
         }
     }
 
-    useEffect(() => {
-        _browseProducts();
+    useEffect(async () => {
+        await _browseProducts();
     }, []);
 
     async function _getCart() {
@@ -56,7 +55,8 @@ function BrowseProducts(props) {
     }
 
     useEffect(async () => {
-        await _getCart();
+        if (props.isLogged)
+            await _getCart();
     }, []);
 
     function ProductEntry(pe_props) {
@@ -84,12 +84,12 @@ function BrowseProducts(props) {
                             {pe_props.product.price.toFixed(2)}€/{pe_props.product.unitOfMeasurement}
                         </Typography>
                     </CardContent>
-                    <CardActions>
+                    {props.isLogged ? <CardActions>
                         <Grid container>
                             <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Add to cart </Button>
                             </Grid>
                         </Grid>
-                    </CardActions>
+                    </CardActions> : <></>}
                 </Card>
 
                 <Modal show={show} onHide={() => {
@@ -205,7 +205,7 @@ function BrowseProducts(props) {
                         </Grid>
                 }
             </Grid>
-            <CartView/>
+            {props.isLogged ? <CartView/> : <></>}
             <Link to="/Dashboard"><Button style={{position: 'fixed', bottom: '10px', right: '10px'}}
                                           variant='secondary'>Back</Button></Link>
         </Container>

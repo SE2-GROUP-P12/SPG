@@ -37,7 +37,7 @@ function Navbar(props) {
         props.setLoggedUser("");
         props.setAccessToken("");
         props.setLoggedUserRole("");
-        props.setTopUpWarning({"exist":"false"})
+        props.setTopUpWarning({"exist": "false"})
         console.log("successful logout");
         setRunRedirect(true);
     }
@@ -50,26 +50,29 @@ function Navbar(props) {
         return (<Redirect to="/"></Redirect>);
     }
 
-    if(props.isLoggedFlag===false)
+    if (props.isLoggedFlag === false)
         return (
             <Nav className="navbar bg-success navbar-dark">
-            <img src={logo} alt="logo" className="logo"/>
-            <div>
-                <Button className="btn btn-outline-light" variant="success" href='/NewCustomer'> Sign up </Button>
-                <Button className="btn btn-outline-light" variant="success" href='/LoginComponent'> Log in </Button>
-            </div>
-        </Nav>);
+                <div>
+                    <img src={logo} alt="logo" className="logo"/>
+                    <Button className="btn btn-outline-light" variant="success" href='/BrowseProducts'> Browse Products </Button>
+                </div>
+                <div>
+                    <Button className="btn btn-outline-light" variant="success" href='/NewCustomer'> Sign up </Button>
+                    <Button className="btn btn-outline-light" variant="success" href='/LoginComponent'> Log in </Button>
+                </div>
+            </Nav>);
     else
         return (
             <Nav className="navbar bg-success navbar-dark">
-                <img src={logo} alt="logo" className="logo" />
+                <img src={logo} alt="logo" className="logo"/>
                 <div>
-                    { props.topUpWarning.exist === "true" && props.loggedUserRole === 'CUSTOMER' ?
+                    {props.topUpWarning.exist === "true" && props.loggedUserRole === 'CUSTOMER' ?
                         <OverlayTrigger
-                            delay={{ show: 250, hide: 400 }}
+                            delay={{show: 250, hide: 400}}
                             overlay={<Tooltip id="button-tooltip">{props.topUpWarning.message}</Tooltip>}
                             placement="left">
-                            <img src={warning} alt="warning" className="warning" />
+                            <img src={warning} alt="warning" className="warning"/>
                         </OverlayTrigger>
                         : ""}
                     <Button className="btn btn-danger" onClick={event => doLogOut(event)}>LOG OUT</Button>
@@ -78,4 +81,4 @@ function Navbar(props) {
         );
 }
 
-export { Navbar }
+export {Navbar}

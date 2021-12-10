@@ -84,7 +84,10 @@ async function browseProducts(setErrorMessage) {
     try {
         const response = await fetch("/api/product/all", {
             method: 'GET',
-            headers: getAuthenticationHeaders(),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
         });
         if (response.ok) {
 
@@ -481,7 +484,6 @@ const API = {
     sessionReloader,
     browseProductsByFarmer,
     modifyForecast,
-    getWalletWarning,
     getWalletOperation,
     addProduct,
     getWalletWarning,
