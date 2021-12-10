@@ -1,5 +1,6 @@
 package it.polito.SE2.P12.SPG.controllerTest;
 
+import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
 import it.polito.SE2.P12.SPG.utils.API;
@@ -29,12 +30,16 @@ public class WalletTest {
     private MockMvc mockMvc;
     @Autowired
     private DBUtilsService dbUtilsService;
+    @Autowired
+    private SpgController spgController;
 
     @BeforeEach
     public void initContext() {
         dbUtilsService.dropAll();
         dbUtilsService.saveCustomer(new Customer("customer1", "", "123450001",
                 "", "customer1@test.com", "password", ""));
+        spgController.topUp("{\"email\" : \"customer1@test.com\", \"value\" : \"100.00\"}");
+
     }
 
     @Test
@@ -119,12 +124,17 @@ public class WalletTest {
         Assertions.assertEquals("", result.getResponse().getContentAsString());
     }
 
-//
-//    @Test
-//    @WithUserDetails("tester@test.com")
-//    public void getWalletOperationsTest() {
-//
-//    }
+
+    @Test
+    @WithUserDetails("tester@test.com")
+    public void getWalletOperationsTest() throws Exception {
+        MvcResult res = mockMvc.perform(MockMvcRequestBuilders.get(API.HOME + API.GET_WALLET_OPERATIONS+"?email=mario.rossi@gmail.com")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseJson = res.getResponse().getContentAsString();
+    }
 
 
 }
