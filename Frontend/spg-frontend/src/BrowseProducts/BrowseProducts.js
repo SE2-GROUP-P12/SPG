@@ -10,7 +10,7 @@ import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 import {Modal, Offcanvas} from "react-bootstrap";
-import {Link, Redirect} from "react-router-dom";
+import {Link, Redirect, useHistory} from "react-router-dom";
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 import Card from '@mui/material/Card';
@@ -29,6 +29,8 @@ function BrowseProducts(props) {
     const [triggerError, setTriggerError] = useState(false);
     const [cart, setCart] = useState([]);
     const [error, setError] = useState(false);
+
+    const history = useHistory();
 
     async function _browseProducts() {
         const data = await API.browseProducts(props.setErrorMessage);
@@ -206,8 +208,8 @@ function BrowseProducts(props) {
                 }
             </Grid>
             {props.isLogged ? <CartView/> : <></>}
-            <Link to="/Dashboard"><Button style={{position: 'fixed', bottom: '10px', right: '10px'}}
-                                          variant='secondary'>Back</Button></Link>
+            <Button onClick={() => history.goBack()} style={{position: 'fixed', bottom: '10px', right: '10px'}}
+                    variant='secondary'>Back</Button>
         </Container>
     );
 }

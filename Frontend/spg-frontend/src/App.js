@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import {API} from "./API/API";
 import Container from 'react-bootstrap/Container';
-import {Navbar} from "./Navbar/Navbar";
+import {NavbarApplication} from "./NavbarApplication/NavbarApplication";
 import {Homepage} from "./Homepage/Homepage";
 import {Login} from "./Login/Login";
 import {Dashboard} from "./Dashboard/Dashboard";
@@ -86,11 +86,11 @@ function App() {
         <div className="App">
             <Container fluid className="header">
                 <Router>
-                    <Navbar setLoggedFlag={setIsLogged} isLoggedFlag={isLogged}
-                            setLoggedUser={setLoggedUser} loggedUser={loggedUser}
-                            setAccessToken={setAccessToken}
-                            setLoggedUserRole={setLoggedUserRole} loggedUserRole={loggedUserRole}
-                            topUpWarning={topUpWarning} setTopUpWarning={setTopUpWarning}/>
+                    <NavbarApplication setLoggedFlag={setIsLogged} isLoggedFlag={isLogged}
+                                       setLoggedUser={setLoggedUser} loggedUser={loggedUser}
+                                       setAccessToken={setAccessToken}
+                                       setLoggedUserRole={setLoggedUserRole} loggedUserRole={loggedUserRole}
+                                       topUpWarning={topUpWarning} setTopUpWarning={setTopUpWarning}/>
                     <Switch>
                         <Route exact path="/DeliverOrder">
                             <DeliverOrder time={time}
