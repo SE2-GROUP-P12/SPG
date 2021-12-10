@@ -58,6 +58,14 @@ function NavbarApplication(props) {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto"></Nav>
                     <Nav>
+                        {props.topUpWarning.exist === "true" && props.loggedUserRole === 'CUSTOMER' ?
+                            <OverlayTrigger
+                                delay={{show: 250, hide: 400}}
+                                overlay={<Tooltip id="button-tooltip">{props.topUpWarning.message}</Tooltip>}
+                                placement="left">
+                                <img src={warning} alt="warning" className="warning"/>
+                            </OverlayTrigger>
+                            : <></>}
                         {location.pathname != "/BrowseProducts" && location.pathname != "/Dashboard" ?
                             <Button className="btn btn-outline-light navbar-button" variant="success"
                                     href='/BrowseProducts'> Browse Products </Button> : <></>}
