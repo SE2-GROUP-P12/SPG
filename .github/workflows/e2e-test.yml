@@ -48,9 +48,7 @@ jobs:
       # install npm dependencies
       - name: front end install NPM dependencies
         run: npm install --prefix ./Frontend/spg-frontend/
-      # run fe application
-      - name: run fe
-        run: npm start --prefix ./Frontend/spg-frontend/ &
+
       # run cypress
       - name: cypress run
         uses: cypress-io/github-action@v2
