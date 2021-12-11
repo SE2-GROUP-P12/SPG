@@ -50,6 +50,4 @@ jobs:
         run: npm install --prefix ./Frontend/spg-frontend/
       # run cypress
       - name: Cypress run
-        uses: cypress-io/github-action@v2
-        with:
-          project: ./Frontend/spg-frontend
+        run: npm run --prefix ./Frontend/spg-frontend/ cypress:runci
