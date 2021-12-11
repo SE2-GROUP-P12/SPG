@@ -107,8 +107,9 @@ async function browseProducts(setErrorMessage) {
 
 async function browseProductsByFarmer(data, setErrorMessage) {
     try {
-        console.log(JSON.stringify(data))
-        const response = await fetch("/api/product/?farmer=" + data.email, {
+        if(data.forecasted === null)
+            data.forecasted = "none"
+        const response = await fetch("/api/product/?farmer=" + data.email + "&forecasted=" + data.forecasted , {
             method: 'GET',
             headers: getAuthenticationHeaders(),
         });

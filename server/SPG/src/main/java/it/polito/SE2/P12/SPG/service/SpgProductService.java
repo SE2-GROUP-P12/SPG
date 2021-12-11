@@ -19,29 +19,39 @@ public class SpgProductService {
         this.productRepo = productRepo;
     }
 
-    public List<Product> getAllProduct(){
+    public List<Product> getAllProduct() {
         List<Product> listProduct = productRepo.findAll();
         return listProduct;
     }
 
-    public List<Product> getAllProductByFarmerEmail(String email){
+    public List<Product> getAllProductByFarmerEmail(String email) {
         List<Product> listProduct = productRepo.findProductsByFarmer_Email(email);
         return listProduct;
     }
 
-    public Product getProductById(Long productId){
+    public List<Product> getAllForecastedProductByFarmerEmail(String email) {
+        List<Product> listProduct = productRepo.findProductsByFarmer_EmailAndAndQuantityForecastGreaterThan(email, 0.0);
+        return listProduct;
+    }
+
+    public List<Product> getAllUnforecastedProductByFarmerEmail(String email) {
+        List<Product> listProduct = productRepo.findProductsByFarmer_EmailAndQuantityForecastEquals(email, 0.0);
+        return listProduct;
+    }
+
+    public Product getProductById(Long productId) {
         return productRepo.findProductByProductId(productId);
     }
 
     public Boolean setForecast(Product product, Double forecast) {
-        if(forecast < 0.0 || Double.isNaN(forecast) || Double.isInfinite(forecast))
+        if (forecast < 0.0 || Double.isNaN(forecast) || Double.isInfinite(forecast))
             return false;
         product.setQuantityForecast(forecast);
         productRepo.save(product);
         return true;
     }
 
-    public boolean setForecast(Product product,  Double forecast, String start, String end) {
+    public boolean setForecast(Product product, Double forecast, String start, String end) {
         product.setQuantityForecast(forecast);
         product.setStartAvailability(start);
         product.setEndAvailability(end);
@@ -66,7 +76,7 @@ public class SpgProductService {
 
     public boolean addProduct(String productName, Double price, String unitOfMeasurement, String imageUrl, Farmer farmer) {
         Product p;
-        if(imageUrl.isEmpty() || imageUrl.isBlank() || imageUrl == null)
+        if (imageUrl.isEmpty() || imageUrl.isBlank() || imageUrl == null)
             p = new Product(productName, unitOfMeasurement, 0.0, price, farmer);
         else
             p = new Product(productName, unitOfMeasurement, 0.0, price, imageUrl, farmer);

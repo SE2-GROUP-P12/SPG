@@ -84,3 +84,7 @@
     overflow-y: scroll;
 }
 
+.card-button {
+    margin: 5px;
+}
+

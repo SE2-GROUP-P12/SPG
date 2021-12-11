@@ -1,34 +1,55 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../App.css';
-import Container from "react-bootstrap/Container";
-import {useState, useEffect} from "react";
 import {API} from "../API/API";
-import fruit from "../resources/fruits.png" //Recheck the original filename
+import {useEffect, useState} from "react";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import fruit from "../resources/fruits.png";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import CardActions from "@mui/material/CardActions";
+import Grid from "@mui/material/Grid";
 import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Spinner from "react-bootstrap/Spinner";
-import Alert from "react-bootstrap/Alert";
 import {Modal} from "react-bootstrap";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import {Field, Form, Formik} from "formik";
+import * as Yup from "yup";
+import Alert from "react-bootstrap/Alert";
 import {Link, Redirect} from "react-router-dom";
-import {Formik, Form, Field} from 'formik';
-import * as Yup from 'yup';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
+import Container from "react-bootstrap/Container";
+import Spinner from "react-bootstrap/Spinner";
+import "../App.css"
+import {forEach} from "react-bootstrap/ElementChildren";
 
+function ConfirmAvailability(props) {
 
-function ProductsForecast(props) {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
     const [triggerError, setTriggerError] = useState(false);
     const email = localStorage.getItem("username")
+    const [availabilities, setAvailabilities] = useState([]);
+
+    const handleConfirm = (productId, quantityConfirmed) => {
+        //Parameters must be present
+        if (productId === undefined || quantityConfirmed === undefined) {
+            console.log("error")
+            return
+        }
+
+        if (availabilities.filter(x => x.id == productId).length === 0) {
+            setAvailabilities(x => [...x, {
+                'id': productId,
+                'quantityAvailable': quantityConfirmed
+            }])
+        } else {
+            let newAvailabilities = [...availabilities];
+            let index = availabilities.findIndex(x => x.id === productId)
+            newAvailabilities[index].quantityAvailable = quantityConfirmed;
+            setAvailabilities(x => newAvailabilities);
+        }
+    }
 
     async function _browseProductsByFarmer() {
-        const data = await API.browseProductsByFarmer({'email': email}, props.setErrorMessage);
+        const data = await API.browseProductsByFarmer({'email': email, 'forecasted': true}, props.setErrorMessage);
         //console.log(data);
         if (data !== null) {
             setProducts(data['data']);
@@ -37,13 +58,11 @@ function ProductsForecast(props) {
             console.log(data);
             setTriggerError(true);
         }
-        return;
     }
 
     useEffect(async () => {
         await _browseProductsByFarmer();
     }, []);
-
 
     function ProductEntry(props) {
         const [show, setShow] = useState(false);
@@ -51,6 +70,27 @@ function ProductsForecast(props) {
         const handleShow = () => setShow(true);
         const [showSuccess, setShowSuccess] = useState(null);
         const [showError, setShowError] = useState(null)
+
+        let currentlyConfirmed = availabilities.filter(x => x.id === props.product.productId).length > 0 ?
+            availabilities.filter(x => x.id === props.product.productId)[0].quantityAvailable : 0
+
+        /*
+        const handleConfirm = (quantity) => {
+            if(quantity===undefined)
+                quantity = props.product.quantityForecast
+            if (availabilities.filter(x => x.id == props.product.productId).length === 0) {
+                setAvailabilities(x => [...x, {
+                    'id': props.product.productId,
+                    'quantityAvailable': quantity
+                }])
+            } else {
+                let newAvailabilities = [...availabilities];
+                let index = availabilities.findIndex(x => x.id == props.product.productId)
+                newAvailabilities[index].quantityAvailable = quantity;
+                setAvailabilities(x => newAvailabilities);
+            }
+        }
+        */
 
         return (
             <>
@@ -68,13 +108,17 @@ function ProductsForecast(props) {
                         <Typography variant="body">
                             {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
                             forecasted <br/>
-                            {props.product.price.toFixed(2)}€/{props.product.unitOfMeasurement}
+                            {currentlyConfirmed} {props.product.unitOfMeasurement} confirmed <br/>
                         </Typography>
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Modify
-                                Forecast </Button>
+                            <Grid item xs={12}> <Button className="card-button" variant="success"
+                                                        onClick={() => handleConfirm(props.product.productId, props.product.quantityForecast)}> Confirm
+                                Forecasted
+                                Availability </Button></Grid>
+                            <Grid item xs={12}> <Button className="card-button" variant="success"
+                                                        onClick={handleShow}> Set Availability </Button>
                             </Grid>
                         </Grid>
                     </CardActions>
@@ -86,7 +130,7 @@ function ProductsForecast(props) {
                     setShowSuccess(null);
                 }}>
                     <Modal.Header>
-                        <Modal.Title>Modify Forecast for {props.product.name}</Modal.Title>
+                        <Modal.Title>Set Availability for {props.product.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
@@ -99,19 +143,17 @@ function ProductsForecast(props) {
                                 </Col>
                             </Row>
                             <Row>
+                                <Col xs={12}>
+                                    {currentlyConfirmed} {props.product.unitOfMeasurement} currently
+                                    confirmed
+                                </Col>
+                            </Row>
+                            <Row>
                                 <Formik
                                     initialValues={{amount: 0}}
                                     validationSchema={Yup.object({amount: Yup.number().min(0).required('Amount required!')})}
                                     onSubmit={async (values) => {
-                                        let outcome = await API.modifyForecast({
-                                            "productId": props.product.productId,
-                                            "quantity": values.amount
-                                        });
-                                        console.log(outcome);
-                                        if (outcome === true)
-                                            setShowSuccess("Forecast successfully modified");
-                                        else
-                                            setShowError("Something went wrong");
+                                        handleConfirm(props.product.productId, values.amount)
                                     }}
                                     validateOnChange={false}
                                     validateOnBlur={false}
@@ -122,8 +164,7 @@ function ProductsForecast(props) {
                                             <Field type="number" id="amount" name="amount"
                                                    min={0}/> {props.product.unitOfMeasurement}
                                             <br/>
-                                            <Button style={{margin: '20px'}} type="submit" variant="success">Modify
-                                                Forecast</Button>
+                                            <Button style={{margin: '20px'}} type="submit" variant="success">Set Availability</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
                                                 <Alert variant='success'>{showSuccess}</Alert> : null}
@@ -156,7 +197,7 @@ function ProductsForecast(props) {
 
     return (
         <Container fluid>
-            <h1>Products List</h1>
+            <h1>Confirm availability for the next week</h1>
             <Grid container spacing={2}>
                 {
                     loadCompleted === true ?
@@ -174,8 +215,13 @@ function ProductsForecast(props) {
             </Grid>
             <Link to='/Dashboard'><Button style={{position: 'fixed', bottom: '10px', right: '10px'}}
                                           variant='secondary'>Back</Button></Link>
+            <pre>
+            {
+                JSON.stringify(availabilities, null, 2)
+            }</pre>
         </Container>
     )
 }
 
-export {ProductsForecast}
+export {ConfirmAvailability}
+

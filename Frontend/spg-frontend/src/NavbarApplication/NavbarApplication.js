@@ -66,7 +66,8 @@ function NavbarApplication(props) {
                                 <img src={warning} alt="warning" className="warning"/>
                             </OverlayTrigger>
                             : <></>}
-                        {location.pathname != "/BrowseProducts" && location.pathname != "/Dashboard" ?
+                        {location.pathname != "/BrowseProducts" && location.pathname != "/Dashboard" && (props.loggedUserRole === 'CUSTOMER' ||
+                            props.loggedUserRole === '') ?
                             <Button className="btn btn-outline-light navbar-button" variant="success"
                                     href='/BrowseProducts'> Browse Products </Button> : <></>}
                         {props.isLoggedFlag && location.pathname != "/Dashboard" ?
