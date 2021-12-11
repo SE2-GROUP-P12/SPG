@@ -95,14 +95,14 @@ public class SpgOrderService {
     }
 
     //Basket viene convertito in un ordine per il possessore del basket
-    public Boolean addNewOrderFromBasket(Basket basket,long epoch) {
+    public Boolean addNewOrderFromBasket(Basket basket,long epoch, Date deliveryDate, String deliveryAddress) {
         if (!spgUserService.isOrderUserType(basket.getCust()))
             return false;
-        return addNewOrderFromBasket(basket, (OrderUserType) basket.getCust(), epoch);
+        return addNewOrderFromBasket(basket, (OrderUserType) basket.getCust(), epoch, deliveryDate,deliveryAddress);
     }
 
     //Basket viene convertito in un ordine per user
-    public Boolean addNewOrderFromBasket(Basket basket, OrderUserType user,long epoch) {
+    public Boolean addNewOrderFromBasket(Basket basket, OrderUserType user,long epoch, Date deliveryDate, String deliveryAddress) {
         //Controlla se le quantità ordinate sono disponibile
         for (Map.Entry<Product, Double> e : basket.getProductQuantityMap().entrySet()) {
             if (e.getValue() > e.getKey().getQuantityAvailable())
@@ -115,7 +115,7 @@ public class SpgOrderService {
             p.moveFromAvailableToOrdered(q);
             productRepo.save(p);
         }
-        Order order = new Order((OrderUserType) user, epoch, basket.getProductQuantityMap());
+        Order order = new Order((OrderUserType) user, epoch, basket.getProductQuantityMap(),  deliveryDate,  deliveryAddress);
         return addNewOrder(order);
     }
 

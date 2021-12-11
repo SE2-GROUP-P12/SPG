@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -173,10 +175,18 @@ public class SpgController {
 
     @PostMapping(API.PLACE_ORDER)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
-    public ResponseEntity<Boolean> placeOrder(@RequestBody String jsonData) {
+    public ResponseEntity<Boolean> placeOrder(@RequestBody String jsonData) throws ParseException {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        Date date = null;
+        String address = "";
         if (requestMap.isEmpty())
             return ResponseEntity.badRequest().build();
+        if (requestMap.containsKey("deliveryDate")) {
+            date = new SimpleDateFormat("dd/MM/yyyy").parse(requestMap.get("deliveryDate").toString());
+        }
+            if (requestMap.containsKey("deliveyAddress")) {
+                address =requestMap.get("deliveryAddress").toString();
+        }
         if (requestMap.containsKey(Constants.JSON_EMAIL) && requestMap.containsKey("customer")) {
             User orderIssuer = userService.getUserByEmail(requestMap.get("customer").toString());
             if (!userService.isOrderUserType(orderIssuer))
@@ -185,13 +195,13 @@ public class SpgController {
                 BasketUserType user = userService.getBasketUserTypeByEmail(orderIssuer.getEmail());
                 Basket basket = user.getBasket();
                 basketService.dropBasket(basket);
-                return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer, (long)System.currentTimeMillis()+this.timeOffset));
+                return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer, (long)System.currentTimeMillis()+this.timeOffset, date,address));
             }
             //It's an order provided by the shopEmployee
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get(Constants.JSON_EMAIL));
             Basket basket = user.getBasket();
             basketService.dropBasket(basket);
-            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer,(long)System.currentTimeMillis()+this.timeOffset));
+            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer,(long)System.currentTimeMillis()+this.timeOffset,date,address));
         }
         return ResponseEntity.badRequest().build();
     }
