@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.lang.model.type.ReferenceType;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +83,7 @@ public class OrderControllerApiTest {
         basketService.addProductToBasket(prod2, 5.001, customer2);
         basketService.addProductToBasket(prod1, 20.00, customer3);
         //Issue order for customer3
-        orderService.addNewOrderFromBasket(customer3.getBasket(), customer3, 0);
+        orderService.addNewOrderFromBasket(customer3.getBasket(), customer3, 0, null, null);
         basketService.addProductToBasket(prod1, 20.00, customer3);
         //orderService.addNewOrderFromBasket(customer3.getBasket(), customer3, 123);
         //TODO extend cases
