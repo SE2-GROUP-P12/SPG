@@ -187,5 +187,20 @@ public class SpgOrderService {
         }
         return response;
     }
+
+    public Boolean setDeliveryDate(Long orderId, Date date){
+        Order order = orderRepo.findOrderByOrderId(orderId);
+        if(order==null) return false;
+        order.setDeliveryDate(date);
+        return true;
+    }
+
+    public Boolean setDeliveryDateAndAddress(Long orderId, Date date,String address){
+        Order order = orderRepo.findOrderByOrderId(orderId);
+        if(order==null) return false;
+        order.setDeliveryDate(date);
+        order.setDeliveryAddress(address);
+        return true;
+    }
 }
 

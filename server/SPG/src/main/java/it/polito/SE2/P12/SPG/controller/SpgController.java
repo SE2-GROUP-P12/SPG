@@ -181,11 +181,11 @@ public class SpgController {
         String address = "";
         if (requestMap.isEmpty())
             return ResponseEntity.badRequest().build();
-        if (requestMap.containsKey("deliveryDate")) {
-            date = new SimpleDateFormat("dd/MM/yyyy").parse(requestMap.get("deliveryDate").toString());
+        if (requestMap.containsKey(Constants.JSON_DELIVERY_DATE)) {
+            date = new SimpleDateFormat("dd/MM/yyyy").parse(requestMap.get(Constants.JSON_DELIVERY_DATE).toString());
         }
-            if (requestMap.containsKey("deliveyAddress")) {
-                address =requestMap.get("deliveryAddress").toString();
+            if (requestMap.containsKey(Constants.JSON_DELIVERY_ADDRESS)) {
+                address =requestMap.get(Constants.JSON_DELIVERY_ADDRESS).toString();
         }
         if (requestMap.containsKey(Constants.JSON_EMAIL) && requestMap.containsKey("customer")) {
             User orderIssuer = userService.getUserByEmail(requestMap.get("customer").toString());
@@ -362,7 +362,7 @@ public class SpgController {
         /*String start;
         String end;
          */
-        if (requestMap == null ||
+        if (requestMap.isEmpty() ||
                 !requestMap.containsKey(Constants.JSON_PRODUCT_ID) ||
                 !requestMap.containsKey(Constants.JSON_QUANTITY)
         )
@@ -378,6 +378,36 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping(API.DELIVERY_DATE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE','ROLE_FARMER')")
+    public ResponseEntity<Boolean> setDeliveryDate(@RequestBody String jsonData) throws ParseException {
+        // sets expected values for products
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if(requestMap.isEmpty() ||
+                !requestMap.containsKey(Constants.JSON_ORDER_ID) ||
+                !requestMap.containsKey(Constants.JSON_DELIVERY_DATE)
+        ) return ResponseEntity.badRequest().build();
+        Date date =new SimpleDateFormat("dd/MM/yyyy").parse(requestMap.get(Constants.JSON_DELIVERY_DATE).toString());
+        Long orderId = Long.parseLong( requestMap.get(Constants.JSON_ORDER_ID).toString());
+        if(!orderService.setDeliveryDate(orderId,date)) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping(API.DELIVERY_DATE_ADDRESS)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE','ROLE_FARMER')")
+    public ResponseEntity<Boolean> setDeliveryDateAndAddress(@RequestBody String jsonData) throws ParseException {
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if(requestMap.isEmpty() ||
+                !requestMap.containsKey(Constants.JSON_ORDER_ID) ||
+                !requestMap.containsKey(Constants.JSON_DELIVERY_DATE)||
+                !requestMap.containsKey(Constants.JSON_DELIVERY_ADDRESS)
+        ) return ResponseEntity.badRequest().build();
+        Date date =new SimpleDateFormat("dd/MM/yyyy").parse(requestMap.get(Constants.JSON_DELIVERY_DATE).toString());
+        String address =requestMap.get(Constants.JSON_DELIVERY_DATE).toString();
+        Long orderId = Long.parseLong( requestMap.get(Constants.JSON_ORDER_ID).toString());
+        if(!orderService.setDeliveryDateAndAddress(orderId,date,address)) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok().build();
+        }
 
     @GetMapping(API.REFRESH_TOKEN)
     public void getRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {

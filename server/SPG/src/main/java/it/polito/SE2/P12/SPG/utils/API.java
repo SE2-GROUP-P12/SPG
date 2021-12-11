@@ -21,6 +21,8 @@ public class API {
     public static final String EXPECTED_PRODUCTS = "/product/expectedProducts";
     public static final String REPORT_EXPECTED = "/farmer/reportExpected";
     public static final String TIME_TRAVEL = "/timeTravel";
+    public static final String DELIVERY_DATE = "/customer/deliveryDate";
+    public static final String DELIVERY_DATE_ADDRESS= "/customer/deliveryDateAndAddress";
     public static final String TEST = "test";
     public static final String REFRESH_TOKEN = "/token/refresh"; //ok
     public static final String LOGOUT = "/logout"; //ok
