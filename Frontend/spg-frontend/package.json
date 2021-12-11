@@ -33,7 +33,9 @@
     "coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
     "coverage:ci": "react-scripts test --env=jsdom --watchAll=false --coverage --testResultsProcessor ./node_modules/jest-sonar-reporter",
     "eject": "react-scripts eject",
-    "cypress": "npx cypress open"
+    "cypress:open": "npx cypress open",
+    "cypress:runci": "cypress run",
+    "cypress:runlocal": "cypress run"
   },
   "eslintConfig": {
     "extends": [

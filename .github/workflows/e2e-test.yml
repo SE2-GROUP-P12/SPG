@@ -1,0 +1,60 @@
+
+name: Cypress e2e tests
+on:
+  push:
+    branches:
+      - main
+      - githubworkflow-*
+      - spg-v*
+      - BE/*
+      - FE/*
+jobs:
+  cypress-run:
+    name: cypress-run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      # Start infrastructure (database)
+      - name: Start infra dependencies
+        run: docker-compose up -d database-test database &
+      # setup java 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      # caching
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+          
+      # start server for frontend tests
+      - name: Start server
+        run: mvn spring-boot:run -f ./server/SPG/pom.xml &
+        
+        
+      # Cache npm
+      - name: Cache NPM dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-npm-cache-
+      # install npm dependencies
+      - name: front end install NPM dependencies
+        run: npm install --prefix ./Frontend/spg-frontend/
+
+      # run cypress
+      - name: cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: Frontend/spg-frontend
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 100
+        
