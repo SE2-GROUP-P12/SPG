@@ -1,5 +1,6 @@
 package it.polito.SE2.P12.SPG.controllerTest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.controller.SpgController;
 import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
@@ -17,6 +18,8 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,7 +54,7 @@ public class WalletTest {
                         .param("email", "customer1@test.com"))
                 .andExpect(status().isOk())
                 .andReturn();
-        Assertions.assertEquals(0.00, Double.parseDouble(result.getResponse().getContentAsString()), 0.0001);
+        Assertions.assertEquals(100.00, Double.parseDouble(result.getResponse().getContentAsString()), 0.0001);
     }
 
     @Test
@@ -80,7 +83,7 @@ public class WalletTest {
                         .content(jsonValid))
                 .andExpect(status().isOk())
                 .andReturn();
-        Assertions.assertEquals(100.00, Double.parseDouble(result.getResponse().getContentAsString()), 0.0001);
+        Assertions.assertEquals(200.00, Double.parseDouble(result.getResponse().getContentAsString()), 0.0001);
         //Server confirmation
         result = mockMvc.perform(MockMvcRequestBuilders.get("/api/" + API.GET_WALLET)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -88,7 +91,7 @@ public class WalletTest {
                         .param("email", "customer1@test.com"))
                 .andExpect(status().isOk())
                 .andReturn();
-        Assertions.assertEquals(100.00, Double.parseDouble(result.getResponse().getContentAsString()), 0.0001);
+        Assertions.assertEquals(200.00, Double.parseDouble(result.getResponse().getContentAsString()), 0.0001);
     }
 
     @Test
@@ -127,13 +130,27 @@ public class WalletTest {
 
     @Test
     @WithUserDetails("tester@test.com")
-    public void getWalletOperationsTest() throws Exception {
+    public void getWalletOperationsErrorHandlerTest() throws Exception {
+        //Mail is not present
         MvcResult res = mockMvc.perform(MockMvcRequestBuilders.get(API.HOME + API.GET_WALLET_OPERATIONS+"?email=mario.rossi@gmail.com")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        String responseJson = res.getResponse().getContentAsString();
+        Assertions.assertEquals("Invalid email", responseJson);
+    }
+
+    @Test
+    @WithUserDetails("tester@test.com")
+    public void getWalletOperationsTest() throws Exception {
+        MvcResult res = mockMvc.perform(MockMvcRequestBuilders.get(API.HOME + API.GET_WALLET_OPERATIONS+"?email=customer1@test.com")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         String responseJson = res.getResponse().getContentAsString();
+        Map<String, String> responseMap = new ObjectMapper().readValue(responseJson, Map.class);
     }
 
 

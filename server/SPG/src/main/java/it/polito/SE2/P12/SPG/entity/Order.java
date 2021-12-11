@@ -49,7 +49,6 @@ public class Order {
     @Column(name = "status")
     private String status = ORDER_STATUS_OPEN;
 
-
     public Order(OrderUserType cust, long date, Map<Product, Double> prods) {
         this.cust = (User) cust;
         this.date = new java.util.Date(date);
@@ -61,6 +60,19 @@ public class Order {
             this.value += e.getKey().getPrice() * e.getValue();
         }
     }
+
+    public Order(OrderUserType cust, long date, Map<Product, Double> prods, long pickUpDate) {
+        this.cust = (User) cust;
+        this.date = new java.util.Date(date);
+        this.creation_date = LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault());
+        this.current_status_date = LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault());
+        this.prods = prods;
+        this.value = 0.0;
+        for (Map.Entry<Product, Double> e : prods.entrySet()) {
+            this.value += e.getKey().getPrice() * e.getValue();
+        }
+    }
+
 
     public List<Product> getProductList() {
         return new ArrayList<>(prods.keySet());

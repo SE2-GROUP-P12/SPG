@@ -200,6 +200,7 @@ public class OrderControllerApiTest {
     @WithUserDetails("tester@test.com")
     public void getOrderEmptyOrderListTest() throws Exception {
         //No issued orders returns 200 and empty json-list
+        dbUtilsService.deleteOrderRepo();
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/" + API.GET_ORDERS)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
