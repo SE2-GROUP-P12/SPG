@@ -67,23 +67,23 @@ function NavbarApplication(props) {
                             </OverlayTrigger>
                             : <></>}
                         {location.pathname != "/BrowseProducts" && location.pathname != "/Dashboard" ?
-                            <Button className="btn btn-outline-light navbar-button" variant="success"
+                            <Button id='browse-product-button' className="btn btn-outline-light navbar-button" variant="success"
                                     href='/BrowseProducts'> Browse Products </Button> : <></>}
                         {props.isLoggedFlag && location.pathname != "/Dashboard" ?
-                            <Button className="btn btn-outline-light navbar-button" variant="success"
+                            <Button id='dashboard' className="btn btn-outline-light navbar-button" variant="success"
                                     href='/Dashboard'> Dashboard </Button> : <></>}
                         {(location.pathname == "/Dashboard" || (!props.isLoggedFlag && location.pathname == "/BrowseProducts")) ? <></> :
                             <span className="button-separator">|</span>
                         }
                         {
-                            props.isLoggedFlag ? <Button className="btn btn-danger navbar-button"
+                            props.isLoggedFlag ? <Button id='logout' className="btn btn-danger navbar-button"
                                                          onClick={event => doLogOut(event)}>Log Out</Button> : <>
                                 {location.pathname == "/NewCustomer" ? <></> :
-                                    <Button className="btn btn-outline-light navbar-button" variant="success"
+                                    <Button id='signup' className="btn btn-outline-light navbar-button" variant="success"
                                             href='/NewCustomer'> Sign
                                         up </Button>}
                                 {location.pathname == "/LoginComponent" ? <></> :
-                                    <Button className="btn btn-outline-light navbar-button" variant="success"
+                                    <Button  id='login' className="btn btn-outline-light navbar-button" variant="success"
                                             href='/LoginComponent'> Log in </Button>
                                 }
                             </>
