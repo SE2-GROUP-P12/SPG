@@ -48,14 +48,8 @@ public class Order {
     private Double value;
     @Column(name = "status")
     private String status = ORDER_STATUS_OPEN;
-    @Column(name = "deliveryDate")
-    private Date deliveryDate;
-    @Column(name = "deliveryAddress")
-    private String deliveryAddress;
 
-
-
-    public Order(OrderUserType cust, long date, Map<Product, Double> prods, Date deliveryDate, String deliveryAddress) {
+    public Order(OrderUserType cust, long date, Map<Product, Double> prods) {
         this.cust = (User) cust;
         this.date = new java.util.Date(date);
         this.creation_date = LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault());
@@ -65,10 +59,20 @@ public class Order {
         for (Map.Entry<Product, Double> e : prods.entrySet()) {
             this.value += e.getKey().getPrice() * e.getValue();
         }
-        if (deliveryDate==null)deliveryDate = new Date(0);
-        else deliveryDate = deliveryDate;
-        deliveryAddress = deliveryAddress;
     }
+
+    public Order(OrderUserType cust, long date, Map<Product, Double> prods, long pickUpDate) {
+        this.cust = (User) cust;
+        this.date = new java.util.Date(date);
+        this.creation_date = LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault());
+        this.current_status_date = LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault());
+        this.prods = prods;
+        this.value = 0.0;
+        for (Map.Entry<Product, Double> e : prods.entrySet()) {
+            this.value += e.getKey().getPrice() * e.getValue();
+        }
+    }
+
 
     public List<Product> getProductList() {
         return new ArrayList<>(prods.keySet());
