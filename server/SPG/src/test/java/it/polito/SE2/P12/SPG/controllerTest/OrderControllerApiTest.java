@@ -1,6 +1,7 @@
 package it.polito.SE2.P12.SPG.controllerTest;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.repository.*;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import javax.lang.model.type.ReferenceType;
 import java.util.List;
 import java.util.Map;
 
@@ -55,16 +57,19 @@ public class OrderControllerApiTest {
         dbUtilsService.dropAll();
         Customer customer1 = new Customer("customer1", "", "123450001", "", "customer1@test.com", "password", "", 1000.0);
         Customer customer2 = new Customer("customer2", "", "123450000", "", "customer2@test.com", "password", "", 1000.0);
+        Customer customer3 = new Customer("customer3", "", "123450002", "", "customer3@test.com", "password", "", 0.00);
+
         ShopEmployee employee = new ShopEmployee("employee", "", "employee_123456", "", "employee@test.com", "password");
         customerRepo.save(customer1);
         customerRepo.save(customer2);
+        customerRepo.save(customer3);
         shopEmployeeRepo.save(employee);
         Farmer farmer = new Farmer("farmer_name", "farmer_surname", "ssn_faaaaaaarmer", "12345667", "far@mer.com", "password");
         farmerRepo.save(farmer);
         //Create some testing product
-        Product prod1 = new Product("Prod1",  "KG", 1000.0, 10.50F, farmer);
-        Product prod2 = new Product("Prod2",  "KG", 100.0, 5.50F, farmer);
-        Product prod3 = new Product("Prod3",  "KG", 20.0, 8.00F, farmer);
+        Product prod1 = new Product("Prod1", "KG", 1000.0, 10.50F, farmer);
+        Product prod2 = new Product("Prod2", "KG", 100.0, 5.50F, farmer);
+        Product prod3 = new Product("Prod3", "KG", 20.0, 8.00F, farmer);
         productRepo.save(prod1);
         productRepo.save(prod2);
         productRepo.save(prod3);
@@ -75,6 +80,14 @@ public class OrderControllerApiTest {
         //done by customer2
         basketService.addProductToBasket(prod1, 2.001, customer2);
         basketService.addProductToBasket(prod2, 5.001, customer2);
+        basketService.addProductToBasket(prod1, 20.00, customer3);
+        //Issue order for customer3
+        orderService.addNewOrderFromBasket(customer3.getBasket(), customer3, 0);
+        basketService.addProductToBasket(prod1, 20.00, customer3);
+        //orderService.addNewOrderFromBasket(customer3.getBasket(), customer3, 123);
+        //TODO extend cases
+
+
     }
 
     @Test
@@ -274,6 +287,20 @@ public class OrderControllerApiTest {
                 .andExpect(status().isOk()).andReturn();
         String response = result.getResponse().getContentAsString();
         Assertions.assertEquals("true", response);
+    }
+
+    @WithUserDetails("tester@test.com")
+    @Test
+    public void getPendingOrderTest() throws Exception {
+        //Pending order created in the initContext()
+        //Customer2 not has pending orders
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/mail/getPendingOrdersEmail")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        Map<String, List<Long>> response = new ObjectMapper().readValue(result.getResponse().getContentAsString(), Map.class);
+        Assertions.assertTrue(response.containsKey("customer3@test.com"));
     }
 
 }
