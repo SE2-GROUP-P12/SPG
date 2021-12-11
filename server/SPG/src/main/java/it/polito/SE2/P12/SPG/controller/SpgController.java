@@ -187,6 +187,7 @@ public class SpgController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
     public ResponseEntity<Boolean> placeOrder(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        //TODO: align BE -> System.out.println("Data: " + requestMap.get("deliveryDate"));
         if (requestMap.isEmpty())
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey(Constants.JSON_EMAIL) && requestMap.containsKey("customer")) {

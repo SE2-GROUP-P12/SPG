@@ -63,7 +63,7 @@ function getAllServices() {
             "type": "Your Orders",
             "description": "Handle your orders and check tehir status in a simple way",
             "imageUrl": OrderImg,
-            "buttonLabel": "show orders",
+            "buttonLabel": "Show Orders",
             "linkUrl": "/Customer/Orders",
             "rolesPermitted": ['CUSTOMER', 'ADMIN']
         },
