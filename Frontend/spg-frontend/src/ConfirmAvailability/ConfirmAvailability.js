@@ -17,8 +17,9 @@ import Alert from "react-bootstrap/Alert";
 import {Link, Redirect} from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Spinner from "react-bootstrap/Spinner";
-import "../App.css"
-import {forEach} from "react-bootstrap/ElementChildren";
+import "../App.css";
+import "./ConfirmAvailability.css";
+import {CheckCircleFill} from "react-bootstrap-icons";
 
 function ConfirmAvailability(props) {
 
@@ -74,27 +75,9 @@ function ConfirmAvailability(props) {
         let currentlyConfirmed = availabilities.filter(x => x.id === props.product.productId).length > 0 ?
             availabilities.filter(x => x.id === props.product.productId)[0].quantityAvailable : 0
 
-        /*
-        const handleConfirm = (quantity) => {
-            if(quantity===undefined)
-                quantity = props.product.quantityForecast
-            if (availabilities.filter(x => x.id == props.product.productId).length === 0) {
-                setAvailabilities(x => [...x, {
-                    'id': props.product.productId,
-                    'quantityAvailable': quantity
-                }])
-            } else {
-                let newAvailabilities = [...availabilities];
-                let index = availabilities.findIndex(x => x.id == props.product.productId)
-                newAvailabilities[index].quantityAvailable = quantity;
-                setAvailabilities(x => newAvailabilities);
-            }
-        }
-        */
-
         return (
             <>
-                <Card sx={{maxWidth: 345}}>
+                <Card className={currentlyConfirmed > 0 ? "confirmed-product-card" : ""} sx={{maxWidth: 345}}>
                     <CardMedia
                         component="img"
                         height="140"
@@ -103,7 +86,7 @@ function ConfirmAvailability(props) {
                     />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
-                            {props.product.name}
+                            {currentlyConfirmed > 0 ? <CheckCircleFill color="#5cb85c"/> : <></>} {props.product.name}
                         </Typography>
                         <Typography variant="body">
                             {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
@@ -164,7 +147,8 @@ function ConfirmAvailability(props) {
                                             <Field type="number" id="amount" name="amount"
                                                    min={0}/> {props.product.unitOfMeasurement}
                                             <br/>
-                                            <Button style={{margin: '20px'}} type="submit" variant="success">Set Availability</Button>
+                                            <Button style={{margin: '20px'}} type="submit" variant="success">Set
+                                                Availability</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
                                                 <Alert variant='success'>{showSuccess}</Alert> : null}
@@ -197,7 +181,20 @@ function ConfirmAvailability(props) {
 
     return (
         <Container fluid>
-            <h1>Confirm availability for the next week</h1>
+            <h1>Confirm availabilities for the next week</h1>
+            <br/>
+            <Row>
+                <Col>
+                    <Button variant="success" onClick={() =>
+                        products.forEach(x => {
+                            console.log(x)
+                            handleConfirm(x.productId, x.quantityForecast)
+                        })
+                    }>Confirm all products</Button>
+                </Col>
+            </Row>
+            <br/>
+            <br/>
             <Grid container spacing={2}>
                 {
                     loadCompleted === true ?
