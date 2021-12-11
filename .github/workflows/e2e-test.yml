@@ -48,6 +48,15 @@ jobs:
       # install npm dependencies
       - name: front end install NPM dependencies
         run: npm install --prefix ./Frontend/spg-frontend/
+      # run fe application
+      - name: run fe
+        run: npm start --prefix ./Frontend/spg-frontend/ &
       # run cypress
-      - name: Cypress run
-        run: npm run --prefix ./Frontend/spg-frontend/ cypress:runci
+      - name: cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: Frontend/spg-frontend
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 100
+        
