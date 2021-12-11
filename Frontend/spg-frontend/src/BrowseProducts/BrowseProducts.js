@@ -174,7 +174,7 @@ function BrowseProducts(props) {
         const handleShow = () => setShow(true);
 
         return (<>
-            <Button variant="success" size="lg" onClick={handleShow}
+            <Button id="basket" variant="success" size="lg" onClick={handleShow}
                     style={{position: 'fixed', bottom: '10px', left: '10px'}}>
                 🛒 {cart.length} item(s)
             </Button>
@@ -213,6 +213,7 @@ function BrowseProducts(props) {
         </Container>
     );
 }
+
 
 
 export {BrowseProducts}
