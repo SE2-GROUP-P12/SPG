@@ -172,7 +172,7 @@ function BrowseProducts(props) {
         const handleShow = () => setShow(true);
 
         return (<>
-        <Button id="basket" variant="success" size="lg" onClick={handleShow} style={{position: 'fixed', bottom: '10px', left: '10px'}}>
+        <Button variant="success" size="lg" onClick={handleShow} style={{position: 'fixed', bottom: '10px', left: '10px'}}>
             🛒 {cart.length} item(s)
         </Button>
         <Offcanvas show={show} onHide={handleClose}>
