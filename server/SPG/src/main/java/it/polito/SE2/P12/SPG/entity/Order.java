@@ -48,9 +48,14 @@ public class Order {
     private Double value;
     @Column(name = "status")
     private String status = ORDER_STATUS_OPEN;
+    @Column(name = "deliveryDate")
+    private Date deliveryDate;
+    @Column(name = "deliveryAddress")
+    private String deliveryAddress;
 
 
-    public Order(OrderUserType cust, long date, Map<Product, Double> prods) {
+
+    public Order(OrderUserType cust, long date, Map<Product, Double> prods, Date deliveryDate, String deliveryAddress) {
         this.cust = (User) cust;
         this.date = new java.util.Date(date);
         this.creation_date = LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault());
@@ -60,6 +65,9 @@ public class Order {
         for (Map.Entry<Product, Double> e : prods.entrySet()) {
             this.value += e.getKey().getPrice() * e.getValue();
         }
+        if (deliveryDate==null)deliveryDate = new Date(0);
+        else deliveryDate = deliveryDate;
+        deliveryAddress = deliveryAddress;
     }
 
     public List<Product> getProductList() {
