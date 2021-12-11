@@ -24,7 +24,7 @@ public class Customer extends User implements BasketUserType, OrderUserType, Wal
     private Double wallet = 0.00;
     @OneToOne(mappedBy = "cust")
     private Basket basket;
-    @OneToMany(mappedBy = "cust")
+    @OneToMany(mappedBy = "cust", fetch = FetchType.EAGER)
     private List<Order> orders;
     @OneToMany(mappedBy = "cust")
     private List<WalletOperation> walletOperations;

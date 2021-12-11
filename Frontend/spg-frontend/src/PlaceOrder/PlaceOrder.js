@@ -84,7 +84,7 @@ function PlaceOrder(props) {
 
     if (triggerError === true) {
         return (
-            <Redirect to="/ErrorHandler" />
+            <Redirect to="/ErrorHandler"/>
         );
     }
 
@@ -165,7 +165,8 @@ function printOrder(prod) {
     if (prod === null)
         return (<h2>The cart is empty </h2>);
     for (let p of prod) {
-        output.push(<OrderEntry product={p}/>);
+        console.log("product-id: " + p.productId)
+        output.push(<OrderEntry product={p} key={p.productId.toString()} value={p.productId}/>);
         total += p.price * p.quantityAvailable;
     }
     output.push(

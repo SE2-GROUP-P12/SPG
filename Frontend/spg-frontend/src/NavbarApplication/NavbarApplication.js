@@ -58,7 +58,7 @@ function NavbarApplication(props) {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto"></Nav>
                     <Nav>
-                        {props.topUpWarning.exist === "true" && props.loggedUserRole === 'CUSTOMER' ?
+                        {props.isLoggedFlag && props.topUpWarning.exist === "true" && props.loggedUserRole === 'CUSTOMER' ?
                             <OverlayTrigger
                                 delay={{show: 250, hide: 400}}
                                 overlay={<Tooltip id="button-tooltip">{props.topUpWarning.message}</Tooltip>}

@@ -191,7 +191,7 @@ test ("double decimal digits", async() => {
     getByText("Deliver Order");
     getByText("Email:");
     getByText("Submit customer");
-    await waitFor(()=>{
+    waitFor(()=>{
         getByText(/225.00€/);
     })
 });
