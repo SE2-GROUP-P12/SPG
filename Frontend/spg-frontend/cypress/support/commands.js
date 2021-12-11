@@ -71,10 +71,14 @@ Cypress.Commands.add('logout', ()=> {
 })
 
 Cypress.Commands.add('checkCustomer', () => {
-    cy.checkUrl('/Customer');
-    cy.contains('Customer').should('exist');
+    cy.checkUrl('/Dashboard');
+    cy.contains('WELCOME BACK').should('exist');
+    cy.contains('Here you are your services').should('exist');
+    cy.contains('Your Cart').should('exist');
+    cy.contains('Your Orders').should('exist');
     cy.contains('Browse Products').should('exist');
-    cy.contains('Place Order').should('exist');
+    cy.contains('Your Wallet').should('exist');
+    cy.contains('Settings').should('exist');
 })
 
 Cypress.Commands.add('checkBrowseProducts', () => {

@@ -19,7 +19,7 @@ context('customer workflow', () => {
 
         cy.checkCustomer();
 
-        cy.contains('Browse Products').click();
+        cy.get('[id=button-BrowseProducts]').click();
         cy.checkBrowseProducts();
 
         

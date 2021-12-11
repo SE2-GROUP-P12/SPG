@@ -48,7 +48,7 @@ function Dashboard(props) {
                     <Grid container>
                         <Grid item xs={12}>
                             <Link to={props.service.linkUrl}>
-                                <Button variant="success" size="lg"> {props.service.buttonLabel} </Button>
+                                <Button id={`button-${props.service.buttonLabel.replace(/\s/gm, '')}`} variant="success" size="lg"> {props.service.buttonLabel} </Button>
                             </Link>
                         </Grid>
                     </Grid>
