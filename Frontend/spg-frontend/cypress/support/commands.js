@@ -45,27 +45,29 @@ Cypress.Commands.add('checkHomepage', () => {
 });
 
 Cypress.Commands.add('login', (email, password) => {
-    cy.get('[id=logout]').then(()=>{
-        cy.get('[id=logout]').click();
-        cy.checkUrl('/');
-        cy.get('[id=login]').should('exist');
-    }).then(()=>{
-        cy.get('[id=login]').then(() => {
-            cy.get('[id=login]').click();
-            cy.checkUrl('/LoginComponent');
-            cy.contains('Login').should('exist');
-            cy.contains('Email:').should('exist');
-            cy.contains('Password:').should('exist');
-            cy.contains('Back').should('exist');
-            cy.get('[type=submit]').should('exist');
-            
-            cy.get('[id=email]').type(email);
-            cy.get('[id=password]').type(password);
-            cy.get('[type=submit]').click();
+    cy.get('[id=login]').should('exist');
+    cy.get('[id=login]').click();
+    cy.checkUrl('/LoginComponent');
+    cy.contains('Login').should('exist');
+    cy.contains('Email:').should('exist');
+    cy.contains('Password:').should('exist');
+    cy.contains('Back').should('exist');
+    cy.get('[type=submit]').should('exist');
+    
+    cy.get('[id=email]').type(email);
+    cy.get('[id=password]').type(password);
+    cy.get('[type=submit]').click();
 
-            cy.get('[id=logout]').should('exist');
-        })
-    })
+    cy.get('[id=logout]').should('exist');
+})
+
+Cypress.Commands.add('logout', ()=> {
+    cy.get('[id=logout').should('exist');
+    cy.get('[id=logout').click();
+
+    cy.get('[id=login').should('exist');
+    cy.checkUrl("/");
+
 })
 
 Cypress.Commands.add('checkCustomer', () => {
@@ -78,7 +80,15 @@ Cypress.Commands.add('checkCustomer', () => {
 Cypress.Commands.add('checkBrowseProducts', () => {
     cy.checkUrl('/BrowseProducts')
     cy.contains('Products List').should('exist');
+    
+    //Spinner
     cy.get('[role=status]').should('exist');
     cy.get('[id=basket]').should('exist');
     cy.contains('Back').should('exist');
+
+    //TODO: Gestire meglio la wait
+    cy.wait(1000);
+
+    cy.get('[alt=fruit]').should('exist')
 })
+

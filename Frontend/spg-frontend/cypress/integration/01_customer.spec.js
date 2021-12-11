@@ -21,5 +21,10 @@ context('customer workflow', () => {
 
         cy.contains('Browse Products').click();
         cy.checkBrowseProducts();
+
+        
+
+        cy.logout();
     })
+
 })
