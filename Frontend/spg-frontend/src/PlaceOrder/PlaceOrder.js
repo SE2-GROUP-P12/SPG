@@ -123,14 +123,18 @@ function PlaceOrder(props) {
 
     const ReviewOrderComponent = (props) => {
         const [showDate, setShowDate] = useState(true);
-        const [pickUpDate, setPickUpDate] = useState(0);
-        const [label, setLabel] = useState("PICK_UP");
+        const [pickUpDate, setPickUpDate] = useState("");
+        const [pickUpTime, setPickUpTime] = useState("");
+        const [label, setLabel] = useState("SKIP FOR NOW");
         const [errorDate, setErrorDate] = useState(false);
+        const [showAddressForm, setShowAddressForm] = useState(false);
+        const [shippingSelector, setShippingSelector] = useState("DELIVERY");
+
 
         const onChangeDateHandler = (date) => {
             let dateObj = new Date(date);
             if ([3, 4, 5].includes(dateObj.getDay())) {
-                let tmp = dateObj.getTime();
+                let tmp = "" + dateObj.getDay() + "/" + dateObj.getMonth() + "/" + dateObj.getFullYear();
                 setPickUpDate(tmp);
                 console.log(tmp);
                 setErrorDate(false);
@@ -138,16 +142,49 @@ function PlaceOrder(props) {
                 setErrorDate(true);
         }
 
+        const onChangeTimeHandler = (time) => {
+            console.log(time)
+            setPickUpTime(time.toString());
+        }
+
 
         const selectAlertType = () => {
 
+            const handleDeliverySelectionSwitch = () => {
+                console.log(shippingSelector === "DELIVERY")
+                if (shippingSelector === "DELIVERY")
+                    setShippingSelector("PICK UP");
+                setShippingSelector("DELIVERY");
+            }
+
+
             const getAlertBasedPicker = (variant) => {
+
+
                 return (
-                    <Alert variant={variant}>
-                        <reactForm.Control type="date" name="dob" placeholder="Pick up date"
-                                           onChange={(event) => onChangeDateHandler(event.target.value)}
-                                           value="12/02/1222"/>
-                    </Alert>
+                    <>
+                        <h6>When deliver your order:</h6>
+                        <Alert className="mt-3" variant={variant}>
+                            <reactForm.Control type="date" name="deliveryDate" placeholder="delivery date"
+                                               onChange={(event) => onChangeDateHandler(event.target.value)}
+                            />
+                            <reactForm.Control className="mt-3" type="time" name="deliveryTime" className="mt-3"
+                                               onChange={(event) => onChangeTimeHandler(event.target.value)}/>
+                        </Alert>
+                        <h6>Where deliver your order:</h6>
+                        <Alert className="mt-3" variant={variant}>
+                            <reactForm.Check type="switch"
+                                             label={(shippingSelector === "DELIVERY") ? "Delivery" : "Pick Up"}
+                                             onClick={() => handleDeliverySelectionSwitch()}/>
+                            {
+                                showAddressForm === true ?
+                                    <reactForm.Control type="text" name="deliveryDate" placeholder="delivery address"
+                                                       onChange={(event) => onChangeDateHandler(event.target.value)}
+                                    />
+                                    : ""
+                            }
+                        </Alert>
+                    </>
                 )
             }
 
@@ -174,12 +211,12 @@ function PlaceOrder(props) {
 
         const changeCheckBoxHanlder = () => {
             if (!showDate) {
-                setLabel("PICK UP");
+                setLabel("SKIP FOR NOW");
                 //reset status
                 setErrorDate(false);
                 setPickUpDate(-1);
             } else
-                setLabel("DELIVERY");
+                setLabel("SET SHIPPING INFO");
             setShowDate(!showDate);
         }
 
@@ -201,10 +238,10 @@ function PlaceOrder(props) {
                     <div>
                         <Row>
                             <Col>
-                                <b>{label} </b>
+                                <h5 variant="success">SHIPPING INFO </h5>
                             </Col>
                             <Col>
-                                <reactForm.Check type="switch" label={label}
+                                <reactForm.Check type="switch" label={label} claaName="success"
                                                  onChange={() => changeCheckBoxHanlder()}
                                                  checked={showDate}/>
                             </Col>
@@ -217,7 +254,8 @@ function PlaceOrder(props) {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="success" disabled={pickUpDate === 0} onClick={() => placeOrder(pickUpDate, null)}>Place
+                    <Button variant="success" disabled={pickUpDate === 0}
+                            onClick={() => placeOrder(pickUpDate, null)}>Place
                         Order</Button>
                 </Modal.Footer>
             </Modal>
@@ -229,9 +267,11 @@ function PlaceOrder(props) {
             <h1>Place Order</h1>
             <ReviewOrderComponent/>
             {itsTime ? null :
-                <Alert variant='warning'> It's possible to place orders only from Saturday at 9am to Sunday at
+                <Alert variant='warning'> It's possible to place orders only from Saturday at 9am to
+                    Sunday at
                     11pm</Alert>}
-            {error ? <Alert variant='danger'>Something went wrong, couldn't retrieve order</Alert> : null}
+            {error ? <Alert variant='danger'>Something went wrong, couldn't retrieve
+                order</Alert> : null}
             <div id="container" className="pagecontent">
                 <ul className="list-group">{printOrder(order)}</ul>
             </div>
@@ -250,7 +290,7 @@ function PlaceOrder(props) {
                                 let presentEmail = await API.customerExistsByMail(values.email)
                                 setCustomerError(!presentEmail);
                                 if (presentEmail) {
-                                    console.log("CHECKPOINT, EMAIL:" + values.email + " ORDER:" + JSON.stringify(order) + " itsTime:" + itsTime);
+                                    //console.log("CHECKPOINT, EMAIL:" + values.email + " ORDER:" + JSON.stringify(order) + " itsTime:" + itsTime);
                                     setCustomer(values.email);
                                     setCustomerSuccess(true);
                                 }
@@ -264,7 +304,8 @@ function PlaceOrder(props) {
                                     <Button style={{margin: '20px'}} type="submit" variant="success">Submit
                                         customer</Button>
                                     {errors.email && touched.email ? errors.email : null}
-                                    {customerError ? <Alert variant='danger'> User not found </Alert> : null}
+                                    {customerError ?
+                                        <Alert variant='danger'> User not found </Alert> : null}
                                     {customerSuccess ?
                                         <Alert variant='success'> User found, you can now place their
                                             order </Alert> : null}
@@ -274,7 +315,8 @@ function PlaceOrder(props) {
                                     {sendError ?
                                         <Alert variant='danger'> Something went wrong sending your
                                             order </Alert> : null}
-                                    {sendSuccess ? <Alert variant='success'> Order sent successfully </Alert> : null}
+                                    {sendSuccess ? <Alert variant='success'> Order sent
+                                        successfully </Alert> : null}
                                 </Form>
                             }
                         </Formik>
@@ -283,12 +325,14 @@ function PlaceOrder(props) {
                     ""}
             </div>
             <Row>
-                <Col xs={4}><Link to="/Dashboard"><Button variant='secondary'>Back</Button></Link></Col>
+                <Col xs={4}><Link to="/Dashboard"><Button
+                    variant='secondary'>Back</Button></Link></Col>
                 <Col xs={4}><Button disabled={order.length === 0 ? true : false} variant='danger'
                                     onClick={dropOrder}>Delete
                     order</Button></Col>
-                <Col xs={4}><Button disabled={(!itsTime || order.length === 0 || customer === null) ? true : false}
-                                    variant='success' onClick={() => showModalHanlder()}>Send order</Button></Col>
+                <Col xs={4}><Button
+                    disabled={(!itsTime || order.length === 0 || customer === null) ? true : false}
+                    variant='success' onClick={() => showModalHanlder()}>Send order</Button></Col>
             </Row>
         </>
     );
