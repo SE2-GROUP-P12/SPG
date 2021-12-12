@@ -213,7 +213,7 @@ async function placeOrder(data) {
         const response = await fetch("/api/customer/placeOrder", {
             method: 'POST',
             headers: getAuthenticationHeaders(),
-            body: JSON.stringify({'email': data.email, 'customer': data.customer})
+            body: JSON.stringify(data)
         });
         if (response.ok)
             return true;

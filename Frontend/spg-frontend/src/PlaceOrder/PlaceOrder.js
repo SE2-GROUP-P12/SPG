@@ -7,13 +7,15 @@ import Spinner from 'react-bootstrap/Spinner';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+import {Modal, Form as reactForm} from 'react-bootstrap';
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 import {API} from '../API/API';
 
+
 function PlaceOrder(props) {
     const [customer, setCustomer] = useState("");
-    const [order, setOrder] = useState(null);
+    const [order, setOrder] = useState([]);
     const [error, setError] = useState(false);
     const [customerError, setCustomerError] = useState(false);
     const [customerSuccess, setCustomerSuccess] = useState(false);
@@ -22,6 +24,8 @@ function PlaceOrder(props) {
     const [sendSuccess, setSendSuccess] = useState(false);
     const [triggerError, setTriggerError] = useState(false);
     const [loading, setLoading] = useState(true);
+    //Modal confirm placd order
+    const [modalShow, setModalShow] = useState(false);
 
     async function _getCart() {
         const prod = await API.getCart({'email': localStorage.getItem("username")}, props.setErrorMessage);
@@ -51,14 +55,24 @@ function PlaceOrder(props) {
             setDeleteError(true);
     }
 
-    const placeOrder = async () => {
+    const placeOrder = async (pickUpDate, pickUpAddress) => {
         setSendError(false);
         setSendSuccess(false);
         let outcome;
         if (props.loggedUserRole === "EMPLOYEE")
-            outcome = await API.placeOrder({'email': localStorage.getItem("username"), 'customer': customer});
+            outcome = await API.placeOrder({
+                'email': localStorage.getItem("username"),
+                'customer': customer,
+                'deliveryDate': pickUpDate,
+                'deliveryAddress': ''
+            });
         else
-            outcome = await API.placeOrder({'email': "", 'customer': localStorage.getItem("username")});
+            outcome = await API.placeOrder({
+                'email': "",
+                'customer': localStorage.getItem("username"),
+                'deliveryDate': pickUpDate,
+                'deliveryAddress': ''
+            });
         if (outcome) {
             setOrder(null);
             setSendSuccess(true);
@@ -68,7 +82,17 @@ function PlaceOrder(props) {
             /* NEW */
         } else
             setSendError(true);
+        setOrder([]);
     }
+
+    const showModalHanlder = () => {
+        setModalShow(true);
+    }
+
+    const handleClose = () => {
+        setModalShow(false);
+    }
+
 
     /*TIME MACHINE MANAGEMENT*/
     const [itsTime, setItsTime] = useState(false)
@@ -94,9 +118,116 @@ function PlaceOrder(props) {
         </Spinner>
     }
 
+
+    //MODAL REVIEW COMPONENT
+
+    const ReviewOrderComponent = (props) => {
+        const [showDate, setShowDate] = useState(true);
+        const [pickUpDate, setPickUpDate] = useState(0);
+        const [label, setLabel] = useState("PICK_UP");
+        const [errorDate, setErrorDate] = useState(false);
+
+        const onChangeDateHandler = (date) => {
+            let dateObj = new Date(date);
+            if ([3, 4, 5].includes(dateObj.getDay())) {
+                let tmp = dateObj.getTime();
+                setPickUpDate(tmp);
+                console.log(tmp);
+                setErrorDate(false);
+            } else
+                setErrorDate(true);
+        }
+
+
+        const selectAlertType = () => {
+
+            const getAlertBasedPicker = (variant) => {
+                return (
+                    <Alert variant={variant}>
+                        <reactForm.Control type="date" name="dob" placeholder="Pick up date"
+                                           onChange={(event) => onChangeDateHandler(event.target.value)}
+                                           value="12/02/1222"/>
+                    </Alert>
+                )
+            }
+
+
+            if (!errorDate) {
+                if (pickUpDate === 0)
+                    return getAlertBasedPicker("")
+                else
+                    return getAlertBasedPicker("success")
+            } else
+                return getAlertBasedPicker("danger")
+        }
+
+        //console.log(order)
+
+        const getOrderTotalAmount = () => {
+            let total = 0.00;
+            for (let p of order) {
+                total += p.price * p.quantityAvailable;
+            }
+            return total.toFixed(2);
+        }
+
+
+        const changeCheckBoxHanlder = () => {
+            if (!showDate) {
+                setLabel("PICK UP");
+                //reset status
+                setErrorDate(false);
+                setPickUpDate(-1);
+            } else
+                setLabel("DELIVERY");
+            setShowDate(!showDate);
+        }
+
+        return (<Modal
+                show={modalShow}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <h3>Review and comfirme order</h3>
+                </Modal.Header>
+                <Modal.Body>
+                    <b>ISSUER: </b> {localStorage.getItem("role") === "EPLOYEE" ? customer : localStorage.getItem("username")}
+                    <br/>
+                    <br/>
+                    <b>AMOUNT: </b> {getOrderTotalAmount()}
+                    <br/><br/>
+                    <div>
+                        <Row>
+                            <Col>
+                                <b>{label} </b>
+                            </Col>
+                            <Col>
+                                <reactForm.Check type="switch" label={label}
+                                                 onChange={() => changeCheckBoxHanlder()}
+                                                 checked={showDate}/>
+                            </Col>
+                        </Row>
+                    </div>
+                    {showDate === true ? selectAlertType() : "HANDLE SENDING TO THE CURRENT CUSTOMER ADDRESS"}
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="success" disabled={pickUpDate === 0} onClick={() => placeOrder(pickUpDate, null)}>Place
+                        Order</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
     return (
         <>
             <h1>Place Order</h1>
+            <ReviewOrderComponent/>
             {itsTime ? null :
                 <Alert variant='warning'> It's possible to place orders only from Saturday at 9am to Sunday at
                     11pm</Alert>}
@@ -135,11 +266,14 @@ function PlaceOrder(props) {
                                     {errors.email && touched.email ? errors.email : null}
                                     {customerError ? <Alert variant='danger'> User not found </Alert> : null}
                                     {customerSuccess ?
-                                        <Alert variant='success'> User found, you can now place their order </Alert> : null}
+                                        <Alert variant='success'> User found, you can now place their
+                                            order </Alert> : null}
                                     {deleteError ?
-                                        <Alert variant='danger'> Something went wrong emptying your cart </Alert> : null}
+                                        <Alert variant='danger'> Something went wrong emptying your
+                                            cart </Alert> : null}
                                     {sendError ?
-                                        <Alert variant='danger'> Something went wrong sending your order </Alert> : null}
+                                        <Alert variant='danger'> Something went wrong sending your
+                                            order </Alert> : null}
                                     {sendSuccess ? <Alert variant='success'> Order sent successfully </Alert> : null}
                                 </Form>
                             }
@@ -150,10 +284,11 @@ function PlaceOrder(props) {
             </div>
             <Row>
                 <Col xs={4}><Link to="/Dashboard"><Button variant='secondary'>Back</Button></Link></Col>
-                <Col xs={4}><Button disabled={order === null ? true : false} variant='danger' onClick={dropOrder}>Delete
+                <Col xs={4}><Button disabled={order.length === 0 ? true : false} variant='danger'
+                                    onClick={dropOrder}>Delete
                     order</Button></Col>
-                <Col xs={4}><Button disabled={(!itsTime || order === null || customer === null) ? true : false}
-                                    variant='success' onClick={placeOrder}>Send order</Button></Col>
+                <Col xs={4}><Button disabled={(!itsTime || order.length === 0 || customer === null) ? true : false}
+                                    variant='success' onClick={() => showModalHanlder()}>Send order</Button></Col>
             </Row>
         </>
     );
@@ -187,4 +322,7 @@ function OrderEntry(props) {
 }
 
 
-export {PlaceOrder, printOrder}
+export
+{
+    PlaceOrder, printOrder
+}
