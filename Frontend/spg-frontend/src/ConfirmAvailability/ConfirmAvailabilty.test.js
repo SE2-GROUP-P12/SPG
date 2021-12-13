@@ -27,7 +27,9 @@ test('renders correctly', async() => {
         }]});
     const {getByText, getByAltText} = render(
         <Router>
-            <ConfirmAvailability/>
+            <ConfirmAvailability
+                date={"Sun"}
+            />
         </Router>);
     await waitFor(()=>{
         getByText("Confirm availabilities for the next week");
@@ -65,7 +67,9 @@ test('confirm forecasted', async() => {
     mockSubmitConfirmed.mockResolvedValueOnce(true);
     const {getByText} = render(
         <Router>
-            <ConfirmAvailability/>
+            <ConfirmAvailability
+                date={"Sun"}
+            />
         </Router>);
     await waitFor(()=>{
         getByText(/0 Kg confirmed/)
@@ -104,7 +108,9 @@ test('confirm all forecasted', async() => {
     mockSubmitConfirmed.mockResolvedValueOnce(true);
     const {getByText} = render(
         <Router>
-            <ConfirmAvailability/>
+            <ConfirmAvailability
+                date={"Sun"}
+            />
         </Router>);
     await waitFor(()=>{
         getByText(/0 Kg confirmed/)
@@ -143,7 +149,9 @@ test ('set forecast', async ()=>{
     mockSubmitConfirmed.mockResolvedValueOnce(true);
     const {getByText, getByLabelText, getAllByText} = render(
         <Router>
-            <ConfirmAvailability/>
+            <ConfirmAvailability
+            date={"Sun"}
+            />
         </Router>);
     await waitFor(()=>{
         getByText(/0 Kg confirmed/)
@@ -157,5 +165,20 @@ test ('set forecast', async ()=>{
     fireEvent.click(getByText("Submit"));
     await waitFor(()=>{
         getByText("Your availabilities have been communicated with success")
+    })
+})
+
+test("Wrong day", async() =>{
+    localStorage.setItem("username", "thomas.jefferson@gmail.com");
+    const mockGetProducts = (API.browseProductsByFarmer = jest.fn());
+    mockGetProducts.mockResolvedValueOnce({data: []});
+    const {getByText} = render(
+        <Router>
+            <ConfirmAvailability
+                date={"Tue"}
+            />
+        </Router>);
+    await waitFor(()=>{
+        getByText("It's possible to confirm availabilities only from Saturday at 9am to Monday at 9 am");
     })
 })
