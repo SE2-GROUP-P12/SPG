@@ -80,7 +80,7 @@ jobs:
             -Dsonar.testExecutionReportPaths=reports/test-reporter.xml
             -Dsonar.sources=.
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.coverage.exclusions=**/*.test.js, **cypress/**/*.js
+            -Dsonar.coverage.exclusions=**/*.test.js,**cypress/**/*.js
             -Dsonar.projectName=SPG
             -Dsonar.projectVersion=1.0
         env:
