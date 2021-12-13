@@ -148,7 +148,8 @@ function App() {
                             <Farmer/>
                         </Route>
                         <Route exact path="/ProductsForecast">
-                            <ProductsForecast/>
+                            <ProductsForecast
+                                setErrorMessage={setErrorMessage}/>
                         </Route>
                         <Route exact path="/AddProduct">
                             <AddProduct/>
