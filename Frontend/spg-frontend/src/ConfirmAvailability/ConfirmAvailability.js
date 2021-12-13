@@ -30,6 +30,20 @@ function ConfirmAvailability(props) {
     const [availabilities, setAvailabilities] = useState([]);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+    /*TIME MACHINE MANAGEMENT*/
+    const [itsTime, setItsTime] = useState(false)
+    useEffect(() => {
+        let checkTime = (time, date) => {
+            console.log("CHECKTIME CONFIRM AVAILABILITY: " + time + " " + date);
+            if ((date === 'Sat' && time >= '09:00') || (date === 'Mon' && time < '09:00') || (date === 'Sun'))
+                setItsTime(true);
+            else
+                setItsTime(false);
+        }
+        checkTime(props.time, props.date);
+    }, [props.date, props.time])
+
+
     const handleConfirm = async (productId, quantityConfirmed) => {
         //Parameters must be present
         if (productId === undefined || quantityConfirmed === undefined) {
@@ -107,11 +121,11 @@ function ConfirmAvailability(props) {
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button className="card-button" variant="success"
+                            <Grid item xs={12}> <Button disabled={!itsTime} className="card-button" variant="success"
                                                         onClick={() => handleConfirm(props.product.productId, props.product.quantityForecast)}> Confirm
                                 Forecasted
                                 Availability </Button></Grid>
-                            <Grid item xs={12}> <Button className="card-button" variant="success"
+                            <Grid item xs={12}> <Button disabled={!itsTime} className="card-button" variant="success"
                                                         onClick={handleShow}> Set Availability </Button>
                             </Grid>
                         </Grid>
@@ -192,9 +206,13 @@ function ConfirmAvailability(props) {
         <Container fluid>
             <h1>Confirm availabilities for the next week</h1>
             <br/>
+            {itsTime ? null :
+                <Alert variant='warning'> It's possible to confirm availabilities only from Saturday at 9am to Monday at
+                    9 am</Alert>}
+            <br/>
             <Row>
                 <Col>
-                    <Button variant="success" onClick={() =>
+                    <Button disabled={!itsTime} variant="success" onClick={() =>
                         products.forEach(x => {
                             handleConfirm(x.productId, x.quantityForecast)
                         })
@@ -220,7 +238,7 @@ function ConfirmAvailability(props) {
             </Grid>
             <Link to='/Dashboard'><Button style={{position: 'fixed', bottom: '10px', left: '10px'}}
                                           variant='secondary'>Back</Button></Link>
-            <Button onClick={handleSubmit}
+            <Button onClick={handleSubmit} disabled={!itsTime}
                     style={{position: 'fixed', bottom: '10px', right: '10px'}}
                     variant="success">Submit</Button>
             {/*Successful submit modal*/}
@@ -236,10 +254,6 @@ function ConfirmAvailability(props) {
                     </Link>
                 </Modal.Footer>
             </Modal>
-            <pre>
-            {
-                JSON.stringify(availabilities, null, 2)
-            }</pre>
         </Container>
     )
 }
