@@ -1,6 +1,7 @@
 package it.polito.SE2.P12.SPG.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
 import it.polito.SE2.P12.SPG.entity.*;
@@ -385,14 +386,27 @@ public class SpgController {
         )
             return ResponseEntity.badRequest().build();
         Long productId = Long.parseLong(requestMap.get(Constants.JSON_PRODUCT_ID).toString());
-        product = productService.getProductById(productId);
-        if (product == null)
-            return ResponseEntity.badRequest().build();
         forecast = Double.valueOf(requestMap.get(Constants.JSON_QUANTITY).toString());
         /*start = (Double) requestMap.get("quantityForecast");
         end = (Double) requestMap.get("quantityForecast");*/
-        if (!productService.setForecast(product, forecast))
+        if (!productService.setForecast(productId, forecast))
             return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(API.REPORT_CONFIRMED)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE','ROLE_FARMER')")
+    public ResponseEntity<Map<String, String>> reportConfirmed(@RequestBody String jsonData) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(jsonData);
+        if (!jsonNode.isArray())
+            return ResponseEntity.badRequest().build();
+        for (int i = 0; i < jsonNode.size(); i++) {
+            Long productId = jsonNode.get(i).get("productId").asLong();
+            Double quantityConfirmed = jsonNode.get(i).get("quantityConfirmed").asDouble();
+            if (!productService.confirmQuantity(productId, quantityConfirmed))
+                return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok().build();
     }
 

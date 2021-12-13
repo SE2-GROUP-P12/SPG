@@ -43,15 +43,21 @@ public class SpgProductService {
         return productRepo.findProductByProductId(productId);
     }
 
-    public Boolean setForecast(Product product, Double forecast) {
+    public Boolean setForecast(Long productId, Double forecast) {
         if (forecast < 0.0 || Double.isNaN(forecast) || Double.isInfinite(forecast))
+            return false;
+        Product product = productRepo.findProductByProductId(productId);
+        if (product == null)
             return false;
         product.setQuantityForecast(forecast);
         productRepo.save(product);
         return true;
     }
 
+    /*
     public boolean setForecast(Product product, Double forecast, String start, String end) {
+        if (forecast < 0.0 || Double.isNaN(forecast) || Double.isInfinite(forecast))
+            return false;
         product.setQuantityForecast(forecast);
         product.setStartAvailability(start);
         product.setEndAvailability(end);
@@ -59,7 +65,6 @@ public class SpgProductService {
         return true;
     }
 
-    /*
     public boolean setForecast(Long productId, Farmer farmer, Double forecast, String start, String end) {
         Product product = productRepo.findProductByProductId(productId);
         if (product == null){
@@ -76,10 +81,21 @@ public class SpgProductService {
 
     public boolean addProduct(String productName, Double price, String unitOfMeasurement, String imageUrl, Farmer farmer) {
         Product p;
-        if (imageUrl.isEmpty() || imageUrl.isBlank() || imageUrl == null)
+        if (imageUrl == null || imageUrl.isEmpty() || imageUrl.isBlank())
             p = new Product(productName, unitOfMeasurement, 0.0, price, farmer);
         else
             p = new Product(productName, unitOfMeasurement, 0.0, price, imageUrl, farmer);
+        productRepo.save(p);
+        return true;
+    }
+
+    public Boolean confirmQuantity(Long productId, Double quantityConfirmed) {
+        if (productId == null || quantityConfirmed < 0 || quantityConfirmed.isInfinite() || quantityConfirmed.isNaN())
+            return false;
+        Product p = productRepo.findProductByProductId(productId);
+        if (p == null)
+            return false;
+        p.setQuantityConfirmed(quantityConfirmed);
         productRepo.save(p);
         return true;
     }

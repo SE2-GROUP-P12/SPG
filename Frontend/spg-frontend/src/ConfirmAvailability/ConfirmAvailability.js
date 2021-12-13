@@ -37,31 +37,25 @@ function ConfirmAvailability(props) {
             return
         }
 
-        if (availabilities.filter(x => x.id == productId).length === 0) {
+        if (availabilities.filter(x => x.productId == productId).length === 0) {
             setAvailabilities(x => [...x, {
-                'id': productId,
+                'productId': productId,
                 'quantityConfirmed': quantityConfirmed
             }])
         } else {
             let newAvailabilities = [...availabilities];
-            let index = availabilities.findIndex(x => x.id === productId)
+            let index = availabilities.findIndex(x => x.productId === productId)
             newAvailabilities[index].quantityConfirmed = quantityConfirmed;
             setAvailabilities(newAvailabilities);
         }
     }
 
     async function handleSubmit() {
-        const data = {
-            'email': email,
-            'availabilities': availabilities
-        }
-
-        if (await API.submitAvailabilities(data) !== undefined) {
+        if (await API.submitConfirmed(availabilities) !== undefined) {
             setShowSuccessModal(true);
         } else {
             setTriggerError(true)
         }
-
     }
 
     async function _browseProductsByFarmer() {
@@ -80,7 +74,7 @@ function ConfirmAvailability(props) {
 
     useEffect(async () => {
         products.filter(x => x.quantityConfirmed > 0).forEach(y => handleConfirm(y.productId, y.quantityConfirmed));
-    },[products])
+    }, [products])
 
     function ProductEntry(props) {
         const [show, setShow] = useState(false);
@@ -89,8 +83,8 @@ function ConfirmAvailability(props) {
         const [showSuccess, setShowSuccess] = useState(null);
         const [showError, setShowError] = useState(null)
 
-        let currentlyConfirmed = availabilities.filter(x => x.id === props.product.productId).length > 0 ?
-            availabilities.filter(x => x.id === props.product.productId)[0].quantityConfirmed : 0
+        let currentlyConfirmed = availabilities.filter(x => x.productId === props.product.productId).length > 0 ?
+            availabilities.filter(x => x.productId === props.product.productId)[0].quantityConfirmed : 0
 
         return (
             <>

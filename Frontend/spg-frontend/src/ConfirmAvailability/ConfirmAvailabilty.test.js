@@ -44,7 +44,7 @@ test('renders correctly', async() => {
 test('confirm forecasted', async() => {
     localStorage.setItem("username", "thomas.jefferson@gmail.com");
     const mockGetProducts = (API.browseProductsByFarmer = jest.fn());
-    const mockSubmitAvailabilities = (API.submitAvailabilities = jest.fn());
+    const mockSubmitConfirmed = (API.submitConfirmed = jest.fn());
     mockGetProducts.mockResolvedValueOnce({data: [{
             endAvailability: null,
             farmer: 5,
@@ -62,7 +62,7 @@ test('confirm forecasted', async() => {
             totalQuantity: 50,
             unitOfMeasurement: "Kg"
         }]});
-    mockSubmitAvailabilities.mockResolvedValueOnce(true);
+    mockSubmitConfirmed.mockResolvedValueOnce(true);
     const {getByText} = render(
         <Router>
             <ConfirmAvailability/>
@@ -83,7 +83,7 @@ test('confirm forecasted', async() => {
 test('confirm all forecasted', async() => {
     localStorage.setItem("username", "thomas.jefferson@gmail.com");
     const mockGetProducts = (API.browseProductsByFarmer = jest.fn());
-    const mockSubmitAvailabilities = (API.submitAvailabilities = jest.fn());
+    const mockSubmitConfirmed = (API.submitConfirmed = jest.fn());
     mockGetProducts.mockResolvedValueOnce({data: [{
             endAvailability: null,
             farmer: 5,
@@ -101,7 +101,7 @@ test('confirm all forecasted', async() => {
             totalQuantity: 50,
             unitOfMeasurement: "Kg"
         }]});
-    mockSubmitAvailabilities.mockResolvedValueOnce(true);
+    mockSubmitConfirmed.mockResolvedValueOnce(true);
     const {getByText} = render(
         <Router>
             <ConfirmAvailability/>
@@ -122,7 +122,7 @@ test('confirm all forecasted', async() => {
 test ('set forecast', async ()=>{
     localStorage.setItem("username", "thomas.jefferson@gmail.com");
     const mockGetProducts = (API.browseProductsByFarmer = jest.fn());
-    const mockSubmitAvailabilities = (API.submitAvailabilities = jest.fn());
+    const mockSubmitConfirmed = (API.submitConfirmed = jest.fn());
     mockGetProducts.mockResolvedValueOnce({data: [{
             endAvailability: null,
             farmer: 5,
@@ -140,7 +140,7 @@ test ('set forecast', async ()=>{
             totalQuantity: 50,
             unitOfMeasurement: "Kg"
         }]});
-    mockSubmitAvailabilities.mockResolvedValueOnce(true);
+    mockSubmitConfirmed.mockResolvedValueOnce(true);
     const {getByText, getByLabelText, getAllByText} = render(
         <Router>
             <ConfirmAvailability/>

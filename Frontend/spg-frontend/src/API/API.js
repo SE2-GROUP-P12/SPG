@@ -383,9 +383,24 @@ async function addCustomer(data) {
 }
 
 async function modifyForecast(data) {
-    console.log(JSON.stringify(data));
     try {
         await fetch("/api/farmer/reportExpected",
+            {
+                method: 'POST',
+                headers: getAuthenticationHeaders(),
+                body: JSON.stringify(data)
+            });
+    } catch
+        (err) {
+        console.log(err);
+        return undefined;
+    }
+    return true;
+}
+
+async function submitConfirmed(data) {
+    try {
+        await fetch("/api/farmer/submitConfirmed",
             {
                 method: 'POST',
                 headers: getAuthenticationHeaders(),
@@ -489,6 +504,7 @@ const API = {
     addProduct,
     getWalletWarning,
     timeTravel,
+    submitConfirmed
 };
 export { API }
 
