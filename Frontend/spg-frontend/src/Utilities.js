@@ -63,7 +63,7 @@ function getAllServices() {
             "type": "Your Orders",
             "description": "Handle your orders and check tehir status in a simple way",
             "imageUrl": OrderImg,
-            "buttonLabel": "show orders",
+            "buttonLabel": "Show Orders",
             "linkUrl": "/Customer/Orders",
             "rolesPermitted": ['CUSTOMER', 'ADMIN']
         },
@@ -143,9 +143,19 @@ function getAllServices() {
     return customerServices;
 }
 
+
+function getAllShippingMode() {
+    const allShippingMode = [
+        {'name': 'Pick up', status: false},
+        {'name': 'Home delivery', status: true}
+    ];
+    return allShippingMode;
+}
+
 //Exporting functions
 export {
     buildLoginBody,
     getSalt,
     getAllServices,
+    getAllShippingMode,
 }
