@@ -35,13 +35,20 @@ context('customer workflow', () => {
         cy.get(':nth-child(1) > .MuiPaper-root > .MuiCardActions-root > .MuiGrid-container > .MuiGrid-root > .btn').click();
         cy.get('[id=amount]').clear().type('1');
         cy.get('[id=button-addtocart]').click();
-        
         cy.contains('Close').click();
-        cy.get('#basket').click();
 
+        //TODO: test checkout and basket pop-up
+        // cy.contains('Check out').click();
 
-        cy.contains('Check out').click();
+        cy.get('#dashboard').click();
+        cy.wait(2000);
+        cy.get('#button-ShowCart').click({force:true});
+        cy.contains('Apple').should('exist');
+        cy.get('.btn').contains('Delete order').click();
 
+        cy.wait(2000);
         cy.logout();
     })
+
+
 })
