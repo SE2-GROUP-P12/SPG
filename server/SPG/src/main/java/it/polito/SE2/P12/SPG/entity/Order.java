@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -53,6 +54,10 @@ public class Order {
     @Column(name = "deliveryAddress")
     private String deliveryAddress;
 
+    private Long convertDate(Date date) {
+        Timestamp t = Timestamp.valueOf(String.format("%d-%d-%d %d:%d:00", date.getYear(), date.getMonth(), date.getDay(), date.getHours(), date.getMinutes()));
+        return t.getTime();
+    }
 
 
     public Order(OrderUserType cust, long date, Map<Product, Double> prods, Date deliveryDate, String deliveryAddress) {
@@ -65,9 +70,12 @@ public class Order {
         for (Map.Entry<Product, Double> e : prods.entrySet()) {
             this.value += e.getKey().getPrice() * e.getValue();
         }
-        if (deliveryDate==null)deliveryDate = new Date(0);
-        else deliveryDate = deliveryDate;
-        deliveryAddress = deliveryAddress;
+        if (deliveryDate == null)
+            this.deliveryDate = new Date(0);
+        else {
+            this.deliveryDate = deliveryDate;
+            this.deliveryAddress = deliveryAddress;
+        }
     }
 
     public List<Product> getProductList() {

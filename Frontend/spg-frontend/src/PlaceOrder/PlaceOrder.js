@@ -85,7 +85,7 @@ function PlaceOrder(props) {
             /* NEW */
         } else
             setSendError(true);
-        setModalShow(false);
+        //setModalShow(false);
     }
 
     const showModalHanlder = () => {
@@ -346,8 +346,9 @@ function PlaceOrder(props) {
                     <h4>Order Completed</h4>
                 </Modal.Header>
                 <Modal.Body>
-                    {sendError === true ? <Alert variant="success">Order placed correctly! </Alert> :
-                        <Alert variant="warning">Error in placed order, retry!</Alert>}
+                    {sendError === true ?
+                        <Alert variant="warning">Error in placed order, please retry!</Alert> :
+                        <Alert variant="success">Congratulations, order placed correctly!</Alert>}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="success" onClick={() => {
