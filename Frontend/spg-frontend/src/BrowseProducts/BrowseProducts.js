@@ -88,7 +88,7 @@ function BrowseProducts(props) {
                     </CardContent>
                     {props.isLogged ? <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Add to cart </Button>
+                            <Grid item xs={12}> <Button key={`button-addtocart-${pe_props.product.productId}`} variant="success" onClick={handleShow}> Add to cart </Button>
                             </Grid>
                         </Grid>
                     </CardActions> : <></>}
@@ -137,7 +137,7 @@ function BrowseProducts(props) {
                                                    max={pe_props.product.quantityAvailable}
                                                    min={0}/> {pe_props.product.unitOfMeasurement}
                                             <br/>
-                                            <Button style={{margin: '20px'}} type="submit" variant="success">Add to
+                                            <Button id='button-addtocart' style={{margin: '20px'}} type="submit" variant="success">Add to
                                                 cart</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
@@ -183,7 +183,7 @@ function BrowseProducts(props) {
                 <Offcanvas.Body>
                     {error === true ? <Alert variant='danger'>Something went wrong</Alert> : printOrder(cart)}
                     <Button style={{margin: '20px'}} variant="secondary" onClick={handleClose}>Close</Button>
-                    <Link to="/PlaceOrder"><Button style={{margin: '20px'}} variant="success">Check out</Button></Link>
+                    <Link to="/PlaceOrder"><Button id='button-PlaceOrder' style={{margin: '20px'}} variant="success">Check out</Button></Link>
                 </Offcanvas.Body>
             </Offcanvas>
         </>);
