@@ -11,6 +11,7 @@ import {Modal, Form as reactForm} from 'react-bootstrap';
 import {Formik, Form, Field} from 'formik';
 import * as Yup from 'yup';
 import {API} from '../API/API';
+import {getAllShippingMode} from '../Utilities';
 
 
 function PlaceOrder(props) {
@@ -25,6 +26,7 @@ function PlaceOrder(props) {
     const [triggerError, setTriggerError] = useState(false);
     const [loading, setLoading] = useState(true);
     //Modal confirm placd order
+    //Modal confirm placd orde
     const [modalShow, setModalShow] = useState(false);
 
     async function _getCart() {
@@ -55,7 +57,7 @@ function PlaceOrder(props) {
             setDeleteError(true);
     }
 
-    const placeOrder = async (pickUpDate, pickUpAddress) => {
+    const placeOrder = async (pickUpDate, pickUpAddress, time) => {
         setSendError(false);
         setSendSuccess(false);
         let outcome;
@@ -63,15 +65,15 @@ function PlaceOrder(props) {
             outcome = await API.placeOrder({
                 'email': localStorage.getItem("username"),
                 'customer': customer,
-                'deliveryDate': pickUpDate,
-                'deliveryAddress': ''
+                'deliveryDate': pickUpDate + ((time.split(':')[0] * 3600 + time.split(':')[1] * 60) + 0),
+                'deliveryAddress': pickUpAddress,
             });
         else
             outcome = await API.placeOrder({
                 'email': "",
                 'customer': localStorage.getItem("username"),
-                'deliveryDate': pickUpDate,
-                'deliveryAddress': ''
+                'deliveryDate': pickUpDate + ((time.split(':')[0] * 3600 + time.split(':')[1] * 60) + 0),
+                'deliveryAddress': pickUpAddress,
             });
         if (outcome) {
             setOrder(null);
@@ -123,79 +125,134 @@ function PlaceOrder(props) {
 
     const ReviewOrderComponent = (props) => {
         const [showDate, setShowDate] = useState(true);
-        const [pickUpDate, setPickUpDate] = useState("");
+        const [pickUpDate, setPickUpDate] = useState(-1);
         const [pickUpTime, setPickUpTime] = useState("");
-        const [label, setLabel] = useState("SKIP FOR NOW");
+        const [showShippingInfo, setShowShppingInfo] = useState("SKIP FOR NOW");
         const [errorDate, setErrorDate] = useState(false);
         const [showAddressForm, setShowAddressForm] = useState(false);
-        const [shippingSelector, setShippingSelector] = useState("DELIVERY");
+        const [checkBoxStatus, setChechBoxStatus] = useState([true, false]);
+        const [customAddress, setCustomAddress] = useState("");
+        const [enableButton, setEnableButton] = useState(false);
 
+        const enableButtonHandler = (date, time, address) => {
+            //Pick up Selected
+            const tmp = new Date(date * 1000);
+            if (checkBoxStatus[0] === true) {
+                if (date < (Date.now() / 1000)) {
+                    setEnableButton(false);
+                    return;
+                }
+                //check if day is from Wednsday to Friday (add check on time...)
+                if (![3, 4, 5].includes(tmp.getDay()) || (0 + time.split(':')[0]) > 17 || (0 + time.split(':')[0]) < 9 || time === "") {
+                    setEnableButton(false);
+                    return;
+                }
+                setEnableButton(true);
+                return;
+            }
+            //Delivery Selected
+            else if (checkBoxStatus[1] === true) {
+                if (date < (Date.now() / 1000)) {
+                    setEnableButton(false);
+                    return;
+                }
+                //check if day is from Wednsday to Friday (add check on time...)
+                if (![3, 4, 5].includes(tmp.getDay()) || (0 + time.split(':')[0]) > 17 || (0 + time.split(':')[0]) < 9 || time === "") {
+                    setEnableButton(false);
+                    return;
+                }
+                if (address === "") {
+                    setEnableButton(false);
+                    return;
+                }
+                setEnableButton(true);
+            }
+        }
 
         const onChangeDateHandler = (date) => {
-            let dateObj = new Date(date);
+            let dateObj = new Date(date.replaceAll('-', '.'));
             if ([3, 4, 5].includes(dateObj.getDay())) {
-                let tmp = "" + dateObj.getDay() + "/" + dateObj.getMonth() + "/" + dateObj.getFullYear();
+                let tmp = dateObj.getTime() / 1000;
                 setPickUpDate(tmp);
-                console.log(tmp);
                 setErrorDate(false);
             } else
                 setErrorDate(true);
         }
 
         const onChangeTimeHandler = (time) => {
-            console.log(time)
             setPickUpTime(time.toString());
         }
 
 
         const selectAlertType = () => {
 
-            const handleDeliverySelectionSwitch = () => {
-                console.log(shippingSelector === "DELIVERY")
-                if (shippingSelector === "DELIVERY")
-                    setShippingSelector("PICK UP");
-                setShippingSelector("DELIVERY");
-            }
-
 
             const getAlertBasedPicker = (variant) => {
+                const shippingMode = getAllShippingMode();
 
+                function shippingModeCheckHandler(index) {
+                    console.log("here: ", index);
+                    let tmp = checkBoxStatus;
+                    let i;
+                    for (i = 0; i < tmp.length; i++)
+                        if (i === index)
+                            tmp[i] = true;
+                        else
+                            tmp[i] = false;
+                    setCustomAddress("");
+                    tmp[index] = true;
+                    setChechBoxStatus([...tmp]);
+                }
 
                 return (
-                    <>
+                    <div className="mt-3">
                         <h6>When deliver your order:</h6>
-                        <Alert className="mt-3" variant={variant}>
-                            <reactForm.Control type="date" name="deliveryDate" placeholder="delivery date"
-                                               onChange={(event) => onChangeDateHandler(event.target.value)}
+                        <Alert className="mt-2" variant={variant}>
+                            <Alert> <b>NOTICE</b>: Delivery and Pick up are available Wednedasy, Thursday and Friday from 9:00
+                                to 18:00.
+                            </Alert>
+                            <reactForm.Control className="mt-3" type="date" name="deliveryDate"
+                                               placeholder="delivery date"
+                                               onChange={async (event) => {
+                                                   await onChangeDateHandler(event.target.value);
+                                                   await enableButtonHandler(new Date(event.target.value), pickUpTime, customAddress);
+                                               }}
                             />
                             <reactForm.Control className="mt-3" type="time" name="deliveryTime" className="mt-3"
-                                               onChange={(event) => onChangeTimeHandler(event.target.value)}/>
+                                               onChange={(event) => {
+                                                   onChangeTimeHandler(event.target.value);
+                                                   enableButtonHandler(pickUpDate, event.target.value, customAddress);
+                                               }}/>
                         </Alert>
                         <h6>Where deliver your order:</h6>
                         <Alert className="mt-3" variant={variant}>
-                            <reactForm.Check type="switch"
-                                             label={(shippingSelector === "DELIVERY") ? "Delivery" : "Pick Up"}
-                                             onClick={() => handleDeliverySelectionSwitch()}/>
-                            {
-                                showAddressForm === true ?
-                                    <reactForm.Control type="text" name="deliveryDate" placeholder="delivery address"
-                                                       onChange={(event) => onChangeDateHandler(event.target.value)}
-                                    />
-                                    : ""
-                            }
+                            {shippingMode.map((value, index) => <reactForm.Check key={index} label={value.name}
+                                                                                 onChange={() => {
+                                                                                     shippingModeCheckHandler(index);
+                                                                                     enableButtonHandler(pickUpDate, pickUpDate, customAddress)
+                                                                                 }}
+                                                                                 checked={checkBoxStatus[index]}/>)}
                         </Alert>
-                    </>
+                        <reactForm.Control type="text" name="deliveryDate" placeholder="delivery address"
+                                           onChange={(event) => {
+                                               setCustomAddress(event.target.value);
+                                               enableButtonHandler(pickUpDate, pickUpTime, event.target.value);
+                                           }}
+                                           value={customAddress}
+                                           disabled={!checkBoxStatus[1] === true}
+                        />
+                    </div>
                 )
             }
 
 
             if (!errorDate) {
-                if (pickUpDate === 0)
+                if (pickUpDate === "")
                     return getAlertBasedPicker("")
                 else
-                    return getAlertBasedPicker("success")
+                    return getAlertBasedPicker("")
             } else
-                return getAlertBasedPicker("danger")
+                return getAlertBasedPicker("")
         }
 
         //console.log(order)
@@ -211,12 +268,12 @@ function PlaceOrder(props) {
 
         const changeCheckBoxHanlder = () => {
             if (!showDate) {
-                setLabel("SKIP FOR NOW");
+                setShowShppingInfo("SKIP FOR NOW");
                 //reset status
                 setErrorDate(false);
                 setPickUpDate(-1);
             } else
-                setLabel("SET SHIPPING INFO");
+                setShowShppingInfo("SET SHIPPING INFO");
             setShowDate(!showDate);
         }
 
@@ -241,22 +298,28 @@ function PlaceOrder(props) {
                                 <h5 variant="success">SHIPPING INFO </h5>
                             </Col>
                             <Col>
-                                <reactForm.Check type="switch" label={label} claaName="success"
+                                <reactForm.Check type="switch" label={showShippingInfo} claaName="success"
                                                  onChange={() => changeCheckBoxHanlder()}
                                                  checked={showDate}/>
                             </Col>
                         </Row>
                     </div>
-                    {showDate === true ? selectAlertType() : "HANDLE SENDING TO THE CURRENT CUSTOMER ADDRESS"}
+                    {showDate === true ? selectAlertType() :
+                        <Alert variant="warning">Don't forget to set up your shipping info!</Alert>}
 
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="success" disabled={pickUpDate === 0}
-                            onClick={() => placeOrder(pickUpDate, null)}>Place
-                        Order</Button>
+                    {showShippingInfo === "SKIP FOR NOW" ? <Button variant="success" disabled={!enableButton}
+                                                                   onClick={() => placeOrder(pickUpDate, customAddress, pickUpTime)}>
+                            Place Order</Button>
+                        :
+                        <Button variant="success"
+                                onClick={() => placeOrder(-1, "", "")}>
+                            Place Order</Button>}
+
                 </Modal.Footer>
             </Modal>
         );

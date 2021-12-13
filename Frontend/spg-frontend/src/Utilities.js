@@ -143,9 +143,19 @@ function getAllServices() {
     return customerServices;
 }
 
+
+function getAllShippingMode() {
+    const allShippingMode = [
+        {'name': 'Pick up', status: false},
+        {'name': 'Home delivery', status: true}
+    ];
+    return allShippingMode;
+}
+
 //Exporting functions
 export {
     buildLoginBody,
     getSalt,
     getAllServices,
+    getAllShippingMode,
 }
