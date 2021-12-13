@@ -33,6 +33,10 @@ public class Product {
     //Quantità prevista per la settimana seguente dal farmer. Da confermare.
     @Column(name = "quantity_forecast", nullable = false)
     private Double quantityForecast;
+    //Quantità attualmente confermata dal farmer,
+    //che alla fine della finestra di tempo di conferma, diventerà totalQuantity
+    @Column(name = "quantity_confirmed", nullable = false)
+    private Double quantityConfirmed;
     //Quantità di totalQuantity inserita nei carelli degli user
     @Column(name = "quantity_baskets", nullable = false)
     private Double quantityBaskets;
@@ -61,6 +65,7 @@ public class Product {
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityForecast = 0.0;
+        this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
@@ -75,6 +80,7 @@ public class Product {
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityForecast = 0.0;
+        this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
@@ -89,6 +95,7 @@ public class Product {
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityForecast = 0.0;
+        this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
@@ -102,6 +109,7 @@ public class Product {
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityForecast = 0.0;
+        this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
@@ -117,26 +125,13 @@ public class Product {
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityForecast = 0.0;
+        this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
         this.quantityDelivered = 0.0;
         this.price = price;
         this.farmer = farmer;
         this.imageUrl = imageUrl;
-    }
-
-    public Product(String name, String unitOfMeasurement, double price, Farmer farmer , Double quantityForecast) {
-        this.name = name;
-        this.unitOfMeasurement = unitOfMeasurement;
-        this.totalQuantity = 0.0;
-        this.quantityAvailable = 0.0;
-        this.quantityForecast = quantityForecast;
-        this.quantityBaskets = 0.0;
-        this.quantityOrdered = 0.0;
-        this.quantityDelivered = 0.0;
-        this.price = price;
-        this.farmer = farmer;
-        this.imageUrl = null;
     }
 
     public Boolean moveFromAvailableToBasket(Double quantity) {
@@ -186,7 +181,6 @@ public class Product {
         this.quantityDelivered += quantity;
         return true;
     }
-
 
 
     @Override

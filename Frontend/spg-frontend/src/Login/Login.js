@@ -2,8 +2,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
 import Button from "react-bootstrap/Button";
 import { Link, Redirect } from "react-router-dom";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import { Formik, Form, Field } from 'formik';
 import { buildLoginBody, getSalt } from '../Utilities';
 import Alert from "react-bootstrap/Alert";

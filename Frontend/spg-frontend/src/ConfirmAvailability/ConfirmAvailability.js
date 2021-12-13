@@ -28,8 +28,9 @@ function ConfirmAvailability(props) {
     const [triggerError, setTriggerError] = useState(false);
     const email = localStorage.getItem("username")
     const [availabilities, setAvailabilities] = useState([]);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-    const handleConfirm = (productId, quantityConfirmed) => {
+    const handleConfirm = async (productId, quantityConfirmed) => {
         //Parameters must be present
         if (productId === undefined || quantityConfirmed === undefined) {
             console.log("error")
@@ -39,21 +40,35 @@ function ConfirmAvailability(props) {
         if (availabilities.filter(x => x.id == productId).length === 0) {
             setAvailabilities(x => [...x, {
                 'id': productId,
-                'quantityAvailable': quantityConfirmed
+                'quantityConfirmed': quantityConfirmed
             }])
         } else {
             let newAvailabilities = [...availabilities];
             let index = availabilities.findIndex(x => x.id === productId)
-            newAvailabilities[index].quantityAvailable = quantityConfirmed;
-            setAvailabilities(x => newAvailabilities);
+            newAvailabilities[index].quantityConfirmed = quantityConfirmed;
+            setAvailabilities(() => newAvailabilities);
         }
+    }
+
+    async function handleSubmit() {
+        const data = {
+            'email': email,
+            'availabilities': availabilities
+        }
+
+        if (await API.submitAvailabilities(data) !== undefined) {
+            setShowSuccessModal(() => true);
+        } else {
+            setTriggerError(() => true)
+        }
+
     }
 
     async function _browseProductsByFarmer() {
         const data = await API.browseProductsByFarmer({'email': email, 'forecasted': true}, props.setErrorMessage);
-        //console.log(data);
         if (data !== null) {
-            setProducts(data['data']);
+            setProducts(data['data'])
+            products.filter((x) => x.quantityConfirmed > 0).forEach((x) => handleConfirm(x.productId, x.quantityConfirmed))
             setLoadCompleted(true);
         } else {
             console.log(data);
@@ -73,7 +88,7 @@ function ConfirmAvailability(props) {
         const [showError, setShowError] = useState(null)
 
         let currentlyConfirmed = availabilities.filter(x => x.id === props.product.productId).length > 0 ?
-            availabilities.filter(x => x.id === props.product.productId)[0].quantityAvailable : 0
+            availabilities.filter(x => x.id === props.product.productId)[0].quantityConfirmed : 0
 
         return (
             <>
@@ -187,7 +202,6 @@ function ConfirmAvailability(props) {
                 <Col>
                     <Button variant="success" onClick={() =>
                         products.forEach(x => {
-                            console.log(x)
                             handleConfirm(x.productId, x.quantityForecast)
                         })
                     }>Confirm all products</Button>
@@ -210,8 +224,24 @@ function ConfirmAvailability(props) {
                         </Grid>
                 }
             </Grid>
-            <Link to='/Dashboard'><Button style={{position: 'fixed', bottom: '10px', right: '10px'}}
+            <Link to='/Dashboard'><Button style={{position: 'fixed', bottom: '10px', left: '10px'}}
                                           variant='secondary'>Back</Button></Link>
+            <Button onClick={handleSubmit}
+                    style={{position: 'fixed', bottom: '10px', right: '10px'}}
+                    variant="success">Submit</Button>
+            {/*Successful submit modal*/}
+            <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+                <Modal.Body>
+                    Your availabilities have been communicated with success
+                </Modal.Body>
+                <Modal.Footer>
+                    <Link to="/Dashboard">
+                        <Button variant="success">
+                            Return to the Dashboard
+                        </Button>
+                    </Link>
+                </Modal.Footer>
+            </Modal>
             <pre>
             {
                 JSON.stringify(availabilities, null, 2)
