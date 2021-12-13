@@ -211,14 +211,14 @@ function PlaceOrder(props) {
                                 from 9:00
                                 to 18:00.
                             </Alert>
-                            <reactForm.Control className="mt-3" type="date" name="deliveryDate"
+                            <reactForm.Control className="mt-3" type="date" name="deliveryDate" label="date"
                                                placeholder="delivery date"
                                                onChange={async (event) => {
                                                    await onChangeDateHandler(event.target.value);
                                                    await enableButtonHandler(new Date(event.target.value), pickUpTime, customAddress);
                                                }}
                             />
-                            <reactForm.Control className="mt-3" type="time" name="deliveryTime" className="mt-3"
+                            <reactForm.Control className="mt-3" type="time" name="deliveryTime" label="time"
                                                onChange={(event) => {
                                                    onChangeTimeHandler(event.target.value);
                                                    enableButtonHandler(pickUpDate, event.target.value, customAddress);
@@ -233,7 +233,7 @@ function PlaceOrder(props) {
                                                                                  }}
                                                                                  checked={checkBoxStatus[index]}/>)}
                         </Alert>
-                        <reactForm.Control type="text" name="deliveryDate" placeholder="delivery address"
+                        <reactForm.Control type="text" name="deliveryDate" placeholder="delivery address" label="address"
                                            onChange={(event) => {
                                                setCustomAddress(event.target.value);
                                                enableButtonHandler(pickUpDate, pickUpTime, event.target.value);
@@ -290,7 +290,7 @@ function PlaceOrder(props) {
                     <h3>Review and comfirme order</h3>
                 </Modal.Header>
                 <Modal.Body>
-                    <b>ISSUER: </b> {localStorage.getItem("role") === "EPLOYEE" ? customer : localStorage.getItem("username")}
+                    <b>ISSUER: </b> {localStorage.getItem("role") === "EMPLOYEE" ? customer : localStorage.getItem("username")}
                     <br/>
                     <br/>
                     <b>AMOUNT: </b> {getOrderTotalAmount()}

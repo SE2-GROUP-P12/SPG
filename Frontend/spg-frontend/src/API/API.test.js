@@ -600,3 +600,35 @@ test ("getWalletWarning catch", async() => {
     const resp = await API.getWalletWarning('mario.rossi@gmail.com');
     expect(resp).toBe(undefined);
 })
+
+test ("timeTravel ok", async() =>{
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200
+        })
+    )
+    const resp = await API.timeTravel();
+    expect(resp).toBe(true);
+})
+
+
+test ("timeTravel fail", async() =>{
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 500
+        })
+    )
+    const resp = await API.timeTravel();
+    expect(resp).toBe(false);
+})
+
+
+test ("timeTravel catch", async() =>{
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.timeTravel();
+    expect(resp).toBe(undefined);
+})
