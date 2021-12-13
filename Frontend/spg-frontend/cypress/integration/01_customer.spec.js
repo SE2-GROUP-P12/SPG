@@ -39,7 +39,8 @@ context('customer workflow', () => {
         cy.contains('Close').click();
         cy.get('#basket').click();
 
-        //cy.contains('Check out',{timeout: 10000}).click();
+
+        cy.contains('Check out').click();
 
         cy.logout();
     })
