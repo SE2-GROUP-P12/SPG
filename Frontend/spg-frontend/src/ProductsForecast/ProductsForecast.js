@@ -28,7 +28,7 @@ function ProductsForecast(props) {
     const email = localStorage.getItem("username")
 
     async function _browseProductsByFarmer() {
-        const data = await API.browseProductsByFarmer({'email':email}, props.setErrorMessage);
+        const data = await API.browseProductsByFarmer({'email': email}, props.setErrorMessage);
         //console.log(data);
         if (data !== null) {
             setProducts(data['data']);
@@ -66,13 +66,15 @@ function ProductsForecast(props) {
                             {props.product.name}
                         </Typography>
                         <Typography variant="body">
-                            {props.product.quantityForecast} {props.product.unitOfMeasurement} currently forecasted <br/>
+                            {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                            forecasted <br/>
                             {props.product.price.toFixed(2)}€/{props.product.unitOfMeasurement}
                         </Typography>
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Modify Forecast </Button>
+                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Modify
+                                Forecast </Button>
                             </Grid>
                         </Grid>
                     </CardActions>
@@ -84,14 +86,16 @@ function ProductsForecast(props) {
                     setShowSuccess(null);
                 }}>
                     <Modal.Header>
-                        <Modal.Title>Modify Forecast</Modal.Title>
+                        <Modal.Title>Modify Forecast for {props.product.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                        <img src={props.product.imageUrl == null ? fruit : props.product.imageUrl} alt="fruit" style={{width: '150px', height: '150px'}}/>
+                            <img src={props.product.imageUrl == null ? fruit : props.product.imageUrl} alt="fruit"
+                                 style={{width: '150px', height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
-                                    {props.product.name} : {props.product.quantityForecast}{props.product.unitOfMeasurement} currently forecasted
+                                    {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                                    forecasted
                                 </Col>
                             </Row>
                             <Row>
@@ -118,7 +122,8 @@ function ProductsForecast(props) {
                                             <Field type="number" id="amount" name="amount"
                                                    min={0}/> {props.product.unitOfMeasurement}
                                             <br/>
-                                            <Button style={{margin: '20px'}} type="submit" variant="success">Modify Forecast</Button>
+                                            <Button style={{margin: '20px'}} type="submit" variant="success">Modify
+                                                Forecast</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
                                                 <Alert variant='success'>{showSuccess}</Alert> : null}
@@ -150,27 +155,27 @@ function ProductsForecast(props) {
     }
 
     return (
-        localStorage.getItem('role') == 'FARMER' ?
-            <Container fluid>
-                <h1>Products List</h1>
-                <Grid container spacing={2}>
-                    {
-                        loadCompleted === true ?
-                            products.map((prod, index) =>
-                                <Grid item xs={12} sm={6} md={4} align="center">
-                                    <ProductEntry key={index} product={prod}></ProductEntry>
-                                </Grid>)
-                            :
-                            <Grid xs={12} item align="center">
-                                <Spinner animation="border" role="status">
-                                    <span className="visually-hidden">Loading...</span>
-                                </Spinner>
-                            </Grid>
-                    }
-                </Grid>
-                <Link to='/Dashboard'><Button style={{position: 'fixed', bottom: '10px', right: '10px'}} variant='secondary'>Back</Button></Link>
-            </Container> : <></>
-    );
+        <Container fluid>
+            <h1>Products List</h1>
+            <Grid container spacing={2}>
+                {
+                    loadCompleted === true ?
+                        products.map((prod, index) =>
+                            <Grid item xs={12} sm={6} md={4} align="center">
+                                <ProductEntry key={index} product={prod}></ProductEntry>
+                            </Grid>)
+                        :
+                        <Grid xs={12} item align="center">
+                            <Spinner animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner>
+                        </Grid>
+                }
+            </Grid>
+            <Link to='/Dashboard'><Button style={{position: 'fixed', bottom: '10px', right: '10px'}}
+                                          variant='secondary'>Back</Button></Link>
+        </Container>
+    )
 }
 
 export {ProductsForecast}

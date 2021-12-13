@@ -13,4 +13,6 @@ public interface ProductRepo
     Product findProductByProductId(Long productId);
     Product findProductByName(String name);
     List<Product> findProductsByFarmer_Email(String email);
+    List<Product> findProductsByFarmer_EmailAndAndQuantityForecastGreaterThan(String email, Double quantity);
+    List<Product> findProductsByFarmer_EmailAndQuantityForecastEquals(String email, Double quantity);
 }

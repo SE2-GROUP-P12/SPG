@@ -7,10 +7,6 @@ import {FastField, Form, Field, Formik} from "formik";
 import * as Yup from "yup";
 import {API} from "../API/API";
 import Alert from "react-bootstrap/Alert";
-import {Dropdown} from "react-bootstrap";
-import DropdownItem from "react-bootstrap/DropdownItem";
-import DropdownMenu from "react-bootstrap/DropdownMenu";
-import DropdownToggle from "react-bootstrap/DropdownToggle";
 import {useState} from 'react';
 
 const possibleUnits = ['Kg', 'gr', 'L', 'ml', 'units']

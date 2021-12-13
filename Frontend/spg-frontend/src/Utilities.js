@@ -2,6 +2,7 @@ import CartImg from './resources/cart.jpg'
 import OrderImg from './resources/orders.jpg'
 import WalletImg from './resources/wallett.jpg'
 import SettingImg from './resources/settings.jpg'
+import ConfirmImg from './resources/confirmImg.jpg'
 import browseProd from './resources/browseProd.jpg'
 import topUp from './resources/topUp.jpg'
 import handleOrders from './resources/handleOrders.jpg'
@@ -129,6 +130,15 @@ function getAllServices() {
             "buttonLabel": "Add Product",
             "linkUrl": "/AddProduct",
             "rolesPermitted": ['FARMER', 'ADMIN']
+        },
+        /*CONFIRM AVAILABILITY*/
+        {
+            "type": "Confirm Availability",
+            "description": "Confirm the availability for your forecasted products",
+            "imageUrl": ConfirmImg,
+            "buttonLabel": "Confirm Availability",
+            "linkUrl": "/ConfirmAvailability",
+            "rolesPermitted": ['FARMER']
         },
         /*USER SETTINGS*/
         {
