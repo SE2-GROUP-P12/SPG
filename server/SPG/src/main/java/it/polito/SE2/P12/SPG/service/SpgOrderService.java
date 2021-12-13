@@ -192,6 +192,7 @@ public class SpgOrderService {
         Order order = orderRepo.findOrderByOrderId(orderId);
         if(order==null) return false;
         order.setDeliveryDate(date);
+        orderRepo.save(order);
         return true;
     }
 
@@ -200,6 +201,7 @@ public class SpgOrderService {
         if(order==null) return false;
         order.setDeliveryDate(date);
         order.setDeliveryAddress(address);
+        orderRepo.save(order);
         return true;
     }
 }
