@@ -25,9 +25,10 @@ function PlaceOrder(props) {
     const [sendSuccess, setSendSuccess] = useState(false);
     const [triggerError, setTriggerError] = useState(false);
     const [loading, setLoading] = useState(true);
-    //Modal confirm placd order
-    //Modal confirm placd orde
     const [modalShow, setModalShow] = useState(false);
+    const [showEndRoutineModal, setShowEndRoutineModal] = useState(false);
+    const [itsTime, setItsTime] = useState(false)
+
 
     async function _getCart() {
         const prod = await API.getCart({'email': localStorage.getItem("username")}, props.setErrorMessage);
@@ -52,7 +53,7 @@ function PlaceOrder(props) {
     const dropOrder = async () => {
         let outcome = await API.dropOrder({'email': localStorage.getItem("username")});
         if (outcome)
-            setOrder(null);
+            setOrder([]);
         else
             setDeleteError(true);
     }
@@ -65,18 +66,18 @@ function PlaceOrder(props) {
             outcome = await API.placeOrder({
                 'email': localStorage.getItem("username"),
                 'customer': customer,
-                'deliveryDate': pickUpDate + ((time.split(':')[0] * 3600 + time.split(':')[1] * 60) + 0),
+                'deliveryDate': (pickUpDate + ((time.split(':')[0] * 3600 + time.split(':')[1] * 60) + 0)).toString(),
                 'deliveryAddress': pickUpAddress,
             });
         else
             outcome = await API.placeOrder({
                 'email': "",
                 'customer': localStorage.getItem("username"),
-                'deliveryDate': pickUpDate + ((time.split(':')[0] * 3600 + time.split(':')[1] * 60) + 0),
+                'deliveryDate': (pickUpDate + ((time.split(':')[0] * 3600 + time.split(':')[1] * 60) + 0)).toString(),
                 'deliveryAddress': pickUpAddress,
             });
         if (outcome) {
-            setOrder(null);
+            setOrder([]);
             setSendSuccess(true);
             /* NEW */
             let warning = await API.getWalletWarning(localStorage.getItem("username"));
@@ -84,7 +85,7 @@ function PlaceOrder(props) {
             /* NEW */
         } else
             setSendError(true);
-        setOrder([]);
+        setModalShow(false);
     }
 
     const showModalHanlder = () => {
@@ -97,7 +98,6 @@ function PlaceOrder(props) {
 
 
     /*TIME MACHINE MANAGEMENT*/
-    const [itsTime, setItsTime] = useState(false)
     useEffect(() => {
         let checkTime = (time, date) => {
             if ((date === 'Sat' && time >= '09:00') || (date === 'Sun' && time < '23:00'))
@@ -191,7 +191,6 @@ function PlaceOrder(props) {
                 const shippingMode = getAllShippingMode();
 
                 function shippingModeCheckHandler(index) {
-                    console.log("here: ", index);
                     let tmp = checkBoxStatus;
                     let i;
                     for (i = 0; i < tmp.length; i++)
@@ -208,7 +207,8 @@ function PlaceOrder(props) {
                     <div className="mt-3">
                         <h6>When deliver your order:</h6>
                         <Alert className="mt-2" variant={variant}>
-                            <Alert> <b>NOTICE</b>: Delivery and Pick up are available Wednedasy, Thursday and Friday from 9:00
+                            <Alert> <b>NOTICE</b>: Delivery and Pick up are available Wednedasy, Thursday and Friday
+                                from 9:00
                                 to 18:00.
                             </Alert>
                             <reactForm.Control className="mt-3" type="date" name="deliveryDate"
@@ -229,7 +229,7 @@ function PlaceOrder(props) {
                             {shippingMode.map((value, index) => <reactForm.Check key={index} label={value.name}
                                                                                  onChange={() => {
                                                                                      shippingModeCheckHandler(index);
-                                                                                     enableButtonHandler(pickUpDate, pickUpDate, customAddress)
+                                                                                     enableButtonHandler(pickUpDate, pickUpTime, customAddress)
                                                                                  }}
                                                                                  checked={checkBoxStatus[index]}/>)}
                         </Alert>
@@ -259,6 +259,9 @@ function PlaceOrder(props) {
 
         const getOrderTotalAmount = () => {
             let total = 0.00;
+            console.log('order ' + order);
+            if (order === null)
+                return 0.00;
             for (let p of order) {
                 total += p.price * p.quantityAvailable;
             }
@@ -313,11 +316,19 @@ function PlaceOrder(props) {
                         Close
                     </Button>
                     {showShippingInfo === "SKIP FOR NOW" ? <Button variant="success" disabled={!enableButton}
-                                                                   onClick={() => placeOrder(pickUpDate, customAddress, pickUpTime)}>
+                                                                   onClick={() => {
+                                                                       placeOrder(pickUpDate, customAddress, pickUpTime);
+                                                                       setModalShow(false);
+                                                                       setShowEndRoutineModal(true);
+                                                                   }}>
                             Place Order</Button>
                         :
                         <Button variant="success"
-                                onClick={() => placeOrder(-1, "", "")}>
+                                onClick={() => {
+                                    placeOrder(-1, "", "");
+                                    setModalShow(false);
+                                    setShowEndRoutineModal(true)
+                                }}>
                             Place Order</Button>}
 
                 </Modal.Footer>
@@ -328,6 +339,25 @@ function PlaceOrder(props) {
     return (
         <>
             <h1>Place Order</h1>
+            <Modal show={showEndRoutineModal}
+                   backdrop="static"
+                   keyboard={false}>
+                <Modal.Header>
+                    <h4>Order Completed</h4>
+                </Modal.Header>
+                <Modal.Body>
+                    {sendError === true ? <Alert variant="success">Order placed correctly! </Alert> :
+                        <Alert variant="warning">Error in placed order, retry!</Alert>}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="success" onClick={() => {
+                        setError(false);
+                        setShowEndRoutineModal(false);
+                    }}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             <ReviewOrderComponent/>
             {itsTime ? null :
                 <Alert variant='warning'> It's possible to place orders only from Saturday at 9am to
@@ -391,8 +421,7 @@ function PlaceOrder(props) {
                 <Col xs={4}><Link to="/Dashboard"><Button
                     variant='secondary'>Back</Button></Link></Col>
                 <Col xs={4}><Button disabled={order.length === 0 ? true : false} variant='danger'
-                                    onClick={dropOrder}>Delete
-                    order</Button></Col>
+                                    onClick={dropOrder}>Delete order</Button></Col>
                 <Col xs={4}><Button
                     disabled={(!itsTime || order.length === 0 || customer === null) ? true : false}
                     variant='success' onClick={() => showModalHanlder()}>Send order</Button></Col>
@@ -404,7 +433,7 @@ function PlaceOrder(props) {
 function printOrder(prod) {
     let output = [];
     let total = 0;
-    if (prod === null)
+    if (prod.length === 0)
         return (<h2>The cart is empty </h2>);
     for (let p of prod) {
         console.log("product-id: " + p.productId)
