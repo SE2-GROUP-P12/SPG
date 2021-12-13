@@ -46,7 +46,7 @@ function ConfirmAvailability(props) {
             let newAvailabilities = [...availabilities];
             let index = availabilities.findIndex(x => x.id === productId)
             newAvailabilities[index].quantityConfirmed = quantityConfirmed;
-            setAvailabilities(() => newAvailabilities);
+            setAvailabilities(newAvailabilities);
         }
     }
 
@@ -57,9 +57,9 @@ function ConfirmAvailability(props) {
         }
 
         if (await API.submitAvailabilities(data) !== undefined) {
-            setShowSuccessModal(() => true);
+            setShowSuccessModal(true);
         } else {
-            setTriggerError(() => true)
+            setTriggerError(true)
         }
 
     }
@@ -67,11 +67,9 @@ function ConfirmAvailability(props) {
     async function _browseProductsByFarmer() {
         const data = await API.browseProductsByFarmer({'email': email, 'forecasted': true}, props.setErrorMessage);
         if (data !== null) {
-            setProducts(data['data'])
-            products.filter((x) => x.quantityConfirmed > 0).forEach((x) => handleConfirm(x.productId, x.quantityConfirmed))
+            setProducts(data['data']);
             setLoadCompleted(true);
         } else {
-            console.log(data);
             setTriggerError(true);
         }
     }
@@ -79,6 +77,10 @@ function ConfirmAvailability(props) {
     useEffect(async () => {
         await _browseProductsByFarmer();
     }, []);
+
+    useEffect(async () => {
+        products.filter(x => x.quantityConfirmed > 0).forEach(y => handleConfirm(y.productId, y.quantityConfirmed));
+    },[products])
 
     function ProductEntry(props) {
         const [show, setShow] = useState(false);
@@ -179,8 +181,6 @@ function ConfirmAvailability(props) {
                             handleClose();
                             setShowError(null);
                             setShowSuccess(null);
-                            //TODO: Check correctness
-                            await _browseProductsByFarmer();
                         }}>
                             Close
                         </Button>
