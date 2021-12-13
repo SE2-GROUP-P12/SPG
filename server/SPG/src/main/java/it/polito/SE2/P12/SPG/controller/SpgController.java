@@ -182,7 +182,7 @@ public class SpgController {
         if (requestMap.isEmpty())
             return ResponseEntity.badRequest().build();
         if (requestMap.containsKey(Constants.JSON_DELIVERY_DATE)) {
-            date = new SimpleDateFormat("dd/MM/yyyy").parse(requestMap.get(Constants.JSON_DELIVERY_DATE).toString());
+            date = new java.util.Date((long)(requestMap.get(Constants.JSON_DELIVERY_DATE)));
         }
             if (requestMap.containsKey(Constants.JSON_DELIVERY_ADDRESS)) {
                 address =requestMap.get(Constants.JSON_DELIVERY_ADDRESS).toString();
@@ -388,7 +388,7 @@ public class SpgController {
                 !requestMap.containsKey(Constants.JSON_ORDER_ID) ||
                 !requestMap.containsKey(Constants.JSON_DELIVERY_DATE)
         ) return ResponseEntity.badRequest().build();
-        Date date =new SimpleDateFormat("dd/MM/yyyy").parse(requestMap.get(Constants.JSON_DELIVERY_DATE).toString());
+        Date date =new java.util.Date((long)(requestMap.get(Constants.JSON_DELIVERY_DATE)));
         Long orderId = Long.parseLong( requestMap.get(Constants.JSON_ORDER_ID).toString());
         if(!orderService.setDeliveryDate(orderId,date)) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok().build();
@@ -402,7 +402,7 @@ public class SpgController {
                 !requestMap.containsKey(Constants.JSON_DELIVERY_DATE)||
                 !requestMap.containsKey(Constants.JSON_DELIVERY_ADDRESS)
         ) return ResponseEntity.badRequest().build();
-        Date date =new SimpleDateFormat("dd/MM/yyyy").parse(requestMap.get(Constants.JSON_DELIVERY_DATE).toString());
+        Date date =new java.util.Date((long)(requestMap.get(Constants.JSON_DELIVERY_DATE)));
         String address =requestMap.get(Constants.JSON_DELIVERY_DATE).toString();
         Long orderId = Long.parseLong( requestMap.get(Constants.JSON_ORDER_ID).toString());
         if(!orderService.setDeliveryDateAndAddress(orderId,date,address)) return ResponseEntity.badRequest().build();
