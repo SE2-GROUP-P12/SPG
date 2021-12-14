@@ -332,12 +332,15 @@ public class SpgController {
 
     @GetMapping(API.GET_WALLET_OPERATIONS)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
-    public ResponseEntity getWalletOperation(@RequestParam String email) {
-        if (Boolean.FALSE.equals(userService.checkPresenceOfMail(email)))
-            return ResponseEntity.badRequest().body("Invalid email");
+    public ResponseEntity<Map<String,Object>> getWalletOperation(@RequestParam String email) {
+        Map<String, Object> responseMap = new HashMap<>();
+        if (Boolean.FALSE.equals(userService.checkPresenceOfMail(email))) {
+            responseMap.put(Constants.JSON_ERROR_MESSAGE, "Invalid email");
+            return ResponseEntity.badRequest().body(responseMap);
+        }
         //List<WalletOperation> walletOperations = walletOperationService.getWalletOperationsByEmail(email);
         Double walletValue = userService.getWallet(email);
-        Map<String, Object> responseMap = new HashMap<>();
+
         responseMap.put("walletValue", walletValue);
         responseMap.put("operations", walletOperationService.getWalletOperationsByEmail(email));
         return ResponseEntity.ok(responseMap);
@@ -515,12 +518,14 @@ public class SpgController {
             case "Sat":
                 dayToTravel = 7;
                 break;
+            default:
+                dayToTravel = 0;
         }
         timeOffset += ((7 + dayToTravel - dayOfWeek) % 7) * 24 * 60 * 60 * 1000;
         int currentHH = c.get(Calendar.HOUR_OF_DAY);
         int currentMM = c.get(Calendar.MINUTE);
-        timeOffset += ((hh - currentHH)) * 60 * 60 * 1000;
-        timeOffset += ((mm - currentMM)) * 60 * 1000;
+        timeOffset += (hh - currentHH) * 60 * 60 * 1000;
+        timeOffset += (mm - currentMM) * 60 * 1000;
         return ResponseEntity.ok().build();
     }
 
