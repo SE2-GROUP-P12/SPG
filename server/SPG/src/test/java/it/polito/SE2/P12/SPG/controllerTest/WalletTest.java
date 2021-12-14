@@ -138,7 +138,7 @@ public class WalletTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
         String responseJson = res.getResponse().getContentAsString();
-        Assertions.assertEquals("Invalid email", responseJson);
+        Assertions.assertEquals("{\"errorMessage\":\"Invalid email\"}", responseJson);
     }
 
     @Test
