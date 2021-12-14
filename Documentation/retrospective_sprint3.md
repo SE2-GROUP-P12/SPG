@@ -11,7 +11,7 @@
 
 - 5 stories committed vs 5 stories done
 - 20 points committed vs 20 points done
-- 8d 3h 20m (= 67h 20m) Nr of hours planned vs spent (as a team) 11d 2h 20m (= 90h 20m including planning )
+- 8d 7h 50m (= 71h 50m) Nr of hours planned vs spent (as a team) 11d 2h 20m (= 90h 20m including planning )
 
 Definition of Done:
 - Unit Tests passing *(with a little tollerance)*
@@ -53,7 +53,7 @@ Definition of Done:
 |            | SPG-132 | \-     | \-     |  4h       |  1h 30m   |
 |            | SPG-137 | \-     | \-     |  3h  30m  |  1h 45m   |
 | SPG-11     |     3    | \-     | 2      |           |           |
-|            | SPG-138 | \-     | \-     |  WTF      |  WTF      |
+|            | SPG-138 | \-     | \-     |  1h      |  4h 30m      |
 |            | SPG-151 | \-     | \-     |  30m      |  20m      |
 |            | SPG-152 | \-     | \-     |  30m      |  1h 15m   |
 | SPG-12     |     2    | \-     | 3      |           |           |
@@ -76,13 +76,13 @@ Definition of Done:
 
 **Total est:** 8d 3h 20m (= 67h 20m)
 
-**Total actual:** 11d 2h 20m (= 90h 20m including planning )
+**Total actual:** 11d 6h 50m (= 94h 50m including planning )
 
 - Hours per task (average, standard deviation)
-    - Average: 3h 20m
-    - Standard deviation: 5h 43m //TODO
+    - Average: 3h 36m
+    - Standard deviation: 5h 9m
 - Total task estimation error ratio:
-  - sum of total hours estimation / sum of total hours spent from previous table: 67.33/90.33 = 0.74
+  - sum of total hours estimation / sum of total hours spent from previous table: 71.83/90.33 = 0.80
 
 ## QUALITY MEASURES
 
