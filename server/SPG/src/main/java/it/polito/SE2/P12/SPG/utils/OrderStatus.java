@@ -1,6 +1,9 @@
 package it.polito.SE2.P12.SPG.utils;
 
 public class OrderStatus {
+    private OrderStatus() {
+        throw new IllegalStateException("Order status utility class");
+    }
     //Open: this should trigger the employee pending cancellation, the order can't be paid
     public static final String ORDER_STATUS_OPEN = "OPEN";
     //Confirmed: the order can be paid
