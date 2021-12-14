@@ -70,9 +70,10 @@ public class Order {
         for (Map.Entry<Product, Double> e : prods.entrySet()) {
             this.value += e.getKey().getPrice() * e.getValue();
         }
-        if (deliveryDate == null)
+        if (deliveryDate == null) {
             this.deliveryDate = new Date(0);
-        else {
+            this.deliveryAddress = "";
+        } else {
             this.deliveryDate = deliveryDate;
             this.deliveryAddress = deliveryAddress;
         }

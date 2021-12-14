@@ -34,6 +34,7 @@ public class Customer extends User implements BasketUserType, OrderUserType, Wal
                     String password, String address) {
         super(name, surname, ssn, phoneNumber, email, password);
         this.address = address;
+        this.role = UserRole.ROLE_CUSTOMER;
     }
 
     public Customer(String name, String surname, String ssn,

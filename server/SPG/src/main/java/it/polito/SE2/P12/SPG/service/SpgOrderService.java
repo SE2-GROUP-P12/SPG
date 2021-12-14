@@ -9,6 +9,8 @@ import it.polito.SE2.P12.SPG.repository.BasketRepo;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
+import it.polito.SE2.P12.SPG.utils.Constants;
+import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,19 +92,20 @@ public class SpgOrderService {
         }
         //if we exit the for loop we assume to have sufficient amount in the wallet
         order.updateToConfirmedStatus();
+
         orderRepo.save(order);
         return true;
     }
 
     //Basket viene convertito in un ordine per il possessore del basket
-    public Boolean addNewOrderFromBasket(Basket basket,long epoch, Date deliveryDate, String deliveryAddress) {
+    public Boolean addNewOrderFromBasket(Basket basket, long epoch, Date deliveryDate, String deliveryAddress) {
         if (!spgUserService.isOrderUserType(basket.getCust()))
             return false;
-        return addNewOrderFromBasket(basket, (OrderUserType) basket.getCust(), epoch, deliveryDate,deliveryAddress);
+        return addNewOrderFromBasket(basket, (OrderUserType) basket.getCust(), epoch, deliveryDate, deliveryAddress);
     }
 
     //Basket viene convertito in un ordine per user
-    public Boolean addNewOrderFromBasket(Basket basket, OrderUserType user,long epoch, Date deliveryDate, String deliveryAddress) {
+    public Boolean addNewOrderFromBasket(Basket basket, OrderUserType user, long epoch, Date deliveryDate, String deliveryAddress) {
         //Controlla se le quantità ordinate sono disponibile
         for (Map.Entry<Product, Double> e : basket.getProductQuantityMap().entrySet()) {
             if (e.getValue() > e.getKey().getQuantityAvailable())
@@ -115,8 +118,16 @@ public class SpgOrderService {
             p.moveFromAvailableToOrdered(q);
             productRepo.save(p);
         }
-        Order order = new Order((OrderUserType) user, epoch, basket.getProductQuantityMap(),  deliveryDate,  deliveryAddress);
-        return addNewOrder(order);
+        Order order = new Order((OrderUserType) user, epoch, basket.getProductQuantityMap(), deliveryDate, deliveryAddress);
+        boolean result = addNewOrder(order);
+        if (result) {
+            user.getOrders().add(order);
+            if (((User) user).getRole().equals(UserRole.ROLE_SHOP_EMPLOYEE))
+                userRepo.save((ShopEmployee) user);
+            else
+                userRepo.save((Customer) user);
+        }
+        return result;
     }
 
     public Boolean deliverOrder(Long orderId) {
@@ -157,7 +168,7 @@ public class SpgOrderService {
     public String getUserOrdersProductsJson(Long userId) {
         List<Order> orders = orderRepo.findAllByCust_UserId(userId);
         ObjectMapper mapper = new ObjectMapper();
-        String response=null;
+        String response = null;
         try {
             response = mapper.writeValueAsString(orders);
 
@@ -188,17 +199,17 @@ public class SpgOrderService {
         return response;
     }
 
-    public Boolean setDeliveryDate(Long orderId, Date date){
+    public Boolean setDeliveryDate(Long orderId, Date date) {
         Order order = orderRepo.findOrderByOrderId(orderId);
-        if(order==null) return false;
+        if (order == null) return false;
         order.setDeliveryDate(date);
         orderRepo.save(order);
         return true;
     }
 
-    public Boolean setDeliveryDateAndAddress(Long orderId, Date date,String address){
+    public Boolean setDeliveryDateAndAddress(Long orderId, Date date, String address) {
         Order order = orderRepo.findOrderByOrderId(orderId);
-        if(order==null) return false;
+        if (order == null) return false;
         order.setDeliveryDate(date);
         order.setDeliveryAddress(address);
         orderRepo.save(order);

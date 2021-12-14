@@ -287,7 +287,7 @@ function PlaceOrder(props) {
                 keyboard={false}
             >
                 <Modal.Header closeButton>
-                    <h3>Review and comfirme order</h3>
+                    <h3>Review and confirm order</h3>
                 </Modal.Header>
                 <Modal.Body>
                     <b>ISSUER: </b> {localStorage.getItem("role") === "EMPLOYEE" ? customer : localStorage.getItem("username")}
@@ -347,7 +347,7 @@ function PlaceOrder(props) {
                 </Modal.Header>
                 <Modal.Body>
                     {sendError === true ?
-                        <Alert variant="warning">Error in placed order, please retry!</Alert> :
+                        <Alert variant="danger">Error in placed order, please retry!</Alert> :
                         <Alert variant="success">Congratulations, order placed correctly!</Alert>}
                 </Modal.Body>
                 <Modal.Footer>
