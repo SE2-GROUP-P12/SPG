@@ -255,12 +255,12 @@ public class OrderServiceTest {
         orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
 
         Order order = orderRepo.findAll().get(0);
-        Date date = new SimpleDateFormat("dd/MM/yyyy").parse("31/12/2022");
+        Date date = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("31/12/2022 23:59");
         orderService.setDeliveryDate(order.getOrderId(), date);
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String strDate = dateFormat.format(date);
         Order order2 = orderRepo.findAll().get(0);
-        Assertions.assertEquals("31/12/2022",dateFormat.format(order2.getDeliveryDate()));
+        Assertions.assertEquals("31/12/2022 23:59",dateFormat.format(order2.getDeliveryDate()));
     }
 
     @Test
@@ -274,12 +274,12 @@ public class OrderServiceTest {
         orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
 
         Order order = orderRepo.findAll().get(0);
-        Date date = new SimpleDateFormat("dd/MM/yyyy").parse("31/12/2022");
+        Date date = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("31/12/2022 23:59");
         orderService.setDeliveryDateAndAddress(order.getOrderId(), date, "Main Street 1234");
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String strDate = dateFormat.format(date);
         Order order2 = orderRepo.findAll().get(0);
-        Assertions.assertEquals("31/12/2022",dateFormat.format(order2.getDeliveryDate()));
+        Assertions.assertEquals("31/12/2022 23:59",dateFormat.format(order2.getDeliveryDate()));
         Assertions.assertEquals("Main Street 1234",order2.getDeliveryAddress());
     }
 
