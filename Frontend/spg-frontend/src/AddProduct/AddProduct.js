@@ -7,10 +7,6 @@ import {FastField, Form, Field, Formik} from "formik";
 import * as Yup from "yup";
 import {API} from "../API/API";
 import Alert from "react-bootstrap/Alert";
-import {Dropdown} from "react-bootstrap";
-import DropdownItem from "react-bootstrap/DropdownItem";
-import DropdownMenu from "react-bootstrap/DropdownMenu";
-import DropdownToggle from "react-bootstrap/DropdownToggle";
 import {useState} from 'react';
 
 const possibleUnits = ['Kg', 'gr', 'L', 'ml', 'units']
@@ -106,7 +102,7 @@ function AddProduct() {
                                 <Grid item xs={1} sm={2}/>
                                 {/*BUTTONs COMPONENT*/}
                                 <Grid item xs={6}>
-                                    <Link to={"/"+localStorage.getItem("role")}><Button variant="secondary" size="lg"
+                                    <Link to={'/Dashboard'}><Button variant="secondary" size="lg"
                                                                      className="mt-4">Back</Button></Link>
                                 </Grid>
                                 <Grid item xs={6}>

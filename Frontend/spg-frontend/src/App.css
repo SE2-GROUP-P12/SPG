@@ -75,3 +75,16 @@
     align-self: center;
 }
 
+.imageCard{
+    object-fit: cover;
+}
+
+.scroll-down-modal {
+    height: 250px;
+    overflow-y: scroll;
+}
+
+.card-button {
+    margin: 5px;
+}
+

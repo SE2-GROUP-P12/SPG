@@ -2,29 +2,36 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import {API} from "./API/API";
 import Container from 'react-bootstrap/Container';
-import {Navbar} from "./Navbar/Navbar";
+import {NavbarApplication} from "./NavbarApplication/NavbarApplication";
 import {Homepage} from "./Homepage/Homepage";
 import {Login} from "./Login/Login";
+import {Dashboard} from "./Dashboard/Dashboard";
 import {ShopEmployee} from "./ShopEmployee/ShopEmployee";
 import {BrowseProducts} from "./BrowseProducts/BrowseProducts";
 import {NewCustomer} from './NewCustomer/NewCustomer';
-import {TopUp} from "./TopUp";
+import {TopUp} from "./TopUp/TopUp";
 import {PlaceOrder} from './PlaceOrder/PlaceOrder';
 import {Customer} from './Customer/Customer';
 import {Farmer} from './Farmer/Farmer';
-import { DeliverOrder } from './DeliverOrder/DeliverOrder';
+import {DeliverOrder} from './DeliverOrder/DeliverOrder';
 import {UnauthorizedComponent} from './UnauthorizedComponent';
 import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
 import {useState, useEffect} from "react";
 import Modal from 'react-bootstrap/Modal';
 import {Formik, Form, Field} from 'formik';
 import Button from 'react-bootstrap/Button';
-import {ProductsForecast} from "./ProductsForecast";
+import {ProductsForecast} from "./ProductsForecast/ProductsForecast";
 import {AddProduct} from "./AddProduct/AddProduct";
+import {getAllServices} from './Utilities';
+import {WalletOperation} from "./WallettOperation";
+import {ConfirmAvailability} from "./ConfirmAvailability/ConfirmAvailability";
+
 
 const DEBUG = true;
 
 function App() {
+    /*SERVICES*/
+    const [allServices, setAllservices] = useState(getAllServices());
     /*BACK END ERROR HANDLER*/
     const [errorMessage, setErrorMessage] = useState(undefined);
     /*LOGGGED USER SESSION*/
@@ -80,11 +87,11 @@ function App() {
         <div className="App">
             <Container fluid className="header">
                 <Router>
-                    <Navbar setLoggedFlag={setIsLogged} isLoggedFlag={isLogged}
-                            setLoggedUser={setLoggedUser} loggedUser={loggedUser}
-                            setAccessToken={setAccessToken}
-                            setLoggedUserRole={setLoggedUserRole} loggedUserRole={loggedUserRole}
-                            topUpWarning={topUpWarning} setTopUpWarning={setTopUpWarning}/>
+                    <NavbarApplication setLoggedFlag={setIsLogged} isLoggedFlag={isLogged}
+                                       setLoggedUser={setLoggedUser} loggedUser={loggedUser}
+                                       setAccessToken={setAccessToken}
+                                       setLoggedUserRole={setLoggedUserRole} loggedUserRole={loggedUserRole}
+                                       topUpWarning={topUpWarning} setTopUpWarning={setTopUpWarning}/>
                     <Switch>
                         <Route exact path="/DeliverOrder">
                             <DeliverOrder time={time}
@@ -97,7 +104,7 @@ function App() {
                                         loggedUser={loggedUser}
                                         loggedUserRole={loggedUserRole}
                                         setTopUpWarning={setTopUpWarning}
-                                        />
+                            />
                         </Route>
                         <Route exact path="/TopUp">
                             <TopUp/>
@@ -114,32 +121,42 @@ function App() {
                                             loggedUser={loggedUser}>
                             </BrowseProducts>
                         </Route>
+                        <Route exact path="/ConfirmAvailability">
+                            <ConfirmAvailability time={time}
+                                                 date={date}
+                                                 setErrorMessage={setErrorMessage}
+                                                 errorMessage={errorMessage}
+                                                 isLogged={isLogged}
+                                                 loggedUser={loggedUser}>
+                            </ConfirmAvailability>
+                        </Route>
                         <Route exact path="/Employee">
-                            <ShopEmployee   isLogged={isLogged}
-                                            loggedUser={loggedUser}
-                                            loggedUserRole={loggedUserRole}/>
+                            <ShopEmployee isLogged={isLogged}
+                                          loggedUser={loggedUser}
+                                          loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/ShopEmployee">
-                            <ShopEmployee   isLogged={isLogged}
-                                            loggedUser={loggedUser}
-                                            loggedUserRole={loggedUserRole}/>
+                            <ShopEmployee isLogged={isLogged}
+                                          loggedUser={loggedUser}
+                                          loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/Customer">
-                            <Customer   loggedUser={loggedUser}
-                                        loggedUserRole={loggedUserRole}/>
+                            <Customer loggedUser={loggedUser}
+                                      loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/Farmer">
                             <Farmer/>
                         </Route>
                         <Route exact path="/ProductsForecast">
-                            <ProductsForecast/>
+                            <ProductsForecast
+                                setErrorMessage={setErrorMessage}/>
                         </Route>
                         <Route exact path="/AddProduct">
                             <AddProduct/>
                         </Route>
                         <Route exact path="/Admin">
-                            <Customer   loggedUser={loggedUser}
-                                        loggedUserRole={loggedUserRole}/>
+                            <Customer loggedUser={loggedUser}
+                                      loggedUserRole={loggedUserRole}/>
                         </Route>
                         <Route exact path="/LoginComponent">
                             <Login setLoggedUser={setLoggedUser} setLoggedFlag={setIsLogged}
@@ -147,11 +164,17 @@ function App() {
                                    setLoggedUserRole={setLoggedUserRole}
                                    setTopUpWarning={setTopUpWarning}/>
                         </Route>
+                        <Route exact path="/Customer/WalletOperations">
+                            <WalletOperation/>
+                        </Route>
                         <Route exact path="/">
                             <Homepage/>
                         </Route>
                         <Route exact path="/ErrorHandler">
                             <UnauthorizedComponent errorMessage={errorMessage}/>
+                        </Route>
+                        <Route exact path="/Dashboard">
+                            <Dashboard loggedUser={loggedUser} services={allServices}/>
                         </Route>
                     </Switch>
                 </Router>
@@ -166,7 +189,12 @@ function App() {
                                 date: '',
                                 time: ''
                             }}
-                            onSubmit={(values) => {
+                            onSubmit={async (values) => {
+                                let requestBody = {
+                                    time: values.time,
+                                    date: values.date
+                                };
+                                await API.timeTravel(requestBody);
                                 console.log("CHECKTIME APP:" + values.date + " " + values.time)
                                 setDate(values.date);
                                 setTime(values.time);
@@ -175,17 +203,19 @@ function App() {
                         >
                             {({values, handleChange, handleBlur}) =>
                                 <Form>
-                                    <select
-                                        name="date"
-                                        value={values.date}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        style={{display: 'block'}}
-                                    >
-                                        {printDays()}
-                                    </select>
-                                    <Field type='time' name='time'/>
-                                    <Button type='submit' variant='danger'>Time travel!</Button>
+                                    <div className="row ml-4 mr-4">
+                                        <select
+                                            name="date"
+                                            value={values.date}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            style={{display: 'block'}}
+                                        >
+                                            {printDays()}
+                                        </select>
+                                        <Field type='time' name='time'/>
+                                        <Button type='submit' variant='danger'>Time travel!</Button>
+                                    </div>
                                 </Form>
                             }
                         </Formik>

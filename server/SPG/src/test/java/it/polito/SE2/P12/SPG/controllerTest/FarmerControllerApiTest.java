@@ -81,7 +81,7 @@ public class FarmerControllerApiTest {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/" + API.REPORT_EXPECTED)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content("{\"productId\": "+ prodId.toString()+
+                        .content("{\"productId\": " + prodId.toString() +
                                 ",\n\"quantity\": 1}"))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -171,5 +171,86 @@ public class FarmerControllerApiTest {
                 )
                 .andExpect(status().isForbidden());
     }
+
+    @Test
+    @WithUserDetails("tester@test.com")
+    public void farmerReportExpectedTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(API.HOME + API.REPORT_EXPECTED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content("{\"productId\": " + dbUtilsService.getProd1Object().getProductId() + ", \"quantity\": 20}")
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("tester@test.com")
+    public void farmerReportExpectedErrorTest() throws Exception {
+        //Invalid prod id
+        mockMvc.perform(MockMvcRequestBuilders.post(API.HOME + API.REPORT_EXPECTED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content("{\"productId\": " + (dbUtilsService.getProd1Object().getProductId() + 1000) + ", \"quantity\": 20}")
+        ).andExpect(status().isBadRequest());
+        //invalid json
+        mockMvc.perform(MockMvcRequestBuilders.post(API.HOME + API.REPORT_EXPECTED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content("invalid json")
+        ).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @WithUserDetails("tester@test.com")
+    public void farmerReportConfirmedTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(API.HOME + API.REPORT_CONFIRMED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content("[{\"productId\": " + dbUtilsService.getProd1Object().getProductId() + ", \"quantityConfirmed\": 20}]")
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("tester@test.com")
+    public void farmerReportConfirmedErrorTest() throws Exception {
+        //Invalid prod id
+        mockMvc.perform(MockMvcRequestBuilders.post(API.HOME + API.REPORT_CONFIRMED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content("[{\"productId\": " + (dbUtilsService.getProd1Object().getProductId() + 1000) + ", \"quantityConfirmed\": 20}]")
+        ).andExpect(status().isBadRequest());
+        //invalid json
+        mockMvc.perform(MockMvcRequestBuilders.post(API.HOME + API.REPORT_EXPECTED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content("invalid json")
+        ).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @WithUserDetails("tester@test.com")
+    public void browseProductByFarmerTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(API.HOME + API.BROWSE_PRODUCT_BY_FARMER + "?farmer=farmer1@test.com&forecasted=undefined")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("tester@test.com")
+    public void browseProductByFarmerErrorTest() throws Exception {
+        //Invalid forecasted
+        mockMvc.perform(MockMvcRequestBuilders.get(API.HOME + API.BROWSE_PRODUCT_BY_FARMER + "?farmer=farmer1@test.com&forecasted=true")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+        //Invalid email
+        mockMvc.perform(MockMvcRequestBuilders.get(API.HOME + API.BROWSE_PRODUCT_BY_FARMER + "?farmer123=farmer1@test.com&forecasted=true")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest());
+    }
+
 
 }

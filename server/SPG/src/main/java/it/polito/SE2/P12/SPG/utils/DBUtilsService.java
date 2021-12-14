@@ -14,15 +14,16 @@ import java.util.List;
 @Service
 public class DBUtilsService {
 
-    private UserRepo userRepo;
-    private CustomerRepo customerRepo;
-    private FarmerRepo farmerRepo;
-    private AdminRepo adminRepo;
-    private ShopEmployeeRepo shopEmployeeRepo;
-    private BasketRepo basketRepo;
-    private OrderRepo orderRepo;
-    private ProductRepo productRepo;
-    private JWTUserHandlerRepo jwtUserHandlerRepo;
+    private final UserRepo userRepo;
+    private final CustomerRepo customerRepo;
+    private final FarmerRepo farmerRepo;
+    private final AdminRepo adminRepo;
+    private final ShopEmployeeRepo shopEmployeeRepo;
+    private final BasketRepo basketRepo;
+    private final OrderRepo orderRepo;
+    private final ProductRepo productRepo;
+    private final JWTUserHandlerRepo jwtUserHandlerRepo;
+    private final WalletOperationRepo walletOperationRepo;
 
     @Autowired
     public DBUtilsService(UserRepo userRepo,
@@ -33,7 +34,7 @@ public class DBUtilsService {
                           BasketRepo basketRepo,
                           OrderRepo orderRepo,
                           ProductRepo productRepo,
-                          JWTUserHandlerRepo jwtUserHandlerRepo) {
+                          JWTUserHandlerRepo jwtUserHandlerRepo, WalletOperationRepo walletOperationRepo) {
         this.userRepo = userRepo;
         this.customerRepo = customerRepo;
         this.farmerRepo = farmerRepo;
@@ -43,6 +44,7 @@ public class DBUtilsService {
         this.orderRepo = orderRepo;
         this.productRepo = productRepo;
         this.jwtUserHandlerRepo = jwtUserHandlerRepo;
+        this.walletOperationRepo = walletOperationRepo;
     }
 
     public void init() {
@@ -53,6 +55,7 @@ public class DBUtilsService {
     public void dropAll() {
         basketRepo.deleteAll();
         orderRepo.deleteAll();
+        walletOperationRepo.deleteAll();
         productRepo.deleteAll();
         userRepo.deleteAll();
         jwtUserHandlerRepo.deleteAll();
@@ -138,9 +141,9 @@ public class DBUtilsService {
         Product temp49 = new Product("Ricotta", "Kg", 67.0, 2.50, "https://blog.giallozafferano.it/allacciateilgrembiule/wp-content/uploads/2019/05/come-fare-la-ricotta.jpg", farmer1);
         Product temp50 = new Product("Pecorino", "Kg", 13.0, 5.00, "https://www.tartufidinorcia.it/wp-content/uploads/2018/08/pecorino-semi-stagionato_da_raw.jpg", farmer2);
 */
-        for (Product prod: prodList
-             ) {
-            if(productRepo.findProductByName(prod.getName()) == null) productRepo.save(prod);
+        for (Product prod : prodList
+        ) {
+            if (productRepo.findProductByName(prod.getName()) == null) productRepo.save(prod);
         }
         /*
         if (productRepo.findProductByName("Fassona Burger") == null) productRepo.save(temp43);
@@ -168,6 +171,7 @@ public class DBUtilsService {
         productRepo.save(prod2);
         productRepo.save(prod3);
     }
+
 
     public Product getProd1Object() {
         return this.productRepo.findProductByName("Prod1");
@@ -211,6 +215,10 @@ public class DBUtilsService {
 
     public void saveJwtUserHandler(JWTUserHandlerImpl jwtUserHandler) {
         this.jwtUserHandlerRepo.save(jwtUserHandler);
+    }
+
+    public void deleteOrderRepo() {
+        this.orderRepo.deleteAll();
     }
 
 }

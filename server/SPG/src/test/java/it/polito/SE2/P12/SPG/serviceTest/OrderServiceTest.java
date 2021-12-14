@@ -15,6 +15,7 @@ import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.service.SpgBasketService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
+import it.polito.SE2.P12.SPG.utils.Constants;
 import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.Assertions;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,7 +119,7 @@ public class OrderServiceTest {
 
         List<Order> orders = orderRepo.findAll();
         Assertions.assertEquals(0, orders.size());
-        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1));
+        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1,(long)System.currentTimeMillis(),null,""));
         orders = orderRepo.findAll();
         Assertions.assertEquals(1, orders.size());
         Assertions.assertEquals(orders.get(0).getCust().getUserId(), ((User) user).getUserId());
@@ -144,7 +149,7 @@ public class OrderServiceTest {
 
         List<Order> orders = orderRepo.findAll();
         Assertions.assertEquals(0, orders.size());
-        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1, customer));
+        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1, customer,(long)System.currentTimeMillis(),null,""));
         orders = orderRepo.findAll();
         Assertions.assertEquals(1, orders.size());
         Assertions.assertEquals(orders.get(0).getCust().getUserId(), ((User) customer).getUserId());
@@ -166,7 +171,7 @@ public class OrderServiceTest {
         Basket b = shopEmployee.getBasket();
 
         Assertions.assertEquals(2,b.getProductQuantityMap().size());
-        Assertions.assertFalse(orderService.addNewOrderFromBasket(b));
+        Assertions.assertFalse(orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,""));
     }
 
     @Test
@@ -177,7 +182,7 @@ public class OrderServiceTest {
         Assertions.assertNotNull(user);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b);
+        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
 
         Order order = orderRepo.findAll().get(0);
 
@@ -206,7 +211,7 @@ public class OrderServiceTest {
         Assertions.assertNotNull(user);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b);
+        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
 
         Order order = orderRepo.findAll().get(0);
 
@@ -236,7 +241,46 @@ public class OrderServiceTest {
         Assertions.assertNotNull(user);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b);
+        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
 
     }
+    @Test
+    public void correctDeliveryDateTest() throws ParseException {
+        BasketUserType user = userService.getBasketUserTypeByEmail("customer2@foomail.com");
+        Basket b = user.getBasket();
+
+        Assertions.assertNotNull(user);
+
+        basketService.dropBasket(b);
+        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
+
+        Order order = orderRepo.findAll().get(0);
+        Date date = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("31/12/2022 23:59");
+        orderService.setDeliveryDate(order.getOrderId(), date);
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String strDate = dateFormat.format(date);
+        Order order2 = orderRepo.findAll().get(0);
+        Assertions.assertEquals("31/12/2022 23:59",dateFormat.format(order2.getDeliveryDate()));
+    }
+
+    @Test
+    public void correctDeliveryDateAndAddressTest() throws ParseException {
+        BasketUserType user = userService.getBasketUserTypeByEmail("customer2@foomail.com");
+        Basket b = user.getBasket();
+
+        Assertions.assertNotNull(user);
+
+        basketService.dropBasket(b);
+        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
+
+        Order order = orderRepo.findAll().get(0);
+        Date date = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("31/12/2022 23:59");
+        orderService.setDeliveryDateAndAddress(order.getOrderId(), date, "Main Street 1234");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String strDate = dateFormat.format(date);
+        Order order2 = orderRepo.findAll().get(0);
+        Assertions.assertEquals("31/12/2022 23:59",dateFormat.format(order2.getDeliveryDate()));
+        Assertions.assertEquals("Main Street 1234",order2.getDeliveryAddress());
+    }
+
 }

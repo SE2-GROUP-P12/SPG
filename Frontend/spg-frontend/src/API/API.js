@@ -84,9 +84,13 @@ async function browseProducts(setErrorMessage) {
     try {
         const response = await fetch("/api/product/all", {
             method: 'GET',
-            headers: getAuthenticationHeaders(),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
         });
         if (response.ok) {
+
             return createSuccesfulHandlerObject(response);
         } else {
             let error = await createErrorHandlerObject(response, null)
@@ -103,8 +107,9 @@ async function browseProducts(setErrorMessage) {
 
 async function browseProductsByFarmer(data, setErrorMessage) {
     try {
-        console.log(JSON.stringify(data))
-        const response = await fetch("/api/product/?farmer=" + data.email, {
+        if(data.forecasted === null)
+            data.forecasted = "none"
+        const response = await fetch("/api/product/?farmer=" + data.email + "&forecasted=" + data.forecasted , {
             method: 'GET',
             headers: getAuthenticationHeaders(),
         });
@@ -209,7 +214,7 @@ async function placeOrder(data) {
         const response = await fetch("/api/customer/placeOrder", {
             method: 'POST',
             headers: getAuthenticationHeaders(),
-            body: JSON.stringify({ 'email': data.email, 'customer': data.customer })
+            body: JSON.stringify(data)
         });
         if (response.ok)
             return true;
@@ -227,7 +232,7 @@ async function dropOrder(data) {
         const response = await fetch("/api/customer/dropOrder", {
             method: 'DELETE',
             headers: getAuthenticationHeaders(),
-            body: JSON.stringify({ 'email': data.email })
+            body: JSON.stringify({'email': data.email})
         });
         if (response.ok)
             return true;
@@ -378,9 +383,24 @@ async function addCustomer(data) {
 }
 
 async function modifyForecast(data) {
-    console.log(JSON.stringify(data));
     try {
         await fetch("/api/farmer/reportExpected",
+            {
+                method: 'POST',
+                headers: getAuthenticationHeaders(),
+                body: JSON.stringify(data)
+            });
+    } catch
+        (err) {
+        console.log(err);
+        return undefined;
+    }
+    return true;
+}
+
+async function submitConfirmed(data) {
+    try {
+        await fetch("/api/farmer/submitConfirmed",
             {
                 method: 'POST',
                 headers: getAuthenticationHeaders(),
@@ -427,6 +447,42 @@ async function sessionReloader() {
     }
 }
 
+async function timeTravel(data) {
+    try {
+        const response = await fetch("/api/timeTravel", {
+            method: 'POST',
+            headers: getAuthenticationHeaders(),
+            body: JSON.stringify(data)
+        });
+        if (response.ok)
+            return true;
+        return false;
+    } catch (err) {
+        console.log("Some error occourred");
+        return undefined;
+    }
+}
+
+//Get wallet opertions based on logged user email
+async function getWalletOperation(email) {
+    try {
+        const response = await fetch("/api/customer/getWalletOperations?email=" + email, {
+            method: 'GET',
+            headers: getAuthenticationHeaders(),
+        });
+        if (response.ok) {
+            const responseBody = await response.json();
+            return responseBody;
+        } else
+            return undefined;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * Exporting all functions
+ */
 const API = {
     browseProducts,
     placeOrder,
@@ -444,8 +500,11 @@ const API = {
     sessionReloader,
     browseProductsByFarmer,
     modifyForecast,
+    getWalletOperation,
     addProduct,
-    getWalletWarning
+    getWalletWarning,
+    timeTravel,
+    submitConfirmed
 };
 export { API }
 

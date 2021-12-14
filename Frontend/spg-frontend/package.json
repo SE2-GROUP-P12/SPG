@@ -13,9 +13,12 @@
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.1.3",
     "chokidar": "^3.5.2",
+    "eslint-plugin-cypress": "^2.12.1",
     "formik": "^2.2.9",
     "react": "^17.0.2",
     "react-bootstrap": "^2.0.2",
+    "react-bootstrap-date-picker": "^5.1.0",
+    "react-bootstrap-icons": "^1.6.1",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
@@ -31,7 +34,10 @@
     "test:ci": "react-scripts test --watchAll=false --testResultsProcessor ./node_modules/jest-sonar-reporter",
     "coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
     "coverage:ci": "react-scripts test --env=jsdom --watchAll=false --coverage --testResultsProcessor ./node_modules/jest-sonar-reporter",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress:open": "npx cypress open",
+    "cypress:runci": "cypress run",
+    "cypress:runlocal": "cypress run"
   },
   "eslintConfig": {
     "extends": [
@@ -54,7 +60,7 @@
   "devDependencies": {
     "@testing-library/dom": "^8.11.1",
     "@testing-library/user-event": "^13.5.0",
-    "cypress": "^9.0.0",
+    "cypress": "^9.1.1",
     "jest-sonar-reporter": "^2.0.0"
   },
   "jest": {},

@@ -15,4 +15,6 @@ public class UserRole {
 
     public static final List<String> ROLE_BASKET_USER_TYPE = List.of(ROLE_CUSTOMER, ROLE_SHOP_EMPLOYEE);
     public static final List<String> ROLE_ORDER_USER_TYPE = List.of(ROLE_CUSTOMER);
+    public static final List<String> ROLE_WALLET_USER_TYPE = List.of(ROLE_CUSTOMER);
+
 }
