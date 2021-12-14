@@ -424,10 +424,10 @@ function PlaceOrder(props) {
             <Row>
                 <Col xs={4}><Link to="/Dashboard"><Button
                     variant='secondary'>Back</Button></Link></Col>
-                <Col xs={4}><Button disabled={order.length === 0 ? true : false} variant='danger'
+                <Col xs={4}><Button disabled={order.length === 0 || itsTime === false ? true : false && !itsTime()} variant='danger'
                                     onClick={dropOrder}>Delete order</Button></Col>
                 <Col xs={4}><Button
-                    disabled={(!itsTime || order.length === 0 || customer === "") ? true : false}
+                    disabled={(!itsTime || order.length === 0 ) ? true : false}
                     variant='success' onClick={() => showModalHanlder()}>Send order</Button></Col>
             </Row>
         </>
