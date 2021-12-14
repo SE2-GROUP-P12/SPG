@@ -15,7 +15,8 @@ import {getAllShippingMode} from '../Utilities';
 
 
 function PlaceOrder(props) {
-    const [customer, setCustomer] = useState("");
+    /*LASTMINUTE*/ const [customer, setCustomer] = useState("");
+    //const [customer, setCustomer] = useState(null);
     const [order, setOrder] = useState([]);
     const [error, setError] = useState(false);
     const [customerError, setCustomerError] = useState(false);
@@ -246,12 +247,13 @@ function PlaceOrder(props) {
             }
 
 
-            if (!errorDate) {
+        /* LASTMINUTE
+        if (!errorDate) {
                 if (pickUpDate === "")
                     return getAlertBasedPicker("")
                 else
                     return getAlertBasedPicker("")
-            } else
+            } else */
                 return getAlertBasedPicker("")
         }
 
@@ -325,7 +327,8 @@ function PlaceOrder(props) {
                         :
                         <Button variant="success"
                                 onClick={() => {
-                                    placeOrder(-1, "", "");
+                                    //LASTMINUTE placeOrder(-1, "", "");
+                                    placeOrder(-1, "", "00:00");
                                     setModalShow(false);
                                     setShowEndRoutineModal(true)
                                 }}>
@@ -424,7 +427,7 @@ function PlaceOrder(props) {
                 <Col xs={4}><Button disabled={order.length === 0 ? true : false} variant='danger'
                                     onClick={dropOrder}>Delete order</Button></Col>
                 <Col xs={4}><Button
-                    disabled={(!itsTime || order.length === 0 || customer === null) ? true : false}
+                    disabled={(!itsTime || order.length === 0 || customer === "") ? true : false}
                     variant='success' onClick={() => showModalHanlder()}>Send order</Button></Col>
             </Row>
         </>

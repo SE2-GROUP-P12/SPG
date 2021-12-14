@@ -116,7 +116,8 @@ function DeliverOrder(props) {
                     <ul className="border-bottom">
                         <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
                                          checked={checkBox} type='switch' isValid={true}
-                                         onChange={() => setOnChangeCheckBoxStatus(props.index)}>
+                                         onChange={() => //LASTMINUTE setOnChangeCheckBoxStatus(props.index)
+                                             setOnChangeCheckBoxStatus()}>
                         </reactForm.Check>
                     </ul>
                 );
@@ -127,7 +128,8 @@ function DeliverOrder(props) {
                         <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
                                          checked={checkBox}
                                          type='switch' isValid={false}
-                                         onChange={() => setOnChangeCheckBoxStatus(props.index)}>
+                                         onChange={() => //LASTMINUTE setOnChangeCheckBoxStatus(props.index)
+                                             setOnChangeCheckBoxStatus() }>
                         </reactForm.Check>
                     </ul>);
             default:
@@ -136,7 +138,8 @@ function DeliverOrder(props) {
                         <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
                                          checked={checkBox}
                                          type='switch'
-                                         onChange={() => setOnChangeCheckBoxStatus(props.value)}>
+                                         onChange={() => //LASTMINUTE setOnChangeCheckBoxStatus(props.value)
+                                             setOnChangeCheckBoxStatus() }>
                         </reactForm.Check>
                     </ul>
                 );
@@ -239,7 +242,8 @@ function DeliverOrder(props) {
                     11pm</Alert>}
             <div className="mt-5">
                 <h4>Send all pending orders reminder mail</h4>
-                <Button className="mt-3" variant="success" onClick={() => handleShow(getPendingOrdersMail())}>
+                <Button className="mt-3" variant="success" onClick={() => /*LASTMINUTE handleShow(getPendingOrdersMail())*/
+                {getPendingOrdersMail(); handleShow();}}>
                     Send Mail</Button>
             </div>
             <div id="container" className="pagecontent">
@@ -363,7 +367,8 @@ function Orders(props) {
                         Close
                     </Button>
                     <Button variant="success" disabled={data ? true : false}
-                            onClick={(event) => solicitButtonHandler(event)}>
+                            onClick={(event) => //LASTMINUTE solicitButtonHandler(event)
+                                solicitButtonHandler() }>
                         Solicit!
                     </Button>
                 </Modal.Footer>

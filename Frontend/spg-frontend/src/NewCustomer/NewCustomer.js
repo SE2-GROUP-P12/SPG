@@ -55,7 +55,7 @@ function NewCustomer(props) {
                                 {modalMessage.messageFooterButton}
                             </Button>
                             :
-                            <Link to={"/"+localStorage.getItem("role")} > {/*SEND TOCUSTOMER HOME PAGE*/}
+                            <Link to={"/Dashboard"} > {/*SEND TOCUSTOMER HOME PAGE*/}
                                 <Button variant="success">
                                     {modalMessage.messageFooterButton}
                                 </Button>
