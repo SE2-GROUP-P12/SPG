@@ -11,10 +11,10 @@
 
 - 5 stories committed vs 5 stories done
 - 20 points committed vs 20 points done
-- 8d 7h 50m (= 71h 50m) Nr of hours planned vs spent (as a team) 11d 2h 20m (= 90h 20m including planning )
+- 8d 3h 20m (= 67h 20m) Nr of hours planned vs spent (as a team) 11d 6h 50m (= 94h 50m including planning )
 
 Definition of Done:
-- Unit Tests passing *(with a little tollerance)*
+- Unit Tests passing
 - Code review completed
 - Code present on VCS
 - End-to-End tests performed at least manually
@@ -23,7 +23,7 @@ Definition of Done:
 | Story      | #Task  | #Subtask | Points | Estimated time | Actual time    |
 | ---------- | ------ | ------- | ------ | --------- | --------- |
 | _SPG-40_   | 8      | \-      | \-     | \-        | \-        |
-| \-         | SPG-122| 9      | \-     |2d 1h 50m  | 1d 2h 55m |
+| \-         | SPG-122| 9      | \-      |2d 1h 50m  | 1d 2h 55m |
 | \-         | \-     | SPG-123 | \-     |1h 30m     | 0m        |
 | \-         | \-     | SPG-124 | \-     |20m        | 0m        |
 | \-         | \-     | SPG-130 | \-     |30m        | 0m        |
@@ -82,13 +82,13 @@ Definition of Done:
     - Average: 3h 36m
     - Standard deviation: 5h 9m
 - Total task estimation error ratio:
-  - sum of total hours estimation / sum of total hours spent from previous table: 71.83/90.33 = 0.80
+  - sum of total hours estimation / sum of total hours spent from previous table: 67.33/90.33 = 0.74
 
 ## QUALITY MEASURES
 
 - Unit Testing:
     - Total hours estimated:
-        - to do
+        - 25% of total task time ( ~16h 50m)
     - Total hours spent:
         - 13h 30m
     - Nr of automate unit test cases
@@ -99,12 +99,12 @@ Definition of Done:
         - FE: 60.6% (lines of code)
 - E2E testing:
     - Total hours estimated:
-        - to do
+        - 20% of total task time excluding learning ( ~ 13h 30m) 
     - Total hours spent
         - 13h 20m
 - Code review
     - Total hours estimated:
-        -  to do
+        -  5% of total task time ( ~ 3h 20m)
     - Total hours spent:
         - 4h
 
@@ -131,9 +131,9 @@ Definition of Done:
         - Maintainability: A
 
 **Note:**
-    - We introduced the SonarQube estimation on both sides during this sprint, since the frontend wasn't subject to analysis. Our technical debt came mainly from personal      considerations.
-    - The testing time estimation is based on an euristics evaluation. Since we had some test operations to pay in the TD (Sprint-1) we estimate to spend 55% of total time in testing routines.
-
+- The testing time estimation is based on a percentage of total task time. 
+- The E2E tests carried out so far covered stories from past sprints. 
+    
 ## ASSESSMENT
 
 - What caused your errors in estimation (if any)?
@@ -143,28 +143,23 @@ Definition of Done:
       - Race condition: session race condition
 
 - What lessons did you learn (both positive and negative) in this sprint?
-    1. downloading images reduces performance in the FE
-    2. better understanding of code smells and how to avoid them
+    1. Downloading images reduces performance in the FE
+    2. Better understanding of code smells and how to avoid them
     3. Delaying introduction of E2E tests produces an high load in TD
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
-  - Resolved hyper-specialization: now more people are available for each technology
-  - Increase FE coverage (now is 60.6%)
+  1. Resolved hyper-specialization: now more people are available for each technology
+  2. Increase FE coverage (now is 60.6%)
 
 - Which ones you were not able to achieve? Why?
-   - lack of doc: we spent very little time on documentation, with the only exception of aligning the existing documents
-
+   1.  We have still few comments in the code, both in backend and frontend: we didn't have the chance to introduce them during the technical debt repaying phase.
+   
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
-    1. We have still few comments in the code, both in backend and frontend.
-        **solutions:**
-        - Write more comments
-    2. Reduce overspecialization
-        **solutions:**
-        - Try to create subgroup of at least 2 people for each technology
-    3. Little frontend coverage
-        **solutions:**
-        - Introduce more frontend testing, both Unit and E2E
-
+    1. Increase E2E testing 
+    - **solution:** Write more tests    
+    2. Decrease the loading time for products pages
+    - **solution:** Storing the correspoing images locally instead of downloading them every time
+        
 - One thing you are proud of as a Team!!
-    - We keep learning and introducing new technologies.
-    - We have learnt how much technical debt can impact on a project
+    - The quality of our code is increasing
+    - Moving two of us to full stack and spreading knowlegde allowed the sprint to be smoother
