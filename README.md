@@ -67,3 +67,14 @@ go in fronted/spg-frontend  folder
 
  + once the installation is completed use the command `npm start` to start the react application
 
+## Credentials:
+  - customer: 
+    - username: mario.rossi@gmail.com
+    - password: password
+ - shop employee: 
+    - username: francesco.conte@gmail.com
+    - password: password
+ - farmer: 
+    - username: thomas.jefferson@gmail.com
+    - password: password
+
