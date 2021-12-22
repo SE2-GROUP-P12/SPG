@@ -55,6 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/feedback").permitAll() //TODO: implement security config for that pai
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/token/refresh").permitAll()
+                .antMatchers("/api" + API.TIME_TRAVEL).permitAll()
                 .antMatchers("/api" + API.ALL_PRODUCT).permitAll()
                 .antMatchers("/api" + API.EXIST_CUSTOMER_BY_EMAIL).permitAll()
                 .antMatchers("/api" + API.EXIST_CUSTOMER).permitAll()

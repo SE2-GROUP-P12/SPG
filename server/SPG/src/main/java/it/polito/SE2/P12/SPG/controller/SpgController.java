@@ -62,8 +62,9 @@ public class SpgController {
         this.timeOffset = 0;
         this.walletOperationService = walletOperationService;
         this.dbUtilsService = dbUtilsService;
-        this.schedulerService = schedulerService;
         this.dbUtilsService.init();
+        this.schedulerService = schedulerService;
+        this.schedulerService.initScheduler();
     }
 
     @GetMapping("/")
@@ -481,12 +482,13 @@ public class SpgController {
 
 
     @PostMapping(API.TIME_TRAVEL)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER', 'ROLE_EMPLOYEE','ROLE_FARMER')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER', 'ROLE_EMPLOYEE','ROLE_FARMER')")
     public ResponseEntity<Boolean> timeTravel(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null || !requestMap.containsKey(Constants.JSON_EPOCH_TIME))
             return ResponseEntity.badRequest().build();
         Long epochTime = Long.parseLong(requestMap.get(Constants.JSON_EPOCH_TIME).toString());
+        System.out.println("time travel at " + epochTime);
         return ResponseEntity.ok(schedulerService.timeTravelAt(epochTime));
 
         /*

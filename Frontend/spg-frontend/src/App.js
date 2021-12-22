@@ -16,7 +16,7 @@ import {Farmer} from './Farmer/Farmer';
 import {DeliverOrder} from './DeliverOrder/DeliverOrder';
 import {UnauthorizedComponent} from './UnauthorizedComponent';
 import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
-import {useState, useEffect} from "react";
+import {useState, useEffect, Fragment} from "react";
 import Modal from 'react-bootstrap/Modal';
 import {Formik, Form, Field} from 'formik';
 import Button from 'react-bootstrap/Button';
@@ -25,9 +25,13 @@ import {AddProduct} from "./AddProduct/AddProduct";
 import {getAllServices} from './Utilities';
 import {WalletOperation} from "./WallettOperation";
 import {ConfirmAvailability} from "./ConfirmAvailability/ConfirmAvailability";
+import {MuiPickersUtilsProvider, DateTimePicker} from "@material-ui/pickers";
+import MomentUtils from '@date-io/moment';
+import {createTheme, MuiThemeProvider} from "@material-ui/core/styles";
 
 
 const DEBUG = true;
+const moment = require('moment')
 
 function App() {
     /*SERVICES*/
@@ -43,12 +47,21 @@ function App() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const handleDateTimeChange = async (d) => {
+        setDateTime(() => d)
+        setDate(() => d.format('ddd'))
+        setTime(() => d.format('HH') + ":" + d.format('mm'))
+        console.log('new unix time: ' + d.format('X'))
+        await API.timeTravel({'epoch time': d.format('X')})
+    }
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    let [date, setDate] = useState(days[new Date().getDay()]);
+    let [date, setDate] = useState(moment().format('ddd'));
     let [time, setTime] = useState(() => {
-        let d = new Date();
-        return d.getHours() + ":" + d.getMinutes();
+        let d = moment();
+        return d.format('HH') + ":" + d.format('mm');
     });
+    let [dateTime, setDateTime] = useState(moment());
+
     /*TOP UP WARNING MANAGEMENT*/
     const [topUpWarning, setTopUpWarning] = useState({'exist': "false"});
 
@@ -179,53 +192,80 @@ function App() {
                     </Switch>
                 </Router>
 
-                <Modal show={show} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Time machine</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Formik
-                            initialValues={{
-                                date: '',
-                                time: ''
-                            }}
-                            onSubmit={async (values) => {
-                                let requestBody = {
-                                    time: values.time,
-                                    date: values.date
-                                };
-                                await API.timeTravel(requestBody);
-                                console.log("CHECKTIME APP:" + values.date + " " + values.time)
-                                setDate(values.date);
-                                setTime(values.time);
-                                handleClose();
-                            }}
-                        >
-                            {({values, handleChange, handleBlur}) =>
-                                <Form>
-                                    <div className="row ml-4 mr-4">
-                                        <select
-                                            name="date"
-                                            value={values.date}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            style={{display: 'block'}}
-                                        >
-                                            {printDays()}
-                                        </select>
-                                        <Field type='time' name='time'/>
-                                        <Button type='submit' variant='danger'>Time travel!</Button>
-                                    </div>
-                                </Form>
-                            }
-                        </Formik>
-                    </Modal.Body>
-                </Modal>
+                {/*
+                    <Modal show={show} onHide={handleClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Time machine</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Formik
+                                initialValues={{
+                                    date: '',
+                                    time: ''
+                                }}
+                                onSubmit={async (values) => {
+                                    let requestBody = {
+                                        time: values.time,
+                                        date: values.date
+                                    };
+                                    await API.timeTravel(requestBody);
+                                    console.log("CHECKTIME APP:" + values.date + " " + values.time)
+                                    setDate(values.date);
+                                    setTime(values.time);
+                                    handleClose();
+                                }}
+                            >
+                                {({values, handleChange, handleBlur}) =>
+                                    <Form>
+                                        <div className="row ml-4 mr-4">
+                                            <select
+                                                name="date"
+                                                value={values.date}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                style={{display: 'block'}}
+                                            >
+                                                {printDays()}
+                                            </select>
+                                            <Field type='time' name='time'/>
+                                            <Button type='submit' variant='danger'>Time travel!</Button>
+                                        </div>
+                                    </Form>
+                                }
+                            </Formik>
+                        </Modal.Body>
+                    </Modal>*/
+                }
+
+
             </Container>
             {DEBUG ?
-                <Button style={{margin: '100px'}} variant="danger" onClick={handleShow}>TIME MACHINE (for
-                    debug
-                    only)<br/>{date}, {time}</Button>
+                <>
+                    {
+                        <MuiPickersUtilsProvider utils={MomentUtils}>
+                            <MuiThemeProvider theme={createTheme({
+                                palette: {
+                                    primary: {
+                                        main: '#5cb85c'
+                                    }
+                                }
+                            })}>
+                                <DateTimePicker open={show}
+                                                onOpen={() => setShow(true)}
+                                                onClose={() => setShow(false)}
+                                                value={dateTime}
+                                                onChange={handleDateTimeChange}
+                                                okLabel="TIME TRAVEL!"
+                                                TextFieldComponent={() => null}
+                                                ampm={false}/>
+                            </MuiThemeProvider>
+                        </MuiPickersUtilsProvider>
+                    }
+
+                    <Button style={{margin: '100px'}} variant="danger" onClick={handleShow}>TIME MACHINE (for
+                        debug
+                        only)<br/>{date}, {time}</Button>
+                </>
                 : null}
         </div>
 

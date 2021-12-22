@@ -16,10 +16,13 @@ import java.util.List;
 
 public class MondayMorningSchedule implements Schedulable {
 
-    @Autowired
-    SpgProductService spgProductService;
-    @Autowired
-    SchedulerService schedulerService;
+    private SpgProductService spgProductService;
+    private SchedulerService schedulerService;
+
+    public MondayMorningSchedule(SpgProductService spgProductService, SchedulerService schedulerService) {
+        this.spgProductService = spgProductService;
+        this.schedulerService = schedulerService;
+    }
 
     @Override
     public void execute() {
@@ -27,6 +30,6 @@ public class MondayMorningSchedule implements Schedulable {
         for (Product p : prods) {
             spgProductService.setForecast(p.getProductId(), 0.0);
         }
-        schedulerService.addToSchedule(new MondayMorningSchedule(), LocalDate.now(schedulerService.getClock()).with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(9, 0).toEpochSecond(ZoneOffset.ofHours(1)));
+        schedulerService.addToSchedule(new MondayMorningSchedule(spgProductService, schedulerService), LocalDate.now(schedulerService.getClock()).with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(9, 0).toEpochSecond(ZoneOffset.ofHours(1)));
     }
 }
