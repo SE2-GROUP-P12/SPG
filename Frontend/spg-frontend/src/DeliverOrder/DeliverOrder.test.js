@@ -20,7 +20,7 @@ test ("Renders Correctly", () => {
     getByText("Email:");
     getByText("Submit customer");
     getByText("Send all pending orders reminder mail");
-    getByText("Send Mail");
+    getByText("Send All Mail");
 
 });
 
@@ -127,20 +127,20 @@ test("all mails ok", async()=>{
     mockGetPendingOrdersMails.mockResolvedValueOnce({"paolo.bianchi@gmail.com": [71], "mario.rossi@gmail.com": [51, 69]});
     mockSolicitTopUp.mockResolvedValueOnce(true);
 
-    const {getByText} = render(
+    const {getByText, getAllByText} = render(
         <Router>
             <DeliverOrder/>
         </Router>
     );
 
-    fireEvent.click(getByText("Send Mail"));
+    fireEvent.click(getByText("Send All Mail"));
     await waitFor(()=>{
         getByText("paolo.bianchi@gmail.com");
         getByText("mario.rossi@gmail.com");
     })
-    fireEvent.click(getByText("Send mail"))
+    fireEvent.click(getAllByText("Send All Mail")[1])
     await waitFor(()=>{
-        getByText("ALL MAILs WERE SENT");
+        getByText("All mail was sent");
     })
 })
 
@@ -152,20 +152,20 @@ test("all mails fail", async()=>{
     mockGetPendingOrdersMails.mockResolvedValueOnce({"paolo.bianchi@gmail.com": [71], "mario.rossi@gmail.com": [51, 69]});
     mockSolicitTopUp.mockResolvedValueOnce(false);
 
-    const {getByText} = render(
+    const {getByText, getAllByText} = render(
         <Router>
             <DeliverOrder/>
         </Router>
     );
 
-    fireEvent.click(getByText("Send Mail"));
+    fireEvent.click(getByText("Send All Mail"));
     await waitFor(()=>{
         getByText("paolo.bianchi@gmail.com");
         getByText("mario.rossi@gmail.com");
     })
-    fireEvent.click(getByText("Send mail"))
+    fireEvent.click(getAllByText("Send All Mail")[1])
     await waitFor(()=>{
-        getByText("Send mail");
+        getByText("Send All Mail");
     })
 })
 
