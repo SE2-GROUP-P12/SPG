@@ -35,37 +35,6 @@ test("double digits decimals", async() =>{
     })
 });
 
-test("Skip for now", async()=>{
-    localStorage.setItem("role", "CUSTOMER");
-    localStorage.setItem("username", "mario.rossi@gmail.com");
-    mockGetCart.mockResolvedValueOnce(
-        [
-            {   "productId":7,
-                "name":"Apples",
-                "unitOfMeasurement":"Kg",
-                "totalQuantity":50.0,
-                "quantityAvailable":2.0,
-                "price":2.5,
-            }]);
-    const {getByText, getByLabelText} = render(
-        <Router>
-            <PlaceOrder time={"10:00"}
-                        date={"Sab"}
-                        loggedUser={"mario.rossi@gmail.com"}
-                        loggedUserRole={"CUSTOMER"}
-            />
-        </Router>
-    );
-    fireEvent.click(getByText("Send order"));
-    waitFor(()=>{
-        getByText("Review and comfirme order");
-        getByText("mario.rossi@gmail.com");
-        fireEvent.click(getByLabelText("SKIP FOR NOW"));
-        getByLabelText("SET SHIPPING INFO");
-        getByText("Don't forget to set up your shipping info!")
-    })
-})
-
 test("Schedule pickup - ok", async()=>{
     localStorage.setItem("role", "CUSTOMER");
     localStorage.setItem("username", "mario.rossi@gmail.com");
@@ -204,5 +173,32 @@ test("Home delivery - fail", async()=>{
         fireEvent.change(getByLabelText("address"), {target:{value:"Via Roma 10, Torino"}});
         getByText("Order Completed");
         getByText("Error in placed order, retry!");
+    })
+})
+
+test("remove SKIP FOR NOW", async() => {
+    localStorage.setItem("role", "CUSTOMER");
+    localStorage.setItem("username", "mario.rossi@gmail.com");
+    mockGetCart.mockResolvedValueOnce(
+        [
+            {   "productId":7,
+                "name":"Apples",
+                "unitOfMeasurement":"Kg",
+                "totalQuantity":50.0,
+                "quantityAvailable":2.0,
+                "price":2.5,
+            }]);
+    const {getByText, getByLabelText} = render(
+        <Router>
+            <PlaceOrder time={"10:00"}
+                        date={"Sab"}
+                        loggedUser={"mario.rossi@gmail.com"}
+                        loggedUserRole={"CUSTOMER"}
+            />
+        </Router>
+    );
+    fireEvent.click(getByText("Send order"));
+    waitFor(()=>{
+        expect(getByLabelText("SKIP FOR NOW")).toThrow();
     })
 })
