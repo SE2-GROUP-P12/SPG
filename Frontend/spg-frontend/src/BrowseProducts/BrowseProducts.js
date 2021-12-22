@@ -57,9 +57,9 @@ function BrowseProducts(props) {
     }
 
     useEffect(async () => {
-        if (props.isLogged)
+        if (localStorage.getItem("username")!=null)
             await _getCart();
-    }, [props.isLogged]);
+    }, []);
 
     function ProductEntry(pe_props) {
         const [show, setShow] = useState(false);
