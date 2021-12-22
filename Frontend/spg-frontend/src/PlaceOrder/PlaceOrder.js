@@ -128,7 +128,6 @@ function PlaceOrder(props) {
         const [showDate, setShowDate] = useState(true);
         const [pickUpDate, setPickUpDate] = useState(-1);
         const [pickUpTime, setPickUpTime] = useState("");
-        const [showShippingInfo, setShowShppingInfo] = useState("SKIP FOR NOW");
         const [errorDate, setErrorDate] = useState(false);
         const [showAddressForm, setShowAddressForm] = useState(false);
         const [checkBoxStatus, setChechBoxStatus] = useState([true, false]);
@@ -245,16 +244,7 @@ function PlaceOrder(props) {
                     </div>
                 )
             }
-
-
-        /* LASTMINUTE
-        if (!errorDate) {
-                if (pickUpDate === "")
-                    return getAlertBasedPicker("")
-                else
-                    return getAlertBasedPicker("")
-            } else */
-                return getAlertBasedPicker("")
+            return getAlertBasedPicker("")
         }
 
         //console.log(order)
@@ -268,18 +258,6 @@ function PlaceOrder(props) {
                 total += p.price * p.quantityAvailable;
             }
             return total.toFixed(2);
-        }
-
-
-        const changeCheckBoxHanlder = () => {
-            if (!showDate) {
-                setShowShppingInfo("SKIP FOR NOW");
-                //reset status
-                setErrorDate(false);
-                setPickUpDate(-1);
-            } else
-                setShowShppingInfo("SET SHIPPING INFO");
-            setShowDate(!showDate);
         }
 
         return (<Modal
@@ -297,43 +275,19 @@ function PlaceOrder(props) {
                     <br/>
                     <b>AMOUNT: </b> {getOrderTotalAmount()}
                     <br/><br/>
-                    <div>
-                        <Row>
-                            <Col>
-                                <h5 variant="success">SHIPPING INFO </h5>
-                            </Col>
-                            <Col>
-                                <reactForm.Check type="switch" label={showShippingInfo} claaName="success"
-                                                 onChange={() => changeCheckBoxHanlder()}
-                                                 checked={showDate}/>
-                            </Col>
-                        </Row>
-                    </div>
-                    {showDate === true ? selectAlertType() :
-                        <Alert variant="warning">Don't forget to set up your shipping info!</Alert>}
+                    {selectAlertType()}
 
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    {showShippingInfo === "SKIP FOR NOW" ? <Button variant="success" disabled={!enableButton}
-                                                                   onClick={() => {
-                                                                       placeOrder(pickUpDate, customAddress, pickUpTime);
-                                                                       setModalShow(false);
-                                                                       setShowEndRoutineModal(true);
-                                                                   }}>
-                            Place Order</Button>
-                        :
-                        <Button variant="success"
-                                onClick={() => {
-                                    //LASTMINUTE placeOrder(-1, "", "");
-                                    placeOrder(-1, "", "00:00");
-                                    setModalShow(false);
-                                    setShowEndRoutineModal(true)
-                                }}>
-                            Place Order</Button>}
-
+                    <Button variant="success" disabled={!enableButton}
+                            onClick={() => {
+                            placeOrder(pickUpDate, customAddress, pickUpTime);
+                            setModalShow(false);
+                            setShowEndRoutineModal(true);
+                            }}>Place Order</Button>
                 </Modal.Footer>
             </Modal>
         );
@@ -387,7 +341,6 @@ function PlaceOrder(props) {
                                 let presentEmail = await API.customerExistsByMail(values.email)
                                 setCustomerError(!presentEmail);
                                 if (presentEmail) {
-                                    //console.log("CHECKPOINT, EMAIL:" + values.email + " ORDER:" + JSON.stringify(order) + " itsTime:" + itsTime);
                                     setCustomer(values.email);
                                     setCustomerSuccess(true);
                                 }
