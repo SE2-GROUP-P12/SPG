@@ -142,6 +142,7 @@ test("Add to cart", async () => {
 
 test("Bad browse product", async () => {
     mockBrowseProducts.mockResolvedValueOnce(null);
+    mockGetCart.mockResolvedValueOnce(null);
     localStorage.setItem("role", "CUSTOMER");
     localStorage.setItem("username", "mario.rossi@gmail.com");
 
