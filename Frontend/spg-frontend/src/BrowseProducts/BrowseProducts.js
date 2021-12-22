@@ -49,7 +49,7 @@ function BrowseProducts(props) {
 
     async function _getCart() {
         const prod = await API.getCart({'email': localStorage.getItem("username")}, props.setErrorMessage);
-        if (prod === undefined) {
+        if (prod === null) {
             setError(true);
             setCart([]);
         } else
@@ -59,7 +59,7 @@ function BrowseProducts(props) {
     useEffect(async () => {
         if (props.isLogged)
             await _getCart();
-    }, []);
+    }, [props.isLogged]);
 
     function ProductEntry(pe_props) {
         const [show, setShow] = useState(false);
@@ -174,10 +174,16 @@ function BrowseProducts(props) {
         const handleShow = () => setShow(true);
 
         return (<>
-            <Button id="basket" variant="success" size="lg" onClick={handleShow}
+            {error ?
+                <Button id="basket" variant="warning" size="lg" //onClick={handleShow}
+                        style={{position: 'fixed', bottom: '10px', left: '10px'}}>
+                    Error loading cart
+                </Button>
+                :
+                <Button id="basket" variant="success" size="lg" onClick={handleShow}
                     style={{position: 'fixed', bottom: '10px', left: '10px'}}>
                 🛒 {cart.length} item(s)
-            </Button>
+            </Button>}
             <Offcanvas show={show} onHide={handleClose}>
                 <Offcanvas.Header><h2>Your Cart</h2></Offcanvas.Header>
                 <Offcanvas.Body>
