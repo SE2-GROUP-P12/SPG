@@ -8,6 +8,7 @@ import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.*;
 import it.polito.SE2.P12.SPG.service.*;
 import it.polito.SE2.P12.SPG.utils.*;
+import it.polito.SE2.P12.SPG.telegramBot.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,6 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.telegram.telegrambots.ApiContextInitializer;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +51,7 @@ public class SpgController {
     private final SpgBasketService basketService;
     private final JWTUserHandlerService jwtUserHandlerService;
     private final DBUtilsService dbUtilsService;
+    private final TelegramBot telegramBot;
     private final WalletOperationService walletOperationService;
     private long timeOffset;
 
@@ -62,6 +67,7 @@ public class SpgController {
         this.walletOperationService = walletOperationService;
         this.dbUtilsService = dbUtilsService;
         this.dbUtilsService.init();
+        this. telegramBot= this.startBot(userService);
     }
 
     @GetMapping("/")
@@ -572,4 +578,17 @@ public class SpgController {
         return requestMap;
     }
 
-}
+
+    public TelegramBot startBot(SpgUserService userService){
+        ApiContextInitializer.init();
+        TelegramBotsApi api = new TelegramBotsApi();
+        TelegramBot bot  = new TelegramBot(userService);
+        try {
+            api.registerBot(bot);
+        } catch (TelegramApiRequestException e) {
+            // gestione errore in registrazione
+        }
+        return bot;
+    }
+ }
+

@@ -36,7 +36,7 @@ public class SpgUserService {
         this.farmerRepo = farmerRepo;
     }
 
-
+    public User findUserByChatId(String chatId){return userRepo.findUserByChatId(chatId);}
     public Long getUserIdByEmail(String email) {
         return userRepo.findUserByEmail(email).getUserId();
     }
@@ -162,5 +162,12 @@ public class SpgUserService {
 
     public void payForProducts(Basket basket, Customer user) {
         user.pay(basket.getValue());
+    }
+
+    public boolean setChatIdToUser(String email, String chatId) {
+        User user = userRepo.findUserByEmail(email);
+        if(user ==null) return false;
+        user.setChatId(chatId);
+        return true;
     }
 }

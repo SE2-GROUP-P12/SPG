@@ -40,12 +40,12 @@ services:
       #- ./opt/script/data/initialization/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
       # - mysql-persistent-volume:/var/lib/mysql
 
-  database-test:    
+  database-test:
     image: mysql:5.7
-    environment: 
+    environment:
       *mysql-default-environment
     ports:
       - "13306:3306"
-    
+
 # volumes:
 #   mysql-persistent-volume:

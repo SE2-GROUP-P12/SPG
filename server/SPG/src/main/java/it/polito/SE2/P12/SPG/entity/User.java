@@ -44,6 +44,8 @@ public class User {
     protected Boolean active;
     @Column(name = "role", insertable = false, updatable = false)
     protected String role;
+    @Column(name = "chatId")
+    protected  String chatId;
 
     public User(String name, String surname, String ssn,
                 String phoneNumber,
