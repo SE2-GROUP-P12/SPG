@@ -72,8 +72,17 @@ public class Basket {
 
     public void add(Product product, Double quantity) {
         Double price = product.getPrice();
-        if (prods.containsKey(product)) {
-            prods.put(product, prods.get(product) + quantity);
+        Double value = 0.0;
+        for (Map.Entry<Product,Double> entry: prods.entrySet()
+             ) {
+            if(entry.getKey().getProductId() == product.getProductId()){
+                value =entry.getValue();
+            }
+        }
+        if (value!=0.0) {
+            value+=quantity;
+            prods.remove(product);
+            prods.put(product,value );
         } else {
             prods.put(product, quantity);
         }

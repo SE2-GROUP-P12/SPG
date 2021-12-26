@@ -231,17 +231,22 @@ public class SpgController {
     public ResponseEntity<Map<String, String>> addToBasket(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         Map<String, String> response = new HashMap<>();
-        if (requestMap.isEmpty())
+        if (requestMap.isEmpty()) {
+            System.out.println("empty request");
             return ResponseEntity.badRequest().build();
+        }
         if (requestMap.containsKey(Constants.JSON_PRODUCT_ID) && requestMap.containsKey(Constants.JSON_EMAIL) && requestMap.containsKey(Constants.JSON_QUANTITY)) {
             Product product = productService.getProductById(Long.valueOf((Integer) requestMap.get(Constants.JSON_PRODUCT_ID)));
             Double quantity = Double.valueOf(requestMap.get(Constants.JSON_QUANTITY).toString());
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get(Constants.JSON_EMAIL));
-            if (user == null || product == null || !basketService.addProductToBasket(product, quantity, user))
+            if (user == null || product == null || !basketService.addProductToBasket(product, quantity, user)) {
+                System.out.println("Something went wrong");
                 return ResponseEntity.badRequest().build();
+            }
             response.put("responseStatus", "200-OK");
             return ResponseEntity.ok(response);
         }
+        System.out.println("end statement");
         return ResponseEntity.badRequest().build();
     }
 
