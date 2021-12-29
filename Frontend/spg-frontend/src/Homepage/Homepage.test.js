@@ -25,3 +25,8 @@ test ("renders correctly", () => {
     getByText("Torino");
     getByText("Catania");
 });
+
+test ("Introduced telegram button", ()=>{
+    const {getByText} = render(<Homepage/>);
+    getByText("Join us on Telegram 💌");
+});
