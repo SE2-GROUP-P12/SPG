@@ -14,14 +14,29 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 @Component
-@ConditionalOnMissingBean(TelegramBot.class)
-@Slf4j
+
 public class TelegramBot extends TelegramLongPollingBot {
+    @Autowired
+    public TelegramBot(){}
+
     public TelegramBot(SpgUserService userService) {
         this.userService = userService;
     }
     private final String botName= "SPG_p12";
     private SpgUserService userService;
+
+    public String getBotName() {
+        return botName;
+    }
+
+    public SpgUserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(SpgUserService userService) {
+        this.userService = userService;
+    }
+
 
 
     @Override

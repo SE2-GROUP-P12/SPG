@@ -51,6 +51,7 @@ public class SpgController {
     private final SpgBasketService basketService;
     private final JWTUserHandlerService jwtUserHandlerService;
     private final DBUtilsService dbUtilsService;
+    @Autowired
     private final TelegramBot telegramBot;
     private final WalletOperationService walletOperationService;
     private long timeOffset;
@@ -67,7 +68,8 @@ public class SpgController {
         this.walletOperationService = walletOperationService;
         this.dbUtilsService = dbUtilsService;
         this.dbUtilsService.init();
-        this. telegramBot= this.startBot(userService);
+
+        this.telegramBot= this.startBot(userService);
     }
 
     @GetMapping("/")
