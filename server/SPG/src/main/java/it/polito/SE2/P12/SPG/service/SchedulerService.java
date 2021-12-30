@@ -7,6 +7,7 @@ import it.polito.SE2.P12.SPG.schedulables.Schedulable;
 import it.polito.SE2.P12.SPG.schedulables.TuesdayEveningSchedule;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,8 @@ import java.util.Map.Entry;
 @Service
 public class SchedulerService {
 
-
+    @Value("${spring.mail.host}")
+    private String emailHostAddress;
     private static final long POLLING_RATE = 5000L;
     private static final String ZONE = "Europe/Rome";
     private long iteration = 0L;
@@ -49,14 +51,17 @@ public class SchedulerService {
         addToSchedule(new TuesdayEveningSchedule(this.orderRepo, this, this.orderService),
                 LocalDate.now(applicationClock)
                         .with(TemporalAdjusters.next(DayOfWeek.TUESDAY))
-                        .atTime(23, 0).
+                        .atTime(0, 1).
                         toEpochSecond(ZoneOffset.ofHours(1)));
         /* FRIDAY */
     }
 
     @Scheduled(fixedDelay = POLLING_RATE)
     private void poll() {
-
+        if (this.emailHostAddress.equals("127.0.0.1")) {
+            System.out.println("TESTING ENV DETECTED: NO SCHEDULE(s) WILL BE ADDED!\n");
+            return;
+        }
         this.iteration++;
         System.out.println("application time: " + applicationClock.instant().atZone(ZoneId.of(ZONE)) + ", epoch time: " + applicationClock.instant().getEpochSecond() + ", iteration: " + this.iteration);
 

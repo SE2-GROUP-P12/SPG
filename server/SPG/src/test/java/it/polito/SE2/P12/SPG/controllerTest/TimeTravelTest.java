@@ -19,9 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(
@@ -44,21 +41,12 @@ public class TimeTravelTest {
     @Test
     @WithUserDetails("tester@test.com")
     public void timeTravelTest() throws Exception {
-        List<String> days = new ArrayList<String>();
-        days.add("Mon");
-        days.add("Tue");
-        days.add("Wed");
-        days.add("Thu");
-        days.add("Fri");
-        days.add("Sat");
-        days.add("Sun");
-        for (String day : days)
-            mockMvc.perform(MockMvcRequestBuilders.post(API.HOME + API.TIME_TRAVEL)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .content("{\"date\":\"" + day + "\", \"time\":\"12:30\"}")
-                    ).andExpect(status().isOk())
-                    .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.post(API.HOME + API.TIME_TRAVEL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content("{\"epoch time\":\"12345678\"}")
+                ).andExpect(status().isOk())
+                .andReturn();
 
     }
 

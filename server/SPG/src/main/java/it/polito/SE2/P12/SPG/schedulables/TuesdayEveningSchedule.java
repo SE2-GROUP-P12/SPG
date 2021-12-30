@@ -38,7 +38,7 @@ public class TuesdayEveningSchedule implements Schedulable {
         schedulerService.addToSchedule(new TuesdayEveningSchedule(orderRepo, schedulerService, orderService),
                 LocalDate.now(schedulerService.getClock())
                         .with(TemporalAdjusters.next(DayOfWeek.TUESDAY))
-                        .atTime(23, 0).
+                        .atTime(0, 1).
                         toEpochSecond(ZoneOffset.ofHours(1)));
     }
 }
