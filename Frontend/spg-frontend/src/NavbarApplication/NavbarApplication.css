@@ -6,3 +6,8 @@
     margin: 15px 20px;
     color: white;
 }
+
+.alert-style {
+    color: #e37d05;
+    border-color: black;
+}
