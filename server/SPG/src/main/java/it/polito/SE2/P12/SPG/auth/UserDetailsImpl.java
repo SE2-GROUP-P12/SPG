@@ -1,5 +1,6 @@
 package it.polito.SE2.P12.SPG.auth;
 
+import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.security.ApplicationUserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,10 +14,10 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
     private Set<SimpleGrantedAuthority> authorityList;
     private String name;
-    private Boolean active;
+    private Boolean active = true;
+    private int missedPickUp = -1;
 
     public UserDetailsImpl(User user) {
-        this.active = true;
         this.name = user.getName();
         this.username = user.getEmail();
         this.password = user.getPassword();
@@ -24,9 +25,13 @@ public class UserDetailsImpl implements UserDetails {
             this.authorityList = ApplicationUserRole.ADMIN.getGrantedAuthorities();
         else if (user.getRole().equals("EMPLOYEE"))
             this.authorityList = ApplicationUserRole.EMPLOYEE.getGrantedAuthorities();
-        else if (user.getRole().equals("CUSTOMER"))
+        else if (user.getRole().equals("CUSTOMER")) {
             this.authorityList = ApplicationUserRole.CUSTOMER.getGrantedAuthorities();
-        else if (user.getRole().equals("FARMER"))
+            Customer tmp = (Customer) user;
+            this.missedPickUp = tmp.getMissedPickUpAmount();
+            if (missedPickUp > 4)
+                this.active = false;
+        } else if (user.getRole().equals("FARMER"))
             this.authorityList = ApplicationUserRole.FARMER.getGrantedAuthorities();
         else
             this.authorityList = ApplicationUserRole.USER.getGrantedAuthorities();
@@ -69,6 +74,10 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.active;
+    }
+
+    public int getMissedPickUp() {
+        return this.missedPickUp;
     }
 
 }
