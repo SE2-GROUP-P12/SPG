@@ -30,6 +30,7 @@ public class MondayMorningSchedule implements Schedulable {
         for (Product p : prods) {
             spgProductService.setForecast(p.getProductId(), 0.0);
         }
-        schedulerService.addToSchedule(new MondayMorningSchedule(spgProductService, schedulerService), LocalDate.now(schedulerService.getClock()).with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(9, 0).toEpochSecond(ZoneOffset.ofHours(1)));
+        schedulerService.addToSchedule(new MondayMorningSchedule(spgProductService, schedulerService),
+                LocalDate.now(schedulerService.getClock()).with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(9, 0).toEpochSecond(ZoneOffset.ofHours(1)));
     }
 }
