@@ -53,11 +53,9 @@ public class TimeTravelTest {
     @Test
     @WithUserDetails("tester@test.com")
     public void timeTravelErrorTest() throws Exception {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(API.HOME + API.TIME_TRAVEL)
+        mockMvc.perform(MockMvcRequestBuilders.post(API.HOME + API.TIME_TRAVEL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        //1639740466 is GMT: Friday 17 December 2021 11:27:46
-                        // Your time zone: venerdì 17 dicembre 2021 12:27:46 GMT+01:00
                         .content("{\"invalid json\": \"abcd\"}")
                 ).andExpect(status().isBadRequest())
                 .andReturn();
