@@ -8,12 +8,16 @@ import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.MimeTypeUtils;
 
+import javax.mail.Header;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,11 +28,13 @@ import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final JWTUserHandlerService jwtUserHandlerService;
     private final SpgUserService spgUserService;
     private final AuthenticationManager authenticationManager;
@@ -60,6 +66,22 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         //Set it into the authentication manager (see security config file)
         return authenticationManager.authenticate(authenticationToken);
+    }
+
+    @SneakyThrows
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              AuthenticationException failed)
+            throws IOException, ServletException {
+        log.info("Unsuccessful authentication reason: " + failed.toString());
+        //401 - UNAUTHORIZED
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        Map<String, String> responseBody = new HashMap<>();
+        //BE error message generated
+        responseBody.put("errorMessage", failed.getMessage());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        objectMapper.writeValue(response.getOutputStream(), responseBody);
     }
 
     @SneakyThrows

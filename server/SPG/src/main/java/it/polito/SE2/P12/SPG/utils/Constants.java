@@ -26,8 +26,7 @@ public class Constants {
     public static final String JSON_ORDER_ID = "orderId";
     public static final String JSON_QUANTITY = "quantity";
     public static final String JSON_ROLES = "roles";
-    public static final String JSON_DATE = "date";
-    public static final String JSON_TIME = "time";
+    public static final String JSON_EPOCH_TIME = "epoch time";
     public static final String JSON_DELIVERY_DATE = "deliveryDate";
     public static final String JSON_DELIVERY_ADDRESS = "deliveryAddress";
 

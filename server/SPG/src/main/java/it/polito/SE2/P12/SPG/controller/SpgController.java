@@ -48,11 +48,12 @@ public class SpgController {
     private final JWTUserHandlerService jwtUserHandlerService;
     private final DBUtilsService dbUtilsService;
     private final WalletOperationService walletOperationService;
+    private final SchedulerService schedulerService;
     private long timeOffset;
 
 
     @Autowired
-    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService) {
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService, SchedulerService schedulerService) {
         this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
@@ -62,6 +63,8 @@ public class SpgController {
         this.walletOperationService = walletOperationService;
         this.dbUtilsService = dbUtilsService;
         this.dbUtilsService.init();
+        this.schedulerService = schedulerService;
+        this.schedulerService.initScheduler();
     }
 
     @GetMapping("/")
@@ -337,7 +340,7 @@ public class SpgController {
 
     @GetMapping(API.GET_WALLET_OPERATIONS)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
-    public ResponseEntity<Map<String,Object>> getWalletOperation(@RequestParam String email) {
+    public ResponseEntity<Map<String, Object>> getWalletOperation(@RequestParam String email) {
         Map<String, Object> responseMap = new HashMap<>();
         if (Boolean.FALSE.equals(userService.checkPresenceOfMail(email))) {
             responseMap.put(Constants.JSON_ERROR_MESSAGE, "Invalid email");
@@ -484,8 +487,16 @@ public class SpgController {
 
 
     @PostMapping(API.TIME_TRAVEL)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER', 'ROLE_EMPLOYEE','ROLE_FARMER')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER', 'ROLE_EMPLOYEE','ROLE_FARMER')")
     public ResponseEntity<Boolean> timeTravel(@RequestBody String jsonData) {
+        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
+        if (requestMap == null || !requestMap.containsKey(Constants.JSON_EPOCH_TIME))
+            return ResponseEntity.badRequest().build();
+        Long epochTime = Long.parseLong(requestMap.get(Constants.JSON_EPOCH_TIME).toString());
+        System.out.println("time travel at " + epochTime);
+        return ResponseEntity.ok(schedulerService.timeTravelAt(epochTime));
+
+        /*
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null ||
                 !requestMap.containsKey(Constants.JSON_DATE) ||
@@ -532,6 +543,7 @@ public class SpgController {
         timeOffset += (hh - currentHH) * 60 * 60 * 1000;
         timeOffset += (mm - currentMM) * 60 * 1000;
         return ResponseEntity.ok().build();
+        */
     }
 
     @GetMapping(API.LOGOUT)

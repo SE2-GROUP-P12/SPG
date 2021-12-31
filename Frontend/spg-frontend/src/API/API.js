@@ -107,9 +107,9 @@ async function browseProducts(setErrorMessage) {
 
 async function browseProductsByFarmer(data, setErrorMessage) {
     try {
-        if(data.forecasted === null)
+        if (data.forecasted === null)
             data.forecasted = "none"
-        const response = await fetch("/api/product/?farmer=" + data.email + "&forecasted=" + data.forecasted , {
+        const response = await fetch("/api/product/?farmer=" + data.email + "&forecasted=" + data.forecasted, {
             method: 'GET',
             headers: getAuthenticationHeaders(),
         });
@@ -320,10 +320,10 @@ async function getWallet(email) {
     }
 }
 
-async function getWalletWarning(email){
+async function getWalletWarning(email) {
     try {
-        console.log("CHECKPOINT: "+email);
-        const response = await fetch("/api/customer/retrieveError?email="+email,{
+        console.log("CHECKPOINT: " + email);
+        const response = await fetch("/api/customer/retrieveError?email=" + email, {
             method: 'GET',
             headers: getAuthenticationHeaders()
         });
@@ -451,7 +451,10 @@ async function timeTravel(data) {
     try {
         const response = await fetch("/api/timeTravel", {
             method: 'POST',
-            headers: getAuthenticationHeaders(),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(data)
         });
         if (response.ok)
@@ -506,5 +509,5 @@ const API = {
     timeTravel,
     submitConfirmed
 };
-export { API }
+export {API}
 

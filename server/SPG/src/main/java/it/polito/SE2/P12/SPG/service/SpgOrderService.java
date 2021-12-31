@@ -15,8 +15,9 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static it.polito.SE2.P12.SPG.utils.OrderStatus.ORDER_STATUS_OPEN;
+import static it.polito.SE2.P12.SPG.utils.OrderStatus.*;
 
 
 @Service
@@ -77,8 +78,12 @@ public class SpgOrderService {
             orderRepo.save(order);
             return true;
         }
-        //case: we have some other order issued by this user, so we evaluate the total amount
-        for (Order o : getOrdersByUserId(userId)) {
+        //case: we have some other order issued by this user, so we evaluate the total amount of OPEN order
+        //Optimal function: sort order based on value in order to pay more order
+        for (Order o : getOrdersByUserId(userId).stream()
+                .filter(ord -> ord.getStatus().equals(ORDER_STATUS_OPEN))
+                .sorted(Comparator.comparingDouble(Order::getValue))
+                .toList()) {
             //add current order value
             currentAmount += o.getValue();
             //check if with new order value the current amount overflowed the wallet value
@@ -212,6 +217,22 @@ public class SpgOrderService {
         order.setDeliveryAddress(address);
         orderRepo.save(order);
         return true;
+    }
+
+    public boolean setOrderStatus(Long orderId, String orderStatus) {
+        boolean res = false;
+        Order order = orderRepo.findOrderByOrderId(orderId);
+        if (order == null)
+            return false;
+        switch (orderStatus) {
+            case ORDER_STATUS_CONFIRMED -> res = order.updateToConfirmedStatus();
+            case ORDER_STATUS_PAID -> res = order.updateToPaidStatus();
+            case ORDER_STATUS_CLOSED -> res = order.updateToClosedStatus();
+            case ORDER_STATUS_CANCELLED -> res = order.updateToCancelledStatus();
+            case ORDER_STATUS_NOT_RETRIEVED -> res = order.updateToNotRetrievedStatus();
+        }
+        orderRepo.save(order);
+        return res;
     }
 }
 

@@ -1,15 +1,19 @@
 package it.polito.SE2.P12.SPG.service;
 
+import it.polito.SE2.P12.SPG.emailServer.EmailConfiguration;
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
 import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.interfaceEntity.WalletUserType;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
+import it.polito.SE2.P12.SPG.utils.MailConstants;
 import lombok.extern.slf4j.Slf4j;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.repository.*;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,14 +30,16 @@ public class SpgUserService {
     private ShopEmployeeRepo shopEmployeeRepo;
     private AdminRepo adminRepo;
     private FarmerRepo farmerRepo;
+    private EmailConfiguration emailConfiguration;
 
     @Autowired
-    public SpgUserService(UserRepo userRepo, CustomerRepo customerRepo, ShopEmployeeRepo shopEmployeeRepo, AdminRepo adminRepo, FarmerRepo farmerRepo) {
+    public SpgUserService(UserRepo userRepo, CustomerRepo customerRepo, ShopEmployeeRepo shopEmployeeRepo, AdminRepo adminRepo, FarmerRepo farmerRepo, EmailConfiguration emailConfiguration) {
         this.userRepo = userRepo;
         this.customerRepo = customerRepo;
         this.shopEmployeeRepo = shopEmployeeRepo;
         this.adminRepo = adminRepo;
         this.farmerRepo = farmerRepo;
+        this.emailConfiguration = emailConfiguration;
     }
 
 
@@ -163,4 +169,56 @@ public class SpgUserService {
     public void payForProducts(Basket basket, Customer user) {
         user.pay(basket.getValue());
     }
+
+
+    //Check presence of user into repo then update, return the current (updated) amount, if absent return invalid amount (-1)
+    public int incrementMissedPickUp(String email) {
+        Customer tmpCustomer = customerRepo.findCustomerByEmail(email);
+        if (tmpCustomer == null)
+            return -1;
+        tmpCustomer.incrementMissedPickUp();
+        customerRepo.save(tmpCustomer);
+        return customerRepo.findCustomerByEmail(email).getMissedPickUpAmount();
+    }
+
+    //Check presence of user into repo then update, return the current (updated) amount, if absent return invalid amount (-1)
+    public int decrementMissedPickUp(String email) {
+        Customer tmpCustomer = customerRepo.findCustomerByEmail(email);
+        if (tmpCustomer == null)
+            return -1;
+        tmpCustomer.decrementMissedPickUp();
+        customerRepo.save(tmpCustomer);
+        return customerRepo.findCustomerByEmail(email).getMissedPickUpAmount();
+    }
+
+    //check if missedPickUpAmount is > 5
+    public boolean isCustomerBanned(String email) {
+        Customer tmpCustomer = customerRepo.findCustomerByEmail(email);
+        if (tmpCustomer == null)
+            return true; //invalid user is considered banned
+        return tmpCustomer.getMissedPickUpAmount() > 4;
+    }
+
+    //Sent automatically generated mail
+    public boolean sentWarningPickUpAmountMail(String email) {
+        if (customerRepo.findCustomerByEmail(email) == null)
+            return false;
+        //Create java mail serve starting from config
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setUsername(this.emailConfiguration.getUsername());
+        mailSender.setPassword(this.emailConfiguration.getPassword());
+        mailSender.setHost(this.emailConfiguration.getHost());
+        mailSender.setPort(this.emailConfiguration.getPort());
+        //Set parameter
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(MailConstants.NO_REPLY_EMAIL);
+        mailMessage.setTo(email);
+        mailMessage.setSubject(MailConstants.EMAIL_SUBJECT_WARNINGS_PICK_UP);
+        mailMessage.setText(MailConstants.EMAIL_PICK_UP_WARNING(customerRepo.findCustomerByEmail(email)));
+        //Sent mail
+        mailSender.send(mailMessage);
+        return true;
+    }
+
+
 }

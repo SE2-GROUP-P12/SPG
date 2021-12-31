@@ -5,6 +5,9 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
+import it.polito.SE2.P12.SPG.repository.CustomerRepo;
+import it.polito.SE2.P12.SPG.repository.UserRepo;
+import it.polito.SE2.P12.SPG.security.ApplicationUserRole;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.Constants;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,6 +61,8 @@ public class JWTProviderImpl implements JWTProvider {
         responseBody.put("refreshToken", refreshToken);
         responseBody.put(Constants.JSON_ROLES, userDetails.getAuthorities().toString().split("_")[1].replace("]", ""));
         responseBody.put(Constants.JSON_EMAIL, username);
+        if (responseBody.get(Constants.JSON_ROLES).equals(ApplicationUserRole.CUSTOMER.name()))
+            responseBody.put("MissedPickUp", String.valueOf(userDetails.getMissedPickUp()));
         return responseBody;
     }
 
@@ -116,6 +121,8 @@ public class JWTProviderImpl implements JWTProvider {
         responseBody.put("refreshToken", generateRefreshToken(userDetails, requestURL));
         responseBody.put(Constants.JSON_ROLES, userDetails.getAuthorities().toString().split("_")[1].replace("]", "")); //Max 1 authority(?)
         responseBody.put(Constants.JSON_EMAIL, userDetails.getUsername());
+        if (responseBody.get(Constants.JSON_ROLES).equals(ApplicationUserRole.CUSTOMER.name()))
+            responseBody.put("MissedPickUp", String.valueOf(userDetails.getMissedPickUp()));
         return responseBody;
     }
 
