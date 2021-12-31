@@ -65,11 +65,11 @@ public class SpgOrderService {
         //check if customer exists
         if (orderIssuer == null)
             return false;
-        Double currentAmount = order.getValue();
+        Double currentAmount = 0.00;
         //case: empty order list -> just check the wallet
         if (getOrdersByUserId(userId).isEmpty()) {
             //check wallet availability for orders paying
-            if (orderIssuer.getWallet() >= currentAmount) {
+            if (orderIssuer.getWallet() >= order.getValue()) {
                 //Set order as confirmed (payable)
                 order.updateToConfirmedStatus();
                 orderRepo.save(order);
@@ -81,21 +81,20 @@ public class SpgOrderService {
         //case: we have some other order issued by this user, so we evaluate the total amount of OPEN order
         //Optimal function: sort order based on value in order to pay more order
         for (Order o : getOrdersByUserId(userId).stream()
-                .filter(ord -> ord.getStatus().equals(ORDER_STATUS_OPEN))
+                .filter(ord -> ord.getStatus().equals(ORDER_STATUS_CONFIRMED))
                 .sorted(Comparator.comparingDouble(Order::getValue))
                 .toList()) {
             //add current order value
             currentAmount += o.getValue();
-            //check if with new order value the current amount overflowed the wallet value
-            if (currentAmount > orderIssuer.getWallet()) {
-                //leave the state on open then return true
-                orderRepo.save(order);
-                return true;
-            }
         }
-        //if we exit the for loop we assume to have sufficient amount in the wallet
+        //check if with new order value the current amount overflowed the wallet value
+        if (currentAmount + order.getValue() > orderIssuer.getWallet()) {
+            //leave the state on open then return true
+            orderRepo.save(order);
+            return true;
+        }
+        //the order can be paid correctly
         order.updateToConfirmedStatus();
-
         orderRepo.save(order);
         return true;
     }

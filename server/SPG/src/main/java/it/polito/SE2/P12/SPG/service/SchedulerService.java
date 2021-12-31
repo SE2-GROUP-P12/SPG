@@ -1,12 +1,10 @@
 package it.polito.SE2.P12.SPG.service;
 
-import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
-import it.polito.SE2.P12.SPG.schedulables.FridayEveningSchedule;
-import it.polito.SE2.P12.SPG.schedulables.MondayMorningSchedule;
+import it.polito.SE2.P12.SPG.schedulables.schedule_routines.UnRetrievedOrderDetection_Routine;
+import it.polito.SE2.P12.SPG.schedulables.schedule_routines.MondayMorningSchedule;
 import it.polito.SE2.P12.SPG.schedulables.Schedulable;
-import it.polito.SE2.P12.SPG.schedulables.TuesdayEveningSchedule;
-import lombok.Data;
+import it.polito.SE2.P12.SPG.schedulables.schedule_routines.PendingOrdersDetection_Routine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -51,14 +49,14 @@ public class SchedulerService {
         addToSchedule(new MondayMorningSchedule(spgProductService, this), LocalDate.now(applicationClock).with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(9, 0).toEpochSecond(ZoneOffset.ofHours(1)));
         /* TUESDAY */
         //1. Delete all unplayable orders
-        addToSchedule(new TuesdayEveningSchedule(this.orderRepo, this, this.orderService),
+        addToSchedule(new PendingOrdersDetection_Routine(this.orderRepo, this, this.orderService),
                 LocalDate.now(applicationClock)
                         .with(TemporalAdjusters.next(DayOfWeek.TUESDAY))
                         .atTime(0, 1).
                         toEpochSecond(ZoneOffset.ofHours(1)));
         /* FRIDAY */
         //1. mark not retrieved orders
-        addToSchedule(new FridayEveningSchedule(this.userService, this.orderService, this.orderRepo, this),
+        addToSchedule(new UnRetrievedOrderDetection_Routine(this.userService, this.orderService, this.orderRepo, this),
                 LocalDate.now(this.getClock()).with(TemporalAdjusters.next(DayOfWeek.FRIDAY)).atTime(20, 0).toEpochSecond(ZoneOffset.ofHours(1)));
     }
 

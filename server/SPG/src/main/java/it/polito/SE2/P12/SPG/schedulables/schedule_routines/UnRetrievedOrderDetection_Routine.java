@@ -1,8 +1,9 @@
-package it.polito.SE2.P12.SPG.schedulables;
+package it.polito.SE2.P12.SPG.schedulables.schedule_routines;
 
 import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
+import it.polito.SE2.P12.SPG.schedulables.Schedulable;
 import it.polito.SE2.P12.SPG.service.SchedulerService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
@@ -14,14 +15,14 @@ import java.time.ZoneOffset;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
-public class FridayEveningSchedule implements Schedulable {
+public class UnRetrievedOrderDetection_Routine implements Schedulable {
 
     private SpgOrderService orderService;
     private SpgUserService userService;
     private SchedulerService schedulerService;
     private OrderRepo orderRepo;
 
-    public FridayEveningSchedule(SpgUserService userService, SpgOrderService orderService, OrderRepo orderRepo, SchedulerService schedulerService) {
+    public UnRetrievedOrderDetection_Routine(SpgUserService userService, SpgOrderService orderService, OrderRepo orderRepo, SchedulerService schedulerService) {
         this.schedulerService = schedulerService;
         this.orderService = orderService;
         this.userService = userService;
