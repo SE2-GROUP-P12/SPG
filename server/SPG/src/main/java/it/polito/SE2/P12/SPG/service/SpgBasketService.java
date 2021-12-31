@@ -47,7 +47,7 @@ public class SpgBasketService {
         product.moveFromAvailableToBasket(quantity);
         Basket basket = user.getBasket();
         basket.add(product, quantity);
-        basketRepo.delete(basket);
+        //basketRepo.delete(basket); TODO: WTF?
         basketRepo.save(basket);
         return true;
     }
