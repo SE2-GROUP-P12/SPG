@@ -47,7 +47,7 @@ public class UserServiceTest {
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP) //set up mail server protocol
             .withConfiguration(GreenMailConfiguration.aConfig().withUser("duke@test.com", "password")) //remember to set-up user in test properties
-            .withPerMethodLifecycle(true);//reload extension each test: false
+            .withPerMethodLifecycle(false);//reload extension each test: false
 
 
     @BeforeEach
