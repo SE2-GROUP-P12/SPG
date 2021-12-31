@@ -224,11 +224,11 @@ public class UserServiceTest {
         Assertions.assertEquals(92.5, userService.getWallet("customer1@foomail.com"));
     }
 
-//    @Test
-//    public void negativeTopUpTest() {
-//        Assertions.assertFalse(userService.topUp("customer1@foomail.com", -1.0));
-//        Assertions.assertEquals(92.5, userService.getWallet("customer1@foomail.com"));
-//    }
+    @Test
+    public void negativeTopUpTest() {
+        Assertions.assertFalse(userService.topUp("customer1@foomail.com", -1.0));
+        Assertions.assertEquals(92.5, userService.getWallet("customer1@foomail.com"));
+    }
 
     @Test
     public void infiniteTopUpTest() {
