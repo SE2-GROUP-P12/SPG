@@ -121,6 +121,17 @@ public class Order {
         return true;
     }
 
+    public boolean updateToCancelledStatus() {
+        //Order must be in open status
+        if (!this.status.equals(ORDER_STATUS_OPEN) && !this.status.equals(ORDER_STATUS_PAID)) {
+            return false;
+        }
+        //Update status and date
+        this.status = ORDER_STATUS_CANCELLED;
+        this.current_status_date = LocalDateTime.now();
+        return true;
+    }
+
     public static class CustomSerializer extends StdSerializer<Order> {
 
         public CustomSerializer() {

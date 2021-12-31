@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static it.polito.SE2.P12.SPG.utils.OrderStatus.ORDER_STATUS_OPEN;
+import static it.polito.SE2.P12.SPG.utils.OrderStatus.*;
 
 
 @Service
@@ -212,6 +212,21 @@ public class SpgOrderService {
         order.setDeliveryAddress(address);
         orderRepo.save(order);
         return true;
+    }
+
+    public boolean setOrderStatus(Long orderId, String orderStatus) {
+        boolean res = false;
+        Order order = orderRepo.findOrderByOrderId(orderId);
+        if (order == null)
+            return false;
+        switch (orderStatus) {
+            case ORDER_STATUS_CONFIRMED -> res = order.updateToConfirmedStatus();
+            case ORDER_STATUS_PAID -> res = order.updateToPaidStatus();
+            case ORDER_STATUS_CLOSED -> res = order.updateToClosedStatus();
+            case ORDER_STATUS_CANCELLED -> res = order.updateToCancelledStatus();
+        }
+        orderRepo.save(order);
+        return res;
     }
 }
 
