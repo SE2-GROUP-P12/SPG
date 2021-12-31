@@ -1,17 +1,15 @@
-package it.polito.SE2.P12.SPG.schedulables;
+package it.polito.SE2.P12.SPG.schedulables.schedule_routines;
 
 
 import it.polito.SE2.P12.SPG.entity.Product;
+import it.polito.SE2.P12.SPG.schedulables.Schedulable;
 import it.polito.SE2.P12.SPG.service.SchedulerService;
 import it.polito.SE2.P12.SPG.service.SpgProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 public class MondayMorningSchedule implements Schedulable {
