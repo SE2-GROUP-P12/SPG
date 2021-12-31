@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.service;
 
 import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
+import it.polito.SE2.P12.SPG.schedulables.FridayEveningSchedule;
 import it.polito.SE2.P12.SPG.schedulables.MondayMorningSchedule;
 import it.polito.SE2.P12.SPG.schedulables.Schedulable;
 import it.polito.SE2.P12.SPG.schedulables.TuesdayEveningSchedule;
@@ -30,16 +31,18 @@ public class SchedulerService {
     private List<Entry<Schedulable, Long>> schedule;
 
     SpgProductService spgProductService;
-    private OrderRepo orderRepo;
-    private SpgOrderService orderService;
+    private final OrderRepo orderRepo;
+    private final SpgOrderService orderService;
+    private final SpgUserService userService;
 
     @Autowired
-    public SchedulerService(SpgProductService spgProductService, OrderRepo orderRepo, SpgOrderService orderService) {
+    public SchedulerService(SpgProductService spgProductService, OrderRepo orderRepo, SpgOrderService orderService, SpgUserService userService) {
         applicationClock = Clock.system(ZoneId.of(ZONE));
         schedule = new ArrayList<>();
         this.spgProductService = spgProductService;
         this.orderRepo = orderRepo;
         this.orderService = orderService;
+        this.userService = userService;
     }
 
     public void initScheduler() {
@@ -54,6 +57,9 @@ public class SchedulerService {
                         .atTime(0, 1).
                         toEpochSecond(ZoneOffset.ofHours(1)));
         /* FRIDAY */
+        //1. mark not retrieved orders
+        addToSchedule(new FridayEveningSchedule(this.userService, this.orderService, this.orderRepo, this),
+                LocalDate.now(this.getClock()).with(TemporalAdjusters.next(DayOfWeek.FRIDAY)).atTime(20, 0).toEpochSecond(ZoneOffset.ofHours(1)));
     }
 
     @Scheduled(fixedDelay = POLLING_RATE)

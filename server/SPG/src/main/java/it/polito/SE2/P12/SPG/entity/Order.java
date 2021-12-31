@@ -132,6 +132,16 @@ public class Order {
         return true;
     }
 
+    public boolean updateToNotRetrievedStatus() {
+        //Order must be in a PAID status
+        if (!this.status.equals(ORDER_STATUS_CONFIRMED))
+            return false;
+        //Update status and date
+        this.status = ORDER_STATUS_NOT_RETRIEVED;
+        this.current_status_date = LocalDateTime.now();
+        return true;
+    }
+
     public static class CustomSerializer extends StdSerializer<Order> {
 
         public CustomSerializer() {
