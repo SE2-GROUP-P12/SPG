@@ -2,6 +2,7 @@ package it.polito.SE2.P12.SPG.telegramBot;
 
 import it.polito.SE2.P12.SPG.entity.User;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -13,20 +14,17 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import javax.annotation.PostConstruct;
+
 
 
 public class TelegramBot extends TelegramLongPollingBot {
 
-    private SpgUserService userService;
+    //@Autowired
+    private SpgUserService userService=null;
     private final String botName= "SPG_p12";
-
-
-
-    public TelegramBot(SpgUserService userService) {
-        this.userService = userService;
-    }
-
-
 
     public String getBotName() {
         return botName;
@@ -39,25 +37,24 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void setUserService(SpgUserService userService) {
         this.userService = userService;
     }
-
-
-
     @Override
     public void onUpdateReceived(Update update) {
+
         String msg = update.getMessage().getText();
         String chatId=update.getMessage().getChatId().toString();
-        User user = userService.findUserByChatId(chatId);
+        //User user = userService.findUserByChatId(chatId);
+        String user = null;
         if(user==null){
-            if (msg == "/start"){
+            //if (msg == "/start"){
                 sendMessage(chatId, "Welcome to SPG_p12 telegram bot!\nPlease enter your email for registration.");
-            }
-            else {
+
+            /*else {
                 if(!userService.setChatIdToUser(msg, chatId))sendMessage(chatId, "User not found, try again.");
                 else sendMessage(chatId, "Success!");
-            }
+            }*/
         }
         else{
-            sendMessage(chatId,user.getEmail());
+            //sendMessage(chatId,user.getEmail());
         }
 
     }
@@ -67,6 +64,12 @@ public class TelegramBot extends TelegramLongPollingBot {
         sendMessage.setChatId(chatId);
         String risposta=message;
         sendMessage.setText(risposta);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+
+        }
     }
 
     @Override

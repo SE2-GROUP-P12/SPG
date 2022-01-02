@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
 import it.polito.SE2.P12.SPG.entity.*;
-import it.polito.SE2.P12.SPG.interfaceEntity.*;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
+import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.service.*;
-import it.polito.SE2.P12.SPG.utils.*;
-import it.polito.SE2.P12.SPG.telegramBot.*;
+import it.polito.SE2.P12.SPG.utils.API;
+import it.polito.SE2.P12.SPG.utils.Constants;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
+import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,9 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.telegram.telegrambots.ApiContextInitializer;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,10 +30,6 @@ import java.util.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * NOTE: in order to granted access to an api based on the user roles add roles into the 'PreAuthorization' annotation as follows:
@@ -52,16 +48,16 @@ public class SpgController {
     private final DBUtilsService dbUtilsService;
     private final WalletOperationService walletOperationService;
     private long timeOffset;
-    private final TelegramBotService telegramBotService;
+    //private final TelegramBotService telegramBotService;
 
     @Autowired
-    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService, TelegramBotService telegramBotService) {
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService) {
         this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
         this.jwtUserHandlerService = jwtUserHandlerService1;
-        this.telegramBotService = telegramBotService;
+        //this.telegramBotService = telegramBotService;
         this.timeOffset = 0;
         this.walletOperationService = walletOperationService;
         this.dbUtilsService = dbUtilsService;
@@ -579,16 +575,7 @@ public class SpgController {
     }
 
 
-    public TelegramBot startBot(SpgUserService userService){
-        ApiContextInitializer.init();
-        TelegramBotsApi api = new TelegramBotsApi();
-        TelegramBot bot  = new TelegramBot(userService);
-        try {
-            api.registerBot(bot);
-        } catch (TelegramApiRequestException e) {
-            // gestione errore in registrazione
-        }
-        return bot;
-    }
+
+
  }
 
