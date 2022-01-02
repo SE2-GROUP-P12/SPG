@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.mail.internet.MimeMessage;
+import java.time.Instant;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -211,8 +212,8 @@ public class UserServiceTest {
     @Test
     public void correctTopUpTest() {
 
-        Assertions.assertTrue(userService.topUp("customer1@foomail.com", 10.0));
-        Assertions.assertTrue(userService.topUp("customer2@foomail.com", 15.5));
+        Assertions.assertTrue(userService.topUp("customer1@foomail.com", 10.0, Instant.now()));
+        Assertions.assertTrue(userService.topUp("customer2@foomail.com", 15.5, Instant.now()));
 
         Assertions.assertEquals(102.5, userService.getWallet("customer1@foomail.com"));
         Assertions.assertEquals(28.32, userService.getWallet("customer2@foomail.com"));
@@ -220,27 +221,27 @@ public class UserServiceTest {
 
     @Test
     public void zeroTopUpTest() {
-        Assertions.assertFalse(userService.topUp("customer1@foomail.com", 0.0));
+        Assertions.assertFalse(userService.topUp("customer1@foomail.com", 0.0, Instant.now()));
         Assertions.assertEquals(92.5, userService.getWallet("customer1@foomail.com"));
     }
 
     @Test
     public void negativeTopUpTest() {
-        Assertions.assertFalse(userService.topUp("customer1@foomail.com", -1.0));
+        Assertions.assertFalse(userService.topUp("customer1@foomail.com", -1.0, Instant.now()));
         Assertions.assertEquals(92.5, userService.getWallet("customer1@foomail.com"));
     }
 
     @Test
     public void infiniteTopUpTest() {
-        Assertions.assertFalse(userService.topUp("customer1@foomail.com", Double.POSITIVE_INFINITY));
-        Assertions.assertFalse(userService.topUp("customer2@foomail.com", Double.NEGATIVE_INFINITY));
+        Assertions.assertFalse(userService.topUp("customer1@foomail.com", Double.POSITIVE_INFINITY, Instant.now()));
+        Assertions.assertFalse(userService.topUp("customer2@foomail.com", Double.NEGATIVE_INFINITY, Instant.now()));
         Assertions.assertEquals(92.5, userService.getWallet("customer1@foomail.com"));
         Assertions.assertEquals(12.82, userService.getWallet("customer2@foomail.com"));
     }
 
     @Test
     public void nanTopUpTest() {
-        Assertions.assertFalse(userService.topUp("customer1@foomail.com", Double.NaN));
+        Assertions.assertFalse(userService.topUp("customer1@foomail.com", Double.NaN, Instant.now()));
         Assertions.assertEquals(92.5, userService.getWallet("customer1@foomail.com"));
     }
 
@@ -275,7 +276,7 @@ public class UserServiceTest {
         //Decrement on 0
         Assertions.assertEquals(0, userService.decrementMissedPickUp("customer1@foomail.com"));
         //increment on 5
-        for (int i = 0; i < 10 ; i++) {
+        for (int i = 0; i < 10; i++) {
             userService.incrementMissedPickUp("customer1@foomail.com");
         }
         Assertions.assertEquals(5, userService.incrementMissedPickUp("customer1@foomail.com"));

@@ -34,7 +34,7 @@ public class PendingOrdersDetection_Routine implements Schedulable {
                 .toList();
         //for each order set cancelled status
         for (Order o : orderList) {
-            orderService.setOrderStatus(o.getOrderId(), OrderStatus.ORDER_STATUS_CANCELLED);
+            orderService.setOrderStatus(o.getOrderId(), OrderStatus.ORDER_STATUS_CANCELLED, schedulerService.getTime());
         }
         schedulerService.addToSchedule(new PendingOrdersDetection_Routine(orderRepo, schedulerService, orderService),
                 LocalDate.now(schedulerService.getClock())

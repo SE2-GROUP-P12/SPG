@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,7 +74,7 @@ public class SpgOrderService {
             //check wallet availability for orders paying
             if (orderIssuer.getWallet() >= order.getValue()) {
                 //Set order as confirmed (payable)
-                order.updateToConfirmedStatus();
+                order.updateToConfirmedStatus(LocalDateTime.ofInstant(order.getDate().toInstant(), ZoneId.systemDefault()));
                 orderRepo.save(order);
                 return true;
             }
@@ -94,7 +97,7 @@ public class SpgOrderService {
             return true;
         }
         //the order can be paid correctly
-        order.updateToConfirmedStatus();
+        order.updateToConfirmedStatus(LocalDateTime.ofInstant(order.getDate().toInstant(), ZoneId.systemDefault()));
         orderRepo.save(order);
         return true;
     }
@@ -132,7 +135,7 @@ public class SpgOrderService {
         return result;
     }
 
-    public Boolean deliverOrder(Long orderId) {
+    public Boolean deliverOrder(Long orderId, Instant currentSchedulerInstant) {
         Optional<Order> o = orderRepo.findById(orderId);
         if (!o.isPresent())
             return false;
@@ -153,7 +156,7 @@ public class SpgOrderService {
             //decrease the wallet amount
             user.setWallet(user.getWallet() - order.getValue());
             //set status paid
-            order.updateToPaidStatus();
+            order.updateToPaidStatus(LocalDateTime.ofInstant(currentSchedulerInstant, ZoneId.of(SchedulerService.ZONE)));
             //update db
             orderRepo.save(order);
             return true;
@@ -218,17 +221,17 @@ public class SpgOrderService {
         return true;
     }
 
-    public boolean setOrderStatus(Long orderId, String orderStatus) {
+    public boolean setOrderStatus(Long orderId, String orderStatus, Instant schedulerCurrentInstant) {
         boolean res = false;
         Order order = orderRepo.findOrderByOrderId(orderId);
         if (order == null)
             return false;
         switch (orderStatus) {
-            case ORDER_STATUS_CONFIRMED -> res = order.updateToConfirmedStatus();
-            case ORDER_STATUS_PAID -> res = order.updateToPaidStatus();
-            case ORDER_STATUS_CLOSED -> res = order.updateToClosedStatus();
-            case ORDER_STATUS_CANCELLED -> res = order.updateToCancelledStatus();
-            case ORDER_STATUS_NOT_RETRIEVED -> res = order.updateToNotRetrievedStatus();
+            case ORDER_STATUS_CONFIRMED -> res = order.updateToConfirmedStatus(LocalDateTime.ofInstant(schedulerCurrentInstant, ZoneId.systemDefault()));
+            case ORDER_STATUS_PAID -> res = order.updateToPaidStatus(LocalDateTime.ofInstant(schedulerCurrentInstant, ZoneId.systemDefault()));
+            case ORDER_STATUS_CLOSED -> res = order.updateToClosedStatus(LocalDateTime.ofInstant(schedulerCurrentInstant, ZoneId.systemDefault()));
+            case ORDER_STATUS_CANCELLED -> res = order.updateToCancelledStatus(LocalDateTime.ofInstant(schedulerCurrentInstant, ZoneId.systemDefault()));
+            case ORDER_STATUS_NOT_RETRIEVED -> res = order.updateToNotRetrievedStatus(LocalDateTime.ofInstant(schedulerCurrentInstant, ZoneId.systemDefault()));
         }
         orderRepo.save(order);
         return res;

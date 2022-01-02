@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,11 +44,11 @@ public class PendingOrderDetectionTest {
         Map<Product, Double> products = new HashMap<>();
         products.put(dbUtilsService.getProd1Object(), 5.00);
         //Paid order
-        Order orderPaid = new Order(customer, System.currentTimeMillis(), products, null, "");
+        Order orderPaid = new Order(customer, System.currentTimeMillis(), products, Date.from(Instant.now()), "");
         orderPaid.setStatus(OrderStatus.ORDER_STATUS_CONFIRMED); //Check if correct after refactoring (Should be paid)
         dbUtilsService.saveOrder(orderPaid);
         //Unpaid order
-        Order orderUnPaid = new Order(customer, System.currentTimeMillis(), products, null, "");
+        Order orderUnPaid = new Order(customer, System.currentTimeMillis(), products, Date.from(Instant.now()), "");
         //Check if correct after refactoring (Should be confirmed)
         dbUtilsService.saveOrder(orderUnPaid);
     }

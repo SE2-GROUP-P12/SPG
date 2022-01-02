@@ -37,7 +37,7 @@ public class UnRetrievedOrderDetection_Routine implements Schedulable {
         //for each order increase missed pick up and update state
         for (Order o : orderList) {
             //Update State
-            orderService.setOrderStatus(o.getOrderId(), OrderStatus.ORDER_STATUS_NOT_RETRIEVED);
+            orderService.setOrderStatus(o.getOrderId(), OrderStatus.ORDER_STATUS_NOT_RETRIEVED,schedulerService.getTime());
             //Add missed pick up and check if an alert has to be generated
             Customer tmpCustomer = (Customer) o.getCust();
             //if missed pick up is 3 or 4 sent a mail (increment upper-bounded at 5 then user is blocked)

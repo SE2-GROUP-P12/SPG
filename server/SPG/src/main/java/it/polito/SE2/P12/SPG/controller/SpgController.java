@@ -282,7 +282,7 @@ public class SpgController {
             Double value = Double.valueOf(requestMap.get("value").toString());
             if (!userService.checkPresenceOfMail(email) || value <= 0)
                 return ResponseEntity.badRequest().build();
-            if (!userService.topUp(email, value))
+            if (!userService.topUp(email, value, this.schedulerService.getTime()))
                 return ResponseEntity.badRequest().build();
             return ResponseEntity.ok(userService.getWallet(email));
         }
@@ -295,7 +295,7 @@ public class SpgController {
         //record payment
         walletOperationService.recordPayment(orderId);
         //Process order
-        return ResponseEntity.ok(orderService.deliverOrder(orderId));
+        return ResponseEntity.ok(orderService.deliverOrder(orderId, schedulerService.getTime()));
     }
 
     @DeleteMapping(API.DROP_ORDER)

@@ -22,7 +22,7 @@ public class SchedulerService {
     @Value("${spring.mail.host}")
     private String emailHostAddress;
     private static final long POLLING_RATE = 5000L;
-    private static final String ZONE = "Europe/Rome";
+    public static final String ZONE = "Europe/Rome";
     private long iteration = 0L;
 
     private Clock applicationClock;

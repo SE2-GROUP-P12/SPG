@@ -16,6 +16,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,6 +34,7 @@ public class SpgUserService {
     private AdminRepo adminRepo;
     private FarmerRepo farmerRepo;
     private EmailConfiguration emailConfiguration;
+    private SpgUserService userService;
 
     @Autowired
     public SpgUserService(UserRepo userRepo, CustomerRepo customerRepo, ShopEmployeeRepo shopEmployeeRepo, AdminRepo adminRepo, FarmerRepo farmerRepo, EmailConfiguration emailConfiguration) {
@@ -78,7 +82,7 @@ public class SpgUserService {
         return customerRepo.findCustomerByEmail(email).getWallet();
     }
 
-    public Boolean topUp(String email, double value) {
+    public Boolean topUp(String email, double value, Instant schedulerCurrentTime) {
         //set up all the pending order to confirm if possible
         Customer customer = getCustomerByEmail(email);
         List<Order> orderList = customer.getOrders();
@@ -102,7 +106,7 @@ public class SpgUserService {
                 //Update limit that we can top up
                 currentConfirmedValueRest -= order.getValue();
                 //update oder status
-                order.updateToConfirmedStatus();
+                order.updateToConfirmedStatus(LocalDateTime.ofInstant(schedulerCurrentTime, ZoneId.systemDefault()));
             }
         }
         //perform top up

@@ -28,6 +28,8 @@ import org.junit.jupiter.api.Assertions;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -194,7 +196,7 @@ public class OrderServiceTest {
             Assertions.assertEquals(0.0, p.getQuantityDelivered());
         }
 
-        Assertions.assertTrue(orderService.deliverOrder(order.getOrderId()));
+        Assertions.assertTrue(orderService.deliverOrder(order.getOrderId(), LocalDateTime.now().toInstant(ZoneOffset.UTC)));
 
         for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
             Product p = productRepo.findProductByName(e.getKey().getName());
@@ -223,7 +225,7 @@ public class OrderServiceTest {
             Assertions.assertEquals(0.0, p.getQuantityDelivered());
         }
 
-        Assertions.assertFalse(orderService.deliverOrder(order.getOrderId()));
+        Assertions.assertFalse(orderService.deliverOrder(order.getOrderId(),LocalDateTime.now().toInstant(ZoneOffset.UTC)));
 
         for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
             Product p = productRepo.findProductByName(e.getKey().getName());
@@ -294,16 +296,16 @@ public class OrderServiceTest {
         dbUtilsService.saveOrder(order);
         Assertions.assertEquals(OrderStatus.ORDER_STATUS_OPEN, order.getStatus());
         //update order to "CONFIRMED"
-        Assertions.assertTrue(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_CONFIRMED));
+        Assertions.assertTrue(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_CONFIRMED, LocalDateTime.now().toInstant(ZoneOffset.UTC)));
         Assertions.assertEquals(OrderStatus.ORDER_STATUS_CONFIRMED, orderRepo.findOrderByOrderId(order.getOrderId()).getStatus());
         //update to "PAID"
-        Assertions.assertTrue(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_PAID));
+        Assertions.assertTrue(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_PAID, LocalDateTime.now().toInstant(ZoneOffset.UTC)));
         Assertions.assertEquals(OrderStatus.ORDER_STATUS_PAID, orderRepo.findOrderByOrderId(order.getOrderId()).getStatus());
         //update to "CANCELLED"
-        Assertions.assertTrue(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_CANCELLED));
+        Assertions.assertTrue(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_CANCELLED, LocalDateTime.now().toInstant(ZoneOffset.UTC)));
         Assertions.assertEquals(OrderStatus.ORDER_STATUS_CANCELLED, orderRepo.findOrderByOrderId(order.getOrderId()).getStatus());
         //update to "NOT_RETRIEVED"
-        Assertions.assertFalse(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_NOT_RETRIEVED));
+        Assertions.assertFalse(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_NOT_RETRIEVED, LocalDateTime.now().toInstant(ZoneOffset.UTC)));
         Assertions.assertNotEquals(OrderStatus.ORDER_STATUS_NOT_RETRIEVED, orderRepo.findOrderByOrderId(order.getOrderId()).getStatus());
         //update to "CLOSED"
 //        Assertions.assertFalse(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_CLOSED));

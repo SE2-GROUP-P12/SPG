@@ -87,58 +87,58 @@ public class Order {
         return this.cust;
     }
 
-    public boolean updateToPaidStatus() {
+    public boolean updateToPaidStatus(LocalDateTime date) {
         //Order must be in open status
         if (!this.status.equals(ORDER_STATUS_CONFIRMED)) {
             return false;
         }
         //Update status and date
         this.status = ORDER_STATUS_PAID;
-        this.current_status_date = LocalDateTime.now();
+        this.current_status_date = date;
         return true;
     }
 
-    public boolean updateToConfirmedStatus() {
+    public boolean updateToConfirmedStatus(LocalDateTime date) {
         //Order must be in open status
         if (!this.status.equals(ORDER_STATUS_OPEN)) {
             return false;
         }
         //Update status and date
         this.status = ORDER_STATUS_CONFIRMED;
-        this.current_status_date = LocalDateTime.now();
+        this.current_status_date = date;
         return true;
     }
 
 
-    public boolean updateToClosedStatus() {
+    public boolean updateToClosedStatus(LocalDateTime date) {
         //Order must be in open status
         if (!this.status.equals(ORDER_STATUS_OPEN)) {
             return false;
         }
         //Update status and date
         this.status = ORDER_STATUS_CLOSED;
-        this.current_status_date = LocalDateTime.now();
+        this.current_status_date =date;
         return true;
     }
 
-    public boolean updateToCancelledStatus() {
+    public boolean updateToCancelledStatus(LocalDateTime date) {
         //Order must be in open status
         if (!this.status.equals(ORDER_STATUS_OPEN) && !this.status.equals(ORDER_STATUS_PAID)) {
             return false;
         }
         //Update status and date
         this.status = ORDER_STATUS_CANCELLED;
-        this.current_status_date = LocalDateTime.now();
+        this.current_status_date = date;
         return true;
     }
 
-    public boolean updateToNotRetrievedStatus() {
+    public boolean updateToNotRetrievedStatus(LocalDateTime date) {
         //Order must be in a PAID status
         if (!this.status.equals(ORDER_STATUS_CONFIRMED))
             return false;
         //Update status and date
         this.status = ORDER_STATUS_NOT_RETRIEVED;
-        this.current_status_date = LocalDateTime.now();
+        this.current_status_date = date;
         return true;
     }
 
