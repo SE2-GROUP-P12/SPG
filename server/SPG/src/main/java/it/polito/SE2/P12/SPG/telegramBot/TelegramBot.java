@@ -19,50 +19,48 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import javax.annotation.PostConstruct;
 
 
-
+@Component
 public class TelegramBot extends TelegramLongPollingBot {
 
-    //@Autowired
-    private SpgUserService userService=null;
-    private final String botName= "SPG_p12";
+    private final SpgUserService userService;
+    private final String botName = "SPG_p12";
 
     public String getBotName() {
         return botName;
     }
 
-    public SpgUserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(SpgUserService userService) {
+    @Autowired
+    public TelegramBot(SpgUserService userService) {
         this.userService = userService;
     }
+
     @Override
     public void onUpdateReceived(Update update) {
 
         String msg = update.getMessage().getText();
-        String chatId=update.getMessage().getChatId().toString();
+        String chatId = update.getMessage().getChatId().toString();
         //User user = userService.findUserByChatId(chatId);
         String user = null;
-        if(user==null){
+        if (user == null) {
             //if (msg == "/start"){
-                sendMessage(chatId, "Welcome to SPG_p12 telegram bot!\nPlease enter your email for registration.");
+            sendMessage(chatId, "Welcome to SPG_p12 telegram bot!\nPlease enter your email for registration.");
+            if(userService != null)
+                sendMessage(chatId, "con lo user service!");
 
             /*else {
                 if(!userService.setChatIdToUser(msg, chatId))sendMessage(chatId, "User not found, try again.");
                 else sendMessage(chatId, "Success!");
             }*/
-        }
-        else{
+        } else {
             //sendMessage(chatId,user.getEmail());
         }
 
     }
 
-    public void sendMessage(String chatId, String message){
+    public void sendMessage(String chatId, String message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
-        String risposta=message;
+        String risposta = message;
         sendMessage.setText(risposta);
         try {
             execute(sendMessage);

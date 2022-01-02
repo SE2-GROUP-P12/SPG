@@ -12,13 +12,6 @@ public class SpgApplication {
 
 	public static void main(String[] args) {
 		System.err.println("~~~ SPG server v0.0.4 ~~~");
-		try {
-			TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-			botsApi.registerBot(new TelegramBot());
-		} catch (TelegramApiException e) {
-
-		}
-
 		SpringApplication.run(SpgApplication.class, args);
 	}
 
