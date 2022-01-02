@@ -478,7 +478,7 @@ public class SpgController {
                         accessToken, refreshToken);
                 new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
             } catch (Exception e) {
-                log.error("Error  refreshing token: " + e.getMessage());
+                log.error("Error refreshing token: " + e.getMessage());
                 response.setHeader(Constants.HEADER_ERROR, e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 response.setContentType(APPLICATION_JSON_VALUE);
