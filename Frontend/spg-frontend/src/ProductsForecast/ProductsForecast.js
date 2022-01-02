@@ -52,13 +52,15 @@ function ProductsForecast(props) {
         const [showSuccess, setShowSuccess] = useState(null);
         const [showError, setShowError] = useState(null)
 
+        let encodedImg = props.product.base64Image
+
         return (
             <>
                 <Card sx={{maxWidth: 345}}>
                     <CardMedia
                         component="img"
                         height="140"
-                        image={props.product.imageUrl == null ? fruit : props.product.imageUrl}
+                        image={props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
                         alt="fruit"
                     />
                     <CardContent>
@@ -90,8 +92,9 @@ function ProductsForecast(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={props.product.imageUrl == null ? fruit : props.product.imageUrl} alt="fruit"
-                                 style={{width: '150px', height: '150px'}}/>
+                            <img src={props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
+                                 alt="fruit"
+                                 style={{height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
                                     {props.product.quantityForecast} {props.product.unitOfMeasurement} currently

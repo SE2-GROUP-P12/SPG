@@ -3,8 +3,12 @@ package it.polito.SE2.P12.SPG.entity;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.io.FileUtils;
 
 import javax.persistence.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
 
 
 @Entity
@@ -58,6 +62,8 @@ public class Product {
     private Farmer farmer;
     @Column(name = "image_url")
     private String imageUrl;
+    @Column(name = "base_64_image",columnDefinition = "LONGTEXT")
+    private String base64Image;
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price) {
         this.name = name;
@@ -72,6 +78,7 @@ public class Product {
         this.price = price;
         this.farmer = null;
         this.imageUrl = null;
+        this.base64Image = null;
     }
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, Farmer farmer) {
@@ -87,6 +94,7 @@ public class Product {
         this.price = price;
         this.farmer = farmer;
         this.imageUrl = null;
+        this.base64Image = null;
     }
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price, String imageUrl) {
@@ -102,6 +110,13 @@ public class Product {
         this.price = price;
         this.farmer = null;
         this.imageUrl = imageUrl;
+        try {
+            byte[] fileContent = FileUtils.readFileToByteArray(new File(imageUrl));
+            this.base64Image = Base64.getEncoder().encodeToString(fileContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public Product(String name, Double totalQuantity, double price, Farmer farmer) {
@@ -116,6 +131,7 @@ public class Product {
         this.price = price;
         this.farmer = farmer;
         this.imageUrl = null;
+        this.base64Image = null;
     }
 
 
@@ -132,6 +148,13 @@ public class Product {
         this.price = price;
         this.farmer = farmer;
         this.imageUrl = imageUrl;
+        try {
+            byte[] fileContent = FileUtils.readFileToByteArray(new File(imageUrl));
+            this.base64Image = Base64.getEncoder().encodeToString(fileContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public Boolean moveFromAvailableToBasket(Double quantity) {

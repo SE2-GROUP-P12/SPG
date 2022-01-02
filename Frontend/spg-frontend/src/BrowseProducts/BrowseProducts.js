@@ -57,7 +57,7 @@ function BrowseProducts(props) {
     }
 
     useEffect(async () => {
-        if (localStorage.getItem("username")!=null)
+        if (localStorage.getItem("username") != null)
             await _getCart();
     }, []);
 
@@ -68,13 +68,14 @@ function BrowseProducts(props) {
         const [showSuccess, setShowSuccess] = useState(null);
         const [showError, setShowError] = useState(null)
 
+        let encodedImg = pe_props.product.base64Image;
         return (
             <>
                 <Card sx={{maxWidth: 345}}>
                     <CardMedia
                         component="img"
                         height="140"
-                        image={pe_props.product.imageUrl == null ? fruit : pe_props.product.imageUrl}
+                        image={pe_props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
                         alt="fruit"
                     />
                     <CardContent>
@@ -104,8 +105,8 @@ function BrowseProducts(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={pe_props.product.imageUrl == null ? fruit : pe_props.product.imageUrl} alt="fruit"
-                                 style={{width: '150px', height: '150px'}}/>
+                            <img src={pe_props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`} alt="fruit"
+                                 style={{height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
                                     {pe_props.product.name} : {pe_props.product.quantityAvailable}{pe_props.product.unitOfMeasurement} available, {pe_props.product.price.toFixed(2)}€/{pe_props.product.unitOfMeasurement}
@@ -181,9 +182,9 @@ function BrowseProducts(props) {
                 </Button>
                 :
                 <Button id="basket" variant="success" size="lg" onClick={handleShow}
-                    style={{position: 'fixed', bottom: '10px', left: '10px'}}>
-                🛒 {cart.length} item(s)
-            </Button>}
+                        style={{position: 'fixed', bottom: '10px', left: '10px'}}>
+                    🛒 {cart.length} item(s)
+                </Button>}
             <Offcanvas show={show} onHide={handleClose}>
                 <Offcanvas.Header><h2>Your Cart</h2></Offcanvas.Header>
                 <Offcanvas.Body>
@@ -219,7 +220,6 @@ function BrowseProducts(props) {
         </Container>
     );
 }
-
 
 
 export {BrowseProducts}

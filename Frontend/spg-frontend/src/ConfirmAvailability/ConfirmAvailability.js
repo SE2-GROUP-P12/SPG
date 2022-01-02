@@ -100,13 +100,15 @@ function ConfirmAvailability(props) {
         let currentlyConfirmed = availabilities.filter(x => x.productId === props.product.productId).length > 0 ?
             availabilities.filter(x => x.productId === props.product.productId)[0].quantityConfirmed : 0
 
+        let encodedImg = props.product.base64Image;
+
         return (
             <>
                 <Card className={currentlyConfirmed > 0 ? "confirmed-product-card" : ""} sx={{maxWidth: 345}}>
                     <CardMedia
                         component="img"
                         height="140"
-                        image={props.product.imageUrl == null ? fruit : props.product.imageUrl}
+                        image={props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
                         alt="fruit"
                     />
                     <CardContent>
@@ -142,8 +144,9 @@ function ConfirmAvailability(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={props.product.imageUrl == null ? fruit : props.product.imageUrl} alt="fruit"
-                                 style={{width: '150px', height: '150px'}}/>
+                            <img src={props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
+                                 alt="fruit"
+                                 style={{height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
                                     {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
