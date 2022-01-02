@@ -72,7 +72,7 @@ function NavbarApplication(props) {
                             </OverlayTrigger>
                             : <></>}
                         {
-                            props.isLoggedFlag && localStorage.getItem("missedPickUp") !== "0" ?
+                            props.isLoggedFlag && localStorage.getItem("missedPickUp") !== "0" && props.loggedUserRole === 'CUSTOMER' ?
                                 <OverlayTrigger
                                     delay={{show: 250, hide: 400}}
                                     overlay={<Tooltip id="button-tooltip">There
