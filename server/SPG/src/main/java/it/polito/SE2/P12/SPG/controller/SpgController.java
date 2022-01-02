@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -51,25 +50,24 @@ public class SpgController {
     private final SpgBasketService basketService;
     private final JWTUserHandlerService jwtUserHandlerService;
     private final DBUtilsService dbUtilsService;
-    @Autowired
-    private final TelegramBot telegramBot;
     private final WalletOperationService walletOperationService;
     private long timeOffset;
-
+    private final TelegramBotService telegramBotService;
 
     @Autowired
-    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService) {
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService, TelegramBotService telegramBotService) {
         this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
         this.jwtUserHandlerService = jwtUserHandlerService1;
+        this.telegramBotService = telegramBotService;
         this.timeOffset = 0;
         this.walletOperationService = walletOperationService;
         this.dbUtilsService = dbUtilsService;
         this.dbUtilsService.init();
 
-        this.telegramBot= this.startBot(userService);
+
     }
 
     @GetMapping("/")

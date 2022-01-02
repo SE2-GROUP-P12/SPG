@@ -13,17 +13,20 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-@Component
+
 
 public class TelegramBot extends TelegramLongPollingBot {
-    @Autowired
-    public TelegramBot(){}
+
+    private SpgUserService userService;
+    private final String botName= "SPG_p12";
+
+
 
     public TelegramBot(SpgUserService userService) {
         this.userService = userService;
     }
-    private final String botName= "SPG_p12";
-    private SpgUserService userService;
+
+
 
     public String getBotName() {
         return botName;
