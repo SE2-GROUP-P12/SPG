@@ -49,7 +49,7 @@ public class SpgController {
     private final DBUtilsService dbUtilsService;
     private final WalletOperationService walletOperationService;
     private final SchedulerService schedulerService;
-    private long timeOffset;
+    //private long timeOffset;
 
 
     @Autowired
@@ -59,7 +59,7 @@ public class SpgController {
         this.orderService = orderService;
         this.basketService = basketService;
         this.jwtUserHandlerService = jwtUserHandlerService1;
-        this.timeOffset = 0;
+        //this.timeOffset = 0;
         this.walletOperationService = walletOperationService;
         this.dbUtilsService = dbUtilsService;
         this.dbUtilsService.init();
@@ -218,13 +218,13 @@ public class SpgController {
                 BasketUserType user = userService.getBasketUserTypeByEmail(orderIssuer.getEmail());
                 Basket basket = user.getBasket();
                 basketService.dropBasket(basket);
-                return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer, (long) System.currentTimeMillis() + this.timeOffset, date, address));
+                return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer, schedulerService.getTime().toEpochMilli(), date, address));
             }
             //It's an order provided by the shopEmployee
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get(Constants.JSON_EMAIL));
             Basket basket = user.getBasket();
             basketService.dropBasket(basket);
-            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer, (long) System.currentTimeMillis() + this.timeOffset, date, address));
+            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer, schedulerService.getTime().toEpochMilli(), date, address));
         }
         return ResponseEntity.badRequest().build();
     }
