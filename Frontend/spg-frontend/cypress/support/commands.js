@@ -103,3 +103,26 @@ Cypress.Commands.add('checkBrowseProducts', () => {
     cy.get('[alt=fruit]').should('exist')
 })
 
+/**
+ * dayOfweek = 0 sunday, 1 Monday, .... 6 saturday
+ * Hour of the day
+ */
+ Cypress.Commands.add('timeMachine', (dayOfWeek,hour) => {
+
+
+    var date = new Date();
+    date.setHours(hour);
+    cy.clock(date);
+    cy.contains('TIME MACHINE').should('exist');
+    cy.contains('TIME MACHINE').click();
+    
+    cy.get(':nth-child(2) > :nth-child('+(dayOfWeek+1)+') > .MuiButtonBase-root > .MuiIconButton-label > .MuiTypography-root')
+        .click();
+    
+    cy.contains('TIME TRAVEL!').click();
+    date.setDate(dayOfWeek);
+    date.setDate(date.getDate() + (dayOfWeek - date.getDay()));
+    cy.clock(date);
+    cy.reload();
+})
+
