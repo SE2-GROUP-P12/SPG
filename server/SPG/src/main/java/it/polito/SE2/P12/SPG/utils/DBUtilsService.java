@@ -76,16 +76,22 @@ public class DBUtilsService {
         //Shop Employee
         ShopEmployee temp3 = new ShopEmployee("Francesco", "Conte", "CNTFRN00D12N376V", "01234567894",
                 Constants.EMAIL_FRANCESCO_CONTE, hashedPassword);
+        ShopEmployee temp4 = new ShopEmployee("Mario", "Bianchi", "BNCMRO00D12N376V", "01234567819",
+                Constants.EMAIL_MARIO_BIANCHI, hashedPassword);
         //Farmer
-        Farmer temp4 = new Farmer("Thomas", "Jefferson", "JFRTHM00D12N376V", "01234567895",
+        Farmer temp5 = new Farmer("Thomas", "Jefferson", "JFRTHM00D12N376V", "01234567895",
                 Constants.EMAIL_THOMAS_JEFFERSON, hashedPassword);
-        Farmer temp5 = new Farmer("Alexander", "Hamilton", "HMLLND00A11Z501E", "0123456743", Constants.EMAIL_ALEXANDER_HAMILTON, hashedPassword);
+        Farmer temp6 = new Farmer("Alexander", "Hamilton", "HMLLND00A11Z501E", "0123456743", Constants.EMAIL_ALEXANDER_HAMILTON, hashedPassword);
+        Farmer temp7 = new Farmer("Calvin", "Harris", "HRRCVN00A11Z501E", "0123456741", Constants.EMAIL_CALVIN_HARRIS, hashedPassword);
+
         if (userRepo.findUserByEmail(Constants.EMAIL_MARIO_ROSSI) == null) customerRepo.save(temp1);
         if (userRepo.findUserByEmail(Constants.EMAIL_PAOLO_BIANCHI) == null) customerRepo.save(temp2);
         if (userRepo.findUserByEmail(Constants.EMAIL_FRANCESCO_CONTE) == null) shopEmployeeRepo.save(temp3);
+        if (userRepo.findUserByEmail(Constants.EMAIL_MARIO_BIANCHI) == null) shopEmployeeRepo.save(temp4);
         if (userRepo.findUserByEmail(Constants.EMAIL_ADMIN) == null) adminRepo.save(admin);
-        if (userRepo.findUserByEmail(Constants.EMAIL_THOMAS_JEFFERSON) == null) farmerRepo.save(temp4);
-        if (userRepo.findUserByEmail(Constants.EMAIL_ALEXANDER_HAMILTON) == null) farmerRepo.save(temp5);
+        if (userRepo.findUserByEmail(Constants.EMAIL_THOMAS_JEFFERSON) == null) farmerRepo.save(temp5);
+        if (userRepo.findUserByEmail(Constants.EMAIL_ALEXANDER_HAMILTON) == null) farmerRepo.save(temp6);
+        if (userRepo.findUserByEmail(Constants.EMAIL_CALVIN_HARRIS) == null) farmerRepo.save(temp7);
     }
 
     private void populateProducts() {

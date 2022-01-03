@@ -37,6 +37,8 @@ public class Constants {
     public static final String EMAIL_MARIO_ROSSI = "mario.rossi@gmail.com";
     public static final String EMAIL_PAOLO_BIANCHI = "paolo.bianchi@gmail.com";
     public static final String EMAIL_FRANCESCO_CONTE = "francesco.conte@gmail.com";
+    public static final String EMAIL_MARIO_BIANCHI = "mario@gmail.com";
     public static final String EMAIL_THOMAS_JEFFERSON = "thomas.jefferson@gmail.com";
     public static final String EMAIL_ALEXANDER_HAMILTON = "alexander.hamilton@yahoo.com";
+    public static final String EMAIL_CALVIN_HARRIS = "calvin@gmail.com";
 }
