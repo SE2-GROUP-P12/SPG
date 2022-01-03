@@ -8,6 +8,7 @@ import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
 import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.service.*;
+import it.polito.SE2.P12.SPG.telegramBot.TelegramBot;
 import it.polito.SE2.P12.SPG.utils.API;
 import it.polito.SE2.P12.SPG.utils.Constants;
 import it.polito.SE2.P12.SPG.utils.DBUtilsService;
@@ -48,15 +49,17 @@ public class SpgController {
     private final DBUtilsService dbUtilsService;
     private final WalletOperationService walletOperationService;
     private long timeOffset;
+    private final TelegramBot telegramBot;
     //private final TelegramBotService telegramBotService;
 
     @Autowired
-    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService) {
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService, TelegramBot telegramBot) {
         this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
         this.jwtUserHandlerService = jwtUserHandlerService1;
+        this.telegramBot = telegramBot;
         //this.telegramBotService = telegramBotService;
         this.timeOffset = 0;
         this.walletOperationService = walletOperationService;
@@ -119,6 +122,7 @@ public class SpgController {
             String imageUrl = "";
             if (requestMap.containsKey("imageUrl"))
                 imageUrl = (String) requestMap.get("imageUrl");
+            telegramBot.notifyCustomers();
             return ResponseEntity.ok(productService.addProduct(productName, value, uom, imageUrl, farmer));
         }
         return ResponseEntity.badRequest().build();
@@ -398,6 +402,7 @@ public class SpgController {
         end = (Double) requestMap.get("quantityForecast");*/
         if (!productService.setForecast(productId, forecast))
             return ResponseEntity.badRequest().build();
+        telegramBot.notifyCustomers();
         return ResponseEntity.ok().build();
     }
 
@@ -414,6 +419,7 @@ public class SpgController {
             if (!productService.confirmQuantity(productId, quantityConfirmed))
                 return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok().build();
     }
 

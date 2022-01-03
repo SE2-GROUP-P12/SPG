@@ -168,6 +168,10 @@ public class SpgUserService {
         User user = userRepo.findUserByEmail(email);
         if(user ==null) return false;
         user.setChatId(chatId);
+        userRepo.save(user);
         return true;
+    }
+    public List<User> findAllUsers(){
+        return userRepo.findAll();
     }
 }

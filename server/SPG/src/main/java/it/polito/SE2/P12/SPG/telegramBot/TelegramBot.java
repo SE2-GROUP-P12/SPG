@@ -17,6 +17,8 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Component
@@ -24,6 +26,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private final SpgUserService userService;
     private final String botName = "SPG_p12";
+    private List<String> unregisteredUsers = new ArrayList<String>();
 
     public String getBotName() {
         return botName;
@@ -39,22 +42,36 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         String msg = update.getMessage().getText();
         String chatId = update.getMessage().getChatId().toString();
-        //User user = userService.findUserByChatId(chatId);
-        String user = null;
-        if (user == null) {
-            //if (msg == "/start"){
-            sendMessage(chatId, "Welcome to SPG_p12 telegram bot!\nPlease enter your email for registration.");
-            if(userService != null)
-                sendMessage(chatId, "con lo user service!");
+        User user = userService.findUserByChatId(chatId);
 
-            /*else {
-                if(!userService.setChatIdToUser(msg, chatId))sendMessage(chatId, "User not found, try again.");
-                else sendMessage(chatId, "Success!");
-            }*/
+        if (user == null) {
+
+            if (!unregisteredUsers.contains(chatId)) {
+                sendMessage(chatId, "Welcome to SPG_p12 telegram bot!\nPlease enter your email for registration.");
+                unregisteredUsers.add(chatId);
+            }
+
+            else {
+                if(!userService.setChatIdToUser(msg, chatId)){
+                    sendMessage(chatId, "User not found, try again.");
+                }
+                else{
+                    sendMessage(chatId, "Success!");
+                    unregisteredUsers.remove(chatId);
+                }
+            }
         } else {
-            //sendMessage(chatId,user.getEmail());
+            sendMessage(chatId,"User registered with email: "+user.getEmail());
         }
 
+    }
+
+    public void notifyCustomers(){
+        for(User user:userService.findAllUsers()){
+            if(!user.getChatId().equals("")&& user.getChatId()!=null){
+                this.sendMessage(user.getChatId(), "The product list has been updated!");
+            }
+        }
     }
 
     public void sendMessage(String chatId, String message) {
