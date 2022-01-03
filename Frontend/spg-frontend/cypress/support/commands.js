@@ -81,6 +81,16 @@ Cypress.Commands.add('checkCustomer', () => {
     cy.contains('Settings').should('exist');
 })
 
+Cypress.Commands.add('checkFarmer', () => {
+    cy.checkUrl('/Dashboard');
+    cy.contains('WELCOME BACK').should('exist');
+    cy.contains('Here you are your services').should('exist');
+    cy.contains('Forecast Product').should('exist');
+    cy.contains('Add Product').should('exist');
+    cy.contains('Confirm Availability').should('exist');
+    cy.contains('Settings').should('exist');
+})
+
 Cypress.Commands.add('checkBrowseProducts', () => {
     cy.checkUrl('/BrowseProducts')
     cy.contains('Products List').should('exist');
