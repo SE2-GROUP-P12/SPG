@@ -118,14 +118,12 @@ public class Product {
 
         File imageFile = new File("tmp.jpg");
         if (urlValidator.isValid(imageUrl)) {
-            System.out.println("Got here");
             try {
                 FileUtils.copyURLToFile(new URL(imageUrl), imageFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("or here");
             imageFile = new File(imageUrl);
         }
 
@@ -135,8 +133,6 @@ public class Product {
             this.base64Image = Base64.getEncoder().encodeToString(fileContent);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            imageFile.delete();
         }
 
     }
@@ -176,14 +172,12 @@ public class Product {
 
         File imageFile = new File("tmp.jpg");
         if (urlValidator.isValid(imageUrl)) {
-            System.out.println("Got here");
             try {
                 FileUtils.copyURLToFile(new URL(imageUrl), imageFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("or here");
             imageFile = new File(imageUrl);
         }
 
@@ -192,8 +186,6 @@ public class Product {
             this.base64Image = Base64.getEncoder().encodeToString(fileContent);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            imageFile.delete();
         }
 
     }
