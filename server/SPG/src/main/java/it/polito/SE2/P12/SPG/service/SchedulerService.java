@@ -67,7 +67,7 @@ public class SchedulerService {
             return;
         }
         this.iteration++;
-        System.out.println("application time: " + applicationClock.instant().atZone(ZoneId.of(ZONE)) + ", epoch time: " + applicationClock.instant().getEpochSecond() + ", iteration: " + this.iteration);
+        //System.out.println("application time: " + applicationClock.instant().atZone(ZoneId.of(ZONE)) + ", epoch time: " + applicationClock.instant().getEpochSecond() + ", iteration: " + this.iteration);
 
         Entry<Schedulable, Long> e;
         do {
