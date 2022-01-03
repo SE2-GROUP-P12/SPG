@@ -1,8 +1,5 @@
 /// <reference types = "Cypress" />
 
-import { matchPath } from "react-router";
-import { BrowserRouter } from "react-router-dom";
-
 context('customer workflow', () => {
 
     it('customer browses products', () => {
@@ -13,8 +10,8 @@ context('customer workflow', () => {
         cy.get('[alt=logo]').should('exist');
         cy.get('[id=login]').should('exist');
         cy.get('[id=signup]').should('exist');
-        
-        cy.checkHomepage();
+         
+        cy.checkHomepage();  
         cy.login('mario.rossi@gmail.com','password');
 
         cy.checkCustomer();

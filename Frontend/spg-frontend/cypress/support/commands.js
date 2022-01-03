@@ -90,9 +90,6 @@ Cypress.Commands.add('checkBrowseProducts', () => {
     cy.get('[id=basket]').should('exist');
     cy.contains('Back').should('exist');
 
-    //TODO: Gestire meglio la wait
-    cy.wait(1000);
-
     cy.get('[alt=fruit]').should('exist')
 })
 
