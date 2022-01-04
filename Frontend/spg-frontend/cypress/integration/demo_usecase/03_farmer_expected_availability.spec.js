@@ -7,7 +7,6 @@
 */
 
 context('farmer forecasting', () => {
-    //TODO: test this use case
 
     it('farmer enter expected availability', () => {
         cy.visit(Cypress.env('baseUrl'));
@@ -24,6 +23,10 @@ context('farmer forecasting', () => {
 
         cy.get('[id=button-ForecastProducts]').click();
 
+        cy.checkProductsForecast();
+        cy.timeMachine(6,10);
+        cy.modifyForecast();
+        cy.logout();
     })
 
 })

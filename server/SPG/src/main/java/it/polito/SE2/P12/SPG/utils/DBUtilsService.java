@@ -100,7 +100,6 @@ public class DBUtilsService {
         Farmer farmer3 = farmerRepo.findFarmerByEmail(Constants.EMAIL_CALVIN_HARRIS);
         List<Product> prodList = new ArrayList<Product>();
         //Product temp1 =
-        prodList.add(new Product("Apples", "Kg", 50.0, 2.50, "server/SPG/resources/images/Apples.jpg", farmer1));
         prodList.add(new Product("Flour", "Kg", 10.0, 5.00, "server/SPG/resources/images/Flour.jpg", farmer2));
         prodList.add(new Product("Eggs", "Units", 36.0, 6.25, "server/SPG/resources/images/Eggs.jpg", farmer1));
         prodList.add(new Product("Oranges", "Kg", 12.0, 2.10, "server/SPG/resources/images/Oranges.jpg", farmer2));
@@ -138,6 +137,7 @@ public class DBUtilsService {
         prodList.add(new Product("Broccoli", "Kg", 40.0, 2.50, "server/SPG/resources/images/Broccoli.jpg", farmer3));
         prodList.add(new Product("Carrots", "Kg", 10.0, 5.00, "server/SPG/resources/images/Carrots.jpg", farmer3));
         prodList.add(new Product("Cauliflowers", "Kg", 43.0, 2.50, "server/SPG/resources/images/Cauliflowers.jpg", farmer3));
+        prodList.add(new Product("Apples", "Kg", 50.0, 2.50, "server/SPG/resources/images/Apples.jpg", farmer3));
 
         /*
         Product temp43 = new Product("Fassona Burger", "Kg", 52.0, 2.50, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZTbfh7Rsc6-xzK1oS5c1lHoNl3ARS4Xjnm0zPwTfu12mqK9fHqCw9w-anhwHFfX2TE-k&usqp=CAU", farmer2);

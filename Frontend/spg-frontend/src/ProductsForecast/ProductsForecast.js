@@ -125,7 +125,7 @@ function ProductsForecast(props) {
                                             <Field type="number" id="amount" name="amount"
                                                    min={0}/> {props.product.unitOfMeasurement}
                                             <br/>
-                                            <Button style={{margin: '20px'}} type="submit" variant="success">Modify
+                                            <Button id="button-modifyForecast" style={{margin: '20px'}} type="submit" variant="success">Modify
                                                 Forecast</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
