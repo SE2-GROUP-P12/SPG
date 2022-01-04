@@ -9,6 +9,7 @@ import handleOrders from './resources/handleOrders.jpg'
 import registration from './resources/registration.jpg'
 import estimations from './resources/estimations.jpg'
 import addProd from './resources/addProd.jpg'
+import unpicked from './resources/unpicked.jpg'
 
 /**
  * Mapped an object type {key:value,...} on a form body for the login request
@@ -140,6 +141,15 @@ function getAllServices() {
             "linkUrl": "/ConfirmAvailability",
             "rolesPermitted": ['FARMER']
         },
+        /*UNPICKED ORDERS*/
+        {
+            "type": "Unpicked orders",
+            "description": "See a weekly and monthly report of unpicked orders",
+            "imageUrl": unpicked,
+            "buttonLabel": "Unpicked orders",
+            "linkUrl": "/UnpickedOrders",
+            "rolesPermitted": ['ADMIN']
+        },
         /*USER SETTINGS*/
         {
             "type": "Settings",
@@ -162,10 +172,37 @@ function getAllShippingMode() {
     return allShippingMode;
 }
 
+function printOrder(prod) {
+    let output = [];
+    let total = 0;
+    if (prod === null)
+        return (<h2>The order is empty </h2>);
+    for (let p of prod) {
+        output.push(<OrderEntry product={p}/>);
+        total += p["unit price"] * p.amount;
+    }
+    output.push(
+        <li className='list-group-item'>
+            <h2>Total: {total.toFixed(2)} €</h2>
+        </li>
+    )
+    return output;
+}
+
+function OrderEntry(props) {
+    return (
+        <li className="list-group-item">
+            {props.product.name} : {props.product.amount} {props.product.unit}<br />
+            SUBTOTAL: {(props.product["unit price"] * props.product.amount).toFixed(2)}€
+        </li>
+    );
+}
+
 //Exporting functions
 export {
     buildLoginBody,
     getSalt,
     getAllServices,
     getAllShippingMode,
+    printOrder
 }

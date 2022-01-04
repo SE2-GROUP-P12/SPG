@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import {Link} from 'react-router-dom';
 import {API} from '../API/API.js';
 import {MailServerAPI} from '../MailServerAPI/MailServerAPI';
+import {printOrder} from "../Utilities";
 
 /*LOADING ALL ORDERS WHEN NO MAIL IS SET*/
 let statusByIndex = [];
@@ -298,40 +299,12 @@ function Orders(props) {
     async function deliverOrder(orderId) {
         return await API.deliverOrder(orderId);
     }
-
-    function printOrder(prod) {
-        let output = [];
-        let total = 0;
-        if (prod === null)
-            return (<h2>The order is empty </h2>);
-        for (let p of prod) {
-            output.push(<OrderEntry product={p}/>);
-            total += p["unit price"] * p.amount;
-        }
-        output.push(
-            <li className='list-group-item'>
-                <h2>Total: {total.toFixed(2)} €</h2>
-            </li>
-        )
-        return output;
-    }
-
-    function OrderEntry(props) {
-        return (
-            <li className="list-group-item">
-                {props.product.name} : {props.product.amount} {props.product.unit}<br />
-                SUBTOTAL: {(props.product["unit price"] * props.product.amount).toFixed(2)}€
-            </li>
-        );
-    }
     
     async function handleDelivery(e, orderId) {
         e.preventDefault();
         const data = await deliverOrder(orderId);
         if (data === true) {
             window.location.reload(false);
-            //loadAllOrders();
-            //return(<Alert variant='success'>Order delivered successfully</Alert>);
         } else
             return (<Alert variant='danger'>Balance insufficient</Alert>);
     }

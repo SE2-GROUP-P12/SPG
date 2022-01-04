@@ -483,6 +483,24 @@ async function getWalletOperation(email) {
     }
 }
 
+async function getUnretrievedOrders() {
+    try {
+        const response = await fetch("api/manager/getUnRetrievedOrders", {
+            method: 'GET',
+            headers: getAuthenticationHeaders(),
+        });
+        const data = await response.json();
+        if (response.ok) {
+            console.log(data);
+            return data;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 /**
  * Exporting all functions
  */
@@ -507,7 +525,8 @@ const API = {
     addProduct,
     getWalletWarning,
     timeTravel,
-    submitConfirmed
+    submitConfirmed,
+    getUnretrievedOrders
 };
 export {API}
 

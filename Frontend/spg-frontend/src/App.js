@@ -28,7 +28,7 @@ import {ConfirmAvailability} from "./ConfirmAvailability/ConfirmAvailability";
 import {MuiPickersUtilsProvider, DateTimePicker} from "@material-ui/pickers";
 import MomentUtils from '@date-io/moment';
 import {createTheme, MuiThemeProvider} from "@material-ui/core/styles";
-
+import {UnpickedOrders} from './UnpickedOrders/UnpickedOrders';
 
 const DEBUG = true;
 const moment = require('moment')
@@ -170,6 +170,9 @@ function App() {
                         <Route exact path="/Admin">
                             <Customer loggedUser={loggedUser}
                                       loggedUserRole={loggedUserRole}/>
+                        </Route>
+                        <Route exact path="/unpickedOrders">
+                            <UnpickedOrders dateTime={dateTime}/>
                         </Route>
                         <Route exact path="/LoginComponent">
                             <Login setLoggedUser={setLoggedUser} setLoggedFlag={setIsLogged}

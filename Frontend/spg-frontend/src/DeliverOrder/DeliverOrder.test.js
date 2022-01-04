@@ -1,6 +1,4 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import {getByLabelText, getQueriesForElement} from '@testing-library/dom';
 import {render, fireEvent, waitFor } from '@testing-library/react';
 import {DeliverOrder} from "./DeliverOrder";
 import { BrowserRouter as Router} from "react-router-dom";
