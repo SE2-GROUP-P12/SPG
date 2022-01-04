@@ -9,6 +9,7 @@ import it.polito.SE2.P12.SPG.repository.BasketRepo;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import it.polito.SE2.P12.SPG.repository.UserRepo;
+import it.polito.SE2.P12.SPG.utils.OrderStatus;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -235,6 +237,20 @@ public class SpgOrderService {
         }
         orderRepo.save(order);
         return res;
+    }
+
+    public List<Order> getUnRetrievedOrders(long currentTime) {
+        return orderRepo.findAll()
+                .stream()
+                .filter(order -> {
+                    //check order status
+                    if (!order.getStatus().equals(ORDER_STATUS_NOT_RETRIEVED))
+                        return false;
+                    //check date range
+                    return order.getCurrent_status_date().toEpochSecond(ZoneOffset.UTC) > (currentTime - 2592000L);
+                })
+                .sorted(Comparator.comparingLong(ord -> ord.getCurrent_status_date().toEpochSecond(ZoneOffset.UTC)))
+                .toList();
     }
 }
 

@@ -632,3 +632,34 @@ test ("timeTravel catch", async() =>{
     const resp = await API.timeTravel();
     expect(resp).toBe(undefined);
 })
+
+test ("getUnretrievedOrders ok", async () => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => [{name: 'Apples'}]
+        })
+    )
+    const resp = await API.getUnretrievedOrders();
+    expect(resp).toStrictEqual([{"name": "Apples"}]);
+})
+
+test ("getUnretrievedOrders catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.getUnretrievedOrders();
+    expect(resp).toBe(undefined);
+})
+
+test ("getUnretrievedOrders err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            json: () => null
+        })
+    )
+    const resp = await API.getUnretrievedOrders();
+    expect(resp).toBe(null);
+})

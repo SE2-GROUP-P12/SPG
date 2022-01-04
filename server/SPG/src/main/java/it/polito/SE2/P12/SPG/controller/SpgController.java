@@ -457,6 +457,12 @@ public class SpgController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping(API.GET_UNRETRIEVED_ORDERS)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<List<Order>> getUnRetrievedOrderList() {
+        return ResponseEntity.ok(orderService.getUnRetrievedOrders(schedulerService.getTime().getEpochSecond()));
+    }
+
     @GetMapping(API.REFRESH_TOKEN)
     public void getRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
@@ -472,7 +478,7 @@ public class SpgController {
                         accessToken, refreshToken);
                 new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
             } catch (Exception e) {
-                log.error("Error  refreshing token: " + e.getMessage());
+                log.error("Error refreshing token: " + e.getMessage());
                 response.setHeader(Constants.HEADER_ERROR, e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 response.setContentType(APPLICATION_JSON_VALUE);
