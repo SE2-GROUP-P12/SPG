@@ -1,5 +1,5 @@
 import * as React from "react";
-import {render, fireEvent, waitFor, getByText, getByTestId} from '@testing-library/react';
+import {render, fireEvent, waitFor} from '@testing-library/react';
 import {BrowserRouter as Router} from "react-router-dom";
 import "./NavbarApplication.css"
 
@@ -57,7 +57,7 @@ test("Alert missed pickups", async () => {
 
 test("No balance insufficient", async () => {
 
-    const {getByText, getByAltText} = render(
+    const {getByText, getByTestId} = render(
         <Router>
             <NavbarApplication isLoggedFlag={true}
                                loggedUser={"mario.rossi@gmail.com"}
@@ -67,11 +67,11 @@ test("No balance insufficient", async () => {
         </Router>
     );
     getByText("Log Out");
-    expect(() => getByAltText('warning')).toThrow();
+    expect(() => getByTestId("topUpWarning")).toThrow();
 })
 
 test("No user logged in", async () => {
-    const {getByText, getByAltText} = render(
+    const {getByText, getByTestId} = render(
         <Router>
             <NavbarApplication isLoggedFlag={false}
                                loggedUser={""}
@@ -82,15 +82,14 @@ test("No user logged in", async () => {
     getByText("Browse Products")
     getByText("Log in");
     getByText("Sign up");
-    expect(() => getByAltText('warning')).toThrow();
-    expect(() => getByAltText('Dashboard')).toThrow();
+    expect(() => getByTestId("topUpWarning")).toThrow();
 })
 
 test("No user logged in Browse Product", async () => {
     delete window.location
     window.location = new URL("http://localhost:3000/BrowseProducts")
 
-    const {getByText, getByAltText} = render(
+    const {getByText, getByAltText, getByTestId} = render(
         <Router>
             <NavbarApplication isLoggedFlag={false}
                                loggedUser={""}
@@ -100,7 +99,7 @@ test("No user logged in Browse Product", async () => {
     );
     getByText("Log in");
     getByText("Sign up");
-    expect(() => getByAltText('warning')).toThrow();
+    expect(() => getByTestId('topUpWarning')).toThrow();
     expect(() => getByAltText('Dashboard')).toThrow();
     expect(() => getByAltText('Browse Products')).toThrow();
 })
@@ -109,7 +108,7 @@ test("Logged user in Browse Product", async () => {
     delete window.location
     window.location = new URL("http://localhost:3000/BrowseProducts")
 
-    const {getByText, getByAltText} = render(
+    const {getByText, getByAltText, getByTestId} = render(
         <Router>
             <NavbarApplication isLoggedFlag={true}
                                loggedUser={"mario.rossi@gmail.com"}
@@ -120,7 +119,7 @@ test("Logged user in Browse Product", async () => {
     );
     getByText("Log Out");
     getByText("Dashboard")
-    expect(() => getByAltText('warning')).toThrow();
+    expect(() => getByTestId('topUpWarning')).toThrow();
     expect(() => getByAltText('Browse Products')).toThrow();
     expect(() => getByAltText('Sign up')).toThrow();
     expect(() => getByAltText('Log In')).toThrow();

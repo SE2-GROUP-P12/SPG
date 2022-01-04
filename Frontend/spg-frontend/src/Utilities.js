@@ -175,8 +175,8 @@ function getAllShippingMode() {
 function printOrder(prod) {
     let output = [];
     let total = 0;
-    if (prod === null)
-        return (<h2>The order is empty </h2>);
+    if (prod === null || prod.length === 0 )
+        output.push(<h2>The order is empty </h2>);
     for (let p of prod) {
         output.push(<OrderEntry product={p}/>);
         total += p["unit price"] * p.amount;
