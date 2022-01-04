@@ -1,11 +1,14 @@
 /// <reference types = "Cypress" />
-/* 
- 3. on Saturday morning Calvin, the farmer, wakes up and after a 
- quick check enter the expected availability for next week 
- (carrots, apples, cauliflower, broccoli, pumpkin)
+/**
+ * usecase 3  
+ * on Saturday morning Calvin, the farmer, wakes up and after a 
+ * quick check enter the expected availability for next week 
+ * (carrots, apples, cauliflower, broccoli, pumpkin)
 */
 
 context('farmer forecasting', () => {
+    //TODO: test this use case
+
     it('farmer enter expected availability', () => {
         cy.visit(Cypress.env('baseUrl'));
 
