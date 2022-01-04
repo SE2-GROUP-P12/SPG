@@ -14,7 +14,7 @@ import {printOrder} from "../Utilities";
 let statusByIndex = [];
 
 function DeliverOrder(props) {
-    const [customer, setCustomer] = useState(null);
+    const [ , setCustomer] = useState(null);
     const [orders, setOrders] = useState([]);
     const [errUser, setErrUser] = useState(false);
     const [show, setShow] = useState(false);
@@ -56,8 +56,7 @@ function DeliverOrder(props) {
     }
 
     async function _getAllOrders() {
-        const data = await API.getAllOrders();
-        return data;
+        return API.getAllOrders();
     }
 
     async function customerExistsByMail(email) {
@@ -88,8 +87,7 @@ function DeliverOrder(props) {
     const getPendingOrdersMail = async () => {
         const data = await MailServerAPI.getPendingOrdersMail();
         let parsedData = [];
-        const ret = await Object.keys(data).forEach((email) => parsedData.push({"email": email, "status": "LOADED"}));
-        //console.log(...mailList, parsedData);
+        await Object.keys(data).forEach((email) => parsedData.push({"email": email, "status": "LOADED"}));
         //Static array creation
         statusByIndex = [...parsedData];
         setMailLoadCompleted(true);
@@ -97,27 +95,27 @@ function DeliverOrder(props) {
         console.log(statusByIndex);
     }
 
-    function PendingOrdersMailAction(props) {
+    function PendingOrdersMailAction(mailProps) {
         const [checkBox, setCheckBox] = useState(true);
 
         const setOnChangeCheckBoxStatus = () => {
             const res = !checkBox;
             setCheckBox(res);
             if (res)
-                statusByIndex[props.index].status = "LOADED";
+                statusByIndex[mailProps.index].status = "LOADED";
             else
-                statusByIndex[props.index].status = "DISABLED";
+                statusByIndex[mailProps.index].status = "DISABLED";
 
         }
 
 
-        switch (props.value.status) {
+        switch (mailProps.value.status) {
             case 'SENT':
                 return (
                     <ul className="border-bottom">
-                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
+                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[mailProps.index].email}
                                          checked={checkBox} type='switch' isValid={true}
-                                         onChange={() => //LASTMINUTE setOnChangeCheckBoxStatus(props.index)
+                                         onChange={() =>
                                              setOnChangeCheckBoxStatus()}>
                         </reactForm.Check>
                     </ul>
@@ -126,20 +124,20 @@ function DeliverOrder(props) {
             case 'DISABLED':
                 return (
                     <ul className="border-bottom">
-                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
+                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[mailProps.index].email}
                                          checked={checkBox}
                                          type='switch' isValid={false}
-                                         onChange={() => //LASTMINUTE setOnChangeCheckBoxStatus(props.index)
+                                         onChange={() =>
                                              setOnChangeCheckBoxStatus() }>
                         </reactForm.Check>
                     </ul>);
             default:
                 return (
                     <ul className="border-bottom">
-                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
+                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[mailProps.index].email}
                                          checked={checkBox}
                                          type='switch'
-                                         onChange={() => //LASTMINUTE setOnChangeCheckBoxStatus(props.value)
+                                         onChange={() =>
                                              setOnChangeCheckBoxStatus() }>
                         </reactForm.Check>
                     </ul>
@@ -160,10 +158,8 @@ function DeliverOrder(props) {
 
 
         function CustomModalFooter() {
-            const [disabledButton, setDisabledButton] = useState(false);
 
             async function sendAllMailRoutine(event) {
-                setDisabledButton(true);
 
                 async function sendMail(index) {
                     const data = await MailServerAPI.solicitCustomerTopUp(localStorage.getItem("username"), statusByIndex[index].email);
@@ -283,7 +279,7 @@ function DeliverOrder(props) {
 }
 
 function Orders(props) {
-    const [showAlert, setShowAlert] = useState(false);
+    const [showAlert] = useState(false);
     const [show, setShow] = useState(false);
     const [manageOrderCustmer, setManageOrderCustomer] = useState("");
 
@@ -297,7 +293,7 @@ function Orders(props) {
     let output = [];
 
     async function deliverOrder(orderId) {
-        return await API.deliverOrder(orderId);
+        return API.deliverOrder(orderId);
     }
     
     async function handleDelivery(e, orderId) {
@@ -349,7 +345,6 @@ function Orders(props) {
         );
     }
 
-    //console.log(props.orderList);
     if (props.orderList !== []) {
         for (let o of props.orderList) {
             if (o.status === "CONFIRMED")
@@ -360,7 +355,7 @@ function Orders(props) {
                             Customer: {o.email}
                             <Button style={{margin: '20px'}} onClick={(e) => handleDelivery(e, o.orderId)}
                                     variant='success'
-                                    disabled={props.itsTime ? false : true}>Deliver</Button>
+                                    disabled={!props.itsTime}>Deliver</Button>
                             {showAlert ? <Alert variant="danger">Something went wrong</Alert> : ""}
                         </li>
                     </Alert>

@@ -29,15 +29,13 @@ function ProductsForecast(props) {
 
     async function _browseProductsByFarmer() {
         const data = await API.browseProductsByFarmer({'email': email}, props.setErrorMessage);
-        //console.log(data);
-        if (data !== null) {
+        if (data != null) {
             setProducts(data['data']);
             setLoadCompleted(true);
         } else {
             console.log(data);
             setTriggerError(true);
         }
-        return;
     }
 
     useEffect(async () => {
@@ -45,14 +43,14 @@ function ProductsForecast(props) {
     }, []);
 
 
-    function ProductEntry(props) {
+    function ProductEntry(PEProps) {
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
         const [showSuccess, setShowSuccess] = useState(null);
         const [showError, setShowError] = useState(null)
 
-        let encodedImg = props.product.base64Image
+        let encodedImg = PEProps.product.base64Image
 
         return (
             <>
@@ -60,17 +58,17 @@ function ProductsForecast(props) {
                     <CardMedia
                         component="img"
                         height="140"
-                        image={props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
+                        image={PEProps.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
                         alt="fruit"
                     />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
-                            {props.product.name}
+                            {PEProps.product.name}
                         </Typography>
                         <Typography variant="body">
-                            {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                            {PEProps.product.quantityForecast} {PEProps.product.unitOfMeasurement} currently
                             forecasted <br/>
-                            {props.product.price.toFixed(2)}€/{props.product.unitOfMeasurement}
+                            {PEProps.product.price.toFixed(2)}€/{PEProps.product.unitOfMeasurement}
                         </Typography>
                     </CardContent>
                     <CardActions>
@@ -88,16 +86,16 @@ function ProductsForecast(props) {
                     setShowSuccess(null);
                 }}>
                     <Modal.Header>
-                        <Modal.Title>Modify Forecast for {props.product.name}</Modal.Title>
+                        <Modal.Title>Modify Forecast for {PEProps.product.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
+                            <img src={PEProps.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
                                  alt="fruit"
                                  style={{height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
-                                    {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                                    {PEProps.product.quantityForecast} {PEProps.product.unitOfMeasurement} currently
                                     forecasted
                                 </Col>
                             </Row>
@@ -107,7 +105,7 @@ function ProductsForecast(props) {
                                     validationSchema={Yup.object({amount: Yup.number().min(0).required('Amount required!')})}
                                     onSubmit={async (values) => {
                                         let outcome = await API.modifyForecast({
-                                            "productId": props.product.productId,
+                                            "productId": PEProps.product.productId,
                                             "quantity": values.amount
                                         });
                                         console.log(outcome);
@@ -123,7 +121,7 @@ function ProductsForecast(props) {
                                         <Form>
                                             <label htmlFor='amount'>Amount:</label>
                                             <Field type="number" id="amount" name="amount"
-                                                   min={0}/> {props.product.unitOfMeasurement}
+                                                   min={0}/> {PEProps.product.unitOfMeasurement}
                                             <br/>
                                             <Button style={{margin: '20px'}} type="submit" variant="success">Modify
                                                 Forecast</Button>
@@ -142,7 +140,6 @@ function ProductsForecast(props) {
                             handleClose();
                             setShowError(null);
                             setShowSuccess(null);
-                            //TODO: Check correctness
                             await _browseProductsByFarmer();
                         }}>
                             Close

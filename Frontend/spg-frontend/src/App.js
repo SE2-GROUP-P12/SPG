@@ -16,9 +16,7 @@ import {Farmer} from './Farmer/Farmer';
 import {DeliverOrder} from './DeliverOrder/DeliverOrder';
 import {UnauthorizedComponent} from './UnauthorizedComponent';
 import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
-import {useState, useEffect, Fragment} from "react";
-import Modal from 'react-bootstrap/Modal';
-import {Formik, Form, Field} from 'formik';
+import {useState, useEffect} from "react";
 import Button from 'react-bootstrap/Button';
 import {ProductsForecast} from "./ProductsForecast/ProductsForecast";
 import {AddProduct} from "./AddProduct/AddProduct";
@@ -35,7 +33,7 @@ const moment = require('moment')
 
 function App() {
     /*SERVICES*/
-    const [allServices, setAllservices] = useState(getAllServices());
+    const [allServices] = useState(getAllServices());
     /*BACK END ERROR HANDLER*/
     const [errorMessage, setErrorMessage] = useState(undefined);
     /*LOGGGED USER SESSION*/
@@ -45,7 +43,6 @@ function App() {
     const [accessToken, setAccessToken] = useState("");
     /*TIME MACHINE MANAGEMENT*/
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const handleDateTimeChange = async (d) => {
         setDateTime(() => d)
@@ -54,7 +51,6 @@ function App() {
         console.log('new unix time: ' + d.format('X'))
         await API.timeTravel({'epoch time': d.format('X')})
     }
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     let [date, setDate] = useState(moment().format('ddd'));
     let [time, setTime] = useState(() => {
         let d = moment();
@@ -87,14 +83,6 @@ function App() {
     useEffect(async () => {
         await _reloadSession();
     }, []);
-
-    /*TIME HANDLER*/
-    function printDays() {
-        let output = [<option value='' label='Select a day'/>];
-        for (let d of days)
-            output.push(<option value={d} label={d}/>);
-        return output;
-    }
 
     return (
         <div className="App">
@@ -194,52 +182,6 @@ function App() {
                         </Route>
                     </Switch>
                 </Router>
-
-                {/*
-                    <Modal show={show} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Time machine</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <Formik
-                                initialValues={{
-                                    date: '',
-                                    time: ''
-                                }}
-                                onSubmit={async (values) => {
-                                    let requestBody = {
-                                        time: values.time,
-                                        date: values.date
-                                    };
-                                    await API.timeTravel(requestBody);
-                                    console.log("CHECKTIME APP:" + values.date + " " + values.time)
-                                    setDate(values.date);
-                                    setTime(values.time);
-                                    handleClose();
-                                }}
-                            >
-                                {({values, handleChange, handleBlur}) =>
-                                    <Form>
-                                        <div className="row ml-4 mr-4">
-                                            <select
-                                                name="date"
-                                                value={values.date}
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                style={{display: 'block'}}
-                                            >
-                                                {printDays()}
-                                            </select>
-                                            <Field type='time' name='time'/>
-                                            <Button type='submit' variant='danger'>Time travel!</Button>
-                                        </div>
-                                    </Form>
-                                }
-                            </Formik>
-                        </Modal.Body>
-                    </Modal>*/
-                }
-
 
             </Container>
             {DEBUG ?

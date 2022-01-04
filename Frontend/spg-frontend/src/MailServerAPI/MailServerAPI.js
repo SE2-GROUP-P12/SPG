@@ -43,8 +43,7 @@ async function getPendingOrdersMail() {
                 headers: getAuthenticationHeaders(),
             });
         if (response.ok) {
-            const data = await response.json();
-            return data;
+            return await response.json();
         }
     } catch (error) {
         console.log("Error: " + error);

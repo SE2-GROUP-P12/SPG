@@ -1,5 +1,5 @@
 import * as React from "react";
-import {render, fireEvent, waitFor, getByText} from '@testing-library/react';
+import {render, fireEvent, waitFor, getByText, getByTestId} from '@testing-library/react';
 import {BrowserRouter as Router} from "react-router-dom";
 import "./NavbarApplication.css"
 
@@ -7,7 +7,7 @@ import {NavbarApplication} from "./NavbarApplication";
 
 test("Alert Balance insufficient", async () => {
 
-    const {getByText, getByAltText} = render(
+    const {getByText, getByTestId} = render(
         <Router>
             <NavbarApplication isLoggedFlag={true}
                                loggedUser={"mario.rossi@gmail.com"}
@@ -21,11 +21,37 @@ test("Alert Balance insufficient", async () => {
         </Router>
     );
 
-    let warning = getByAltText("warning");
+    let warning = getByTestId("topUpWarning");
     getByText("Log Out");
     fireEvent.mouseOver(warning);
     await waitFor(() => {
         getByText("Balance insufficient, remember to top up!")
+    });
+})
+
+test("Alert missed pickups", async () => {
+
+    localStorage.setItem("missedPickUp", '4');
+    const {getByText, getByTestId} = render(
+        <Router>
+            <NavbarApplication isLoggedFlag={true}
+                               loggedUser={"mario.rossi@gmail.com"}
+                               loggedUserRole={"CUSTOMER"}
+                               topUpWarning={
+                                   {
+                                       "exist": "true",
+                                       "message": "Balance insufficient, remember to top up!"
+                                   }}
+            />
+        </Router>
+    );
+    let warning = getByTestId("missedPickupWarning");
+    getByText("Log Out");
+    fireEvent.mouseOver(warning);
+    await waitFor(() => {
+        getByText(/There are/i);
+        getByText(/4/i);
+        getByText(/order\(s\) waiting for your pick up, please pick it up as soon as possible/i);
     });
 })
 

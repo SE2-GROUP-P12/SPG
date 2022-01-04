@@ -18,8 +18,6 @@ function Login(props) {
     const [alertShow, setAlertShow] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
 
-    //console.log(pbkdf2.pbkdf2Sync('password', getSalt(), 1, 32, 'sha512').toString('hex'));
-
     async function onClickSubmissionHandler(username, password) {
         fetch("/api/login", {
             method: 'POST',
@@ -58,7 +56,7 @@ function Login(props) {
 
     if (redirectRun) {
         return (
-            <Redirect to="/Dashboard"></Redirect>
+            <Redirect to="/Dashboard"/>
         );
     }
 
@@ -84,16 +82,16 @@ function Login(props) {
                 {({values, errors, touched}) =>
                     <Form>
                         <Grid container spacing={2}>
-                            <Grid item xs={3}/>
-                            <Grid item xs={2} align="left"><label htmlFor="email">Email:</label></Grid>
-                            <Grid item xs={4} align="center"><Field id="email" name="email" label="Email"
+                            <Grid item xs={2} sm={3}/>
+                            <Grid item xs={3} sm={2} align="left"><label htmlFor="email">Email:</label></Grid>
+                            <Grid item xs={5} sm={4} align="center"><Field id="email" name="email" label="Email"
                                                                     style={{width: '100%'}}/></Grid>
-                            <Grid item xs={3}/>
-                            <Grid item xs={3}/>
-                            <Grid item xs={2} align="left"><label htmlFor="password">Password:</label></Grid>
-                            <Grid item xs={4} align="center"><Field id="password" name="password" label="Password"
+                            <Grid item xs={2} sm={3}/>
+                            <Grid item xs={2} sm={3}/>
+                            <Grid item xs={3} sm={2} align="left"><label htmlFor="password">Password:</label></Grid>
+                            <Grid item xs={5} sm={4} align="center"><Field id="password" name="password" label="Password"
                                                                     type="password" style={{width: '100%'}}/></Grid>
-                            <Grid item xs={3}/>
+                            <Grid item xs={2} sm={3}/>
                             <Grid item xs={3}/>
                             <Grid item xs={3}><Link to="/"><Button variant="secondary">Back</Button></Link></Grid>
                             <Grid item xs={3} align="center"><Button type="submit"

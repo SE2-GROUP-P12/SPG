@@ -8,14 +8,10 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import {getAllServices} from '../Utilities';
 import {Link} from "react-router-dom";
 
 
 function Dashboard(props) {
-    const customerServices = getAllServices();
-
-
     //Title
     function TitleComponent() {
         return (
@@ -27,34 +23,33 @@ function Dashboard(props) {
     }
 
     //Card component
-    function CustomerCardComponent(props) {
+    function CustomerCardComponent(cardProps) {
         return (
             <Card sx={{maxWidth: 345}} className="mx-3 mt-5">
                 <CardMedia
                     component="img"
                     height="200"
-                    image={props.service.imageUrl}
+                    image={cardProps.service.imageUrl}
                     alt=""
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                        {props.service.type}
+                        {cardProps.service.type}
                     </Typography>
                     <Typography variant="body">
-                        {props.service.description}
+                        {cardProps.service.description}
                     </Typography>
                 </CardContent>
                 <CardActions>
                     <Grid container>
                         <Grid item xs={12}>
-                            <Link to={props.service.linkUrl}>
-                                <Button id={`button-${props.service.buttonLabel.replace(/\s/gm, '')}`} variant="success" size="lg"> {props.service.buttonLabel} </Button>
+                            <Link to={cardProps.service.linkUrl}>
+                                <Button id={`button-${cardProps.service.buttonLabel.replace(/\s/gm, '')}`} variant="success" size="lg"> {cardProps.service.buttonLabel} </Button>
                             </Link>
                         </Grid>
                     </Grid>
                 </CardActions>
             </Card>
-
         );
     }
 
@@ -64,9 +59,11 @@ function Dashboard(props) {
         <Container fluid>
             <TitleComponent/>
             {/*Mapping all the services for rendering*/}
-            <Grid container spacing={2} align="center">
+            <Grid container spacing={2}>
                 {props.services.filter((service) => service.rolesPermitted.includes(localStorage.getItem("role"))).map((value, index) =>
-                    <CustomerCardComponent service={value}/>
+                    <Grid item xs={12} sm={6} md={4} align="center">
+                        <CustomerCardComponent service={value}/>
+                    </Grid>
                 )}
             </Grid>
         </Container>

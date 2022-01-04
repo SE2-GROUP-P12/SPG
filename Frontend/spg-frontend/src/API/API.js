@@ -226,7 +226,6 @@ async function placeOrder(data) {
 }
 
 //DELETE: delete the order of a customer by his/her email (data.email), it returns a boolean
-//TODO: what happen if a customer has more than one order?
 async function dropOrder(data) {
     try {
         const response = await fetch("/api/customer/dropOrder", {
@@ -474,8 +473,7 @@ async function getWalletOperation(email) {
             headers: getAuthenticationHeaders(),
         });
         if (response.ok) {
-            const responseBody = await response.json();
-            return responseBody;
+            return await response.json();
         } else
             return undefined;
     } catch (error) {
