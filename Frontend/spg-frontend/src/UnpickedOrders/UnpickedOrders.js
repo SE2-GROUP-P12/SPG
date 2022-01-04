@@ -18,13 +18,13 @@ function UnpickedOrders(props) {
         setLoading(false);
     }, [])
 
-    function listOrders(weekly) {
+    function listOrders(isWeekly) {
         let output = [];
         if(orders === null || orders.length===0)
             return (<h2>No unpicked orders in this time period! 🎉</h2>);
         for(let o of orders)
         {
-            if(weekly && inThisWeek(o.currentStatusDate, props.dateTime))
+            if(isWeekly && inThisWeek(o.currentStatusDate, props.dateTime))
                 continue;
             output.push(<li className="list-group-item">
                 {printOrder(o.productList)}

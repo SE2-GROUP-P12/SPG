@@ -23,7 +23,7 @@ test("renders correctly", async() => {
 
 test("empty fields", async()=>{
     localStorage.setItem("role", "FARMER");
-    const {getByText, getByLabelText} = render(
+    const {getByText} = render(
         <Router>
             <AddProduct/>
         </Router>

@@ -40,10 +40,18 @@ test("Missing credentials", async ()=>{
     });
 })
 
-/*test("Wrong credentials", async () => {
+global.fetch = jest.fn();
+beforeEach(()=>fetch.mockClear() );
 
-    const mockLogin = (API.login = jest.fn());
-    mockLogin.mockResolvedValueOnce(false); //assuming that login API returns false on 401
+test("Wrong credentials", async () => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 401,
+            json: () => Promise.resolve({'errorMessage': 'Bad credentials'})
+        })
+    )
     const {getByText, getByLabelText, getAllByText} = render(
         <Router>
             <Login/>
@@ -53,26 +61,56 @@ test("Missing credentials", async ()=>{
     fireEvent.change(getByLabelText("Password:"), { target: { value: "somethingtotallYr4ndom" } });
     fireEvent.click(getAllByText("Login")[1]);
     await waitFor(()=>{
-        getByText("Wrong Credentials, please recheck your credentials.");
+        getByText("Error: Bad credentials");
     });
-    expect(mockLogin).toBeCalledTimes(1);
-    expect(mockLogin).toBeCalledWith({"email":"I@dont.exist", "password":expect.anything()});
 })
 
-test("Right credentials", async() => {
-    const mockLogin = (API.login = jest.fn());
-    mockLogin.mockResolvedValueOnce(false); //assuming that login API returns false on 401
+test("Banned user", async () => {
+
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 401,
+            json: () => Promise.resolve({'errorMessage': 'User is disabled'})
+        })
+    )
     const {getByText, getByLabelText, getAllByText} = render(
         <Router>
             <Login/>
         </Router>
     );
-    fireEvent.change(getByLabelText("Email:"), { target: { value: "mario.rossi@gmail.com" } });
-    fireEvent.change(getByLabelText("Password:"), { target: { value: "password" } });
+    fireEvent.change(getByLabelText("Email:"), { target: { value: "I@dont.exist" } });
+    fireEvent.change(getByLabelText("Password:"), { target: { value: "somethingtotallYr4ndom" } });
     fireEvent.click(getAllByText("Login")[1]);
     await waitFor(()=>{
-        expect(location.pathname).toEqual('/CUSTOMER'); //or something similar idk
+        getByText("Error: User is disabled");
     });
-    expect(mockLogin).toBeCalledTimes(1);
-    expect(mockLogin).toBeCalledWith({"email":"I@dont.exist", "password":expect.anything()});
-})*/
+})
+
+test("Right credentials", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => Promise.resolve({'accessToken': '',
+                                                refreshToken: '',
+                                                username: '',
+                                                role: 'CUSTOMER',
+                                                missedPickUp: 0})
+        })
+    )
+    const {getByLabelText, getAllByText} = render(
+        <Router>
+            <Login setLoggedUser={x=>x} setLoggedFlag={x=>x}
+                   setAccessToken={x=>x} accessToken={x=>x}
+                   setLoggedUserRole={x=>x}
+                   setTopUpWarning={x=>x}/>
+        </Router>
+    );
+    fireEvent.change(getByLabelText("Email:"), { target: { value: "I@dont.exist" } });
+    fireEvent.change(getByLabelText("Password:"), { target: { value: "somethingtotallYr4ndom" } });
+    fireEvent.click(getAllByText("Login")[1]);
+    await waitFor(()=>{
+        expect(global.window.location.pathname).toEqual('/Dashboard');
+    });
+})

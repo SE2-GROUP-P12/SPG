@@ -16,7 +16,6 @@ import {getAllShippingMode} from '../Utilities';
 
 function PlaceOrder(props) {
     /*LASTMINUTE*/ const [customer, setCustomer] = useState("");
-    //const [customer, setCustomer] = useState(null);
     const [order, setOrder] = useState([]);
     const [error, setError] = useState(false);
     const [customerError, setCustomerError] = useState(false);
@@ -86,7 +85,6 @@ function PlaceOrder(props) {
             /* NEW */
         } else
             setSendError(true);
-        //setModalShow(false);
     }
 
     const showModalHanlder = () => {
@@ -124,12 +122,10 @@ function PlaceOrder(props) {
 
     //MODAL REVIEW COMPONENT
 
-    const ReviewOrderComponent = (props) => {
-        const [showDate, setShowDate] = useState(true);
+    const ReviewOrderComponent = (reviewProps) => {
         const [pickUpDate, setPickUpDate] = useState(-1);
         const [pickUpTime, setPickUpTime] = useState("");
-        const [errorDate, setErrorDate] = useState(false);
-        const [showAddressForm, setShowAddressForm] = useState(false);
+        const [ , setErrorDate] = useState(false);
         const [checkBoxStatus, setChechBoxStatus] = useState([true, false]);
         const [customAddress, setCustomAddress] = useState("");
         const [enableButton, setEnableButton] = useState(false);
@@ -148,7 +144,6 @@ function PlaceOrder(props) {
                     return;
                 }
                 setEnableButton(true);
-                return;
             }
             //Delivery Selected
             else if (checkBoxStatus[1] === true) {
@@ -337,7 +332,7 @@ function PlaceOrder(props) {
                             onSubmit={async (values) => {
                                 setCustomerSuccess(false);
                                 setCustomerError(false);
-                                setCustomer(null);
+                                setCustomer("");
                                 let presentEmail = await API.customerExistsByMail(values.email)
                                 setCustomerError(!presentEmail);
                                 if (presentEmail) {
@@ -377,10 +372,10 @@ function PlaceOrder(props) {
             <Row>
                 <Col xs={4}><Link to="/Dashboard"><Button
                     variant='secondary'>Back</Button></Link></Col>
-                <Col xs={4}><Button disabled={order.length === 0 || itsTime === false ? true : false && !itsTime()} variant='danger'
+                <Col xs={4}><Button disabled={order.length === 0 || !itsTime } variant='danger' //itsTime === false ? true : false && !itsTime()
                                     onClick={dropOrder}>Delete order</Button></Col>
                 <Col xs={4}><Button
-                    disabled={(!itsTime || order.length === 0 ) ? true : false}
+                    disabled={!itsTime || order.length === 0 || customer === "" }
                     variant='success' onClick={() => showModalHanlder()}>Send order</Button></Col>
             </Row>
         </>

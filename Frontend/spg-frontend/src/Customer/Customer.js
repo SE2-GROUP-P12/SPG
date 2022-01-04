@@ -19,7 +19,7 @@ function Customer() {
                 </Grid>
             </div>
             :
-            <Redirect to="/ErrorHandler"></Redirect>
+            <Redirect to="/ErrorHandler"/>
     );
 }
 
