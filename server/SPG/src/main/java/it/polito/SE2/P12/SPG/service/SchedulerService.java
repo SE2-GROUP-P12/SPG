@@ -19,8 +19,12 @@ import java.util.Map.Entry;
 @Service
 public class SchedulerService {
 
-    @Value("${spring.mail.host}")
-    private String emailHostAddress;
+    @Value("${scheduler.print-poll}")
+    private boolean pollPrint;
+    @Value("${scheduler.print-schedule-execution}")
+    private boolean scheduleExecutionPrint;
+    @Value("${scheduler.active}")
+    private boolean active;
     private static final long POLLING_RATE = 5000L;
     public static final String ZONE = "Europe/Rome";
     private long iteration = 0L;
@@ -44,6 +48,10 @@ public class SchedulerService {
     }
 
     public void initScheduler() {
+        if (!this.active) {
+            System.out.println("TESTING ENV DETECTED: NO SCHEDULE(s) WILL BE ADDED!\n");
+            return;
+        }
         /* MONDAY */
         //1. Set forecast to zero for all product
         addToSchedule(new MondayMorningSchedule(spgProductService, this), LocalDate.now(applicationClock).with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(9, 0).toEpochSecond(ZoneOffset.ofHours(1)));
@@ -62,20 +70,22 @@ public class SchedulerService {
 
     @Scheduled(fixedDelay = POLLING_RATE)
     private void poll() {
-        if (this.emailHostAddress.equals("127.0.0.1")) {
-            System.out.println("TESTING ENV DETECTED: NO SCHEDULE(s) WILL BE ADDED!\n");
+        if (!this.active) {
             return;
         }
+
         this.iteration++;
-        //System.out.println("application time: " + applicationClock.instant().atZone(ZoneId.of(ZONE)) + ", epoch time: " + applicationClock.instant().getEpochSecond() + ", iteration: " + this.iteration);
+        if (this.pollPrint)
+            System.out.println("application time: " + applicationClock.instant().atZone(ZoneId.of(ZONE)) + ", epoch time: " + applicationClock.instant().getEpochSecond() + ", iteration: " + this.iteration);
 
         Entry<Schedulable, Long> e;
         do {
             e = schedule.stream().
                     min((x, y) -> Math.toIntExact(x.getValue() - y.getValue())).orElse(null);
             if (e != null && e.getValue() <= applicationClock.instant().getEpochSecond()) {
-                System.out.println(e.getKey().getClass().getSimpleName() + " executed");
                 e.getKey().execute();
+                if (this.scheduleExecutionPrint)
+                    System.out.println(e.getKey().getClass().getSimpleName() + " executed");
                 schedule.remove(e);
             }
         } while (e != null && e.getValue() <= applicationClock.instant().getEpochSecond());
@@ -87,6 +97,10 @@ public class SchedulerService {
 
         schedule.add(new AbstractMap.SimpleEntry<>(s, t));
         return true;
+    }
+
+    public Long getEpochTime() {
+        return this.applicationClock.instant().getEpochSecond();
     }
 
     public Instant getTime() {
