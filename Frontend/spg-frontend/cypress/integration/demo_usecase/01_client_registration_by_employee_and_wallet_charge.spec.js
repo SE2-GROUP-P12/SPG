@@ -7,7 +7,12 @@
  *  to be registered for the system and charges the wallet with 50€
  */
 context('customer workflow', () => {
-
+    
+    it('Mario login', () => {
+        cy.visit(Cypress.env('baseUrl'));
+        cy.login('mario@gmail.com','password');
+        
+    });
     //TODO: test this use case
 
 })
