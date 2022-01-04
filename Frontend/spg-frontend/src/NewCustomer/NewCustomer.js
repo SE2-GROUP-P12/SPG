@@ -56,7 +56,7 @@ function NewCustomer(props) {
                             </Button>
                             :
                             <Link to={"/Dashboard"} > {/*SEND TOCUSTOMER HOME PAGE*/}
-                                <Button variant="success">
+                                <Button id='home' variant="success">
                                     {modalMessage.messageFooterButton}
                                 </Button>
                             </Link>
@@ -193,7 +193,7 @@ function NewCustomer(props) {
                                                                  className="mt-4">Back</Button></Link>
                             </Grid>
                             <Grid item xs={6}>
-                                <Button type='Submit' variant="success" size="lg" className="mt-4">Submit</Button>
+                                <Button id='submit' type='Submit' variant="success" size="lg" className="mt-4">Submit</Button>
                             </Grid>
                         </Grid>
                     </Form>

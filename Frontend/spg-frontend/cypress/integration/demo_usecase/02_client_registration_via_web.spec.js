@@ -9,12 +9,11 @@
 context('customer workflow', () => {
     //TODO: test this use case
     
-    it('Mario login', () => {
+    it('Giovanni Sign up', () =>{
         cy.visit(Cypress.env('baseUrl'));
-        cy.login('mario@gmail.com','password');
-        
-        
-    });
+        cy.signUp('giovanni@gmail.com','password');
+
+    })
     
     it('time machine example', () => {
         cy.visit(Cypress.env('baseUrl'));
@@ -22,4 +21,5 @@ context('customer workflow', () => {
         cy.timeMachine(0,10);
         
     });
+    //TODO: teardown -> elimina giovanni
 })

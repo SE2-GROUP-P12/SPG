@@ -44,6 +44,34 @@ Cypress.Commands.add('checkHomepage', () => {
     cy.get('[alt=italymap]').should('exist');
 });
 
+/**
+ * dayOfweek = 0 sunday, 1 Monday, .... 6 saturday
+ * Hour of the day
+ */
+ Cypress.Commands.add('signUp', (email,password) => {
+
+    cy.get('#signup').click();
+    cy.get('#email').should('exist');
+    cy.get('#email').type('giovanni@gmail.com');
+    cy.get('#password').should('exist');
+    cy.get('#password').type('Malnati30L');
+    cy.get('#name').should('exist');
+    cy.get('#name').type('Giovanni');
+    cy.get('#surname').should('exist');
+    cy.get('#surname').type('Malnati');
+    cy.get('#address').should('exist');
+    cy.get('#address').type('Corso Duca degli Abruzzi, 24 - 10129 Torino (TO)');
+    cy.get('#ssn').should('exist');
+    cy.get('#ssn').type('MLNGNN80A01L219Q');
+    cy.get('#phoneNumber').should('exist');
+    cy.get('#submit').click();
+    cy.wait(2000);
+    cy.contains('Creation successful').should('exist');
+    cy.get('#home').should('exist');
+    cy.get('#home').click();
+    
+})
+
 Cypress.Commands.add('login', (email, password) => {
     cy.get('[id=login]').should('exist');
     cy.get('[id=login]').click();
@@ -108,7 +136,6 @@ Cypress.Commands.add('checkBrowseProducts', () => {
  * Hour of the day
  */
  Cypress.Commands.add('timeMachine', (dayOfWeek,hour) => {
-
 
     var date = new Date();
     date.setHours(hour);
