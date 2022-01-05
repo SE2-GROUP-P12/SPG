@@ -4,7 +4,6 @@ import {BrowserRouter as Router} from "react-router-dom";
 import "./NavbarApplication.css"
 
 import {NavbarApplication} from "./NavbarApplication";
-import {Login} from "../Login/Login";
 
 test("Alert Balance insufficient", async () => {
 

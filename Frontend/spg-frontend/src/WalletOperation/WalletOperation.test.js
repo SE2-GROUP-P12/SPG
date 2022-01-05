@@ -1,5 +1,5 @@
 import * as React from "react";
-import {render, fireEvent, waitFor, getAllByText} from '@testing-library/react';
+import {render, waitFor} from '@testing-library/react';
 import {BrowserRouter as Router} from "react-router-dom";
 
 import {WalletOperation} from "./WallettOperation";

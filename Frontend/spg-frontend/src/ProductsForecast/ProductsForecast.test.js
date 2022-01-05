@@ -1,5 +1,5 @@
 import * as React from "react";
-import {render, fireEvent, waitFor, getAllByText} from '@testing-library/react';
+import {render, fireEvent, waitFor} from '@testing-library/react';
 import {BrowserRouter as Router} from "react-router-dom";
 import {ProductsForecast} from "./ProductsForecast";
 import {API} from "./../API/API";
@@ -140,7 +140,7 @@ test ("browse product error", async () => {
     localStorage.setItem("role", "FARMER");
     localStorage.setItem("username", "thomas.jefferson@gmail.com");
 
-    const {} = render(
+    const {getByText} = render(
         <Router>
             <ProductsForecast
                 setErrorMessage={null}
