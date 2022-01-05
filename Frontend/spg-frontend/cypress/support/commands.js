@@ -47,6 +47,7 @@ Cypress.Commands.add('checkHomepage', () => {
 
 /**
  * Perform a signUp of an user (he/she will remain logged in)
+ * (the page must be the registration page)
  * @Param email
  * @Param password
  * @Param name
@@ -64,27 +65,18 @@ Cypress.Commands.add('checkHomepage', () => {
      ssn,
      phoneNumber) => {
 
-    cy.get('#signup').click();
-    cy.get('#email').should('exist');
     cy.get('#email').type(email);
-    cy.get('#password').should('exist');
     cy.get('#password').type(password);
-    cy.get('#name').should('exist');
     cy.get('#name').type(name);
-    cy.get('#surname').should('exist');
     cy.get('#surname').type(surname);
-    cy.get('#address').should('exist');
     cy.get('#address').type(address);
-    cy.get('#ssn').should('exist');
     cy.get('#ssn').type(ssn);
-    cy.get('#phoneNumber').should('exist');
     if (phoneNumber) {
         cy.get('#phoneNumber').type(phoneNumber);
     }
     cy.get('#submit').click();
     cy.wait(2000);
     cy.contains('Creation successful').should('exist');
-    cy.get('#home').should('exist');
     cy.get('#home').click();
     
 })
@@ -121,6 +113,22 @@ Cypress.Commands.add('logout', ()=> {
     cy.checkUrl("/");
 
 })
+/**
+ * perform a logout of an logged in user
+ */
+Cypress.Commands.add('topUp', (email,money)=> {
+    cy.get('#email').type(email);
+    cy.get('#button-Submit').click();
+    cy.contains('User correctly found').should('exist');
+    cy.get('#button-Cash').should('be.visible');
+    cy.get('#button-Cash').click();
+    cy.get('#button-TopUp').should('be.visible');
+    cy.get('#amount').type(money);
+    cy.get('#button-TopUp').click();
+    cy.contains('Top up correctly performed').should('be.visible');
+
+})
+
 
 Cypress.Commands.add('checkCustomer', () => {
     cy.checkUrl('/Dashboard');

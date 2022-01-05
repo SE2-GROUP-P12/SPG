@@ -13,6 +13,7 @@ context('Giovanni signup', () => {
 
     it('Giovanni Sign up', () => {
         cy.visit(Cypress.env('baseUrl'));
+        cy.get('#signup').click();
         cy.signUp(
             'giovanni@gmail.com',
             'Malnati30L',
