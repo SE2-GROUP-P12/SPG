@@ -33,7 +33,7 @@ public class SpgOrderService {
 
 
     @Autowired
-    public SpgOrderService(OrderRepo orderRepo, BasketRepo basketRepo, SpgUserService spgUserService, ProductRepo productRepo, UserRepo userRepo) {
+    public SpgOrderService(OrderRepo orderRepo, SpgUserService spgUserService, ProductRepo productRepo, UserRepo userRepo) {
         this.orderRepo = orderRepo;
         this.spgUserService = spgUserService;
         this.productRepo = productRepo;
@@ -123,7 +123,7 @@ public class SpgOrderService {
             p.moveFromAvailableToOrdered(q);
             productRepo.save(p);
         }
-        Order order = new Order((OrderUserType) user, epoch, basket.getProductQuantityMap(), deliveryDate, deliveryAddress);
+        Order order = new Order(user, epoch, basket.getProductQuantityMap(), deliveryDate, deliveryAddress);
         boolean result = addNewOrder(order);
         if (result) {
             user.getOrders().add(order);

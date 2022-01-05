@@ -4,7 +4,6 @@ import it.polito.SE2.P12.SPG.entity.Farmer;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.List;
 public class SpgProductService {
 
     private ProductRepo productRepo;
+    private SchedulerService schedulerService;
 
     @Autowired
     public SpgProductService(ProductRepo productRepo) {
@@ -50,6 +50,18 @@ public class SpgProductService {
         if (product == null)
             return false;
         product.setQuantityForecast(forecast);
+        product.setQuantityAvailable(forecast - product.getQuantityBaskets() - product.getQuantityOrdered());
+        productRepo.save(product);
+        return true;
+    }
+
+    public Boolean setForecastNext(Long productId, Double forecast) {
+        if (forecast < 0.0 || Double.isNaN(forecast) || Double.isInfinite(forecast))
+            return false;
+        Product product = productRepo.findProductByProductId(productId);
+        if (product == null)
+            return false;
+        product.setQuantityForecastNext(forecast);
         productRepo.save(product);
         return true;
     }

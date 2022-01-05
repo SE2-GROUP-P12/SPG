@@ -162,6 +162,8 @@ function App() {
                         </Route>
                         <Route exact path="/ProductsForecast">
                             <ProductsForecast
+                                time={time}
+                                date={date}
                                 setErrorMessage={setErrorMessage}/>
                         </Route>
                         <Route exact path="/AddProduct">

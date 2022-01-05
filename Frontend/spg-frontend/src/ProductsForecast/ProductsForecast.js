@@ -44,6 +44,19 @@ function ProductsForecast(props) {
         await _browseProductsByFarmer();
     }, []);
 
+    /*TIME MACHINE MANAGEMENT*/
+    const [nextWeekFrame, setNextWeekFrame] = useState(false)
+    useEffect(() => {
+        let checkTime = (time, date) => {
+            console.log("CHECKTIME NEXT WEEK FRAME: " + time + " " + date);
+            if ((date === 'Sat' && time >= '09:00') || (date === 'Mon' && time < '09:00') || (date === 'Sun'))
+                setNextWeekFrame(true);
+            else
+                setNextWeekFrame(false);
+        }
+        checkTime(props.time, props.date);
+    }, [props.date, props.time])
+
 
     function ProductEntry(props) {
         const [show, setShow] = useState(false);
@@ -68,7 +81,7 @@ function ProductsForecast(props) {
                             {props.product.name}
                         </Typography>
                         <Typography variant="body">
-                            {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                            {nextWeekFrame ? props.product.quantityForecastNext : props.product.quantityForecast} {props.product.unitOfMeasurement} currently
                             forecasted <br/>
                             {props.product.price.toFixed(2)}€/{props.product.unitOfMeasurement}
                         </Typography>
@@ -97,7 +110,7 @@ function ProductsForecast(props) {
                                  style={{height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
-                                    {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                                    {nextWeekFrame ? props.product.quantityForecastNext : props.product.quantityForecast} {props.product.unitOfMeasurement} currently
                                     forecasted
                                 </Col>
                             </Row>

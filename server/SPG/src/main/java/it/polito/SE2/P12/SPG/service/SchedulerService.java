@@ -11,6 +11,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
+import java.time.chrono.ChronoLocalDateTime;
+import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.Map.Entry;
@@ -106,6 +108,27 @@ public class SchedulerService {
         applicationClock = Clock.offset(applicationClock, offset).withZone(ZoneId.of(ZONE));
         //poll();
         return true;
+    }
+
+    public Boolean isConfirmationFrame() {
+        LocalDateTime now = LocalDateTime.now(applicationClock);
+        if ((now.getDayOfWeek() == DayOfWeek.SATURDAY && now.getHour() >= 9) ||
+                (now.getDayOfWeek() == DayOfWeek.SUNDAY) ||
+                (now.getDayOfWeek() == DayOfWeek.MONDAY && now.getHour() < 9))
+            return true;
+        return false;
+    }
+
+    public Boolean isThisWeekForecastFrame() {
+        return !isNextWeekForecastFrame();
+    }
+
+    public Boolean isNextWeekForecastFrame() {
+        LocalDateTime now = LocalDateTime.now(applicationClock);
+        if ((now.getDayOfWeek() == DayOfWeek.SATURDAY && now.getHour() >= 9) ||
+                (now.getDayOfWeek() == DayOfWeek.SUNDAY && now.getHour() < 23))
+            return true;
+        return false;
     }
 
 }

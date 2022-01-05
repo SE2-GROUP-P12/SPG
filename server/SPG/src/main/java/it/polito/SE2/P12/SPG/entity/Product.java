@@ -35,8 +35,13 @@ public class Product {
     @Column(name = "quantity_available", nullable = false)
     private Double quantityAvailable;
     //Quantità prevista per la settimana seguente dal farmer. Da confermare.
+    // Settata nel periodo da lunedì mattina a sabato mattina
     @Column(name = "quantity_forecast", nullable = false)
     private Double quantityForecast;
+    //Quantità prevista per la settimana seguente dal farmer. Da confermare.
+    // Settata nel periodo da sabato mattina a lunedì mattina, dove diventerà quantityForecast
+    @Column(name = "quantity_forecast_next", nullable = false)
+    private Double quantityForecastNext;
     //Quantità attualmente confermata dal farmer,
     //che alla fine della finestra di tempo di conferma, diventerà totalQuantity
     @Column(name = "quantity_confirmed", nullable = false)
@@ -71,6 +76,7 @@ public class Product {
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityForecast = 0.0;
+        this.quantityForecastNext = 0.0;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -87,6 +93,7 @@ public class Product {
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityForecast = 0.0;
+        this.quantityForecastNext = 0.0;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -103,6 +110,7 @@ public class Product {
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityForecast = 0.0;
+        this.quantityForecastNext = 0.0;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -124,6 +132,7 @@ public class Product {
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityForecast = 0.0;
+        this.quantityForecastNext = 0.0;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -141,6 +150,7 @@ public class Product {
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
         this.quantityForecast = 0.0;
+        this.quantityForecastNext = 0.0;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
