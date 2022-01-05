@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.validator.routines.UrlValidator;
 
 import javax.persistence.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Base64;
 
 
@@ -67,7 +69,7 @@ public class Product {
     private Farmer farmer;
     @Column(name = "image_url")
     private String imageUrl;
-    @Column(name = "base_64_image",columnDefinition = "LONGTEXT")
+    @Column(name = "base_64_image", columnDefinition = "LONGTEXT")
     private String base64Image;
 
     public Product(String name, String unitOfMeasurement, Double totalQuantity, double price) {
@@ -118,8 +120,24 @@ public class Product {
         this.price = price;
         this.farmer = null;
         this.imageUrl = imageUrl;
+
+        String[] schemes = {"http", "https"}; // DEFAULT schemes = "http", "https"
+        UrlValidator urlValidator = new UrlValidator(schemes);
+
+        File imageFile = new File("tmp.jpg");
+        if (urlValidator.isValid(imageUrl)) {
+            try {
+                FileUtils.copyURLToFile(new URL(imageUrl), imageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            imageFile = new File(imageUrl);
+        }
+
+
         try {
-            byte[] fileContent = FileUtils.readFileToByteArray(new File(imageUrl));
+            byte[] fileContent = FileUtils.readFileToByteArray(imageFile);
             this.base64Image = Base64.getEncoder().encodeToString(fileContent);
         } catch (IOException e) {
             e.printStackTrace();
@@ -158,8 +176,24 @@ public class Product {
         this.price = price;
         this.farmer = farmer;
         this.imageUrl = imageUrl;
+
+        String[] schemes = {"http", "https"}; // DEFAULT schemes = "http", "https"
+        UrlValidator urlValidator = new UrlValidator(schemes);
+
+        File imageFile = new File("tmp.jpg");
+        if (urlValidator.isValid(imageUrl)) {
+            try {
+                FileUtils.copyURLToFile(new URL(imageUrl), imageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            imageFile = new File(imageUrl);
+        }
+
+
         try {
-            byte[] fileContent = FileUtils.readFileToByteArray(new File(imageUrl));
+            byte[] fileContent = FileUtils.readFileToByteArray(imageFile);
             this.base64Image = Base64.getEncoder().encodeToString(fileContent);
         } catch (IOException e) {
             e.printStackTrace();

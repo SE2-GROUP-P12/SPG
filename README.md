@@ -8,6 +8,7 @@
 - [FE instructions](#fe-instructions)
   - [Install FE dependencies](#install-fe-dependencies)
   - [Run FE application](#run-fe-application)
+  - [Credentials:](#credentials)
 # SPG Team P12
 Members:
  - Gracis Riccardo (s287961)
@@ -70,11 +71,19 @@ go in fronted/spg-frontend  folder
 ## Credentials:
   - customer: 
     - username: mario.rossi@gmail.com
-    - password: password
+    - password: password   
+
  - shop employee: 
     - username: francesco.conte@gmail.com
     - password: password
+
+    - username: mario@gmail.com
+    - password: password
+
  - farmer: 
     - username: thomas.jefferson@gmail.com
+    - password: password
+
+    - username: calvin@gmail.com
     - password: password
 
