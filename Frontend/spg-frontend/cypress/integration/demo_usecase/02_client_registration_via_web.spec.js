@@ -1,5 +1,12 @@
 /// <reference types = "Cypress" />
 
+after(() =>{
+    const dbName = 'spg';
+    var query = `DELETE FROM spg.customer WHERE address like 'Corso Duca degli Abruzzi, 24 - 10129 Torino (TO)';`;
+    cy.task('queryDatabase', { dbName, query});
+    query = "DELETE FROM spg.user WHERE email like 'giovanni@gmail.com';";
+    cy.task('queryDatabase', { dbName, query});
+})
 
 /**
  * usecase 2
@@ -26,16 +33,17 @@ context('customer workflow', () => {
         cy.visit(Cypress.env('baseUrl'));
         cy.logout();
         cy.login('giovanni@gmail.com','Malnati30L');
+        cy.wait(1000);
+        cy.logout();
     })
     
 
     
-    it('time machine example', () => {
-        cy.visit(Cypress.env('baseUrl'));
-        cy.get('#browse-product-button').click();
-        cy.timeMachine(0,10);
+    // it('time machine example', () => {
+    //     cy.visit(Cypress.env('baseUrl'));
+    //     cy.get('#browse-product-button').click();
+    //     cy.timeMachine(0,10);
         
-    });
+    // });
 
-    //TODO: use 02_teardown.sql revert the changes of this usecase
 })
