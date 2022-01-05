@@ -44,26 +44,43 @@ Cypress.Commands.add('checkHomepage', () => {
     cy.get('[alt=italymap]').should('exist');
 });
 
+
 /**
- * dayOfweek = 0 sunday, 1 Monday, .... 6 saturday
- * Hour of the day
+ * Perform a signUp of an user (he/she will remain logged in)
+ * @Param email
+ * @Param password
+ * @Param name
+ * @Param surname
+ * @Param address
+ * @Param ssn
+ * @Param phoneNumber (optional)
  */
- Cypress.Commands.add('signUp', (email,password) => {
+ Cypress.Commands.add('signUp', (
+     email,
+     password,
+     name,
+     surname,
+     address,
+     ssn,
+     phoneNumber) => {
 
     cy.get('#signup').click();
     cy.get('#email').should('exist');
-    cy.get('#email').type('giovanni@gmail.com');
+    cy.get('#email').type(email);
     cy.get('#password').should('exist');
-    cy.get('#password').type('Malnati30L');
+    cy.get('#password').type(password);
     cy.get('#name').should('exist');
-    cy.get('#name').type('Giovanni');
+    cy.get('#name').type(name);
     cy.get('#surname').should('exist');
-    cy.get('#surname').type('Malnati');
+    cy.get('#surname').type(surname);
     cy.get('#address').should('exist');
-    cy.get('#address').type('Corso Duca degli Abruzzi, 24 - 10129 Torino (TO)');
+    cy.get('#address').type(address);
     cy.get('#ssn').should('exist');
-    cy.get('#ssn').type('MLNGNN80A01L219Q');
+    cy.get('#ssn').type(ssn);
     cy.get('#phoneNumber').should('exist');
+    if (phoneNumber) {
+        cy.get('#phoneNumber').type(phoneNumber);
+    }
     cy.get('#submit').click();
     cy.wait(2000);
     cy.contains('Creation successful').should('exist');
@@ -71,7 +88,11 @@ Cypress.Commands.add('checkHomepage', () => {
     cy.get('#home').click();
     
 })
-
+/**
+ * perform a login of an user
+ * @Param email
+ * @Param password
+ */
 Cypress.Commands.add('login', (email, password) => {
     cy.get('[id=login]').should('exist');
     cy.get('[id=login]').click();
@@ -89,6 +110,9 @@ Cypress.Commands.add('login', (email, password) => {
     cy.get('[id=logout]').should('exist');
 })
 
+/**
+ * perform a logout of an logged in user
+ */
 Cypress.Commands.add('logout', ()=> {
     cy.get('[id=logout').should('exist');
     cy.get('[id=logout').click();
