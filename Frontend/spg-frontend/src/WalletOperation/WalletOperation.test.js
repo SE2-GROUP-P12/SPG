@@ -57,10 +57,10 @@ test("operation list", async() =>{
     await waitFor(()=>{
         getByText("0");
         getByText(/\+ 10/i);
-        getByText("Tue Jan 04 2022, 14:44:53");
+        getByText(/Tue Jan 04 2022, 14:44:53/i);
         getByText("1");
         getByText(/\- 15/i);
-        getByText("Fri Feb 04 2022, 22:10:35");
+        getByText(/Fri Feb 04 2022, 22:10:35/i);
         getAllByText("actions placeholder")
     });
 });
