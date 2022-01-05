@@ -124,7 +124,7 @@ function TopUp()
                     <div id="container">
                         <Form>
                             {errors.amount && touched.amount ? errors.amount : null} <br/>
-                            Amount: <FastField id='amount' type="number" name="amount" label="amount" min="0"
+                            Amount: <FastField data-testid="amount" id='amount' type="number" name="amount" label="amount" min="0"
                                                step="0.01"/> €
                             <Button style={{margin : '20px'}} type='submit' variant='success'>Top Up</Button>
                         </Form>                

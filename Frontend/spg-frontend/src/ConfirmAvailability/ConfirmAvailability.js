@@ -134,12 +134,7 @@ function ConfirmAvailability(props) {
                     </CardActions>
                 </Card>
 
-                <Modal show={show} onHide={
-                    () => {
-                    handleClose();
-                    setShowError(null);
-                    setShowSuccess(null);
-                }}>
+                <Modal show={show} onHide={() => {handleClose(); setShowError(null); setShowSuccess(null);}}>
                     <Modal.Header>
                         <Modal.Title>Set Availability for {productProps.product.name}</Modal.Title>
                     </Modal.Header>
@@ -189,11 +184,7 @@ function ConfirmAvailability(props) {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={async () => {
-                            handleClose();
-                            setShowError(null);
-                            setShowSuccess(null);
-                        }}>
+                        <Button variant="secondary" onClick={async () => {handleClose(); setShowError(null); setShowSuccess(null);}}>
                             Close
                         </Button>
                     </Modal.Footer>
@@ -203,7 +194,7 @@ function ConfirmAvailability(props) {
     }
 
     if (triggerError === true) {
-        return (<Redirect to="/ErrorHandler"></Redirect>);
+        return (<Redirect to="/ErrorHandler"/>);
     }
 
     return (

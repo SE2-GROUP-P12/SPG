@@ -22,9 +22,49 @@ test ("Renders Correctly", () => {
 
 });
 
-test("Open Order - mail ok", async() => {
+test ("Deliver", async()=>{
+    localStorage.setItem("role", "EMPLOYEE");
+    localStorage.setItem("username", "francesco.conte@gmail.com");
     const mockGetAllOrders = (API.getAllOrders = jest.fn());
-    const mockSolicitTopUp = (MailServerAPI.solicitCustomerTopUp = jest.fn());
+    const mockDeliverOrder = (API.deliverOrder = jest.fn());
+    mockDeliverOrder.mockResolvedValueOnce(false);
+    mockGetAllOrders.mockResolvedValueOnce(
+        [{creationDate: "2021-12-09T16:08:49.113832",
+            currentStatusDate: "2021-12-09T16:08:49.113832",
+            email: "mario.rossi@gmail.com",
+            orderId: 51,
+            productList: [],
+            status: "CONFIRMED",
+            value: 100},
+            {creationDate: "2021-12-09T16:08:49.113832",
+                currentStatusDate: "2021-12-09T16:08:49.113832",
+                email: "gianni.verdi@gmail.com",
+                orderId: 51,
+                productList: [],
+                status: "OPEN",
+                value: 100}]);
+    const {getByText} = render(
+        <Router>
+            <DeliverOrder date={'Wed'}
+                          time={'10:00'}/>
+        </Router>
+    );
+
+    await waitFor(()=>{
+        getByText(/mario.rossi@gmail.com/i);
+        getByText(/gianni.verdi@gmail.com/i);
+        getByText("Deliver");
+    });
+    fireEvent.click(getByText("Deliver"));
+    await waitFor(()=>{
+        expect(mockDeliverOrder).toHaveBeenCalledTimes(1);
+    });
+})
+
+test ("Get by mail - ok", async()=>{
+    const mockGetAllOrders = (API.getAllOrders = jest.fn());
+    const mockGetOrdersByEmail = (API.getOrdersByEmail = jest.fn());
+    const mockCustomerExistsByMail = (API.customerExistsByMail = jest.fn());
     mockGetAllOrders.mockResolvedValueOnce(
         [{creationDate: "2021-12-09T16:08:49.113832",
             currentStatusDate: "2021-12-09T16:08:49.113832",
@@ -32,26 +72,136 @@ test("Open Order - mail ok", async() => {
             orderId: 51,
             productList: [],
             status: "OPEN",
+            value: 100},
+            {creationDate: "2021-12-09T16:08:49.113832",
+                currentStatusDate: "2021-12-09T16:08:49.113832",
+                email: "gianni.verdi@gmail.com",
+                orderId: 51,
+                productList: [],
+                status: "OPEN",
+                value: 100}]);
+    mockCustomerExistsByMail.mockResolvedValueOnce(true);
+    mockGetOrdersByEmail.mockResolvedValueOnce(
+        [{creationDate: "2021-12-09T16:08:49.113832",
+            currentStatusDate: "2021-12-09T16:08:49.113832",
+            email: "mario.rossi@gmail.com",
+            orderId: 51,
+            productList: [],
+            status: "OPEN",
             value: 100}]);
-    mockSolicitTopUp.mockResolvedValueOnce(true);
-
-    const {getByText} = render(
+    const {getByText, getByLabelText} = render(
         <Router>
-            <DeliverOrder/>
+            <DeliverOrder date={'Wed'}
+            time={'10:00'}/>
         </Router>
     );
 
     await waitFor(()=>{
-        getByText("Cancel Order");
+        getByText(/mario.rossi@gmail.com/i);
+        getByText(/gianni.verdi@gmail.com/i);
     });
-    fireEvent.click(getByText("Manage Order"));
+    fireEvent.change(getByLabelText("Email:"), {target: {value:"mario.rossi@gmail.com"}});
+    fireEvent.click(getByText("Submit customer"));
     await waitFor(()=>{
-        getByText("Handle unpaid order");
-        getByText("Close");
-    })
-    fireEvent.click(getByText("Solicit!"))
+
+        getByText(/mario.rossi@gmail.com/i);
+        expect(()=>getByText(/gianni.verdi@gmail.com/i)).toThrow();
+    });
+})
+
+test ("Get by mail - no user", async()=>{
+    const mockGetAllOrders = (API.getAllOrders = jest.fn());
+    const mockGetOrdersByEmail = (API.getOrdersByEmail = jest.fn());
+    const mockCustomerExistsByMail = (API.customerExistsByMail = jest.fn());
+    mockGetAllOrders.mockResolvedValueOnce(
+        [{creationDate: "2021-12-09T16:08:49.113832",
+            currentStatusDate: "2021-12-09T16:08:49.113832",
+            email: "mario.rossi@gmail.com",
+            orderId: 51,
+            productList: [],
+            status: "OPEN",
+            value: 100},
+            {creationDate: "2021-12-09T16:08:49.113832",
+                currentStatusDate: "2021-12-09T16:08:49.113832",
+                email: "gianni.verdi@gmail.com",
+                orderId: 51,
+                productList: [],
+                status: "OPEN",
+                value: 100}]);
+    mockCustomerExistsByMail.mockResolvedValueOnce(false);
+    mockGetOrdersByEmail.mockResolvedValueOnce(
+        [{creationDate: "2021-12-09T16:08:49.113832",
+            currentStatusDate: "2021-12-09T16:08:49.113832",
+            email: "mario.rossi@gmail.com",
+            orderId: 51,
+            productList: [],
+            status: "OPEN",
+            value: 100}]);
+    const {getByText, getByLabelText} = render(
+        <Router>
+            <DeliverOrder date={'Wed'}
+                          time={'10:00'}/>
+        </Router>
+    );
+
     await waitFor(()=>{
-        getByText("Mail sent correctly");
+        getByText(/mario.rossi@gmail.com/i);
+        getByText(/gianni.verdi@gmail.com/i);
+    });
+    fireEvent.change(getByLabelText("Email:"), {target: {value:"mario.rossi@gmail.com"}});
+    fireEvent.click(getByText("Submit customer"));
+    await waitFor(()=>{
+        getByText("Customer not found")
+        getByText(/mario.rossi@gmail.com/i);
+        expect(()=>getByText(/gianni.verdi@gmail.com/i)).not.toThrow();
+    });
+})
+
+test ("Get by mail - no user", async()=>{
+    const mockGetAllOrders = (API.getAllOrders = jest.fn());
+    const mockGetOrdersByEmail = (API.getOrdersByEmail = jest.fn());
+    const mockCustomerExistsByMail = (API.customerExistsByMail = jest.fn());
+    mockGetAllOrders.mockResolvedValueOnce(
+        [{creationDate: "2021-12-09T16:08:49.113832",
+            currentStatusDate: "2021-12-09T16:08:49.113832",
+            email: "mario.rossi@gmail.com",
+            orderId: 51,
+            productList: [],
+            status: "OPEN",
+            value: 100},
+            {creationDate: "2021-12-09T16:08:49.113832",
+                currentStatusDate: "2021-12-09T16:08:49.113832",
+                email: "gianni.verdi@gmail.com",
+                orderId: 51,
+                productList: [],
+                status: "OPEN",
+                value: 100}]);
+    mockCustomerExistsByMail.mockResolvedValueOnce(false);
+    mockGetOrdersByEmail.mockResolvedValueOnce(
+        [{creationDate: "2021-12-09T16:08:49.113832",
+            currentStatusDate: "2021-12-09T16:08:49.113832",
+            email: "mario.rossi@gmail.com",
+            orderId: 51,
+            productList: [],
+            status: "OPEN",
+            value: 100}]);
+    const {getByText, getByLabelText} = render(
+        <Router>
+            <DeliverOrder date={'Wed'}
+                          time={'10:00'}/>
+        </Router>
+    );
+
+    await waitFor(()=>{
+        getByText(/mario.rossi@gmail.com/i);
+        getByText(/gianni.verdi@gmail.com/i);
+    });
+    fireEvent.change(getByLabelText("Email:"), {target: {value:"mario.rossi@gmail.com"}});
+    fireEvent.click(getByText("Submit customer"));
+    await waitFor(()=>{
+        getByText("Customer not found")
+        getByText(/mario.rossi@gmail.com/i);
+        expect(()=>getByText(/gianni.verdi@gmail.com/i)).not.toThrow();
     });
 })
 
