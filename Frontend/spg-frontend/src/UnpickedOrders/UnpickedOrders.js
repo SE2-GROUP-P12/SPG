@@ -21,7 +21,8 @@ function UnpickedOrders(props) {
     function listOrders(isWeekly) {
         let output = [];
         if(orders === null || orders.length===0)
-            return (<h2>No unpicked orders in this time period! 🎉</h2>);
+            //return (<h2>No unpicked orders in this time period! 🎉</h2>);
+            output.push(<h2>No unpicked orders in this time period! 🎉</h2>);
         for(let o of orders)
         {
             if(isWeekly && inThisWeek(o.currentStatusDate, props.dateTime))

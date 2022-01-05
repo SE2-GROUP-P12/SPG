@@ -29,7 +29,6 @@ function PlaceOrder(props) {
     const [showEndRoutineModal, setShowEndRoutineModal] = useState(false);
     const [itsTime, setItsTime] = useState(false)
 
-
     async function _getCart() {
         const prod = await API.getCart({'email': localStorage.getItem("username")}, props.setErrorMessage);
         if (prod === null) {
@@ -206,14 +205,14 @@ function PlaceOrder(props) {
                                 from 9:00
                                 to 18:00.
                             </Alert>
-                            <reactForm.Control className="mt-3" type="date" name="deliveryDate" label="date"
+                            <reactForm.Control className="mt-3" type="date" name="deliveryDate" label="date" data-testid="date"
                                                placeholder="delivery date"
                                                onChange={async (event) => {
                                                    await onChangeDateHandler(event.target.value);
                                                    await enableButtonHandler(new Date(event.target.value), pickUpTime, customAddress);
                                                }}
                             />
-                            <reactForm.Control className="mt-3" type="time" name="deliveryTime" label="time"
+                            <reactForm.Control className="mt-3" type="time" name="deliveryTime" label="time" data-testid="time"
                                                onChange={(event) => {
                                                    onChangeTimeHandler(event.target.value);
                                                    enableButtonHandler(pickUpDate, event.target.value, customAddress);
@@ -222,13 +221,14 @@ function PlaceOrder(props) {
                         <h6>Where deliver your order:</h6>
                         <Alert className="mt-3" variant={variant}>
                             {shippingMode.map((value, index) => <reactForm.Check key={index} label={value.name}
+                                                                                 data-testid={value.name}
                                                                                  onChange={() => {
                                                                                      shippingModeCheckHandler(index);
                                                                                      enableButtonHandler(pickUpDate, pickUpTime, customAddress)
                                                                                  }}
                                                                                  checked={checkBoxStatus[index]}/>)}
                         </Alert>
-                        <reactForm.Control type="text" name="deliveryDate" placeholder="delivery address" label="address"
+                        <reactForm.Control type="text" name="deliveryDate" placeholder="delivery address" label="address" data-testid="address"
                                            onChange={(event) => {
                                                setCustomAddress(event.target.value);
                                                enableButtonHandler(pickUpDate, pickUpTime, event.target.value);
@@ -242,11 +242,8 @@ function PlaceOrder(props) {
             return getAlertBasedPicker("")
         }
 
-        //console.log(order)
-
         const getOrderTotalAmount = () => {
             let total = 0.00;
-            console.log('order ' + order);
             if (order === null)
                 return 0.00;
             for (let p of order) {
@@ -277,7 +274,7 @@ function PlaceOrder(props) {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="success" disabled={!enableButton}
+                    <Button variant="success" disabled={!enableButton} data-testid="placeorder"
                             onClick={() => {
                             placeOrder(pickUpDate, customAddress, pickUpTime);
                             setModalShow(false);
@@ -345,7 +342,7 @@ function PlaceOrder(props) {
                         >
                             {({values, errors, touched}) =>
                                 <Form>
-                                    Email:<Field style={{margin: '20px'}} name="email" type="text"/>
+                                    Email:<Field style={{margin: '20px'}} data-testid="email" name="email" type="text"/>
                                     <Button style={{margin: '20px'}} type="submit" variant="success">Submit
                                         customer</Button>
                                     {errors.email && touched.email ? errors.email : null}
@@ -375,7 +372,7 @@ function PlaceOrder(props) {
                 <Col xs={4}><Button disabled={order.length === 0 || !itsTime } variant='danger' //itsTime === false ? true : false && !itsTime()
                                     onClick={dropOrder}>Delete order</Button></Col>
                 <Col xs={4}><Button
-                    disabled={!itsTime || order.length === 0 || customer === "" }
+                    disabled={!itsTime || order.length === 0 || (customer === "" && localStorage.getItem("role")==="EMPLOYEE") }
                     variant='success' onClick={() => showModalHanlder()}>Send order</Button></Col>
             </Row>
         </>
@@ -388,7 +385,6 @@ function printOrder(prod) {
     if (prod.length === 0)
         return (<h2>The cart is empty </h2>);
     for (let p of prod) {
-        console.log("product-id: " + p.productId)
         output.push(<OrderEntry product={p} key={p.productId.toString()} value={p.productId}/>);
         total += p.price * p.quantityAvailable;
     }

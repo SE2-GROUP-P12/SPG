@@ -265,7 +265,7 @@ function DeliverOrder(props) {
                             <label htmlFor='email'>Email:</label><Field id='email' style={{margin: '20px'}} name="email"
                                                                         type="text"/>
                             <Button style={{margin: '20px'}} type="submit" variant="success"
-                                    disabled={!itsTime ? false : true}>Submit customer</Button>
+                                    disabled={!itsTime}>Submit customer</Button>
                             {errors.email && touched.email ? errors.email : null}
                         </Form>}
                 </Formik>
@@ -345,7 +345,7 @@ function Orders(props) {
         );
     }
 
-    if (props.orderList !== []) {
+    if (props.orderList != null && props.orderList !== []) {
         for (let o of props.orderList) {
             if (o.status === "CONFIRMED")
                 output.push(

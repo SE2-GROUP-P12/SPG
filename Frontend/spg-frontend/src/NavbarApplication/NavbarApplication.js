@@ -53,7 +53,7 @@ function NavbarApplication(props) {
     function conditionalSignUp ()
     {
         if(location.pathname==="/NewCustomer")
-            return "";
+            return (<></>);
         return (<Button id='signup' className="btn btn-outline-light navbar-button"
                         variant="success"
                         href='/NewCustomer'> Sign up </Button>);
@@ -62,7 +62,7 @@ function NavbarApplication(props) {
     function conditionalLogIn ()
     {
         if(location.pathname === "/LoginComponent")
-            return "";
+            return (<></>);
         return(<Button id='login' className="btn btn-outline-light navbar-button"
                     variant="success"
                     href='/LoginComponent'> Log in </Button>);

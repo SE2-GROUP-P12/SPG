@@ -120,7 +120,7 @@ function ProductsForecast(props) {
                                     {({values, errors, touched}) =>
                                         <Form>
                                             <label htmlFor='amount'>Amount:</label>
-                                            <Field type="number" id="amount" name="amount"
+                                            <Field data-testid="amount" type="number" id="amount" name="amount"
                                                    min={0}/> {PEProps.product.unitOfMeasurement}
                                             <br/>
                                             <Button style={{margin: '20px'}} type="submit" variant="success">Modify
@@ -151,7 +151,7 @@ function ProductsForecast(props) {
     }
 
     if (triggerError === true) {
-        return (<Redirect to="/ErrorHandler"></Redirect>);
+        return (<Redirect to="/ErrorHandler"/>);
     }
 
     return (

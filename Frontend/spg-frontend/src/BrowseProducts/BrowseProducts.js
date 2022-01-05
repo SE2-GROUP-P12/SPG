@@ -152,10 +152,7 @@ function BrowseProducts(props) {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => {
-                            handleClose();
-                            setShowError(null);
-                            setShowSuccess(null);
-                            _browseProducts();
+                            handleClose(); setShowError(null); setShowSuccess(null); _browseProducts();
                         }}>
                             Close
                         </Button>
