@@ -32,7 +32,7 @@ function AddProduct() {
                             productName: Yup.string().required('Product Name is required').max(50, "Name can't be longer than 50 characters"),
                             price: Yup.string().required('Price is required').matches(/^(?=.*?\d)^(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/, 'Please insert a valid price'),
                             unitOfMeasurement: Yup.string().required('A Unit of measurement is required').notOneOf(["Unit of Measurement"], 'A Unit of measurement is required'),
-                            imageUrl: Yup.string().matches(/^(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg))$|^$/, 'Insert a valid URL containing a png, jpg or jpeg image')
+                            imageUrl: Yup.string().matches(/^(http)?s?:?(\/\/[^"']*\.(?:.*))$|^$/, 'Insert a valid URL')
                         })
                     }
                     onSubmit={async (values, {resetForm}) => {
