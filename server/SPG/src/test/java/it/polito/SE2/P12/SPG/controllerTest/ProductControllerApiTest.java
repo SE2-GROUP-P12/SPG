@@ -87,7 +87,6 @@ public class ProductControllerApiTest {
         }
         Assertions.assertEquals(3, productList.size());
         Assertions.assertEquals("Prod1", productList.get(0).getName());
-        Assertions.assertEquals(100.00, productList.get(1).getTotalQuantity());
         Assertions.assertEquals(8.00F, productList.get(2).getPrice());
 
     }

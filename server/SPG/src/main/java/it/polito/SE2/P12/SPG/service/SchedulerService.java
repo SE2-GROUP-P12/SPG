@@ -1,7 +1,6 @@
 package it.polito.SE2.P12.SPG.service;
 
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
-import it.polito.SE2.P12.SPG.schedulables.schedule_routines.SundayEveningSchedule;
 import it.polito.SE2.P12.SPG.schedulables.schedule_routines.UnRetrievedOrderDetection_Routine;
 import it.polito.SE2.P12.SPG.schedulables.schedule_routines.MondayMorningSchedule;
 import it.polito.SE2.P12.SPG.schedulables.Schedulable;
@@ -54,8 +53,8 @@ public class SchedulerService {
             return;
         }
         /* MONDAY */
-        //1. Set forecast to zero for all product
-        addToSchedule(new MondayMorningSchedule(productService, this, orderService), LocalDate.now(applicationClock).with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(9, 0).toEpochSecond(ZoneOffset.ofHours(1)));
+        //1. Manage product quantities for the begin of the new week
+        addToSchedule(new MondayMorningSchedule(productService, this), LocalDate.now(applicationClock).with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(9, 0).toEpochSecond(ZoneOffset.ofHours(1)));
         /* TUESDAY */
         //1. Delete all unplayable orders
         addToSchedule(new PendingOrdersDetection_Routine(this.orderRepo, this, this.orderService),
@@ -67,10 +66,6 @@ public class SchedulerService {
         //1. mark not retrieved orders
         addToSchedule(new UnRetrievedOrderDetection_Routine(this.userService, this.orderService, this.orderRepo, this),
                 LocalDate.now(this.getClock()).with(TemporalAdjusters.next(DayOfWeek.FRIDAY)).atTime(20, 0).toEpochSecond(ZoneOffset.ofHours(1)));
-        /* SUNDAY*/
-        //1. quantities for forecasts are rearranged
-        addToSchedule(new SundayEveningSchedule(this, productService),
-                LocalDate.now(this.getClock()).with(TemporalAdjusters.next(DayOfWeek.SUNDAY)).atTime(23, 0).toEpochSecond(ZoneOffset.ofHours(1)));
     }
 
     @Scheduled(fixedDelay = POLLING_RATE)

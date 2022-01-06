@@ -226,7 +226,6 @@ public class ProductServiceTest {
         Assertions.assertEquals(0.0, p.getQuantityDelivered());
         Assertions.assertEquals(0.0, p.getQuantityForecast());
         Assertions.assertEquals(0.0, p.getQuantityOrdered());
-        Assertions.assertEquals(0.0, p.getTotalQuantity());
     }
 
     @Test
@@ -250,7 +249,6 @@ public class ProductServiceTest {
         Assertions.assertEquals(0.0, p.getQuantityDelivered());
         Assertions.assertEquals(0.0, p.getQuantityForecast());
         Assertions.assertEquals(0.0, p.getQuantityOrdered());
-        Assertions.assertEquals(0.0, p.getTotalQuantity());
     }
 
 }
