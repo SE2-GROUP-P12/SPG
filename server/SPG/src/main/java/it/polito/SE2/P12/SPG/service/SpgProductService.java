@@ -75,4 +75,15 @@ public class SpgProductService {
         productRepo.save(p);
         return true;
     }
+
+    public void resetQuantities(){
+        for(Product product: productRepo.findAll() ){
+            product.setQuantityAvailable(0.0);
+            product.setQuantityConfirmed(0.0);
+            product.setQuantityBaskets(0.0);
+            product.setQuantityDelivered(0.0);
+            product.setQuantityOrdered(0.0);
+            product.setQuantityForecast(0.0);
+        }
+    }
 }

@@ -5,14 +5,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
-import it.polito.SE2.P12.SPG.repository.BasketRepo;
-import it.polito.SE2.P12.SPG.repository.OrderRepo;
-import it.polito.SE2.P12.SPG.repository.ProductRepo;
-import it.polito.SE2.P12.SPG.repository.UserRepo;
+import it.polito.SE2.P12.SPG.repository.*;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.lang.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -30,14 +27,16 @@ public class SpgOrderService {
     private SpgUserService spgUserService;
     private ProductRepo productRepo;
     private UserRepo userRepo;
+    private CustomerRepo customerRepo;
 
 
     @Autowired
-    public SpgOrderService(OrderRepo orderRepo, SpgUserService spgUserService, ProductRepo productRepo, UserRepo userRepo) {
+    public SpgOrderService(OrderRepo orderRepo, SpgUserService spgUserService, ProductRepo productRepo, UserRepo userRepo,CustomerRepo customerRepo) {
         this.orderRepo = orderRepo;
         this.spgUserService = spgUserService;
         this.productRepo = productRepo;
         this.userRepo = userRepo;
+        this.customerRepo = customerRepo;
     }
 
     public Map<String, List<Long>> getPendingOrdersMail() {
@@ -221,6 +220,33 @@ public class SpgOrderService {
         order.setDeliveryAddress(address);
         orderRepo.save(order);
         return true;
+    }
+
+    public void updateConfirmedOrders(){
+        for(Order order: orderRepo.findAll()){
+            Customer cust = customerRepo.findCustomerByEmail(order.getCust().getEmail());
+            if(order.getStatus().equals(ORDER_STATUS_OPEN)||order.getStatus().equals(ORDER_STATUS_CANCELLED)){
+                order.setStatus(ORDER_STATUS_CANCELLED);
+                orderRepo.save(order);
+                continue;
+            }
+            if(order.getValue()>cust.getWallet()) continue;
+            Double price =0.0;
+            for(Product product: order.getProductList()){
+                double quantity = Math.min(order.getProds().get(product), product.getQuantityConfirmed());
+                Map<Product, Double>prods= order.getProds();
+                prods.remove(product);
+                prods.put(product,quantity);
+                order.setProds(prods);
+                price+=product.getPrice()*quantity;
+                product.setQuantityConfirmed(product.getQuantityConfirmed()-quantity);
+                productRepo.save(product);
+            }
+            cust.pay(price);
+            order.setStatus(ORDER_STATUS_PAID);
+            customerRepo.save(cust);
+            orderRepo.save(order);
+        }
     }
 
     public boolean setOrderStatus(Long orderId, String orderStatus, Instant schedulerCurrentInstant) {
