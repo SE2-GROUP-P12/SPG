@@ -25,11 +25,11 @@ function ProductsForecast(props) {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
     const [triggerError, setTriggerError] = useState(false);
-    const email = localStorage.getItem("username")
+    const email = localStorage.getItem("username");
+    const [forecastTime, setForecastTime] = useState(true);
 
     async function _browseProductsByFarmer() {
-        const data = await API.browseProductsByFarmer({'email': email}, props.setErrorMessage);
-        //console.log(data);
+        const data = await API.browseProductsByFarmer({'email': email}, props.setErrorMessage)
         if (data !== null) {
             setProducts(data['data']);
             setLoadCompleted(true);
@@ -42,6 +42,14 @@ function ProductsForecast(props) {
 
     useEffect(async () => {
         await _browseProductsByFarmer();
+        let checkTime = (time, date) => {
+            console.log("CHECKTIME FORECAST TIME: " + time + " " + date);
+            if ((date === 'Sat' && time >= '09:00') ||  (date === 'Sun') || (date === 'Mon' && time < '09:00'))
+                setForecastTime(false);
+            else
+                setForecastTime(true);
+        }
+        checkTime(props.time, props.date);
     }, [props.date, props.time]);
 
     function ProductEntry(props) {
@@ -74,7 +82,7 @@ function ProductsForecast(props) {
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Modify
+                            <Grid item xs={12}> <Button disabled={!forecastTime} variant="success" onClick={handleShow}> Modify
                                 Forecast </Button>
                             </Grid>
                         </Grid>
@@ -124,7 +132,7 @@ function ProductsForecast(props) {
                                             <Field type="number" id="amount" name="amount"
                                                    min={0}/> {props.product.unitOfMeasurement}
                                             <br/>
-                                            <Button style={{margin: '20px'}} type="submit" variant="success">Modify
+                                            <Button disabled={!forecastTime} style={{margin: '20px'}} type="submit" variant="success">Modify
                                                 Forecast</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
@@ -159,6 +167,9 @@ function ProductsForecast(props) {
     return (
         <Container fluid>
             <h1>Products List</h1>
+            {forecastTime ? null :
+                <Alert variant='warning'> It's possible to do forecasts for products only from Monday at 9am to Saturday at
+                    9am</Alert>}
             <Grid container spacing={2}>
                 {
                     loadCompleted === true ?
