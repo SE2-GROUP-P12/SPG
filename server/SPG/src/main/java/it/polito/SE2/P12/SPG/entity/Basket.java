@@ -73,16 +73,16 @@ public class Basket {
     public void add(Product product, Double quantity) {
         Double price = product.getPrice();
         Double value = 0.0;
-        for (Map.Entry<Product,Double> entry: prods.entrySet()
-             ) {
-            if(entry.getKey().getProductId() == product.getProductId()){
-                value =entry.getValue();
+        for (Map.Entry<Product, Double> entry : prods.entrySet()
+        ) {
+            if (entry.getKey().getProductId().equals(product.getProductId())) {
+                value = entry.getValue();
             }
         }
-        if (value!=0.0) {
-            value+=quantity;
+        if (value != 0.0) {
+            value += quantity;
             prods.remove(product);
-            prods.put(product,value );
+            prods.put(product, value);
         } else {
             prods.put(product, quantity);
         }
@@ -101,7 +101,7 @@ public class Basket {
     @Override
     public String toString() {
         StringBuilder prodString = new StringBuilder("");
-        for (Map.Entry<Product,Double> entry : this.prods.entrySet()) {
+        for (Map.Entry<Product, Double> entry : this.prods.entrySet()) {
             prodString.append("[(id=" + entry.getKey().getProductId() + ")" + entry.getKey().getName() + ", " + entry.getValue() + "],");
         }
         prodString.deleteCharAt(prodString.lastIndexOf(","));

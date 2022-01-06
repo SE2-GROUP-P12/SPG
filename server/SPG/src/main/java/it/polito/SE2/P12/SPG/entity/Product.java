@@ -3,6 +3,7 @@ package it.polito.SE2.P12.SPG.entity;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 
@@ -12,7 +13,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Base64;
 
-
+@Slf4j
 @Entity
 @Table(name = "product")
 @Data
@@ -121,7 +122,7 @@ public class Product {
             try {
                 FileUtils.copyURLToFile(new URL(imageUrl), imageFile);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         } else {
             imageFile = new File(imageUrl);
@@ -132,7 +133,7 @@ public class Product {
             byte[] fileContent = FileUtils.readFileToByteArray(imageFile);
             this.base64Image = Base64.getEncoder().encodeToString(fileContent);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
     }
@@ -175,7 +176,8 @@ public class Product {
             try {
                 FileUtils.copyURLToFile(new URL(imageUrl), imageFile);
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                log.error(e.getMessage());
             }
         } else {
             imageFile = new File(imageUrl);
@@ -186,7 +188,8 @@ public class Product {
             byte[] fileContent = FileUtils.readFileToByteArray(imageFile);
             this.base64Image = Base64.getEncoder().encodeToString(fileContent);
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            log.error(e.getMessage());
         }
 
     }
