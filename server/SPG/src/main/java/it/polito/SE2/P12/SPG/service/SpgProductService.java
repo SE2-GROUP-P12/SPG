@@ -55,42 +55,6 @@ public class SpgProductService {
         return true;
     }
 
-    public Boolean setForecastNext(Long productId, Double forecast) {
-        if (forecast < 0.0 || Double.isNaN(forecast) || Double.isInfinite(forecast))
-            return false;
-        Product product = productRepo.findProductByProductId(productId);
-        if (product == null)
-            return false;
-        product.setQuantityForecastNext(forecast);
-        productRepo.save(product);
-        return true;
-    }
-
-    /*
-    public boolean setForecast(Product product, Double forecast, String start, String end) {
-        if (forecast < 0.0 || Double.isNaN(forecast) || Double.isInfinite(forecast))
-            return false;
-        product.setQuantityForecast(forecast);
-        product.setStartAvailability(start);
-        product.setEndAvailability(end);
-        productRepo.save(product);
-        return true;
-    }
-
-    public boolean setForecast(Long productId, Farmer farmer, Double forecast, String start, String end) {
-        Product product = productRepo.findProductByProductId(productId);
-        if (product == null){
-            return false;
-        }
-        product.setFarmer(farmer);
-        product.setQuantityForecast(forecast);
-        product.setStartAvailability(start);
-        product.setEndAvailability(end);
-        productRepo.save(product);
-        return true;
-    }
-    */
-
     public boolean addProduct(String productName, Double price, String unitOfMeasurement, String imageUrl, Farmer farmer) {
         Product p;
         if (imageUrl == null || imageUrl.isEmpty() || imageUrl.isBlank())

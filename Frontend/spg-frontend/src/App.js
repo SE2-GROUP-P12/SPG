@@ -128,7 +128,9 @@ function App() {
                                          setLoggedUserRole={setLoggedUserRole}/>
                         </Route>
                         <Route exact path="/BrowseProducts">
-                            <BrowseProducts setErrorMessage={setErrorMessage}
+                            <BrowseProducts date={date}
+                                            time={time}
+                                            setErrorMessage={setErrorMessage}
                                             errorMessage={errorMessage}
                                             isLogged={isLogged}
                                             loggedUser={loggedUser}>

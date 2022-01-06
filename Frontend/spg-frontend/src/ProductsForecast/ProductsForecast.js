@@ -42,21 +42,7 @@ function ProductsForecast(props) {
 
     useEffect(async () => {
         await _browseProductsByFarmer();
-    }, []);
-
-    /*TIME MACHINE MANAGEMENT*/
-    const [nextWeekFrame, setNextWeekFrame] = useState(false)
-    useEffect(() => {
-        let checkTime = (time, date) => {
-            console.log("CHECKTIME NEXT WEEK FRAME: " + time + " " + date);
-            if ((date === 'Sat' && time >= '09:00') || (date === 'Mon' && time < '09:00') || (date === 'Sun'))
-                setNextWeekFrame(true);
-            else
-                setNextWeekFrame(false);
-        }
-        checkTime(props.time, props.date);
-    }, [props.date, props.time])
-
+    }, [props.date, props.time]);
 
     function ProductEntry(props) {
         const [show, setShow] = useState(false);
@@ -81,7 +67,7 @@ function ProductsForecast(props) {
                             {props.product.name}
                         </Typography>
                         <Typography variant="body">
-                            {nextWeekFrame ? props.product.quantityForecastNext : props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                            {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
                             forecasted <br/>
                             {props.product.price.toFixed(2)}€/{props.product.unitOfMeasurement}
                         </Typography>
@@ -110,7 +96,7 @@ function ProductsForecast(props) {
                                  style={{height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
-                                    {nextWeekFrame ? props.product.quantityForecastNext : props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                                    {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
                                     forecasted
                                 </Col>
                             </Row>
@@ -119,11 +105,11 @@ function ProductsForecast(props) {
                                     initialValues={{amount: 0}}
                                     validationSchema={Yup.object({amount: Yup.number().min(0).required('Amount required!')})}
                                     onSubmit={async (values) => {
-                                        let outcome = await API.modifyForecast({
+                                        let data = {
                                             "productId": props.product.productId,
                                             "quantity": values.amount
-                                        });
-                                        console.log(outcome);
+                                        }
+                                        let outcome = await API.modifyForecast(data);
                                         if (outcome === true)
                                             setShowSuccess("Forecast successfully modified");
                                         else

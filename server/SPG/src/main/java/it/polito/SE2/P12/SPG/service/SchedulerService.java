@@ -1,6 +1,7 @@
 package it.polito.SE2.P12.SPG.service;
 
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
+import it.polito.SE2.P12.SPG.schedulables.schedule_routines.SundayEveningSchedule;
 import it.polito.SE2.P12.SPG.schedulables.schedule_routines.UnRetrievedOrderDetection_Routine;
 import it.polito.SE2.P12.SPG.schedulables.schedule_routines.MondayMorningSchedule;
 import it.polito.SE2.P12.SPG.schedulables.Schedulable;
@@ -11,8 +12,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
-import java.time.chrono.ChronoLocalDateTime;
-import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.Map.Entry;
@@ -34,16 +33,16 @@ public class SchedulerService {
     private Clock applicationClock;
     private List<Entry<Schedulable, Long>> schedule;
 
-    SpgProductService spgProductService;
+    private final SpgProductService productService;
     private final OrderRepo orderRepo;
     private final SpgOrderService orderService;
     private final SpgUserService userService;
 
     @Autowired
-    public SchedulerService(SpgProductService spgProductService, OrderRepo orderRepo, SpgOrderService orderService, SpgUserService userService) {
+    public SchedulerService(SpgProductService productService, OrderRepo orderRepo, SpgOrderService orderService, SpgUserService userService) {
         applicationClock = Clock.system(ZoneId.of(ZONE));
         schedule = new ArrayList<>();
-        this.spgProductService = spgProductService;
+        this.productService = productService;
         this.orderRepo = orderRepo;
         this.orderService = orderService;
         this.userService = userService;
@@ -56,7 +55,7 @@ public class SchedulerService {
         }
         /* MONDAY */
         //1. Set forecast to zero for all product
-        addToSchedule(new MondayMorningSchedule(spgProductService, this), LocalDate.now(applicationClock).with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(9, 0).toEpochSecond(ZoneOffset.ofHours(1)));
+        addToSchedule(new MondayMorningSchedule(productService, this), LocalDate.now(applicationClock).with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(9, 0).toEpochSecond(ZoneOffset.ofHours(1)));
         /* TUESDAY */
         //1. Delete all unplayable orders
         addToSchedule(new PendingOrdersDetection_Routine(this.orderRepo, this, this.orderService),
@@ -68,6 +67,10 @@ public class SchedulerService {
         //1. mark not retrieved orders
         addToSchedule(new UnRetrievedOrderDetection_Routine(this.userService, this.orderService, this.orderRepo, this),
                 LocalDate.now(this.getClock()).with(TemporalAdjusters.next(DayOfWeek.FRIDAY)).atTime(20, 0).toEpochSecond(ZoneOffset.ofHours(1)));
+        /* SUNDAY*/
+        //1. quantities for forecasts are rearranged
+        addToSchedule(new SundayEveningSchedule(this, productService),
+                LocalDate.now(this.getClock()).with(TemporalAdjusters.next(DayOfWeek.SUNDAY)).atTime(23, 0).toEpochSecond(ZoneOffset.ofHours(1)));
     }
 
     @Scheduled(fixedDelay = POLLING_RATE)
@@ -123,26 +126,4 @@ public class SchedulerService {
         //poll();
         return true;
     }
-
-    public Boolean isConfirmationFrame() {
-        LocalDateTime now = LocalDateTime.now(applicationClock);
-        if ((now.getDayOfWeek() == DayOfWeek.SATURDAY && now.getHour() >= 9) ||
-                (now.getDayOfWeek() == DayOfWeek.SUNDAY) ||
-                (now.getDayOfWeek() == DayOfWeek.MONDAY && now.getHour() < 9))
-            return true;
-        return false;
-    }
-
-    public Boolean isThisWeekForecastFrame() {
-        return !isNextWeekForecastFrame();
-    }
-
-    public Boolean isNextWeekForecastFrame() {
-        LocalDateTime now = LocalDateTime.now(applicationClock);
-        if ((now.getDayOfWeek() == DayOfWeek.SATURDAY && now.getHour() >= 9) ||
-                (now.getDayOfWeek() == DayOfWeek.SUNDAY && now.getHour() < 23))
-            return true;
-        return false;
-    }
-
 }

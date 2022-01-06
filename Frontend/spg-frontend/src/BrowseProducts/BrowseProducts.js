@@ -45,7 +45,7 @@ function BrowseProducts(props) {
 
     useEffect(async () => {
         await _browseProducts();
-    }, []);
+    }, [props.date, props.time]);
 
     async function _getCart() {
         const prod = await API.getCart({'email': localStorage.getItem("username")}, props.setErrorMessage);
