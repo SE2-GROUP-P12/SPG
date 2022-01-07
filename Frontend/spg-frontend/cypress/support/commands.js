@@ -163,6 +163,15 @@ Cypress.Commands.add('checkBrowseProducts', () => {
     cy.get('[alt=fruit]').should('exist')
 })
 
+Cypress.Commands.add('checkPlaceOrder', () => {
+    cy.checkUrl('/PlaceOrder')
+    cy.contains('Place Order').should('exist');
+
+    cy.contains('Back').should('exist');
+    cy.contains('Delete order').should('exist');
+    cy.contains('Send order').should('exist');
+})
+
 Cypress.Commands.add('checkProductsForecast', () => {
     cy.checkUrl('/ProductsForecast')
     cy.contains('Products List').should('exist');

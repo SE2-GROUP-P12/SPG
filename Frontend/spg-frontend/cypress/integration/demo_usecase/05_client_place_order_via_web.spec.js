@@ -52,14 +52,20 @@ context('Giovanni place order', () => {
         
         cy.get('#button-basket').click({force:true});
         cy.get('#button-checkout').click({force:true});
-        
-        cy.wait(2000);
 
+        cy.checkPlaceOrder();
         cy.get('#button-send-order').should('be.visible').click();
 
+        cy.contains('Review and confirm order');
+        cy.contains('ISSUER: mario.rossi@gmail.com')
         
-        cy.get('#button-place-order').should('be.visible').click();
+        cy.get('#date-field').type('29/12/2021');
+        cy.get('#time-field').type('10:30');
 
+        cy.get('#button-place-order').click();
+    })
+
+    it('logout',()=>{
         cy.logout();
     })
 

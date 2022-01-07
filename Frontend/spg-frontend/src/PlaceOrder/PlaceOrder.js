@@ -211,14 +211,14 @@ function PlaceOrder(props) {
                                 from 9:00
                                 to 18:00.
                             </Alert>
-                            <reactForm.Control className="mt-3" type="date" name="deliveryDate" label="date"
+                            <reactForm.Control id="date-field" className="mt-3" type="date" name="deliveryDate" label="date"
                                                placeholder="delivery date"
                                                onChange={async (event) => {
                                                    await onChangeDateHandler(event.target.value);
                                                    await enableButtonHandler(new Date(event.target.value), pickUpTime, customAddress);
                                                }}
                             />
-                            <reactForm.Control className="mt-3" type="time" name="deliveryTime" label="time"
+                            <reactForm.Control id="time-field" className="mt-3" type="time" name="deliveryTime" label="time"
                                                onChange={(event) => {
                                                    onChangeTimeHandler(event.target.value);
                                                    enableButtonHandler(pickUpDate, event.target.value, customAddress);
