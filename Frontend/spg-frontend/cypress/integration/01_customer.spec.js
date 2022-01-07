@@ -20,6 +20,9 @@ context('customer workflow', () => {
         cy.wait(1000);
         cy.checkBrowseProducts();
         cy.wait(1000);
+    })
+
+    it('logout', () => {
         cy.logout();
     })
 

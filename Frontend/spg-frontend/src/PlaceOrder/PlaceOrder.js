@@ -308,7 +308,9 @@ function PlaceOrder(props) {
                         <Alert variant="success">Congratulations, order placed correctly!</Alert>}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="success" onClick={() => {
+                    <Button
+                        id='button-closeOrderCompleted'
+                        variant="success" onClick={() => {
                         setError(false);
                         setShowEndRoutineModal(false);
                     }}>
