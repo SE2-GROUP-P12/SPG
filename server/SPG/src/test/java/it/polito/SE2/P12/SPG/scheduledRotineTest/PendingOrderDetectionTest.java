@@ -30,6 +30,8 @@ public class PendingOrderDetectionTest {
     private OrderRepo orderRepo;
     @Autowired
     private SchedulerService schedulerService;
+    @Autowired
+    PendingOrdersDetection_Routine pendingOrdersDetection_routine;
 
     @BeforeEach
     public void initContext() {
@@ -55,8 +57,7 @@ public class PendingOrderDetectionTest {
 
     @Test
     public void routineExecutionTest() {
-        PendingOrdersDetection_Routine routine = new PendingOrdersDetection_Routine(orderRepo, schedulerService, orderService);
-        routine.execute();
+        pendingOrdersDetection_routine.execute();
         Assertions.assertEquals(OrderStatus.ORDER_STATUS_CANCELLED, orderRepo.findAll().get(1).getStatus());
         Assertions.assertEquals(OrderStatus.ORDER_STATUS_CONFIRMED, orderRepo.findAll().get(0).getStatus());
     }

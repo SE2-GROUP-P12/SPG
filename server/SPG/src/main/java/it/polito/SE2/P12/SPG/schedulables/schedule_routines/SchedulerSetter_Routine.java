@@ -7,26 +7,32 @@ import it.polito.SE2.P12.SPG.service.SchedulerService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgProductService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
+import org.checkerframework.checker.units.qual.C;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.temporal.TemporalAdjusters;
 
+@Component
 public class SchedulerSetter_Routine implements Schedulable {
 
     private SchedulerService schedulerService;
-    private SpgProductService productService;
-    private SpgOrderService orderService;
-    private OrderRepo orderRepo;
-    private SpgUserService userService;
+    private MondayMorning_Routine mondayMorning_routine;
+    private PendingOrdersDetection_Routine pendingOrdersDetection_routine;
+    private SchedulerSetter_Routine schedulerSetter_routine;
+    private UnRetrievedOrderDetection_Routine unRetrievedOrderDetection_routine;
 
-    public SchedulerSetter_Routine(SchedulerService schedulerService, SpgProductService productService, SpgOrderService orderService, OrderRepo orderRepo, SpgUserService userService) {
+    @Autowired
+    SchedulerSetter_Routine(SchedulerService schedulerService, @Lazy MondayMorning_Routine mondayMorning_routine, @Lazy PendingOrdersDetection_Routine pendingOrdersDetection_routine, @Lazy SchedulerSetter_Routine schedulerSetter_routine, @Lazy UnRetrievedOrderDetection_Routine unRetrievedOrderDetection_routine) {
         this.schedulerService = schedulerService;
-        this.productService = productService;
-        this.orderService = orderService;
-        this.orderRepo = orderRepo;
-        this.userService = userService;
+        this.mondayMorning_routine = mondayMorning_routine;
+        this.pendingOrdersDetection_routine = pendingOrdersDetection_routine;
+        this.schedulerSetter_routine = schedulerSetter_routine;
+        this.unRetrievedOrderDetection_routine = unRetrievedOrderDetection_routine;
     }
 
     @Override
@@ -34,29 +40,29 @@ public class SchedulerSetter_Routine implements Schedulable {
 
         // MONDAY
         //Manage product quantities for the begin of the new week
-        schedulerService.addToSchedule(new MondayMorning_Routine(productService, orderService),
+        schedulerService.addToSchedule(mondayMorning_routine,
                 LocalDate.now(schedulerService.getClock()).
                         atTime(9, 0).
                         toEpochSecond(ZoneOffset.ofHours(1)));
         // TUESDAY
         //Delete all unplayable orders
-        schedulerService.addToSchedule(new PendingOrdersDetection_Routine(this.orderRepo, schedulerService, this.orderService),
+        schedulerService.addToSchedule(pendingOrdersDetection_routine,
                 LocalDate.now(schedulerService.getClock())
                         .with(TemporalAdjusters.next(DayOfWeek.TUESDAY))
-                        .atTime(0, 1).
+                        .atTime(0, 0).
                         toEpochSecond(ZoneOffset.ofHours(1)));
         // FRIDAY
         //Mark not retrieved orders
-        schedulerService.addToSchedule(new UnRetrievedOrderDetection_Routine(this.userService, this.orderService, this.orderRepo, this.schedulerService),
+        schedulerService.addToSchedule(unRetrievedOrderDetection_routine,
                 LocalDate.now(schedulerService.getClock()).
                         with(TemporalAdjusters.next(DayOfWeek.FRIDAY)).
-                        atTime(20, 0).
+                        atTime(22, 0).
                         toEpochSecond(ZoneOffset.ofHours(1)));
         // NEXT WEEK SCHEDULER SETTER
-        schedulerService.addToSchedule(new SchedulerSetter_Routine(this.schedulerService, this.productService, this.orderService, this.orderRepo, this.userService),
+        schedulerService.addToSchedule(schedulerSetter_routine,
                 LocalDate.now(schedulerService.getClock()).
                         with(TemporalAdjusters.next(DayOfWeek.MONDAY)).
-                        atTime(0, 1).
+                        atTime(0, 0).
                         toEpochSecond(ZoneOffset.ofHours(1)));
 
     }

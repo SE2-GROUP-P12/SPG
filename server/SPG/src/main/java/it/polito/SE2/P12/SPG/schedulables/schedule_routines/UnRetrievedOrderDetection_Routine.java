@@ -8,6 +8,9 @@ import it.polito.SE2.P12.SPG.service.SchedulerService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.OrderStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -15,6 +18,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
+@Component
 public class UnRetrievedOrderDetection_Routine implements Schedulable {
 
     private SpgOrderService orderService;
@@ -22,6 +26,7 @@ public class UnRetrievedOrderDetection_Routine implements Schedulable {
     private SchedulerService schedulerService;
     private OrderRepo orderRepo;
 
+    @Autowired
     public UnRetrievedOrderDetection_Routine(SpgUserService userService, SpgOrderService orderService, OrderRepo orderRepo, SchedulerService schedulerService) {
         this.schedulerService = schedulerService;
         this.orderService = orderService;
@@ -37,13 +42,12 @@ public class UnRetrievedOrderDetection_Routine implements Schedulable {
         //for each order increase missed pick up and update state
         for (Order o : orderList) {
             //Update State
-            orderService.setOrderStatus(o.getOrderId(), OrderStatus.ORDER_STATUS_NOT_RETRIEVED,schedulerService.getTime());
+            orderService.setOrderStatus(o.getOrderId(), OrderStatus.ORDER_STATUS_NOT_RETRIEVED, schedulerService.getTime());
             //Add missed pick up and check if an alert has to be generated
             Customer tmpCustomer = (Customer) o.getCust();
             //if missed pick up is 3 or 4 sent a mail (increment upper-bounded at 5 then user is blocked)
             if (tmpCustomer.incrementMissedPickUp() > 2)
                 userService.sentWarningPickUpAmountMail(tmpCustomer.getEmail());
         }
-        schedulerService.addToSchedule(this, LocalDate.now(schedulerService.getClock()).with(TemporalAdjusters.next(DayOfWeek.FRIDAY)).atTime(22, 0).toEpochSecond(ZoneOffset.ofHours(1)));
     }
 }

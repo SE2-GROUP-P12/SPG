@@ -6,16 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.repository.*;
+import it.polito.SE2.P12.SPG.utils.OrderStatus;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.lang.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static it.polito.SE2.P12.SPG.utils.OrderStatus.*;
 
@@ -28,15 +29,17 @@ public class SpgOrderService {
     private ProductRepo productRepo;
     private UserRepo userRepo;
     private CustomerRepo customerRepo;
+    private SchedulerService schedulerService;
 
 
     @Autowired
-    public SpgOrderService(OrderRepo orderRepo, SpgUserService spgUserService, ProductRepo productRepo, UserRepo userRepo,CustomerRepo customerRepo) {
+    public SpgOrderService(OrderRepo orderRepo, SpgUserService spgUserService, ProductRepo productRepo, UserRepo userRepo, CustomerRepo customerRepo, SchedulerService schedulerService) {
         this.orderRepo = orderRepo;
         this.spgUserService = spgUserService;
         this.productRepo = productRepo;
         this.userRepo = userRepo;
         this.customerRepo = customerRepo;
+        this.schedulerService = schedulerService;
     }
 
     public Map<String, List<Long>> getPendingOrdersMail() {
@@ -222,24 +225,24 @@ public class SpgOrderService {
         return true;
     }
 
-    public void updateConfirmedOrders(){
-        for(Order order: orderRepo.findAll()){
+    public void updateConfirmedOrders() {
+        for (Order order : orderRepo.findAll()) {
             Customer cust = customerRepo.findCustomerByEmail(order.getCust().getEmail());
-            if(order.getStatus().equals(ORDER_STATUS_OPEN)||order.getStatus().equals(ORDER_STATUS_CANCELLED)){
+            if (order.getStatus().equals(ORDER_STATUS_OPEN) || order.getStatus().equals(ORDER_STATUS_CANCELLED)) {
                 order.setStatus(ORDER_STATUS_CANCELLED);
                 orderRepo.save(order);
                 continue;
             }
-            if(order.getValue()>cust.getWallet()) continue;
-            Double price =0.0;
-            for(Product product: order.getProductList()){
+            if (order.getValue() > cust.getWallet()) continue;
+            Double price = 0.0;
+            for (Product product : order.getProductList()) {
                 double quantity = Math.min(order.getProds().get(product), product.getQuantityConfirmed());
-                Map<Product, Double>prods= order.getProds();
+                Map<Product, Double> prods = order.getProds();
                 prods.remove(product);
-                prods.put(product,quantity);
+                prods.put(product, quantity);
                 order.setProds(prods);
-                price+=product.getPrice()*quantity;
-                product.setQuantityConfirmed(product.getQuantityConfirmed()-quantity);
+                price += product.getPrice() * quantity;
+                product.setQuantityConfirmed(product.getQuantityConfirmed() - quantity);
                 productRepo.save(product);
             }
             cust.pay(price);
@@ -263,6 +266,15 @@ public class SpgOrderService {
         }
         orderRepo.save(order);
         return res;
+    }
+
+    public void deleteUnpayableOrders() {
+        //Get not payable orders -> orders are in open status and set them to cancelled
+        orderRepo.findAllByStatus(ORDER_STATUS_OPEN).
+                parallelStream().
+                forEach(o ->
+                        setOrderStatus(o.getOrderId(), OrderStatus.ORDER_STATUS_CANCELLED, schedulerService.getTime())
+                );
     }
 }
 
