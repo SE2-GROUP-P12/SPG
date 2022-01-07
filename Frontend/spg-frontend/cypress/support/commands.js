@@ -180,28 +180,16 @@ Cypress.Commands.add('checkProductsForecast', () => {
     cy.get('[role=status]').should('exist');
     cy.contains('Back').should('exist');
 
-    cy.contains('Pumpkin').should('have.length', 1);
-    cy.contains('Broccoli').should('have.length', 1);
-    cy.contains('Carrots').should('have.length', 1);
-    cy.contains('Cauliflower').should('have.length', 1);
-    cy.contains('Apple').should('have.length', 1);
-
     cy.get('[alt=fruit]').should('exist');
 })
 
 Cypress.Commands.add('checkConfirmAvailability', () => {
-    cy.checkUrl('/ProductsForecast')
-    cy.contains('Products List').should('exist');
+    cy.checkUrl('/ConfirmAvailability')
+    cy.contains('Confirm availabilities for the next week').should('exist');
     
     //Spinner
     cy.get('[role=status]').should('exist');
     cy.contains('Back').should('exist');
-
-    cy.contains('Pumpkin').should('have.length', 1);
-    cy.contains('Broccoli').should('have.length', 1);
-    cy.contains('Carrots').should('have.length', 1);
-    cy.contains('Cauliflower').should('have.length', 1);
-    cy.contains('Apple').should('have.length', 1);
 
     cy.get('[alt=fruit]').should('exist');
 })

@@ -24,6 +24,13 @@ context('farmer forecasting', () => {
         cy.get('[id=button-ForecastProducts]').click();
 
         cy.checkProductsForecast();
+
+        cy.contains('Pumpkin').should('have.length', 1);
+        cy.contains('Broccoli').should('have.length', 1);
+        cy.contains('Carrots').should('have.length', 1);
+        cy.contains('Cauliflower').should('have.length', 1);
+        cy.contains('Apple').should('have.length', 1);
+
         cy.timeMachine(6,10);
         cy.modifyForecast();
         cy.logout();

@@ -123,11 +123,11 @@ function ConfirmAvailability(props) {
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button disabled={!itsTime} className="card-button" variant="success"
+                            <Grid item xs={12}> <Button id={`button-confirm-${props.product.name}`} disabled={!itsTime} className="card-button" variant="success"
                                                         onClick={() => handleConfirm(props.product.productId, props.product.quantityForecast)}> Confirm
                                 Forecasted
                                 Availability </Button></Grid>
-                            <Grid item xs={12}> <Button disabled={!itsTime} className="card-button" variant="success"
+                            <Grid item xs={12}> <Button id={`button-set-${props.product.name}`} disabled={!itsTime} className="card-button" variant="success"
                                                         onClick={handleShow}> Set Availability </Button>
                             </Grid>
                         </Grid>
@@ -175,7 +175,7 @@ function ConfirmAvailability(props) {
                                             <Field type="number" id="amount" name="amount"
                                                    min={0}/> {props.product.unitOfMeasurement}
                                             <br/>
-                                            <Button style={{margin: '20px'}} type="submit" variant="success">Set
+                                            <Button id="button-set-availability" style={{margin: '20px'}} type="submit" variant="success">Set
                                                 Availability</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
@@ -215,7 +215,7 @@ function ConfirmAvailability(props) {
             <br/>
             <Row>
                 <Col>
-                    <Button disabled={!itsTime} variant="success" onClick={() =>
+                    <Button id="button-confirm-all" disabled={!itsTime} variant="success" onClick={() =>
                         products.forEach(x => {
                             handleConfirm(x.productId, x.quantityForecast)
                         })
@@ -241,7 +241,7 @@ function ConfirmAvailability(props) {
             </Grid>
             <Link to='/Dashboard'><Button style={{position: 'fixed', bottom: '10px', left: '10px'}}
                                           variant='secondary'>Back</Button></Link>
-            <Button onClick={handleSubmit} disabled={!itsTime}
+            <Button id="button-submit" onClick={handleSubmit} disabled={!itsTime}
                     style={{position: 'fixed', bottom: '10px', right: '10px'}}
                     variant="success">Submit</Button>
             {/*Successful submit modal*/}
