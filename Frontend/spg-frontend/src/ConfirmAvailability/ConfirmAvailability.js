@@ -123,11 +123,11 @@ function ConfirmAvailability(props) {
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button id={`button-confirm-${props.product.name}`} disabled={!itsTime} className="card-button" variant="success"
+                            <Grid item xs={12}> <Button id={`button-confirm-${productProps.product.name}`} disabled={!itsTime} className="card-button" variant="success"
                                                         onClick={() => handleConfirm(productProps.product.productId, productProps.product.quantityForecast)}> Confirm
                                 Forecasted
                                 Availability </Button></Grid>
-                            <Grid item xs={12}> <Button id={`button-set-${props.product.name}`} disabled={!itsTime} className="card-button" variant="success"
+                            <Grid item xs={12}> <Button id={`button-set-${productProps.product.name}`} disabled={!itsTime} className="card-button" variant="success"
                                                         onClick={handleShow}> Set Availability </Button>
                             </Grid>
                         </Grid>
