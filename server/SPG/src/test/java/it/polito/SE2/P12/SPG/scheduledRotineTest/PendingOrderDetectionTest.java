@@ -4,7 +4,7 @@ import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
-import it.polito.SE2.P12.SPG.schedulables.schedule_routines.PendingOrdersDetection_Routine;
+import it.polito.SE2.P12.SPG.schedulables.scheduleRoutines.PendingOrdersDetectionRoutine;
 import it.polito.SE2.P12.SPG.service.SchedulerService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.utils.DBUtilsService;
@@ -31,7 +31,7 @@ public class PendingOrderDetectionTest {
     @Autowired
     private SchedulerService schedulerService;
     @Autowired
-    PendingOrdersDetection_Routine pendingOrdersDetection_routine;
+    PendingOrdersDetectionRoutine pendingOrdersDetection_routine;
 
     @BeforeEach
     public void initContext() {

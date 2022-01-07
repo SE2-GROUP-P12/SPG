@@ -1,4 +1,4 @@
-package it.polito.SE2.P12.SPG.schedulables.schedule_routines;
+package it.polito.SE2.P12.SPG.schedulables.scheduleRoutines;
 
 import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.entity.Order;
@@ -9,17 +9,12 @@ import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 @Component
-public class UnRetrievedOrderDetection_Routine implements Schedulable {
+public class UnRetrievedOrderDetectionRoutine implements Schedulable {
 
     private SpgOrderService orderService;
     private SpgUserService userService;
@@ -27,7 +22,7 @@ public class UnRetrievedOrderDetection_Routine implements Schedulable {
     private OrderRepo orderRepo;
 
     @Autowired
-    public UnRetrievedOrderDetection_Routine(SpgUserService userService, SpgOrderService orderService, OrderRepo orderRepo, SchedulerService schedulerService) {
+    public UnRetrievedOrderDetectionRoutine(SpgUserService userService, SpgOrderService orderService, OrderRepo orderRepo, SchedulerService schedulerService) {
         this.schedulerService = schedulerService;
         this.orderService = orderService;
         this.userService = userService;

@@ -1,10 +1,10 @@
 package it.polito.SE2.P12.SPG.service;
 
-import it.polito.SE2.P12.SPG.schedulables.schedule_routines.SchedulerSetter_Routine;
-import it.polito.SE2.P12.SPG.schedulables.schedule_routines.UnRetrievedOrderDetection_Routine;
-import it.polito.SE2.P12.SPG.schedulables.schedule_routines.MondayMorning_Routine;
+import it.polito.SE2.P12.SPG.schedulables.scheduleRoutines.SchedulerSetterRoutine;
+import it.polito.SE2.P12.SPG.schedulables.scheduleRoutines.UnRetrievedOrderDetectionRoutine;
+import it.polito.SE2.P12.SPG.schedulables.scheduleRoutines.MondayMorningRoutine;
 import it.polito.SE2.P12.SPG.schedulables.Schedulable;
-import it.polito.SE2.P12.SPG.schedulables.schedule_routines.PendingOrdersDetection_Routine;
+import it.polito.SE2.P12.SPG.schedulables.scheduleRoutines.PendingOrdersDetectionRoutine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -37,13 +37,13 @@ public class SchedulerService {
     private Clock applicationClock;
     private List<Entry<Schedulable, Long>> schedule;
 
-    private MondayMorning_Routine mondayMorning_routine;
-    private PendingOrdersDetection_Routine pendingOrdersDetection_routine;
-    private SchedulerSetter_Routine schedulerSetter_routine;
-    private UnRetrievedOrderDetection_Routine unRetrievedOrderDetection_routine;
+    private MondayMorningRoutine mondayMorning_routine;
+    private PendingOrdersDetectionRoutine pendingOrdersDetection_routine;
+    private SchedulerSetterRoutine schedulerSetter_routine;
+    private UnRetrievedOrderDetectionRoutine unRetrievedOrderDetection_routine;
 
     @Autowired
-    public SchedulerService(@Lazy MondayMorning_Routine mondayMorning_routine, @Lazy PendingOrdersDetection_Routine pendingOrdersDetection_routine, @Lazy SchedulerSetter_Routine schedulerSetter_routine, @Lazy UnRetrievedOrderDetection_Routine unRetrievedOrderDetection_routine) {
+    public SchedulerService(@Lazy MondayMorningRoutine mondayMorning_routine, @Lazy PendingOrdersDetectionRoutine pendingOrdersDetection_routine, @Lazy SchedulerSetterRoutine schedulerSetter_routine, @Lazy UnRetrievedOrderDetectionRoutine unRetrievedOrderDetection_routine) {
         applicationClock = Clock.system(ZoneId.of(ZONE));
         schedule = new ArrayList<>();
 
