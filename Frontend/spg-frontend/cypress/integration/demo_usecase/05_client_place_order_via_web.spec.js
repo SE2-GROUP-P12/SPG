@@ -49,6 +49,20 @@ context('Giovanni place order', () => {
         cy.logout();
     })
 
+    
+    it('teardown basket Giovanni', () => {
+        const dbName = 'spg';
+        var query = `delete from basket_prods where true`;
+        cy.task('queryDatabase', { dbName, query });
+        cy.wait(2000);
+        query = `delete from basket where true`;
+        cy.task('queryDatabase', { dbName, query });
+        query = `DELETE FROM spg.customer WHERE address like 'Corso Duca degli Abruzzi, 24 - 10129 Torino (TO)';`;
+        cy.task('queryDatabase', { dbName, query });
+        var query = "DELETE FROM spg.user WHERE email like 'giovanni@gmail.com';";
+        cy.task('queryDatabase', { dbName, query });
+    })
+    
     it('teardown user Giovanni', () => {
         const dbName = 'spg';
         var query = `DELETE FROM spg.customer WHERE address like 'Corso Duca degli Abruzzi, 24 - 10129 Torino (TO)';`;
