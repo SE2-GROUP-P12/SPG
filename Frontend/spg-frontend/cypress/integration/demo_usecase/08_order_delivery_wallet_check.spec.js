@@ -7,7 +7,7 @@
  * and checks her wallet balance so 
  * she's sure she can place another order for next week.
  */
-context('customer workflow', () => {
+context('08 order delivery and wallet check', () => {
 
 
     it('seed', () => {

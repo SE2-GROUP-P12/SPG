@@ -4,7 +4,7 @@
  * Monday morning Calvin finds out that due to an unexpected frost all his broccoli are damaged and must be disposed. 
  * So he confirms the availability of all products, except for broccoli.
  */
-context('farmer confirmation', () => {
+context('06 farmer confirmation', () => {
     //TODO: test this use case
     it('dispose a product', () => {
         

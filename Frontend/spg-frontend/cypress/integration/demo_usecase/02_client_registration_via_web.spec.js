@@ -7,7 +7,7 @@
  * on Friday Giovanni, another client, 
  * registers himself with the web site
  */
-context('Giovanni signup', () => {
+context('02 Giovanni signup', () => {
 
     //no seeds are needed
 

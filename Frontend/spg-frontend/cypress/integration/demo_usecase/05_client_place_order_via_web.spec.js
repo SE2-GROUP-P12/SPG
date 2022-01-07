@@ -8,7 +8,7 @@
  *  the order is accepted even if he has no money in the wallet. 
  * He plans to pick up his order on Wednesday morning.
  */
-context('Giovanni place order', () => {
+context('05 Giovanni place order', () => {
 
     it('seed user Giovanni', () => {
         const dbName = 'spg';

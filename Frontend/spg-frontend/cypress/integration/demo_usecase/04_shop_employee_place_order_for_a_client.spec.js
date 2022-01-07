@@ -7,7 +7,7 @@
  * to place an order for her: carrots 1kg, pumpkin 2kg, and broccoli 1kg.
  * She will pick up her order next Wednesday.
  */
-context('Shop employee places an order', () => {
+context('04 Shop employee places an order', () => {
 
     it('seed user Miriam', () => {
         const dbName = 'spg';

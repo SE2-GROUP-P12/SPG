@@ -6,7 +6,7 @@
  * to tell him he has to top-up the wallet. 
  * He receives a Satispay payment of 20€ and tops up his wallet.
  */
-context('customer workflow', () => {
+context('07 browse orders and wallet top up', () => {
 
     it('seed Giovanni order', () => {
         //TODO: seed giovanni order 

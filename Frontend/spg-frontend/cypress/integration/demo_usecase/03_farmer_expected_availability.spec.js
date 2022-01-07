@@ -6,7 +6,7 @@
  * (carrots, apples, cauliflower, broccoli, pumpkin)
 */
 
-context('farmer forecasting', () => {
+context('03 farmer forecasting', () => {
 
     it('farmer enter expected availability', () => {
         cy.visit(Cypress.env('baseUrl'));
