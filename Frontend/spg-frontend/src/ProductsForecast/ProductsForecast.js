@@ -73,7 +73,7 @@ function ProductsForecast(props) {
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button id={`button-forecast-${props.product.name}`} variant="success" onClick={handleShow}> Modify
+                            <Grid item xs={12}> <Button id={`button-forecast-${PEProps.product.name}`} variant="success" onClick={handleShow}> Modify
                                 Forecast </Button>
                             </Grid>
                         </Grid>
