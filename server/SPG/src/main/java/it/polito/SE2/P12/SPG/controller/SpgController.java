@@ -491,7 +491,6 @@ public class SpgController {
         if (requestMap == null || !requestMap.containsKey(Constants.JSON_EPOCH_TIME))
             return ResponseEntity.badRequest().build();
         Long epochTime = Long.parseLong(requestMap.get(Constants.JSON_EPOCH_TIME).toString());
-        System.out.println("time travel at " + epochTime);
         return ResponseEntity.ok(schedulerService.timeTravelAt(epochTime));
 
         /*

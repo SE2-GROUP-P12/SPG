@@ -36,10 +36,5 @@ public class PendingOrdersDetection_Routine implements Schedulable {
         for (Order o : orderList) {
             orderService.setOrderStatus(o.getOrderId(), OrderStatus.ORDER_STATUS_CANCELLED, schedulerService.getTime());
         }
-        schedulerService.addToSchedule(new PendingOrdersDetection_Routine(orderRepo, schedulerService, orderService),
-                LocalDate.now(schedulerService.getClock())
-                        .with(TemporalAdjusters.next(DayOfWeek.TUESDAY))
-                        .atTime(0, 1).
-                        toEpochSecond(ZoneOffset.ofHours(1)));
     }
 }
