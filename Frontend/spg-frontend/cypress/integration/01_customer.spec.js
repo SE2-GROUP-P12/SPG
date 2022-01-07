@@ -13,14 +13,16 @@ context('customer workflow', () => {
          
         cy.checkHomepage();  
         cy.login('mario.rossi@gmail.com','password');
-
+        cy.wait(1000);
         cy.checkCustomer();
 
         cy.get('[id=button-BrowseProducts]').click();
+        cy.wait(1000);
         cy.checkBrowseProducts();
+        cy.wait(1000);
+    })
 
-        
-
+    it('logout', () => {
         cy.logout();
     })
 

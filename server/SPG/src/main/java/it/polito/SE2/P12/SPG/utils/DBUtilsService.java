@@ -97,9 +97,9 @@ public class DBUtilsService {
     private void populateProducts() {
         Farmer farmer1 = farmerRepo.findFarmerByEmail(Constants.EMAIL_THOMAS_JEFFERSON);
         Farmer farmer2 = farmerRepo.findFarmerByEmail(Constants.EMAIL_ALEXANDER_HAMILTON);
+        Farmer farmer3 = farmerRepo.findFarmerByEmail(Constants.EMAIL_CALVIN_HARRIS);
         List<Product> prodList = new ArrayList<Product>();
         //Product temp1 =
-        prodList.add(new Product("Apples", "Kg", 50.0, 2.50, "server/SPG/resources/images/Apples.jpg", farmer1));
         prodList.add(new Product("Flour", "Kg", 10.0, 5.00, "server/SPG/resources/images/Flour.jpg", farmer2));
         prodList.add(new Product("Eggs", "Units", 36.0, 6.25, "server/SPG/resources/images/Eggs.jpg", farmer1));
         prodList.add(new Product("Oranges", "Kg", 12.0, 2.10, "server/SPG/resources/images/Oranges.jpg", farmer2));
@@ -114,8 +114,6 @@ public class DBUtilsService {
         prodList.add(new Product("Peaches", "Kg", 51.0, 2.50, "server/SPG/resources/images/Peaches.jpg", farmer2));
         prodList.add(new Product("Grapes", "Kg", 11.0, 5.00, "server/SPG/resources/images/Grapes.jpg", farmer1));
         prodList.add(new Product("Cucumber", "Kg", 37.0, 6.25, "server/SPG/resources/images/Cucumber.jpg", farmer2));
-        prodList.add(new Product("Cauliflowers", "Kg", 43.0, 2.50, "server/SPG/resources/images/Cauliflowers.jpg", farmer2));
-        prodList.add(new Product("Carrots", "Kg", 10.0, 5.00, "server/SPG/resources/images/Carrots.jpg", farmer1));
         prodList.add(new Product("Onions", "Kg", 12.0, 6.25, "server/SPG/resources/images/Onions.jpg", farmer2));
         prodList.add(new Product("Lettuce", "Kg", 19.0, 5.00, "server/SPG/resources/images/Lettuce.jpg", farmer1));
         prodList.add(new Product("Potatoes", "Kg", 68.0, 6.25, "server/SPG/resources/images/Potatoes.jpg", farmer2));
@@ -128,7 +126,6 @@ public class DBUtilsService {
         prodList.add(new Product("Chard", "Kg", 5.0, 2.50, "server/SPG/resources/images/Chard.jpg", farmer2));
         prodList.add(new Product("Radish", "Kg", 70.0, 5.00, "server/SPG/resources/images/Radish.jpg", farmer1));
         prodList.add(new Product("Thistles", "Kg", 30.0, 6.25, "server/SPG/resources/images/Thistles.jpg", farmer1));
-        prodList.add(new Product("Broccoli", "Kg", 40.0, 2.50, "server/SPG/resources/images/Broccoli.jpg", farmer2));
         prodList.add(new Product("Honey", "Kg", 13.0, 5.00, "server/SPG/resources/images/Honey.jpg", farmer2));
         prodList.add(new Product("Milk", "L", 6.0, 6.25, "server/SPG/resources/images/Milk.jpg", farmer1));
         prodList.add(new Product("Capers", "Kg", 5.0, 2.50, "server/SPG/resources/images/Capers.jpg", farmer2));
@@ -136,7 +133,12 @@ public class DBUtilsService {
         prodList.add(new Product("Salami", "Kg", 41.0, 6.25, "server/SPG/resources/images/Salami.jpg", farmer2));
         prodList.add(new Product("Ham", "Kg", 45.0, 2.50, "server/SPG/resources/images/Ham.jpg", farmer1));
         prodList.add(new Product("Raw Ham", "Kg", 14.0, 5.00, "server/SPG/resources/images/Raw Ham.jpg", farmer2));
-        prodList.add(new Product("Pumpkin", "Kg", 12.0, 3.00, "server/SPG/resources/images/Pumpkin.jpg", farmer2));
+        prodList.add(new Product("Pumpkin", "Kg", 12.0, 3.00, "server/SPG/resources/images/Pumpkin.jpg", farmer3));
+        prodList.add(new Product("Broccoli", "Kg", 40.0, 2.50, "server/SPG/resources/images/Broccoli.jpg", farmer3));
+        prodList.add(new Product("Carrots", "Kg", 10.0, 5.00, "server/SPG/resources/images/Carrots.jpg", farmer3));
+        prodList.add(new Product("Cauliflowers", "Kg", 43.0, 2.50, "server/SPG/resources/images/Cauliflowers.jpg", farmer3));
+        prodList.add(new Product("Apples", "Kg", 50.0, 2.50, "server/SPG/resources/images/Apples.jpg", farmer3));
+
         /*
         Product temp43 = new Product("Fassona Burger", "Kg", 52.0, 2.50, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZTbfh7Rsc6-xzK1oS5c1lHoNl3ARS4Xjnm0zPwTfu12mqK9fHqCw9w-anhwHFfX2TE-k&usqp=CAU", farmer2);
         Product temp44 = new Product("Fresh sausage", "Kg", 13.0, 5.00, "https://www.intavoliamo.it/Info/media/k2/items/cache/79e08f32fa8a036f84441baab7b7a7ff_XL.jpg?t=20210715_100607", farmer2);
@@ -149,7 +151,8 @@ public class DBUtilsService {
 */
         for (Product prod : prodList
         ) {
-            if (productRepo.findProductByName(prod.getName()) == null) productRepo.save(prod);
+            if (productRepo.findProductByName(prod.getName()) == null)
+                productRepo.save(prod);
         }
         /*
         if (productRepo.findProductByName("Fassona Burger") == null) productRepo.save(temp43);

@@ -73,7 +73,7 @@ function ProductsForecast(props) {
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Modify
+                            <Grid item xs={12}> <Button id={`button-forecast-${props.product.name}`} variant="success" onClick={handleShow}> Modify
                                 Forecast </Button>
                             </Grid>
                         </Grid>
@@ -123,7 +123,7 @@ function ProductsForecast(props) {
                                             <Field data-testid="amount" type="number" id="amount" name="amount"
                                                    min={0}/> {PEProps.product.unitOfMeasurement}
                                             <br/>
-                                            <Button style={{margin: '20px'}} type="submit" variant="success">Modify
+                                            <Button id="button-modifyForecast" style={{margin: '20px'}} type="submit" variant="success">Modify
                                                 Forecast</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
@@ -136,7 +136,7 @@ function ProductsForecast(props) {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={async () => {
+                        <Button id="button-close" variant="secondary" onClick={async () => {
                             handleClose();
                             setShowError(null);
                             setShowSuccess(null);
