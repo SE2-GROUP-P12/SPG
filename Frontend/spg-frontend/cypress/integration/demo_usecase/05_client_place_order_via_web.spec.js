@@ -11,7 +11,6 @@
 context('Giovanni place order', () => {
 
     it('seed user Giovanni', () => {
-        //TODO: seed -> inserisci giovanni
         const dbName = 'spg';
         var query = `INSERT INTO spg.user (role, user_id, active, email, name, password, phone_number, ssn, surname) VALUES ('CUSTOMER', 84, false, 'giovanni@gmail.com', 'Giovanni', '52ee8459cfe61a1b86d2a5a7c9b5926b1b25ada31b76640782bf6a7493bef2cc', '', 'MLNGNN80A01L219Q', 'Malnati');`;
         cy.task('queryDatabase', { dbName, query });
@@ -20,12 +19,7 @@ context('Giovanni place order', () => {
         cy.wait(1000);
     })
     //TODO: seed -> inserisci mele, cavolfiori ...
-
-    //TODO: test this use case
-    
-
-
-
+   
     it('Giovanni place order', () => {
         cy.visit(Cypress.env('baseUrl'));
         cy.timeMachine(0, 10);

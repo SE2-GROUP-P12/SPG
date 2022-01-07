@@ -152,6 +152,16 @@ Cypress.Commands.add('topUp', (email,money,method)=> {
 
 })
 
+Cypress.Commands.add('checkShopEmployee', () => {
+    cy.checkUrl('/Dashboard');
+    cy.contains('WELCOME BACK').should('exist');
+    cy.contains('Here you are your services').should('exist');
+    cy.contains('Browse Products').should('exist');
+    cy.contains('New Customer').should('exist');
+    cy.contains('Top Up').should('exist');
+    cy.contains('Handle Order').should('exist');
+    cy.contains('Settings').should('exist');
+})
 
 Cypress.Commands.add('checkCustomer', () => {
     cy.checkUrl('/Dashboard');

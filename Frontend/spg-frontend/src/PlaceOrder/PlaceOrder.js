@@ -352,8 +352,8 @@ function PlaceOrder(props) {
                         >
                             {({values, errors, touched}) =>
                                 <Form>
-                                    Email:<Field style={{margin: '20px'}} name="email" type="text"/>
-                                    <Button style={{margin: '20px'}} type="submit" variant="success">Submit
+                                    Email:<Field id="field-email" style={{margin: '20px'}} name="email" type="text"/>
+                                    <Button id="button-submit" style={{margin: '20px'}} type="submit" variant="success">Submit
                                         customer</Button>
                                     {errors.email && touched.email ? errors.email : null}
                                     {customerError ?

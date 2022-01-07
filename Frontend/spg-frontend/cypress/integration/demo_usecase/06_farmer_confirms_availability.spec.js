@@ -33,8 +33,10 @@ context('farmer confirmation', () => {
         cy.get('#button-set-availability').click();
         
         cy.get('#button-submit').should('be.visible').click();
-        cy.logout();
         
     })
-
+    
+    it('logout',()=>{
+        cy.logout();
+    })
 })
