@@ -117,13 +117,35 @@ Cypress.Commands.add('logout', ()=> {
 /**
  * perform a logout of an logged in user
  */
-Cypress.Commands.add('topUp', (email,money)=> {
+Cypress.Commands.add('topUp', (email,money,method)=> {
     cy.get('#email').type(email);
     cy.get('#button-Submit').click();
     cy.contains('User correctly found').should('exist');
-    cy.get('#button-Cash').should('be.visible');
-    cy.get('#button-Cash').click();
-    cy.get('#button-TopUp').should('be.visible');
+    switch (method) {
+        case 'Cash':
+            cy.get('#button-Cash').should('be.visible');
+            cy.get('#button-Cash').click();
+            cy.get('#button-TopUp').should('be.visible');
+            break;
+
+        case 'GiftCard':
+            cy.get('#button-GiftCard').should('be.visible');
+            cy.get('#button-GiftCard').click();
+            cy.get('#button-TopUp').should('be.visible');
+            break;
+        
+        case 'CreditCard':
+            cy.get('#CreditCard').should('be.visible');
+            cy.get('#CreditCard').click();
+            cy.get('#button-TopUp').should('be.visible');
+            break;
+    
+        default:
+            cy.get('#button-Cash').should('be.visible');
+            cy.get('#button-Cash').click();
+            cy.get('#button-TopUp').should('be.visible');
+    }
+    
     cy.get('#amount').type(money);
     cy.get('#button-TopUp').click();
     cy.contains('Top up correctly performed').should('be.visible');

@@ -72,14 +72,14 @@ function TopUp() {
             {user === null ?
                 <Grid container spacing={2}>
                     <Grid item xs={6} sm={4}><Button disabled id='button-Cash' onClick={handleShow} size='huge' variant="outline-success"> <h1>Cash</h1> </Button></Grid>
-                    <Grid item xs={6} sm={4}><Button disabled id='button-Credit Card' onClick={handleShow} size='huge' variant="outline-success"> <h1>Credit Card</h1> </Button></Grid>
-                    <Grid item xs={6} sm={4}><Button disabled id='button-Gift Card' onClick={handleShow} size='huge' variant="outline-success"> <h1>Gift Card</h1> </Button></Grid>
+                    <Grid item xs={6} sm={4}><Button disabled id='button-CreditCard' onClick={handleShow} size='huge' variant="outline-success"> <h1>Credit Card</h1> </Button></Grid>
+                    <Grid item xs={6} sm={4}><Button disabled id='button-GiftCard' onClick={handleShow} size='huge' variant="outline-success"> <h1>Gift Card</h1> </Button></Grid>
                 </Grid>
                 :
                 <Grid container spacing={2}>
                     <Grid item xs={6} sm={4}><Button id='button-Cash' onClick={handleShow} size='huge' variant="outline-success"> <h1>Cash</h1> </Button></Grid>
-                    <Grid item xs={6} sm={4}><Button id='button-Credit Card' onClick={handleShow} size='huge' variant="outline-success"> <h1>Credit Card</h1> </Button></Grid>
-                    <Grid item xs={6} sm={4}><Button id='button-Gift Card' onClick={handleShow} size='huge' variant="outline-success"> <h1>Gift Card</h1> </Button></Grid>
+                    <Grid item xs={6} sm={4}><Button id='button-CreditCard' onClick={handleShow} size='huge' variant="outline-success"> <h1>Credit Card</h1> </Button></Grid>
+                    <Grid item xs={6} sm={4}><Button id='button-GiftCard' onClick={handleShow} size='huge' variant="outline-success"> <h1>Gift Card</h1> </Button></Grid>
                 </Grid>
             }
             <Row>
