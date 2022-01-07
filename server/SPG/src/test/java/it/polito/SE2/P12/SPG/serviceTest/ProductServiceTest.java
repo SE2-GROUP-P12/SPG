@@ -229,6 +229,12 @@ public class ProductServiceTest {
     }
 
     @Test
+    public void resetQuantityTest(){
+        productService.resetQuantities();
+        Assertions.assertEquals(0.0, productRepo.findProductByName("Prod1").getTotalQuantity());
+    }
+
+    @Test
     public void addProductWithoutImageTest() {
         String name = "newProd";
         Double price = 12.50;
