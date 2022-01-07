@@ -176,12 +176,12 @@ function BrowseProducts(props) {
 
         return (<>
             {error ?
-                <Button id="basket" variant="warning" size="lg" //onClick={handleShow}
+                <Button id="button-basket" variant="warning" size="lg" //onClick={handleShow}
                         style={{position: 'fixed', bottom: '10px', left: '10px'}}>
                     Error loading cart
                 </Button>
                 :
-                <Button id="basket" variant="success" size="lg" onClick={handleShow}
+                <Button id="button-basket" variant="success" size="lg" onClick={handleShow}
                         style={{position: 'fixed', bottom: '10px', left: '10px'}}>
                     🛒 {cart.length} item(s)
                 </Button>}
@@ -190,7 +190,7 @@ function BrowseProducts(props) {
                 <Offcanvas.Body>
                     {error === true ? <Alert variant='danger'>Something went wrong</Alert> : printOrder(cart)}
                     <Button style={{margin: '20px'}} variant="secondary" onClick={handleClose}>Close</Button>
-                    <Link to="/PlaceOrder"><Button style={{margin: '20px'}} variant="success">Check out</Button></Link>
+                    <Link to="/PlaceOrder"><Button id="button-checkout" style={{margin: '20px'}} variant="success">Check out</Button></Link>
                 </Offcanvas.Body>
             </Offcanvas>
         </>);

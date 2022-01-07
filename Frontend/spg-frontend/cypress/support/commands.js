@@ -157,7 +157,7 @@ Cypress.Commands.add('checkBrowseProducts', () => {
     
     //Spinner
     cy.get('[role=status]').should('exist');
-    cy.get('[id=basket]').should('exist');
+    cy.get('[id=button-basket]').should('exist');
     cy.contains('Back').should('exist');
 
     cy.get('[alt=fruit]').should('exist')
@@ -198,35 +198,35 @@ Cypress.Commands.add('checkConfirmAvailability', () => {
 })
 
 Cypress.Commands.add('modifyForecast', () => {
-    cy.get(':nth-child(1) > .MuiPaper-root > .MuiCardActions-root > .MuiGrid-container > .MuiGrid-root > .btn').click({force:true});
+    cy.get('#button-forecast-Carrots').click({force:true});
     cy.get('[id=amount]').clear({force:true}).type('4');
     cy.get('[id=button-modifyForecast]').click({force:true});
     cy.get('.modal-footer > .btn').click({force:true});
 
     cy.wait(2000);
 
-    cy.get(':nth-child(2) > .MuiPaper-root > .MuiCardActions-root > .MuiGrid-container > .MuiGrid-root > .btn').click({force:true});
+    cy.get('#button-forecast-Apples').click({force:true});
     cy.get('[id=amount]').clear({force:true}).type('4');
     cy.get('[id=button-modifyForecast]').click({force:true});
     cy.get('.modal-footer > .btn').click({force:true});
 
     cy.wait(2000);
 
-    cy.get(':nth-child(3) > .MuiPaper-root > .MuiCardActions-root > .MuiGrid-container > .MuiGrid-root > .btn').click({force:true});
-    cy.get('[id=amount]').clear({force:true}).type('4');
-    cy.get('[id=button-modifyForecast]').click({force:true});
-    cy.get('.modal-footer > .btn').click({force:true});
-    
-    cy.wait(2000);
-    
-    cy.get(':nth-child(4) > .MuiPaper-root > .MuiCardActions-root > .MuiGrid-container > .MuiGrid-root > .btn').click({force:true});
+    cy.get('#button-forecast-Cauliflowers').click({force:true});
     cy.get('[id=amount]').clear({force:true}).type('4');
     cy.get('[id=button-modifyForecast]').click({force:true});
     cy.get('.modal-footer > .btn').click({force:true});
     
     cy.wait(2000);
+    
+    cy.get('#button-forecast-Broccoli').click({force:true});
+    cy.get('[id=amount]').clear({force:true}).type('4');
+    cy.get('[id=button-modifyForecast]').click({force:true});
+    cy.get('.modal-footer > .btn').click({force:true});
+    
+    cy.wait(2000);
 
-    cy.get(':nth-child(5) > .MuiPaper-root > .MuiCardActions-root > .MuiGrid-container > .MuiGrid-root > .btn').click({force:true});
+    cy.get('#button-forecast-Pumpkin').click({force:true});
     cy.get('[id=amount]').clear({force:true}).type('4');
     cy.get('[id=button-modifyForecast]').click({force:true});
     cy.get('.modal-footer > .btn').click({force:true});

@@ -282,7 +282,7 @@ function PlaceOrder(props) {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="success" disabled={!enableButton}
+                    <Button id="button-place-order" variant="success" disabled={!enableButton}
                             onClick={() => {
                             placeOrder(pickUpDate, customAddress, pickUpTime);
                             setModalShow(false);
@@ -380,6 +380,7 @@ function PlaceOrder(props) {
                 <Col xs={4}><Button disabled={order.length === 0 || itsTime === false ? true : false && !itsTime()} variant='danger'
                                     onClick={dropOrder}>Delete order</Button></Col>
                 <Col xs={4}><Button
+                    id="button-send-order"
                     disabled={(!itsTime || order.length === 0 ) ? true : false}
                     variant='success' onClick={() => showModalHanlder()}>Send order</Button></Col>
             </Row>
