@@ -89,7 +89,7 @@ function BrowseProducts(props) {
                     </CardContent>
                     {props.isLogged ? <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Add to cart </Button>
+                            <Grid item xs={12}> <Button id={`button-add-${pe_props.product.name}`} variant="success" onClick={handleShow}> Add to cart </Button>
                             </Grid>
                         </Grid>
                     </CardActions> : <></>}
@@ -138,7 +138,7 @@ function BrowseProducts(props) {
                                                    max={pe_props.product.quantityAvailable}
                                                    min={0}/> {pe_props.product.unitOfMeasurement}
                                             <br/>
-                                            <Button style={{margin: '20px'}} type="submit" variant="success">Add to
+                                            <Button id="button-add-to-cart" style={{margin: '20px'}} type="submit" variant="success">Add to
                                                 cart</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
@@ -151,7 +151,7 @@ function BrowseProducts(props) {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => {
+                        <Button id="button-close" variant="secondary" onClick={() => {
                             handleClose();
                             setShowError(null);
                             setShowSuccess(null);

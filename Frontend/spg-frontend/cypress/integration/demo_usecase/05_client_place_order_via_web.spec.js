@@ -19,15 +19,41 @@ context('Giovanni place order', () => {
         cy.task('queryDatabase', { dbName, query });
     })
     //TODO: seed -> inserisci mele, cavolfiori ...
-
+    
     //TODO: test this use case
+    it('Giovanni place an order', () => {
+        cy.visit(Cypress.env('baseUrl'))
+        cy.clearLocalStorage();
 
+        cy.get('[alt=logo]').should('exist');
+        cy.get('[id=login]').should('exist');
+        cy.get('[id=signup]').should('exist');
+         
+        cy.checkHomepage();  
+        cy.login('giovanni@gmail.com','Malnati30L');
+        cy.checkCustomer();
+
+        cy.get('[id=button-BrowseProducts]').click();
+        cy.checkBrowseProducts();
+
+        cy.get('#button-add-Cauliflowers').click();
+        cy.get('[id=amount]').clear({force:true}).type('1');
+        cy.get('[id=button-add-to-cart]').click({force:true});
+        
+        cy.wait(2000);
+
+        cy.get('#button-add-Apples').click();
+        cy.get('[id=amount]').clear({force:true}).type('2');
+        cy.get('[id=button-add-to-cart]').click({force:true});
+        
+        cy.logout();
+    })
 
     it('teardown user Giovanni', () => {
         const dbName = 'spg';
         var query = `DELETE FROM spg.customer WHERE address like 'Corso Duca degli Abruzzi, 24 - 10129 Torino (TO)';`;
         cy.task('queryDatabase', { dbName, query });
-        query = "DELETE FROM spg.user WHERE email like 'giovanni@gmail.com';";
+        var query = "DELETE FROM spg.user WHERE email like 'giovanni@gmail.com';";
         cy.task('queryDatabase', { dbName, query });
     })
     //TODO: teardown -> (seed) elimina giovanni

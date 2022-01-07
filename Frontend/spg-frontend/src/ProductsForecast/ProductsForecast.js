@@ -75,7 +75,7 @@ function ProductsForecast(props) {
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Modify
+                            <Grid item xs={12}> <Button id={`button-forecast-${props.product.name}`} variant="success" onClick={handleShow}> Modify
                                 Forecast </Button>
                             </Grid>
                         </Grid>
@@ -138,7 +138,7 @@ function ProductsForecast(props) {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={async () => {
+                        <Button id="button-close" variant="secondary" onClick={async () => {
                             handleClose();
                             setShowError(null);
                             setShowSuccess(null);
