@@ -32,5 +32,8 @@ context('customer workflow', () => {
 
 
     });
+    it('Mario logout', () =>{
+        cy.logout();
+    })
 
 })

@@ -385,7 +385,7 @@ function Orders(props) {
                         <li className="list-group-item">
                             {printOrder(o.productList)}
                             Customer: {o.email}
-                            <Button style={{margin: '20px'}} onClick={(e) => handleDelivery(e, o.orderId)}
+                            <Button id={'button-deliver-'+o.email.split('@')[0]} style={{margin: '20px'}} onClick={(e) => handleDelivery(e, o.orderId)}
                                     variant='success'
                                     disabled={props.itsTime ? false : true}>Deliver</Button>
                             {showAlert ? <Alert variant="danger">Something went wrong</Alert> : ""}
