@@ -47,7 +47,7 @@ public class SchedulerServiceTest {
     public void initSchedulerNotActiveTest() {
         schedulerService.setActive(false);
         schedulerService.initScheduler();
-        Assertions.assertTrue(schedulerService.getSchedule().size() == 0);
+        Assertions.assertEquals(0,schedulerService.getSchedule().size() );
     }
 
     @Test

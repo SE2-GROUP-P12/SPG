@@ -145,16 +145,6 @@ public class SpgOrderService {
         OrderUserType user = (OrderUserType) order.getCust();
         if (user.getWallet() < order.getValue())
             return false;
-        /*
-        //Controlla se la quantità ordinata è disponibile
-        for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
-            Product p = e.getKey();
-            Double q = e.getValue();
-            if (!p.moveFromOrderedToDelivered(q))
-                return false;
-            productRepo.save(p);
-        }
-        */
         //Check if the customer wallet has available amount
         if (user.getWallet() > order.getValue()) {
             //decrease the wallet amount

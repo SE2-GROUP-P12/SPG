@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 public class MondayMorningRoutine implements Schedulable {
 
     private SpgProductService productService;
-    private SpgOrderService orderService;
+
 
     @Autowired
-    public MondayMorningRoutine(SpgProductService spgProductService, SpgOrderService orderService) {
+    public MondayMorningRoutine(SpgProductService spgProductService) {
         this.productService = spgProductService;
-        this.orderService = orderService;
+
     }
 
     @Override
