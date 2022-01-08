@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Slf4j
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
 
@@ -82,7 +82,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
 
         }
     }
