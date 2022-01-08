@@ -31,7 +31,7 @@ function ConfirmAvailability(props) {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     /*TIME MACHINE MANAGEMENT*/
-    const [itsTime, setItsTime] = useState(false)
+    const [itsTime, setItsTime] = useState(true)
     useEffect(() => {
         let checkTime = (time, date) => {
             console.log("CHECKTIME CONFIRM AVAILABILITY: " + time + " " + date);

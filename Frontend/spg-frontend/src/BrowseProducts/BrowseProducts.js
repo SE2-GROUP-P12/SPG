@@ -29,6 +29,7 @@ function BrowseProducts(props) {
     const [triggerError, setTriggerError] = useState(false);
     const [cart, setCart] = useState([]);
     const [error, setError] = useState(false);
+    const [sellTime, setSellTime] = useState(true);
 
     const history = useHistory();
 
@@ -45,7 +46,15 @@ function BrowseProducts(props) {
 
     useEffect(async () => {
         await _browseProducts();
-    }, []);
+        let checkTime = (time, date) => {
+            console.log("CHECKTIME SELL PRODUCTS: " + time + " " + date);
+            if ((date === 'Sun' && time >= '23:00') || (date === 'Mon' && time < '09:00'))
+                setSellTime(false);
+            else
+                setSellTime(true);
+        }
+        checkTime(props.time, props.date);
+    }, [props.date, props.time]);
 
     async function _getCart() {
         const prod = await API.getCart({'email': localStorage.getItem("username")}, props.setErrorMessage);
@@ -89,7 +98,7 @@ function BrowseProducts(props) {
                     </CardContent>
                     {props.isLogged ? <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button id={`button-add-${pe_props.product.name}`} variant="success" onClick={handleShow}> Add to cart </Button>
+                            <Grid item xs={12}> <Button id={`button-add-${pe_props.product.name}`} disabled={!sellTime} variant="success" onClick={handleShow}> Add to cart </Button>
                             </Grid>
                         </Grid>
                     </CardActions> : <></>}
@@ -105,8 +114,10 @@ function BrowseProducts(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={pe_props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`} alt="fruit"
-                                 style={{height: '150px'}}/>
+                            <img
+                                src={pe_props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
+                                alt="fruit"
+                                style={{height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
                                     {pe_props.product.name} : {pe_props.product.quantityAvailable}{pe_props.product.unitOfMeasurement} available, {pe_props.product.price.toFixed(2)}€/{pe_props.product.unitOfMeasurement}
@@ -138,7 +149,7 @@ function BrowseProducts(props) {
                                                    max={pe_props.product.quantityAvailable}
                                                    min={0}/> {pe_props.product.unitOfMeasurement}
                                             <br/>
-                                            <Button id="button-add-to-cart" style={{margin: '20px'}} type="submit" variant="success">Add to
+                                            <Button id="button-add-to-cart" disabled={!sellTime} style={{margin: '20px'}} type="submit" variant="success">Add to
                                                 cart</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
@@ -199,6 +210,8 @@ function BrowseProducts(props) {
     return (
         <Container fluid>
             <h1>Products List</h1>
+            {sellTime ? null :
+                <Alert variant='warning'> It's not possible to buy products from Sunday at 23pm to Monday at 9am</Alert>}
             <Grid container spacing={2}>
                 {
                     loadCompleted === true && products != undefined ?

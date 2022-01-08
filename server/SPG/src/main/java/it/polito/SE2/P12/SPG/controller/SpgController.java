@@ -400,8 +400,6 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         Long productId = Long.parseLong(requestMap.get(Constants.JSON_PRODUCT_ID).toString());
         forecast = Double.valueOf(requestMap.get(Constants.JSON_QUANTITY).toString());
-        /*start = (Double) requestMap.get("quantityForecast");
-        end = (Double) requestMap.get("quantityForecast");*/
         if (!productService.setForecast(productId, forecast))
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok().build();
@@ -499,7 +497,6 @@ public class SpgController {
         if (requestMap == null || !requestMap.containsKey(Constants.JSON_EPOCH_TIME))
             return ResponseEntity.badRequest().build();
         Long epochTime = Long.parseLong(requestMap.get(Constants.JSON_EPOCH_TIME).toString());
-        System.out.println("time travel at " + epochTime);
         return ResponseEntity.ok(schedulerService.timeTravelAt(epochTime));
 
         /*

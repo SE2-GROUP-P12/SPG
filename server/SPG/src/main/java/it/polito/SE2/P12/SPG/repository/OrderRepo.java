@@ -10,7 +10,11 @@ import java.util.List;
 public interface OrderRepo
         extends JpaRepository<Order, Long> {
     public void deleteByCust_UserId(Long userId);
+
     public List<Order> findAllByCust_UserId(Long userId);
+
     public Order findOrderByOrderId(Long orderId);
+
+    public List<Order> findAllByStatus(String status);
 
 }

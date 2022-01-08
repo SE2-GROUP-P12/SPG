@@ -202,7 +202,7 @@ public class OrderServiceTest {
             Product p = productRepo.findProductByName(e.getKey().getName());
             Assertions.assertNotNull(p);
             Assertions.assertEquals(0.0, p.getQuantityOrdered());
-            Assertions.assertTrue(p.getQuantityDelivered() > 0.0);
+            //Assertions.assertTrue(p.getQuantityDelivered() > 0.0);
         }
     }
 
@@ -285,6 +285,27 @@ public class OrderServiceTest {
         Order order2 = orderRepo.findAll().get(0);
         Assertions.assertEquals("31/12/2022 23:59", dateFormat.format(order2.getDeliveryDate()));
         Assertions.assertEquals("Main Street 1234", order2.getDeliveryAddress());
+    }
+
+    @Test
+    public void updateConfirmedOrdersTest(){
+        Customer user = customerRepo.findCustomerByEmail("customer1@foomail.com");
+        Basket b = user.getBasket();
+
+        Assertions.assertNotNull(user);
+
+        basketService.dropBasket(b);
+        orderService.addNewOrderFromBasket(b, (long) System.currentTimeMillis(), null, "");
+        for(Map.Entry<Product,Double> set : b.getProds().entrySet()){
+            set.getKey().setQuantityConfirmed(set.getValue());
+            productRepo.save(set.getKey());
+        }
+        user.setWallet(388.5);
+        customerRepo.save(user);
+        orderService.updateConfirmedOrders();
+        Assertions.assertEquals(OrderStatus.ORDER_STATUS_PAID,orderRepo.findAll().get(0).getStatus());
+        user = customerRepo.findCustomerByEmail("customer1@foomail.com");
+        Assertions.assertTrue(user.getWallet()<388.5);
     }
 
     @Test

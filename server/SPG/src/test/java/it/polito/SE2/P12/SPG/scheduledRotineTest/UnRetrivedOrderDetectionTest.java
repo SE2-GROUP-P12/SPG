@@ -5,7 +5,7 @@ import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.entity.Product;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
-import it.polito.SE2.P12.SPG.schedulables.schedule_routines.UnRetrievedOrderDetection_Routine;
+import it.polito.SE2.P12.SPG.schedulables.scheduleRoutines.UnRetrievedOrderDetectionRoutine;
 import it.polito.SE2.P12.SPG.service.SchedulerService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
@@ -57,7 +57,7 @@ public class UnRetrivedOrderDetectionTest {
 
     @Test
     public void routineExecutionTest() {
-        UnRetrievedOrderDetection_Routine routine = new UnRetrievedOrderDetection_Routine(userService, orderService, orderRepo, schedulerService);
+        UnRetrievedOrderDetectionRoutine routine = new UnRetrievedOrderDetectionRoutine(userService, orderService, orderRepo, schedulerService);
         routine.execute();
         Assertions.assertEquals(OrderStatus.ORDER_STATUS_NOT_RETRIEVED, orderRepo.findAll().get(0).getStatus());
         Assertions.assertEquals(OrderStatus.ORDER_STATUS_OPEN, orderRepo.findAll().get(1).getStatus());
