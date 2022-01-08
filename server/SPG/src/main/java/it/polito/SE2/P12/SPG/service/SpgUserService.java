@@ -46,7 +46,7 @@ public class SpgUserService {
         this.emailConfiguration = emailConfiguration;
     }
 
-
+    public User findUserByChatId(String chatId){return userRepo.findUserByChatId(chatId);}
     public Long getUserIdByEmail(String email) {
         return userRepo.findUserByEmail(email).getUserId();
     }
@@ -225,4 +225,15 @@ public class SpgUserService {
     }
 
 
+
+    public boolean setChatIdToUser(String email, String chatId) {
+        User user = userRepo.findUserByEmail(email);
+        if(user ==null) return false;
+        user.setChatId(chatId);
+        userRepo.save(user);
+        return true;
+    }
+    public List<User> findAllUsers(){
+        return userRepo.findAll();
+    }
 }

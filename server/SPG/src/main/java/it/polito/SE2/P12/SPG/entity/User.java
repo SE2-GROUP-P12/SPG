@@ -44,6 +44,8 @@ public class User {
     protected Boolean active;
     @Column(name = "role", insertable = false, updatable = false)
     protected String role;
+    @Column(name = "chatId", nullable = true)
+    protected  String chatId="";
 
     public User(String name, String surname, String ssn,
                 String phoneNumber,
@@ -55,6 +57,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.active = false;
+        this.chatId = "";
     }
 
     public User(String name, String surname, String ssn,

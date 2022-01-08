@@ -5,9 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
 import it.polito.SE2.P12.SPG.entity.*;
-import it.polito.SE2.P12.SPG.interfaceEntity.*;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
+import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.service.*;
-import it.polito.SE2.P12.SPG.utils.*;
+import it.polito.SE2.P12.SPG.telegramBot.TelegramBot;
+import it.polito.SE2.P12.SPG.utils.API;
+import it.polito.SE2.P12.SPG.utils.Constants;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
+import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,16 +26,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * NOTE: in order to granted access to an api based on the user roles add roles into the 'PreAuthorization' annotation as follows:
@@ -48,18 +48,20 @@ public class SpgController {
     private final JWTUserHandlerService jwtUserHandlerService;
     private final DBUtilsService dbUtilsService;
     private final WalletOperationService walletOperationService;
+    private final TelegramBot telegramBot;
+    //private final TelegramBotService telegramBotService;
     private final SchedulerService schedulerService;
     //private long timeOffset;
 
 
     @Autowired
-    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService, SchedulerService schedulerService) {
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService, SchedulerService schedulerService, TelegramBot telegramBot) {
         this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
         this.jwtUserHandlerService = jwtUserHandlerService1;
-        //this.timeOffset = 0;
+        this.telegramBot = telegramBot;
         this.walletOperationService = walletOperationService;
         this.dbUtilsService = dbUtilsService;
         this.dbUtilsService.init();
@@ -120,6 +122,7 @@ public class SpgController {
             String imageUrl = "";
             if (requestMap.containsKey("imageUrl"))
                 imageUrl = (String) requestMap.get("imageUrl");
+            telegramBot.notifyCustomers();
             return ResponseEntity.ok(productService.addProduct(productName, value, uom, imageUrl, farmer));
         }
         return ResponseEntity.badRequest().build();
@@ -404,6 +407,7 @@ public class SpgController {
         end = (Double) requestMap.get("quantityForecast");*/
         if (!productService.setForecast(productId, forecast))
             return ResponseEntity.badRequest().build();
+        telegramBot.notifyCustomers();
         return ResponseEntity.ok().build();
     }
 
@@ -493,7 +497,6 @@ public class SpgController {
 
 
     @PostMapping(API.TIME_TRAVEL)
-    //@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER', 'ROLE_EMPLOYEE','ROLE_FARMER')")
     public ResponseEntity<Boolean> timeTravel(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         if (requestMap == null || !requestMap.containsKey(Constants.JSON_EPOCH_TIME))
@@ -502,54 +505,6 @@ public class SpgController {
         System.out.println("time travel at " + epochTime);
         return ResponseEntity.ok(schedulerService.timeTravelAt(epochTime));
 
-        /*
-        Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
-        if (requestMap == null ||
-                !requestMap.containsKey(Constants.JSON_DATE) ||
-                !requestMap.containsKey(Constants.JSON_TIME)
-        )
-            return ResponseEntity.badRequest().build();
-        String travelDayOfWeek = requestMap.get(Constants.JSON_DATE).toString();
-        String hhmm = requestMap.get(Constants.JSON_TIME).toString();
-        int hh = Integer.parseInt(hhmm.split(":")[0]);
-        int mm = Integer.parseInt(hhmm.split(":")[1]);
-        java.util.Date time = new java.util.Date((long) System.currentTimeMillis() + this.timeOffset);
-        Calendar c = Calendar.getInstance();
-        c.setTime(time);
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        int dayToTravel = 0;
-        switch (travelDayOfWeek) {
-            case "Sun":
-                dayToTravel = 1;
-                break;
-            case "Mon":
-                dayToTravel = 2;
-                break;
-            case "Tue":
-                dayToTravel = 3;
-                break;
-            case "Wed":
-                dayToTravel = 4;
-                break;
-            case "Thu":
-                dayToTravel = 5;
-                break;
-            case "Fri":
-                dayToTravel = 6;
-                break;
-            case "Sat":
-                dayToTravel = 7;
-                break;
-            default:
-                dayToTravel = 0;
-        }
-        timeOffset += ((7 + dayToTravel - dayOfWeek) % 7) * 24 * 60 * 60 * 1000;
-        int currentHH = c.get(Calendar.HOUR_OF_DAY);
-        int currentMM = c.get(Calendar.MINUTE);
-        timeOffset += (hh - currentHH) * 60 * 60 * 1000;
-        timeOffset += (mm - currentMM) * 60 * 1000;
-        return ResponseEntity.ok().build();
-        */
     }
 
     @GetMapping(API.LOGOUT)
