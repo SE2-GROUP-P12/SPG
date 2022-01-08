@@ -81,7 +81,6 @@ public class SpgProductService {
 
             product.setTotalQuantity(0.0);
             product.setQuantityAvailable(0.0);
-            product.setQuantityConfirmed(0.0);
             product.setQuantityBaskets(0.0);
             product.setQuantityDelivered(0.0);
             product.setQuantityOrdered(0.0);
