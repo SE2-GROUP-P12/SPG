@@ -37,6 +37,7 @@ function ProductsForecast(props) {
             console.log(data);
             setTriggerError(true);
         }
+        return;
     }
 
     useEffect(async () => {
@@ -51,14 +52,14 @@ function ProductsForecast(props) {
         checkTime(props.time, props.date);
     }, [props.date, props.time]);
 
-    function ProductEntry(PEProps) {
+    function ProductEntry(props) {
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
         const [showSuccess, setShowSuccess] = useState(null);
         const [showError, setShowError] = useState(null)
 
-        let encodedImg = PEProps.product.base64Image
+        let encodedImg = props.product.base64Image
 
         return (
             <>
@@ -66,22 +67,22 @@ function ProductsForecast(props) {
                     <CardMedia
                         component="img"
                         height="140"
-                        image={PEProps.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
+                        image={props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
                         alt="fruit"
                     />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
-                            {PEProps.product.name}
+                            {props.product.name}
                         </Typography>
                         <Typography variant="body">
-                            {PEProps.product.quantityForecast} {PEProps.product.unitOfMeasurement} currently
+                            {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
                             forecasted <br/>
-                            {PEProps.product.price.toFixed(2)}€/{PEProps.product.unitOfMeasurement}
+                            {props.product.price.toFixed(2)}€/{props.product.unitOfMeasurement}
                         </Typography>
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button id={`button-forecast-${PEProps.product.name}`} disabled={!forecastTime} variant="success" onClick={handleShow}> Modify
+                            <Grid item xs={12}> <Button disabled={!forecastTime} variant="success" onClick={handleShow}> Modify
                                 Forecast </Button>
                             </Grid>
                         </Grid>
@@ -94,16 +95,16 @@ function ProductsForecast(props) {
                     setShowSuccess(null);
                 }}>
                     <Modal.Header>
-                        <Modal.Title>Modify Forecast for {PEProps.product.name}</Modal.Title>
+                        <Modal.Title>Modify Forecast for {props.product.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={PEProps.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
+                            <img src={props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
                                  alt="fruit"
                                  style={{height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
-                                    {PEProps.product.quantityForecast} {PEProps.product.unitOfMeasurement} currently
+                                    {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
                                     forecasted
                                 </Col>
                             </Row>
@@ -128,10 +129,10 @@ function ProductsForecast(props) {
                                     {({values, errors, touched}) =>
                                         <Form>
                                             <label htmlFor='amount'>Amount:</label>
-                                            <Field data-testid="amount" type="number" id="amount" name="amount"
-                                                   min={0}/> {PEProps.product.unitOfMeasurement}
+                                            <Field type="number" id="amount" name="amount"
+                                                   min={0}/> {props.product.unitOfMeasurement}
                                             <br/>
-                                            <Button id="button-modifyForecast" disabled={!forecastTime} style={{margin: '20px'}} type="submit" variant="success">Modify
+                                            <Button disabled={!forecastTime} style={{margin: '20px'}} type="submit" variant="success">Modify
                                                 Forecast</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
@@ -144,7 +145,7 @@ function ProductsForecast(props) {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button id="button-close" variant="secondary" onClick={async () => {
+                        <Button variant="secondary" onClick={async () => {
                             handleClose();
                             setShowError(null);
                             setShowSuccess(null);
@@ -159,7 +160,7 @@ function ProductsForecast(props) {
     }
 
     if (triggerError === true) {
-        return (<Redirect to="/ErrorHandler"/>);
+        return (<Redirect to="/ErrorHandler"></Redirect>);
     }
 
     return (
