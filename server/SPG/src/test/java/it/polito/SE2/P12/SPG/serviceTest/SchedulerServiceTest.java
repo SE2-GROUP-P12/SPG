@@ -29,6 +29,7 @@ public class SchedulerServiceTest {
         dbUtilsService.dropAll();
         schedulerService.setActive(true);
         schedulerService.setSchedule(new ArrayList<>());
+        schedulerService.resetTime();
     }
 
     @AfterEach
@@ -62,8 +63,8 @@ public class SchedulerServiceTest {
         //Time travel to tomorrow
         schedulerService.timeTravelAt(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + 86400);
         Assertions.assertTrue(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + 86400 < LocalDateTime.now(schedulerService.getApplicationClock()).toEpochSecond(ZoneOffset.UTC));
-        Assertions.assertTrue(LocalDateTime.now().getDayOfWeek() != LocalDateTime.now(schedulerService.getApplicationClock()).getDayOfWeek());
-        Assertions.assertTrue(LocalDateTime.now().getDayOfMonth() != LocalDateTime.now(schedulerService.getApplicationClock()).getDayOfMonth());
+        Assertions.assertNotEquals(LocalDateTime.now().getDayOfWeek(), LocalDateTime.now(schedulerService.getApplicationClock()).getDayOfWeek());
+        Assertions.assertNotEquals(LocalDateTime.now().getDayOfMonth(), LocalDateTime.now(schedulerService.getApplicationClock()).getDayOfMonth());
     }
 
     @Test
@@ -71,8 +72,8 @@ public class SchedulerServiceTest {
         LocalDateTime now = LocalDateTime.now();
         //Time travel to yesterday, should result in no travel at all
         schedulerService.timeTravelAt(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - 86400);
-        Assertions.assertTrue(LocalDateTime.now().getDayOfWeek() == LocalDateTime.now(schedulerService.getApplicationClock()).getDayOfWeek());
-        Assertions.assertTrue(LocalDateTime.now().getDayOfMonth() == LocalDateTime.now(schedulerService.getApplicationClock()).getDayOfMonth());
+        Assertions.assertEquals(LocalDateTime.now().getDayOfWeek(), LocalDateTime.now(schedulerService.getApplicationClock()).getDayOfWeek());
+        Assertions.assertEquals(LocalDateTime.now().getDayOfMonth(), LocalDateTime.now(schedulerService.getApplicationClock()).getDayOfMonth());
     }
 
     @Test

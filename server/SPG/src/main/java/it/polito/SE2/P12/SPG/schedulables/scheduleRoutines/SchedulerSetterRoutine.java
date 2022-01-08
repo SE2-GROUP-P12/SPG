@@ -16,16 +16,14 @@ public class SchedulerSetterRoutine implements Schedulable {
 
     private final SchedulerService schedulerService;
     private final MondayMorningRoutine mondayMorningRoutine;
-    private final PendingOrdersDetectionRoutine pendingOrdersDetectionRoutine;
     private final SchedulerSetterRoutine schedulerSetterRoutine;
     private final UnRetrievedOrderDetectionRoutine unRetrievedOrderDetectionRoutine;
     private final MondayEveningRoutine mondayEveningRoutine;
 
     @Autowired
-    SchedulerSetterRoutine(SchedulerService schedulerService, @Lazy MondayEveningRoutine mondayEveningRoutine, @Lazy MondayMorningRoutine mondayMorningRoutine, @Lazy PendingOrdersDetectionRoutine pendingOrdersDetectionRoutine, @Lazy SchedulerSetterRoutine schedulerSetterRoutine, @Lazy UnRetrievedOrderDetectionRoutine unRetrievedOrderDetectionRoutine) {
+    SchedulerSetterRoutine(SchedulerService schedulerService, @Lazy MondayEveningRoutine mondayEveningRoutine, @Lazy MondayMorningRoutine mondayMorningRoutine, @Lazy SchedulerSetterRoutine schedulerSetterRoutine, @Lazy UnRetrievedOrderDetectionRoutine unRetrievedOrderDetectionRoutine) {
         this.schedulerService = schedulerService;
         this.mondayMorningRoutine = mondayMorningRoutine;
-        this.pendingOrdersDetectionRoutine = pendingOrdersDetectionRoutine;
         this.schedulerSetterRoutine = schedulerSetterRoutine;
         this.unRetrievedOrderDetectionRoutine = unRetrievedOrderDetectionRoutine;
         this.mondayEveningRoutine = mondayEveningRoutine;
@@ -43,13 +41,6 @@ public class SchedulerSetterRoutine implements Schedulable {
         schedulerService.addToSchedule(mondayEveningRoutine,
                 LocalDate.now(schedulerService.getApplicationClock()).
                         atTime(23, 0).
-                        toEpochSecond(ZoneOffset.ofHours(1)));
-        // TUESDAY
-        //Delete all unplayable orders
-        schedulerService.addToSchedule(pendingOrdersDetectionRoutine,
-                LocalDate.now(schedulerService.getApplicationClock())
-                        .with(TemporalAdjusters.next(DayOfWeek.TUESDAY))
-                        .atTime(0, 0).
                         toEpochSecond(ZoneOffset.ofHours(1)));
         // FRIDAY
         //Mark not retrieved orders

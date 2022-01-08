@@ -37,21 +37,23 @@ public class SchedulerService {
     private List<Entry<Schedulable, Long>> schedule;
 
     private MondayMorningRoutine mondayMorningRoutine;
-    private PendingOrdersDetectionRoutine pendingOrdersDetectionRoutine;
     private SchedulerSetterRoutine schedulerSetterRoutine;
     private UnRetrievedOrderDetectionRoutine unRetrievedOrderDetectionRoutine;
     private MondayEveningRoutine mondayEveningRoutine;
 
     @Autowired
-    public SchedulerService(@Lazy MondayMorningRoutine mondayMorningRoutine, @Lazy MondayEveningRoutine mondayEveningRoutine, @Lazy PendingOrdersDetectionRoutine pendingOrdersDetectionRoutine, @Lazy SchedulerSetterRoutine schedulerSetterRoutine, @Lazy UnRetrievedOrderDetectionRoutine unRetrievedOrderDetectionRoutine) {
+    public SchedulerService(@Lazy MondayMorningRoutine mondayMorningRoutine, @Lazy MondayEveningRoutine mondayEveningRoutine, @Lazy SchedulerSetterRoutine schedulerSetterRoutine, @Lazy UnRetrievedOrderDetectionRoutine unRetrievedOrderDetectionRoutine) {
         applicationClock = Clock.system(ZoneId.of(ZONE));
         schedule = new ArrayList<>();
 
         this.mondayMorningRoutine = mondayMorningRoutine;
-        this.pendingOrdersDetectionRoutine = pendingOrdersDetectionRoutine;
         this.schedulerSetterRoutine = schedulerSetterRoutine;
         this.unRetrievedOrderDetectionRoutine = unRetrievedOrderDetectionRoutine;
         this.mondayEveningRoutine = mondayEveningRoutine;
+    }
+
+    public void resetTime(){
+        this.applicationClock = Clock.system(ZoneId.of(ZONE));
     }
 
     public void initScheduler() {
@@ -77,12 +79,7 @@ public class SchedulerService {
 
                 }
             case TUESDAY:
-                //Delete all unplayable orders
-                if (rn.getDayOfWeek() != DayOfWeek.TUESDAY) {
-                    addToSchedule(pendingOrdersDetectionRoutine,
-                            rn.with(TemporalAdjusters.next(DayOfWeek.TUESDAY)).withHour(0).withMinute(0).toEpochSecond(ZoneOffset.of(ZONE)));
-                    //System.out.println("PendingOrdersDetection_Routine added");
-                }
+                //Tuesday schedule not set
             case WEDNESDAY:
                 //Wednesday schedule not set
             case THURSDAY:
@@ -103,22 +100,6 @@ public class SchedulerService {
                 System.out.println("SchedulerSetter_Routine added");
 
         }
-        /*
-        // MONDAY
-        //1. Manage product quantities for the begin of the new week
-        addToSchedule(new MondayMorning_Routine(productService, this, orderService), LocalDate.now(applicationClock).with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(9, 0).toEpochSecond(ZoneOffset.ofHours(1)));
-        // TUESDAY
-        //1. Delete all unplayable orders
-        addToSchedule(new PendingOrdersDetection_Routine(this.orderRepo, this, this.orderService),
-                LocalDate.now(applicationClock)
-                        .with(TemporalAdjusters.next(DayOfWeek.TUESDAY))
-                        .atTime(0, 1).
-                        toEpochSecond(ZoneOffset.ofHours(1)));
-        // FRIDAY
-        //1. mark not retrieved orders
-        addToSchedule(new UnRetrievedOrderDetection_Routine(this.userService, this.orderService, this.orderRepo, this),
-                LocalDate.now(this.getClock()).with(TemporalAdjusters.next(DayOfWeek.FRIDAY)).atTime(20, 0).toEpochSecond(ZoneOffset.ofHours(1)));
-        */
     }
 
     @Scheduled(fixedDelay = POLLING_RATE)
@@ -172,9 +153,7 @@ public class SchedulerService {
             return false;
 
         //Wait for the actual polling to finish
-        while (isPolling)
-            System.out.println("Polling Conflict");
-        System.out.println("End Conflict");
+        while (isPolling);
 
 
         //Set semaphore variable

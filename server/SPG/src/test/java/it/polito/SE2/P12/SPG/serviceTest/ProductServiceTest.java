@@ -101,27 +101,23 @@ public class ProductServiceTest {
 
     @Test
     public void getAllForecastedProductFarmerByEmailTest() {
-        Product p = productRepo.findProductByName("Prod1");
-        p.setQuantityForecast(10.0);
-        productRepo.save(p);
         List<Product> products = productService.getAllForecastedProductByFarmerEmail("farmer@farmer.com");
-
-        Assertions.assertEquals(1, products.size());
-        Assertions.assertEquals("Prod1",products.get(0).getName() );
+        Assertions.assertEquals(3, products.size());
+        Assertions.assertEquals("Prod1", products.get(0).getName());
     }
 
     @Test
     public void getAllUnforecastedProductFarmerByEmailTest() {
         Product p1 = productRepo.findProductByName("Prod1");
         Product p2 = productRepo.findProductByName("Prod2");
-        p1.setQuantityForecast(10.0);
-        p2.setQuantityForecast(12.0);
+        p1.setQuantityForecast(0.0);
+        p2.setQuantityForecast(0.0);
         productRepo.save(p1);
         productRepo.save(p2);
         List<Product> products = productService.getAllUnforecastedProductByFarmerEmail("farmer@farmer.com");
 
-        Assertions.assertEquals(1, products.size());
-        Assertions.assertEquals("Prod3",products.get(0).getName());
+        Assertions.assertEquals(2, products.size());
+        Assertions.assertEquals("Prod1", products.get(0).getName());
     }
 
 
@@ -140,19 +136,19 @@ public class ProductServiceTest {
     @Test
     public void forecastNegativeQuantityTest() {
         Assertions.assertFalse(productService.setForecast(productRepo.findProductByName("Prod1").getProductId(), -2.0));
-        Assertions.assertEquals(0.0,productRepo.findProductByName("Prod1").getQuantityForecast());
+        Assertions.assertEquals(1000.0, productRepo.findProductByName("Prod1").getQuantityForecast());
     }
 
     @Test
     public void forecastNanQuantityTest() {
         Assertions.assertFalse(productService.setForecast(productRepo.findProductByName("Prod1").getProductId(), Double.NaN));
-        Assertions.assertEquals(0.0,productRepo.findProductByName("Prod1").getQuantityForecast());
+        Assertions.assertEquals(1000.0, productRepo.findProductByName("Prod1").getQuantityForecast());
     }
 
     @Test
     public void forecastInfiniteQuantityTest() {
         Assertions.assertFalse(productService.setForecast(productRepo.findProductByName("Prod1").getProductId(), Double.POSITIVE_INFINITY));
-        Assertions.assertEquals(0.0,productRepo.findProductByName("Prod1").getQuantityForecast());
+        Assertions.assertEquals(1000.0, productRepo.findProductByName("Prod1").getQuantityForecast());
     }
 
     @Test
@@ -229,7 +225,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void resetQuantityTest(){
+    public void resetQuantityTest() {
         productService.resetQuantities();
         Assertions.assertEquals(0.0, productRepo.findProductByName("Prod1").getTotalQuantity());
     }

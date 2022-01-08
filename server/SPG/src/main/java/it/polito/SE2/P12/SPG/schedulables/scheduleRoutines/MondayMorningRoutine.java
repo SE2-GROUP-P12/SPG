@@ -21,7 +21,6 @@ public class MondayMorningRoutine implements Schedulable {
 
     @Override
     public void execute() {
-        orderService.updateConfirmedOrders();
         productService.resetQuantities();
     }
 }

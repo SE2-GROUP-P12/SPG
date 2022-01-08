@@ -162,10 +162,9 @@ public class SpgOrderService {
             //set status paid
             order.updateToPaidStatus(LocalDateTime.ofInstant(currentSchedulerInstant, ZoneId.of(schedulerService.getZone())));
             //update db
-            for (Map.Entry<Product,Double> set : order.getProds().entrySet())
-            {
+            for (Map.Entry<Product, Double> set : order.getProds().entrySet()) {
                 set.getKey().setQuantityDelivered(set.getValue());
-                set.getKey().setQuantityOrdered(set.getKey().getQuantityOrdered()-set.getValue());
+                set.getKey().setQuantityOrdered(set.getKey().getQuantityOrdered() - set.getValue());
                 productRepo.save(set.getKey());
             }
             orderRepo.save(order);
@@ -252,7 +251,10 @@ public class SpgOrderService {
                 productRepo.save(product);
             }
             cust.pay(price);
-            order.setStatus(ORDER_STATUS_PAID);
+            if (price == 0.0)
+                order.setStatus(ORDER_STATUS_CANCELLED);
+            else
+                order.setStatus(ORDER_STATUS_PAID);
             customerRepo.save(cust);
             orderRepo.save(order);
         }
@@ -274,13 +276,5 @@ public class SpgOrderService {
         return res;
     }
 
-    public void deleteUnpayableOrders() {
-        //Get not payable orders -> orders are in open status and set them to cancelled
-        orderRepo.findAllByStatus(ORDER_STATUS_OPEN).
-                parallelStream().
-                forEach(o ->
-                        setOrderStatus(o.getOrderId(), OrderStatus.ORDER_STATUS_CANCELLED, schedulerService.getTime())
-                );
-    }
 }
 

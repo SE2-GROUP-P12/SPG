@@ -1,6 +1,5 @@
 package it.polito.SE2.P12.SPG.entity;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.FileUtils;
@@ -68,7 +67,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
-        this.quantityForecast = 0.0;
+        this.quantityForecast = totalQuantity;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -84,7 +83,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
-        this.quantityForecast = 0.0;
+        this.quantityForecast = totalQuantity;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -100,7 +99,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
-        this.quantityForecast = 0.0;
+        this.quantityForecast = totalQuantity;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -108,10 +107,14 @@ public class Product {
         this.price = price;
         this.farmer = null;
         this.imageUrl = imageUrl;
+        this.base64Image = base64ImageFromPath(imageUrl);
 
+    }
+
+    private String base64ImageFromPath(String imageUrl) {
         String[] schemes = {"http", "https"}; // DEFAULT schemes = "http", "https"
+        String base64Source = "";
         UrlValidator urlValidator = new UrlValidator(schemes);
-
         File imageFile = new File("tmp.jpg");
         if (urlValidator.isValid(imageUrl)) {
             try {
@@ -126,18 +129,18 @@ public class Product {
 
         try {
             byte[] fileContent = FileUtils.readFileToByteArray(imageFile);
-            this.base64Image = Base64.getEncoder().encodeToString(fileContent);
+            base64Source = Base64.getEncoder().encodeToString(fileContent);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return base64Source;
     }
 
     public Product(String name, Double totalQuantity, double price, Farmer farmer) {
         this.name = name;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
-        this.quantityForecast = 0.0;
+        this.quantityForecast = totalQuantity;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -154,7 +157,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
-        this.quantityForecast = 0.0;
+        this.quantityForecast = totalQuantity;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -162,28 +165,7 @@ public class Product {
         this.price = price;
         this.farmer = farmer;
         this.imageUrl = imageUrl;
-
-        String[] schemes = {"http", "https"}; // DEFAULT schemes = "http", "https"
-        UrlValidator urlValidator = new UrlValidator(schemes);
-
-        File imageFile = new File("tmp.jpg");
-        if (urlValidator.isValid(imageUrl)) {
-            try {
-                FileUtils.copyURLToFile(new URL(imageUrl), imageFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            imageFile = new File(imageUrl);
-        }
-
-
-        try {
-            byte[] fileContent = FileUtils.readFileToByteArray(imageFile);
-            this.base64Image = Base64.getEncoder().encodeToString(fileContent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.base64Image = base64ImageFromPath(this.imageUrl);
 
     }
 
