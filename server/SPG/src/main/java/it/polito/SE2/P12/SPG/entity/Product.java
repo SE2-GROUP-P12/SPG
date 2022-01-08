@@ -1,6 +1,5 @@
 package it.polito.SE2.P12.SPG.entity;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +37,7 @@ public class Product {
     @Column(name = "quantity_available", nullable = false)
     private Double quantityAvailable;
     //Quantità prevista per la settimana seguente dal farmer. Da confermare.
+    // Settata nel periodo da lunedì mattina a sabato mattina
     @Column(name = "quantity_forecast", nullable = false)
     private Double quantityForecast;
     //Quantità attualmente confermata dal farmer,
@@ -55,12 +55,6 @@ public class Product {
     private Double quantityDelivered;
     @Column(name = "price", nullable = false)
     private Double price;
-    //start time for last prediction given
-    @Column(name = "startAvailability", nullable = true)
-    private String startAvailability;
-    //end time for last prediction given
-    @Column(name = "endAvailability", nullable = true)
-    private String endAvailability;
     @ManyToOne
     private Farmer farmer;
     @Column(name = "image_url")
@@ -73,7 +67,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
-        this.quantityForecast = 0.0;
+        this.quantityForecast = totalQuantity;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -89,7 +83,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
-        this.quantityForecast = 0.0;
+        this.quantityForecast = totalQuantity;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -105,7 +99,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
-        this.quantityForecast = 0.0;
+        this.quantityForecast = totalQuantity;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -113,10 +107,14 @@ public class Product {
         this.price = price;
         this.farmer = null;
         this.imageUrl = imageUrl;
+        this.base64Image = base64ImageFromPath(imageUrl);
 
+    }
+
+    private String base64ImageFromPath(String imageUrl) {
         String[] schemes = {"http", "https"}; // DEFAULT schemes = "http", "https"
+        String base64Source = "";
         UrlValidator urlValidator = new UrlValidator(schemes);
-
         File imageFile = new File("tmp.jpg");
         if (urlValidator.isValid(imageUrl)) {
             try {
@@ -131,18 +129,18 @@ public class Product {
 
         try {
             byte[] fileContent = FileUtils.readFileToByteArray(imageFile);
-            this.base64Image = Base64.getEncoder().encodeToString(fileContent);
+            base64Source = Base64.getEncoder().encodeToString(fileContent);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
-
+        return base64Source;
     }
 
     public Product(String name, Double totalQuantity, double price, Farmer farmer) {
         this.name = name;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
-        this.quantityForecast = 0.0;
+        this.quantityForecast = totalQuantity;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -159,7 +157,7 @@ public class Product {
         this.unitOfMeasurement = unitOfMeasurement;
         this.totalQuantity = totalQuantity;
         this.quantityAvailable = totalQuantity;
-        this.quantityForecast = 0.0;
+        this.quantityForecast = totalQuantity;
         this.quantityConfirmed = 0.0;
         this.quantityBaskets = 0.0;
         this.quantityOrdered = 0.0;
@@ -167,30 +165,7 @@ public class Product {
         this.price = price;
         this.farmer = farmer;
         this.imageUrl = imageUrl;
-
-        String[] schemes = {"http", "https"}; // DEFAULT schemes = "http", "https"
-        UrlValidator urlValidator = new UrlValidator(schemes);
-
-        File imageFile = new File("tmp.jpg");
-        if (urlValidator.isValid(imageUrl)) {
-            try {
-                FileUtils.copyURLToFile(new URL(imageUrl), imageFile);
-            } catch (IOException e) {
-                //e.printStackTrace();
-                log.error(e.getMessage());
-            }
-        } else {
-            imageFile = new File(imageUrl);
-        }
-
-
-        try {
-            byte[] fileContent = FileUtils.readFileToByteArray(imageFile);
-            this.base64Image = Base64.getEncoder().encodeToString(fileContent);
-        } catch (IOException e) {
-            //e.printStackTrace();
-            log.error(e.getMessage());
-        }
+        this.base64Image = base64ImageFromPath(this.imageUrl);
 
     }
 
@@ -256,8 +231,6 @@ public class Product {
                 ", quantityOrdered=" + quantityOrdered +
                 ", quantityDelivered=" + quantityDelivered +
                 ", price=" + price +
-                ", startAvailability='" + startAvailability + '\'' +
-                ", endAvailability='" + endAvailability + '\'' +
                 ", farmer=" + (farmer == null ? "null" : farmer.getUserId()) +
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';

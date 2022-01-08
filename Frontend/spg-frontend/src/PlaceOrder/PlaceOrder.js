@@ -205,14 +205,14 @@ function PlaceOrder(props) {
                                 from 9:00
                                 to 18:00.
                             </Alert>
-                            <reactForm.Control className="mt-3" type="date" name="deliveryDate" label="date" data-testid="date"
+                            <reactForm.Control id="date-field" className="mt-3" type="date" name="deliveryDate" label="date" data-testid="date"
                                                placeholder="delivery date"
                                                onChange={async (event) => {
                                                    await onChangeDateHandler(event.target.value);
                                                    await enableButtonHandler(new Date(event.target.value), pickUpTime, customAddress);
                                                }}
                             />
-                            <reactForm.Control className="mt-3" type="time" name="deliveryTime" label="time" data-testid="time"
+                            <reactForm.Control id="time-field" className="mt-3" type="time" name="deliveryTime" label="time" data-testid="time"
                                                onChange={(event) => {
                                                    onChangeTimeHandler(event.target.value);
                                                    enableButtonHandler(pickUpDate, event.target.value, customAddress);
@@ -274,7 +274,7 @@ function PlaceOrder(props) {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="success" disabled={!enableButton} data-testid="placeorder"
+                    <Button id="button-place-order" variant="success" disabled={!enableButton} data-testid="placeorder"
                             onClick={() => {
                             placeOrder(pickUpDate, customAddress, pickUpTime);
                             setModalShow(false);
@@ -300,7 +300,9 @@ function PlaceOrder(props) {
                         <Alert variant="success">Congratulations, order placed correctly!</Alert>}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="success" onClick={() => {
+                    <Button
+                        id='button-closeOrderCompleted'
+                        variant="success" onClick={() => {
                         setError(false);
                         setShowEndRoutineModal(false);
                     }}>
@@ -342,8 +344,8 @@ function PlaceOrder(props) {
                         >
                             {({values, errors, touched}) =>
                                 <Form>
-                                    Email:<Field style={{margin: '20px'}} data-testid="email" name="email" type="text"/>
-                                    <Button style={{margin: '20px'}} type="submit" variant="success">Submit
+                                    Email:<Field id="field-email" style={{margin: '20px'}} data-testid="email" name="email" type="text"/>
+                                    <Button id="button-submit" style={{margin: '20px'}} type="submit" variant="success">Submit
                                         customer</Button>
                                     {errors.email && touched.email ? errors.email : null}
                                     {customerError ?
@@ -372,6 +374,7 @@ function PlaceOrder(props) {
                 <Col xs={4}><Button disabled={order.length === 0 || !itsTime } variant='danger' //itsTime === false ? true : false && !itsTime()
                                     onClick={dropOrder}>Delete order</Button></Col>
                 <Col xs={4}><Button
+                    id="button-send-order"
                     disabled={!itsTime || order.length === 0 || (customer === "" && localStorage.getItem("role")==="EMPLOYEE") }
                     variant='success' onClick={() => showModalHanlder()}>Send order</Button></Col>
             </Row>

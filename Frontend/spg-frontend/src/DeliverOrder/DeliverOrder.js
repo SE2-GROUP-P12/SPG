@@ -273,7 +273,7 @@ function DeliverOrder(props) {
                 {orders != null && orders.length === 0 ? <h2>No orders to display yet</h2> :
                     <Orders itsTime={itsTime} orderList={orders}/>}
             </div>
-            <Link to='/Dashboard'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
+            <Link to='/Dashboard'><Button id='button-back' style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
         </>
     );
 }
@@ -353,7 +353,7 @@ function Orders(props) {
                         <li className="list-group-item">
                             {printOrder(o.productList)}
                             Customer: {o.email}
-                            <Button style={{margin: '20px'}} onClick={(e) => handleDelivery(e, o.orderId)}
+                            <Button id={'button-deliver-'+o.email.split('@')[0]} style={{margin: '20px'}} onClick={(e) => handleDelivery(e, o.orderId)}
                                     variant='success'
                                     disabled={!props.itsTime}>Deliver</Button>
                             {showAlert ? <Alert variant="danger">Something went wrong</Alert> : ""}
