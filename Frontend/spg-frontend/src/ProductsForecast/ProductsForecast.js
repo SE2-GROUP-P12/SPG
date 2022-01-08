@@ -113,7 +113,7 @@ function ProductsForecast(props) {
                                     validationSchema={Yup.object({amount: Yup.number().min(0).required('Amount required!')})}
                                     onSubmit={async (values) => {
                                         let data = {
-                                            "productId": props.product.productId,
+                                            "productId": PEProps.product.productId,
                                             "quantity": values.amount
                                         }
                                         let outcome = await API.modifyForecast(data);
