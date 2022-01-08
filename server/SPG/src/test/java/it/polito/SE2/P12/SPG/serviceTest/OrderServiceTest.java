@@ -288,6 +288,27 @@ public class OrderServiceTest {
     }
 
     @Test
+    public void updateConfirmedOrdersTest(){
+        Customer user = customerRepo.findCustomerByEmail("customer1@foomail.com");
+        Basket b = user.getBasket();
+
+        Assertions.assertNotNull(user);
+
+        basketService.dropBasket(b);
+        orderService.addNewOrderFromBasket(b, (long) System.currentTimeMillis(), null, "");
+        for(Map.Entry<Product,Double> set : b.getProds().entrySet()){
+            set.getKey().setQuantityConfirmed(set.getValue());
+            productRepo.save(set.getKey());
+        }
+        user.setWallet(388.5);
+        customerRepo.save(user);
+        orderService.updateConfirmedOrders();
+        Assertions.assertEquals(OrderStatus.ORDER_STATUS_PAID,orderRepo.findAll().get(0).getStatus());
+        user = customerRepo.findCustomerByEmail("customer1@foomail.com");
+        Assertions.assertTrue(user.getWallet()<388.5);
+    }
+
+    @Test
     public void setOrderStatusTest() {
         //Create an order
         Map<Product, Double> prod = new HashMap<>();

@@ -162,6 +162,12 @@ public class SpgOrderService {
             //set status paid
             order.updateToPaidStatus(LocalDateTime.ofInstant(currentSchedulerInstant, ZoneId.of(schedulerService.getZone())));
             //update db
+            for (Map.Entry<Product,Double> set : order.getProds().entrySet())
+            {
+                set.getKey().setQuantityDelivered(set.getValue());
+                set.getKey().setQuantityOrdered(set.getKey().getQuantityOrdered()-set.getValue());
+                productRepo.save(set.getKey());
+            }
             orderRepo.save(order);
             return true;
         }
