@@ -1,10 +1,8 @@
 package it.polito.SE2.P12.SPG.service;
 
-import it.polito.SE2.P12.SPG.schedulables.scheduleRoutines.SchedulerSetterRoutine;
-import it.polito.SE2.P12.SPG.schedulables.scheduleRoutines.UnRetrievedOrderDetectionRoutine;
-import it.polito.SE2.P12.SPG.schedulables.scheduleRoutines.MondayMorningRoutine;
+import it.polito.SE2.P12.SPG.schedulables.scheduleRoutines.*;
 import it.polito.SE2.P12.SPG.schedulables.Schedulable;
-import it.polito.SE2.P12.SPG.schedulables.scheduleRoutines.PendingOrdersDetectionRoutine;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -20,6 +18,7 @@ import java.util.Map.Entry;
 
 
 @Service
+@Data
 public class SchedulerService {
 
     @Value("${scheduler.print-poll}")
@@ -29,7 +28,7 @@ public class SchedulerService {
     @Value("${scheduler.active}")
     private boolean active;
     private static final long POLLING_RATE = 5000L;
-    public static final String ZONE = "Europe/Rome";
+    private static final String ZONE = "Europe/Rome";
     private long iteration = 0L;
     private boolean isPolling = false;
     private boolean timeTravelling = false;
@@ -37,22 +36,23 @@ public class SchedulerService {
     private Clock applicationClock;
     private List<Entry<Schedulable, Long>> schedule;
 
-    private MondayMorningRoutine mondayMorning_routine;
-    private PendingOrdersDetectionRoutine pendingOrdersDetection_routine;
-    private SchedulerSetterRoutine schedulerSetter_routine;
-    private UnRetrievedOrderDetectionRoutine unRetrievedOrderDetection_routine;
+    private MondayMorningRoutine mondayMorningRoutine;
+    private PendingOrdersDetectionRoutine pendingOrdersDetectionRoutine;
+    private SchedulerSetterRoutine schedulerSetterRoutine;
+    private UnRetrievedOrderDetectionRoutine unRetrievedOrderDetectionRoutine;
+    private MondayEveningRoutine mondayEveningRoutine;
 
     @Autowired
-    public SchedulerService(@Lazy MondayMorningRoutine mondayMorning_routine, @Lazy PendingOrdersDetectionRoutine pendingOrdersDetection_routine, @Lazy SchedulerSetterRoutine schedulerSetter_routine, @Lazy UnRetrievedOrderDetectionRoutine unRetrievedOrderDetection_routine) {
+    public SchedulerService(@Lazy MondayMorningRoutine mondayMorningRoutine, @Lazy MondayEveningRoutine mondayEveningRoutine, @Lazy PendingOrdersDetectionRoutine pendingOrdersDetectionRoutine, @Lazy SchedulerSetterRoutine schedulerSetterRoutine, @Lazy UnRetrievedOrderDetectionRoutine unRetrievedOrderDetectionRoutine) {
         applicationClock = Clock.system(ZoneId.of(ZONE));
         schedule = new ArrayList<>();
 
-        this.mondayMorning_routine = mondayMorning_routine;
-        this.pendingOrdersDetection_routine = pendingOrdersDetection_routine;
-        this.schedulerSetter_routine = schedulerSetter_routine;
-        this.unRetrievedOrderDetection_routine = unRetrievedOrderDetection_routine;
+        this.mondayMorningRoutine = mondayMorningRoutine;
+        this.pendingOrdersDetectionRoutine = pendingOrdersDetectionRoutine;
+        this.schedulerSetterRoutine = schedulerSetterRoutine;
+        this.unRetrievedOrderDetectionRoutine = unRetrievedOrderDetectionRoutine;
+        this.mondayEveningRoutine = mondayEveningRoutine;
     }
-
 
     public void initScheduler() {
         if (!this.active) {
@@ -66,14 +66,20 @@ public class SchedulerService {
             case MONDAY:
                 //Manage product quantities for the begin of the new week
                 if (rn.getHour() < 9) {
-                    addToSchedule(mondayMorning_routine,
+                    addToSchedule(mondayMorningRoutine,
                             rn.withHour(9).withMinute(0).toEpochSecond(ZoneOffset.ofHours(1)));
-                    System.out.println("MondayMorning_Routine added");
+                    System.out.println("MondayMorningRoutine added");
+                }
+                if (rn.getHour() < 23) {
+                    addToSchedule(mondayEveningRoutine,
+                            rn.withHour(23).withMinute(0).toEpochSecond(ZoneOffset.ofHours(1)));
+                    System.out.println("MondayEveningRoutine added");
+
                 }
             case TUESDAY:
                 //Delete all unplayable orders
                 if (rn.getDayOfWeek() != DayOfWeek.TUESDAY) {
-                    addToSchedule(pendingOrdersDetection_routine,
+                    addToSchedule(pendingOrdersDetectionRoutine,
                             rn.with(TemporalAdjusters.next(DayOfWeek.TUESDAY)).withHour(0).withMinute(0).toEpochSecond(ZoneOffset.of(ZONE)));
                     //System.out.println("PendingOrdersDetection_Routine added");
                 }
@@ -84,7 +90,7 @@ public class SchedulerService {
             case FRIDAY:
                 //Mark not retrieved orders
                 if (((rn.getDayOfWeek() == DayOfWeek.FRIDAY) && (rn.getHour() < 20)) || (rn.getDayOfWeek() != DayOfWeek.FRIDAY)) {
-                    addToSchedule(unRetrievedOrderDetection_routine,
+                    addToSchedule(unRetrievedOrderDetectionRoutine,
                             rn.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY)).withHour(22).withMinute(0).toEpochSecond(ZoneOffset.ofHours(1)));
                     System.out.println("UnretrievedOrderDetection_Routine added");
                 }
@@ -92,7 +98,7 @@ public class SchedulerService {
                 //Saturday schedule not set
             case SUNDAY:
                 //Set schedule for the next week
-                addToSchedule(schedulerSetter_routine,
+                addToSchedule(schedulerSetterRoutine,
                         rn.with(TemporalAdjusters.next(DayOfWeek.MONDAY)).withHour(0).withMinute(0).toEpochSecond(ZoneOffset.ofHours(1)));
                 System.out.println("SchedulerSetter_Routine added");
 
@@ -116,7 +122,7 @@ public class SchedulerService {
     }
 
     @Scheduled(fixedDelay = POLLING_RATE)
-    private void poll() {
+    public void poll() {
         if (!this.active || this.timeTravelling) {
             return;
         }
@@ -160,11 +166,6 @@ public class SchedulerService {
         return this.applicationClock.instant();
     }
 
-    public Clock getClock() {
-        return this.applicationClock;
-    }
-
-
     public Boolean timeTravelAt(Long timeDestination) {
         //Cannot time travel backwards. If so, return
         if (applicationClock.instant().isAfter(Instant.ofEpochSecond(timeDestination)))
@@ -206,5 +207,9 @@ public class SchedulerService {
         timeTravelling = false;
 
         return true;
+    }
+
+    public String getZone() {
+        return ZONE;
     }
 }

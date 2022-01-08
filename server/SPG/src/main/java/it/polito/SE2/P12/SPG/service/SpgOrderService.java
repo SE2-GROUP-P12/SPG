@@ -160,7 +160,7 @@ public class SpgOrderService {
             //decrease the wallet amount
             user.setWallet(user.getWallet() - order.getValue());
             //set status paid
-            order.updateToPaidStatus(LocalDateTime.ofInstant(currentSchedulerInstant, ZoneId.of(SchedulerService.ZONE)));
+            order.updateToPaidStatus(LocalDateTime.ofInstant(currentSchedulerInstant, ZoneId.of(schedulerService.getZone())));
             //update db
             orderRepo.save(order);
             return true;
