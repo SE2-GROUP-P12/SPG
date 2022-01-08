@@ -85,7 +85,7 @@ test("modify forecast ok", async() =>{
     fireEvent.change(getByTestId("amount"), {target:{value: 10}});
     fireEvent.click(getAllByText("Modify Forecast")[1]);
     await waitFor(()=>{
-        getByText("Forecast successfully modified");
+        getByText(/Forecast successfully modified/i);
     })
     fireEvent.click(getByText(/Close/i));
 })

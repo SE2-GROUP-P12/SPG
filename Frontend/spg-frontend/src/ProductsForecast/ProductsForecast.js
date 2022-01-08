@@ -37,7 +37,6 @@ function ProductsForecast(props) {
             console.log(data);
             setTriggerError(true);
         }
-        return;
     }
 
     useEffect(async () => {
@@ -52,14 +51,14 @@ function ProductsForecast(props) {
         checkTime(props.time, props.date);
     }, [props.date, props.time]);
 
-    function ProductEntry(props) {
+    function ProductEntry(PEprops) {
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
         const [showSuccess, setShowSuccess] = useState(null);
         const [showError, setShowError] = useState(null)
 
-        let encodedImg = props.product.base64Image
+        let encodedImg = PEprops.product.base64Image
 
         return (
             <>
@@ -67,17 +66,17 @@ function ProductsForecast(props) {
                     <CardMedia
                         component="img"
                         height="140"
-                        image={props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
+                        image={PEprops.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
                         alt="fruit"
                     />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
-                            {props.product.name}
+                            {PEprops.product.name}
                         </Typography>
                         <Typography variant="body">
-                            {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                            {PEprops.product.quantityForecast} {PEprops.product.unitOfMeasurement} currently
                             forecasted <br/>
-                            {props.product.price.toFixed(2)}€/{props.product.unitOfMeasurement}
+                            {PEprops.product.price.toFixed(2)}€/{PEprops.product.unitOfMeasurement}
                         </Typography>
                     </CardContent>
                     <CardActions>
@@ -95,16 +94,16 @@ function ProductsForecast(props) {
                     setShowSuccess(null);
                 }}>
                     <Modal.Header>
-                        <Modal.Title>Modify Forecast for {props.product.name}</Modal.Title>
+                        <Modal.Title>Modify Forecast for {PEprops.product.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
+                            <img src={PEprops.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
                                  alt="fruit"
                                  style={{height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
-                                    {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                                    {PEprops.product.quantityForecast} {PEprops.product.unitOfMeasurement} currently
                                     forecasted
                                 </Col>
                             </Row>
@@ -114,7 +113,7 @@ function ProductsForecast(props) {
                                     validationSchema={Yup.object({amount: Yup.number().min(0).required('Amount required!')})}
                                     onSubmit={async (values) => {
                                         let data = {
-                                            "productId": PEProps.product.productId,
+                                            "productId": PEprops.product.productId,
                                             "quantity": values.amount
                                         }
                                         let outcome = await API.modifyForecast(data);
@@ -129,8 +128,8 @@ function ProductsForecast(props) {
                                     {({values, errors, touched}) =>
                                         <Form>
                                             <label htmlFor='amount'>Amount:</label>
-                                            <Field type="number" id="amount" name="amount"
-                                                   min={0}/> {props.product.unitOfMeasurement}
+                                            <Field type="number" id="amount" name="amount" data-testid='amount'
+                                                   min={0}/> {PEprops.product.unitOfMeasurement}
                                             <br/>
                                             <Button disabled={!forecastTime} style={{margin: '20px'}} type="submit" variant="success">Modify
                                                 Forecast</Button>
