@@ -37,27 +37,27 @@ context('04 Shop employee places an order', () => {
 
         cy.get('#button-add-Carrots').should('be.visible').click({force:true});
         cy.get('[id=amount]').clear({force:true}).type('1');
-        cy.get('[id=button-add-to-cart]').click({force:true});
-        cy.get('[id=button-close]').click({force:true});
+        cy.get('[id=button-add-to-cart]').should('be.visible').click({force:true});
+        cy.get('[id=button-close]').should('be.visible').click({force:true});
         
         cy.wait(2000);
         
         cy.get('#button-add-Pumpkin').should('be.visible').click({force:true});
         cy.get('[id=amount]').clear({force:true}).type('2');
-        cy.get('[id=button-add-to-cart]').click({force:true});
-        cy.get('[id=button-close]').click({force:true});
+        cy.get('[id=button-add-to-cart]').should('be.visible').click({force:true});
+        cy.get('[id=button-close]').should('be.visible').click({force:true});
         
         cy.wait(2000);
         
         cy.get('#button-add-Broccoli').should('be.visible').click({force:true});
         cy.get('[id=amount]').clear({force:true}).type('1');
-        cy.get('[id=button-add-to-cart]').click({force:true});
-        cy.get('[id=button-close]').click({force:true});
+        cy.get('[id=button-add-to-cart]').should('be.visible').click({force:true});
+        cy.get('[id=button-close]').should('be.visible').click({force:true});
         
         cy.wait(2000);
         
-        cy.get('#button-basket').click({force:true});
-        cy.get('#button-checkout').click({force:true});
+        cy.get('#button-basket').should('be.visible').click({force:true});
+        cy.get('#button-checkout').should('be.visible').click({force:true});
 
         cy.checkPlaceOrder();
 

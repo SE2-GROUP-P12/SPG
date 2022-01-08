@@ -81,7 +81,7 @@ function ProductsForecast(props) {
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button disabled={!forecastTime} variant="success" onClick={handleShow}> Modify
+                            <Grid item xs={12}> <Button id={`button-forecast-${PEprops.product.name}`} disabled={!forecastTime} variant="success" onClick={handleShow}> Modify
                                 Forecast </Button>
                             </Grid>
                         </Grid>
@@ -131,7 +131,7 @@ function ProductsForecast(props) {
                                             <Field type="number" id="amount" name="amount" data-testid='amount'
                                                    min={0}/> {PEprops.product.unitOfMeasurement}
                                             <br/>
-                                            <Button disabled={!forecastTime} style={{margin: '20px'}} type="submit" variant="success">Modify
+                                            <Button id="button-modifyForecast" disabled={!forecastTime} style={{margin: '20px'}} type="submit" variant="success">Modify
                                                 Forecast</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?

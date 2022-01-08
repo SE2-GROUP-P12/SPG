@@ -17,6 +17,7 @@ context('08 order delivery and wallet check', () => {
 
     it('Mario deliver orders', () => {
         cy.visit(Cypress.env('baseUrl'));
+        cy.timeMachine(3,10);
         cy.login('mario@gmail.com','password');
         cy.get('#button-HandleOrders').should('be.visible').click();
         cy.get('#button-deliver-miriam').should('be.be.visible').click();

@@ -228,38 +228,38 @@ Cypress.Commands.add('checkConfirmAvailability', () => {
 })
 
 Cypress.Commands.add('modifyForecast', () => {
-    cy.get('#button-forecast-Carrots').click({force:true});
-    cy.get('[id=amount]').clear({force:true}).type('4');
-    cy.get('[id=button-modifyForecast]').click({force:true});
-    cy.get('.modal-footer > .btn').click({force:true});
+    cy.get('#button-forecast-Carrots').should('be.visible').click({force:true});
+    cy.get('#amount').clear({force:true}).type('4');
+    cy.get('[id=button-modifyForecast]').should('be.visible').click({force:true});
+    cy.get('.modal-footer > .btn').should('be.visible').click({force:true});
 
     cy.wait(2000);
 
-    cy.get('#button-forecast-Apples').click({force:true});
-    cy.get('[id=amount]').clear({force:true}).type('4');
-    cy.get('[id=button-modifyForecast]').click({force:true});
-    cy.get('.modal-footer > .btn').click({force:true});
+    cy.get('#button-forecast-Apples').should('be.visible').click({force:true});
+    cy.get('#amount').clear({force:true}).type('4');
+    cy.get('[id=button-modifyForecast]').should('be.visible').click({force:true});
+    cy.get('.modal-footer > .btn').should('be.visible').click({force:true});
 
     cy.wait(2000);
 
-    cy.get('#button-forecast-Cauliflowers').click({force:true});
-    cy.get('[id=amount]').clear({force:true}).type('4');
-    cy.get('[id=button-modifyForecast]').click({force:true});
-    cy.get('.modal-footer > .btn').click({force:true});
+    cy.get('#button-forecast-Cauliflowers').should('be.visible').click({force:true});
+    cy.get('#amount').clear({force:true}).type('4');
+    cy.get('[id=button-modifyForecast]').should('be.visible').click({force:true});
+    cy.get('.modal-footer > .btn').should('be.visible').click({force:true});
     
     cy.wait(2000);
     
-    cy.get('#button-forecast-Broccoli').click({force:true});
-    cy.get('[id=amount]').clear({force:true}).type('4');
-    cy.get('[id=button-modifyForecast]').click({force:true});
-    cy.get('.modal-footer > .btn').click({force:true});
+    cy.get('#button-forecast-Broccoli').should('be.visible').click({force:true});
+    cy.get('#amount').clear({force:true}).type('4');
+    cy.get('[id=button-modifyForecast]').should('be.visible').click({force:true});
+    cy.get('.modal-footer > .btn').should('be.visible').click({force:true});
     
     cy.wait(2000);
 
-    cy.get('#button-forecast-Pumpkin').click({force:true});
-    cy.get('[id=amount]').clear({force:true}).type('4');
-    cy.get('[id=button-modifyForecast]').click({force:true});
-    cy.get('.modal-footer > .btn').click({force:true});
+    cy.get('#button-forecast-Pumpkin').should('be.visible').click({force:true});
+    cy.get('#amount').clear({force:true}).type('4');
+    cy.get('[id=button-modifyForecast]').should('be.visible').click({force:true});
+    cy.get('.modal-footer > .btn').should('be.visible').click({force:true});
 })
 
 /**
