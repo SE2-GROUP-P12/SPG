@@ -26,15 +26,19 @@ context('08 order delivery and wallet check', () => {
         cy.wait(1000);
 
         cy.get('#button-back').should('be.visible').click();
+        cy.wait(1000);
         cy.get('#button-TopUp').should('be.visible').click();
+        cy.wait(1000);
         var email = 'miriam@gmail.com';
         cy.get('#email').type(email);
         cy.get('#button-Submit').click();
         cy.contains('User correctly found').should('exist');
+        cy.wait(1000);
         var email = 'giovanni@gmail.com';
-        cy.get('#email').type(email);
+        cy.get('#email').cear().type(email);
         cy.get('#button-Submit').click();
         cy.contains('User correctly found').should('exist');
+        cy.wait(1000);
     })
 
     it('teardown', () => {
