@@ -28,40 +28,47 @@ context('05 Giovanni place order', () => {
         
 
         cy.get('#button-BrowseProducts').should('be.visible')
-            .click();
+            .click({force:true});
 
 
         cy.get('#button-add-Cauliflowers')
+            .wait(100)
             .should('be.visible')
-            .click();
+            .click({force:true});
         cy.get('#amount')
             .clear()
             .type('1');
 
-        cy.get('#button-add-to-cart').should('be.visible')
-            .click();
+        cy.get('#button-add-to-cart')
+            .should('be.visible')
+            .wait(100)
+            .click({force:true});
 
-        cy.contains('Product added').should('be.visible');
+        cy.contains('Product added')
+            .should('be.visible');
 
-        cy.get('#button-close').click();
+        cy.get('#button-close')
+            .click({force:true});
 
         cy.wait(1000);
         cy.get('#button-add-Apples')
             .should('be.visible')
-            .click();
+            .wait(100)
+            .click({force:true});
         cy.get('#amount')
             .clear()
             .type('2');
         cy.get('#button-add-to-cart')
-            .click();
+            .click({force:true});
         cy.get('#button-close')
-            .click();
+            .click({force:true});
 
         cy.wait(2000);
-        cy.get('#button-basket').should('be.visible').click();
-        cy.get('#button-checkout').should('be.visible').click();
+        cy.get('#button-basket').should('be.visible').click({force:true});
+        cy.wait(1000);
+        cy.get('#button-checkout').should('be.visible').click({force:true});
         cy.wait(2000);
-        cy.get('#button-send-order').should('be.visible').click();
+        cy.get('#button-send-order').should('be.visible').click({force:true});
         cy.wait(2000);
         var date = new Date();
         while (date.getDay() != 3){
@@ -70,9 +77,9 @@ context('05 Giovanni place order', () => {
         cy.get('[type=date]').type(date.toISOString().split('T')[0]);
         cy.get('[type=time]').type('10:00');
         cy.get('#button-place-order').should('be.visible')
-            .click();
+            .click({force:true});
         cy.contains('Congratulations, order placed correctly!').should('be.visible');
-        cy.get('#button-closeOrderCompleted').click();
+        cy.get('#button-closeOrderCompleted').click({force:true});
         
     });
 

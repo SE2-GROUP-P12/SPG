@@ -32,7 +32,7 @@ context('04 Shop employee places an order', () => {
 
         cy.checkShopEmployee();
 
-        cy.get('[id=button-BrowseProducts]').click();
+        cy.get('[id=button-BrowseProducts]').click({force:true});
         cy.checkBrowseProducts();
 
         cy.get('#button-add-Carrots').should('be.visible').click({force:true});
@@ -63,9 +63,16 @@ context('04 Shop employee places an order', () => {
 
         cy.contains('Whose order is this?');
         cy.get('#field-email').clear().type('miriam@gmail.com');
-        cy.get('#button-submit').should('be.visible').click();
+        cy.get('#button-submit')
+            .wait(100)
+            .should('be.visible')
+            .click({force:true});
+        cy.contains('User found, you can now place their order').should('be.visible');
 
-        cy.get('#button-send-order').should('be.visible').click();
+        cy.get('#button-send-order')
+            .should('be.visible')
+            .wait(100)
+            .click({force:true});
         cy.wait(2000);
         var date = new Date();
         while (date.getDay() != 3){
@@ -76,7 +83,7 @@ context('04 Shop employee places an order', () => {
         cy.get('#button-place-order').should('be.visible')
             .click();
         cy.contains('Congratulations, order placed correctly!').should('be.visible');
-        cy.get('#button-closeOrderCompleted').click();
+        cy.get('#button-closeOrderCompleted').click({force:true});
 
     })
 
