@@ -19,22 +19,32 @@ context('05 Giovanni place order', () => {
         cy.wait(1000);
     })
     //TODO: seed -> inserisci mele, cavolfiori ...
-   
+
     it('Giovanni place order', () => {
         cy.visit(Cypress.env('baseUrl'));
         cy.timeMachine(0, 10);
         cy.get('[id=login]').should('be.visible');
-        cy.login('giovanni@gmail.com','Malnati30L');
-        
+        cy.login('giovanni@gmail.com', 'Malnati30L');
+
 
         cy.get('#button-BrowseProducts').should('be.visible')
-            .click({force:true});
+            .click({ force: true });
 
 
+        cy.wait(2000);
         cy.get('#button-add-Cauliflowers')
-            .wait(100)
-            .should('be.visible')
-            .click({force:true});
+            .as('addCauliflowers')
+
+        cy.waitUntil(() =>
+            cy.get('#button-add-Cauliflowers')
+                .as('addCauliflowers')
+                .wait(10) // for some reason this is needed, otherwise next line returns `true` even if click() fails due to detached element in the next step
+                .then($el => Cypress.dom.isAttached($el)),
+            { timeout: 1000, interval: 10 }
+        )
+            .get('@addCauliflowers')
+            .click()
+
         cy.get('#amount')
             .clear()
             .type('1');
@@ -42,45 +52,51 @@ context('05 Giovanni place order', () => {
         cy.get('#button-add-to-cart')
             .should('be.visible')
             .wait(100)
-            .click({force:true});
+            .click({ force: true });
 
         cy.contains('Product added')
             .should('be.visible');
 
         cy.get('#button-close')
-            .click({force:true});
+            .click({ force: true });
 
         cy.wait(1000);
-        cy.get('#button-add-Apples')
-            .should('be.visible')
-            .wait(100)
-            .click({force:true});
+        cy.waitUntil(() =>
+            cy.get('#button-add-Apples')
+                .as('addApples')
+                .wait(10) // for some reason this is needed, otherwise next line returns `true` even if click() fails due to detached element in the next step
+                .then($el => Cypress.dom.isAttached($el)),
+            { timeout: 1000, interval: 10 }
+        )
+            .get('@addApples')
+            .click()
+
         cy.get('#amount')
             .clear()
             .type('2');
         cy.get('#button-add-to-cart')
-            .click({force:true});
+            .click({ force: true });
         cy.get('#button-close')
-            .click({force:true});
+            .click({ force: true });
 
         cy.wait(2000);
-        cy.get('#button-basket').should('be.visible').click({force:true});
+        cy.get('#button-basket').should('be.visible').click({ force: true });
         cy.wait(1000);
-        cy.get('#button-checkout').should('be.visible').click({force:true});
+        cy.get('#button-checkout').should('be.visible').click({ force: true });
         cy.wait(2000);
-        cy.get('#button-send-order').should('be.visible').click({force:true});
+        cy.get('#button-send-order').should('be.visible').click({ force: true });
         cy.wait(2000);
         var date = new Date();
-        while (date.getDay() != 3){
-            date.setDate(date.getDate()+1);    
+        while (date.getDay() != 3) {
+            date.setDate(date.getDate() + 1);
         };
         cy.get('[type=date]').type(date.toISOString().split('T')[0]);
         cy.get('[type=time]').type('10:00');
         cy.get('#button-place-order').should('be.visible')
-            .click({force:true});
+            .click({ force: true });
         cy.contains('Congratulations, order placed correctly!').should('be.visible');
-        cy.get('#button-closeOrderCompleted').click({force:true});
-        
+        cy.get('#button-closeOrderCompleted').click({ force: true });
+
     });
 
 
