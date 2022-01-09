@@ -35,7 +35,7 @@ context('08 order delivery and wallet check', () => {
         cy.contains('User correctly found').should('exist');
         cy.wait(1000);
         var email = 'giovanni@gmail.com';
-        cy.get('#email').cear().type(email);
+        cy.get('#email').clear().type(email);
         cy.get('#button-Submit').click();
         cy.contains('User correctly found').should('exist');
         cy.wait(1000);
