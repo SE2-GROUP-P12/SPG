@@ -7,6 +7,7 @@ on:
       - spg-v*
       - BE/*
       - FE/*
+      - fix-security-hotspots
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
