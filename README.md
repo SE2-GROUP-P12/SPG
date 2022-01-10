@@ -55,7 +55,7 @@ steps:
   Currently the email server is linked to a MailTrap account (s287961@studenti.polito.it), the number of mail available is 500 per month.
   By the way the mail server(which is using SMTP) could be set up using other credentials and/or mail server (if yoo want to use a real mail server a security channel on TLS should be used).
   The `application.properties` file in the `main` package can be edited in order to seu up correctly the mail server.
-  Pay attention to not edit the `application.properties` file in the `test` package since this is working on greenmail SMTP mock, if wrongly edited some test will crash.
+  Pay attention to not edit the `application.properties` file in the `test` package since this is working on `GreenMail` SMTP mock server, if wrongly edited some test will crash.
 
 
 ## Run the server
