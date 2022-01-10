@@ -243,7 +243,7 @@ function ConfirmAvailability(props) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Link to="/Dashboard">
-                        <Button variant="success">
+                        <Button id='button-return-dashboard' variant="success">
                             Return to the Dashboard
                         </Button>
                     </Link>

@@ -33,6 +33,9 @@ context('06 farmer confirmation', () => {
         cy.get('#button-set-availability').click();
         
         cy.get('#button-submit').should('be.visible').click();
+        cy.wait(1000);
+        cy.get('#button-return-dashboard').should('be.visible').click();
+        cy.wait(1000);
         
     })
     
