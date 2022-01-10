@@ -4,6 +4,7 @@
 - [Running the application in container](#running-the-application-in-container)
   - [Configure the server](#configure-the-server)
     - [Reset the local DB](#reset-the-local-db)
+  - [Set Up Email Server](#set-up-email-server)
   - [Run the server](#run-the-server)
 - [FE instructions](#fe-instructions)
   - [Install FE dependencies](#install-fe-dependencies)
@@ -48,6 +49,13 @@ steps:
  if you want reset the local db you can simply run the commands 
  1. shut down the services and remove the container, you can do this with this commang: `docker-compose down` 
  2. execute this command to remove the volume used by mysql: `docker volume rm spg_mysql-persistent-volume`
+
+### Set Up Email Server
+
+  Currently the email server is linked to a MailTrap account (s287961@studenti.polito.it), the number of mail available is 500 per month.
+  By the way the mail server(which is using SMTP) could be set up using other credentials and/or mail server (if yoo want to use a real mail server a security channel on TLS should be used).
+  The `application.properties` file in the `main` package can be edited in order to seu up correctly the mail server.
+  Pay attention to not edit the `application.properties` file in the `test` package since this is working on greenmail SMTP mock, if wrongly edited some test will crash.
 
 
 ## Run the server
