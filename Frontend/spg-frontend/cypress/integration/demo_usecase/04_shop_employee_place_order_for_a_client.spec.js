@@ -36,15 +36,35 @@ context('04 Shop employee places an order', () => {
         cy.checkBrowseProducts();
 
         cy.get('#button-add-Carrots').should('be.visible').click({force:true});
-        cy.get('[id=amount]').clear({force:true}).type('1');
+        cy.waitUntil(() =>
+            cy.get('#amount')
+                .as('amount')
+                .wait(10) // for some reason this is needed, otherwise next line returns `true` even if click() fails due to detached element in the next step
+                .then($el => Cypress.dom.isAttached($el)),
+            { timeout: 1000, interval: 10 }
+        )
+            .get('@amount')
+            .clear({force:true})
+            .type('1');
         cy.get('[id=button-add-to-cart]').should('be.visible').click({force:true});
+        cy.wait(500);
         cy.get('[id=button-close]').should('be.visible').click({force:true});
         
         cy.wait(2000);
         
         cy.get('#button-add-Pumpkin').should('be.visible').click({force:true});
-        cy.get('[id=amount]').clear({force:true}).type('2');
+        cy.waitUntil(() =>
+            cy.get('#amount')
+                .as('amount')
+                .wait(10) // for some reason this is needed, otherwise next line returns `true` even if click() fails due to detached element in the next step
+                .then($el => Cypress.dom.isAttached($el)),
+            { timeout: 1000, interval: 10 }
+        )
+            .get('@amount')
+            .clear({force:true})
+            .type('1');
         cy.get('[id=button-add-to-cart]').should('be.visible').click({force:true});
+        cy.wait(500);
         cy.get('[id=button-close]').should('be.visible').click({force:true});
         
         cy.wait(2000);
