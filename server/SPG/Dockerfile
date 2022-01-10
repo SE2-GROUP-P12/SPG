@@ -8,6 +8,6 @@ COPY mvnw pom.xml ./
 RUN ./mvnw dependency:go-offline
 
 COPY ./src/ ./src
-COPY ./resources ./resources
+COPY ./resources ./server/SPG/resources
 
 CMD ["./mvnw", "spring-boot:run"]
