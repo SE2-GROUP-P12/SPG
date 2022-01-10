@@ -201,11 +201,13 @@ public class OrderServiceTest {
         for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
             Product p = productRepo.findProductByName(e.getKey().getName());
             Assertions.assertNotNull(p);
+            //TODO: the quantity ordered is update into the schedule routine, so here is unuseful
             Assertions.assertEquals(0.0, p.getQuantityOrdered());
             //Assertions.assertTrue(p.getQuantityDelivered() > 0.0);
         }
     }
 
+    //TODO: since there is no longer wallet processing into deliver order this test is unuseful
     @Test
     public void insufficientBalanceDeliverOrderTest() {
         BasketUserType user = userService.getBasketUserTypeByEmail("customer2@foomail.com");
