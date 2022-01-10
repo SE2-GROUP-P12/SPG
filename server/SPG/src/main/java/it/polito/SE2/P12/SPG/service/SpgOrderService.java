@@ -236,7 +236,7 @@ public class SpgOrderService {
             }
             if (order.getValue() > cust.getWallet()) continue;
             Double price = 0.0;
-            for (Product product : order.getProductList()) {
+            for (Product product : order.getProds().keySet()) {
                 double quantity = Math.min(order.getProds().get(product), product.getQuantityConfirmed()); //TODO: recheck code crashes if there are two orders issued by same custgomer
                 Map<Product, Double> prods = order.getProds();
                 prods.remove(product);
