@@ -17,10 +17,11 @@ const mysql = require('mysql')
 // come from a config file, or from environment variables
 const connections = {
   spg: {
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'password',
-    database: 'spg',
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DB,
+    
   }
   
 }
