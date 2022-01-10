@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.repository.*;
+import it.polito.SE2.P12.SPG.utils.OrderStatus;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -222,8 +223,11 @@ public class SpgOrderService {
 
     public void updateConfirmedOrders() {
         for (Order order : orderRepo.findAll()) {
+            if (order.getStatus().equals(ORDER_STATUS_PAID) || order.getStatus().equals(ORDER_STATUS_CLOSED)
+                    || order.getStatus().equals(ORDER_STATUS_CANCELLED) || order.getStatus().equals(ORDER_STATUS_NOT_RETRIEVED))
+                continue;
             Customer cust = customerRepo.findCustomerByEmail(order.getCust().getEmail());
-            if (order.getStatus().equals(ORDER_STATUS_OPEN) || order.getStatus().equals(ORDER_STATUS_CANCELLED)) {
+            if (order.getStatus().equals(ORDER_STATUS_OPEN)) {
                 order.setStatus(ORDER_STATUS_CANCELLED);
                 orderRepo.save(order);
                 continue;
@@ -231,7 +235,7 @@ public class SpgOrderService {
             if (order.getValue() > cust.getWallet()) continue;
             Double price = 0.0;
             for (Product product : order.getProductList()) {
-                double quantity = Math.min(order.getProds().get(product), product.getQuantityConfirmed());
+                double quantity = Math.min(order.getProds().get(product), product.getQuantityConfirmed()); //TODO: recheck code crashes if there are two orders issued by same custgomer
                 Map<Product, Double> prods = order.getProds();
                 prods.remove(product);
                 prods.put(product, quantity);

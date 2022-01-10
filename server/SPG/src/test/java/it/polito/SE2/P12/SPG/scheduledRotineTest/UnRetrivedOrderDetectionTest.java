@@ -47,7 +47,7 @@ public class UnRetrivedOrderDetectionTest {
         products.put(dbUtilsService.getProd1Object(), 5.00);
         //Paid order
         Order orderPaid = new Order(customer, System.currentTimeMillis(), products, null, "");
-        orderPaid.setStatus(OrderStatus.ORDER_STATUS_CONFIRMED); //Check if correct after refactoring (Should be paid)
+        orderPaid.setStatus(OrderStatus.ORDER_STATUS_PAID);
         dbUtilsService.saveOrder(orderPaid);
         //Unpaid order
         Order orderUnPaid = new Order(customer, System.currentTimeMillis(), products, null, "");

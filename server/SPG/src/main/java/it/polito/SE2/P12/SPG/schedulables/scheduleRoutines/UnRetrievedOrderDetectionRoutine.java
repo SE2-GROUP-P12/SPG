@@ -32,7 +32,7 @@ public class UnRetrievedOrderDetectionRoutine implements Schedulable {
     @Override
     public void execute() {
         //Get not retrieved orders -> orders are paid and delivery address != "" (if "" is assumed as delivery)
-        List<Order> orderList = orderRepo.findAll().stream().filter(order -> order.getStatus().equals(OrderStatus.ORDER_STATUS_CONFIRMED)
+        List<Order> orderList = orderRepo.findAll().stream().filter(order -> order.getStatus().equals(OrderStatus.ORDER_STATUS_PAID)
                 && order.getDeliveryAddress().equals("")).toList();
         //for each order increase missed pick up and update state
         for (Order o : orderList) {

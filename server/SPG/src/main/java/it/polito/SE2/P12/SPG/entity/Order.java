@@ -134,7 +134,7 @@ public class Order {
 
     public boolean updateToNotRetrievedStatus(LocalDateTime date) {
         //Order must be in a PAID status
-        if (!this.status.equals(ORDER_STATUS_CONFIRMED))
+        if (!this.status.equals(ORDER_STATUS_PAID))
             return false;
         //Update status and date
         this.status = ORDER_STATUS_NOT_RETRIEVED;

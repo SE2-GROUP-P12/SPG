@@ -59,7 +59,7 @@ public class SchedulerService {
 
     public void initScheduler() {
         if (!this.active) {
-            log.error("TESTING ENV DETECTED: NO SCHEDULE(s) WILL BE ADDED!\n");
+            log.info("TESTING ENV DETECTED: NO SCHEDULE(s) WILL BE ADDED!\n");
             return;
         }
         LocalDateTime rn = LocalDateTime.now(applicationClock);
@@ -71,12 +71,12 @@ public class SchedulerService {
                 if (rn.getHour() < 9) {
                     addToSchedule(mondayMorningRoutine,
                             rn.withHour(9).withMinute(0).toEpochSecond(ZoneOffset.ofHours(1)));
-                    log.error("MondayMorningRoutine added");
+                    log.info("MondayMorningRoutine added");
                 }
                 if (rn.getHour() < 23) {
                     addToSchedule(mondayEveningRoutine,
                             rn.withHour(23).withMinute(0).toEpochSecond(ZoneOffset.ofHours(1)));
-                    log.error("MondayEveningRoutine added");
+                    log.info("MondayEveningRoutine added");
 
                 }
             case TUESDAY:
@@ -90,7 +90,7 @@ public class SchedulerService {
                 if (((rn.getDayOfWeek() == DayOfWeek.FRIDAY) && (rn.getHour() < 20)) || (rn.getDayOfWeek() != DayOfWeek.FRIDAY)) {
                     addToSchedule(unRetrievedOrderDetectionRoutine,
                             rn.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY)).withHour(22).withMinute(0).toEpochSecond(ZoneOffset.ofHours(1)));
-                    log.error("UnretrievedOrderDetection_Routine added");
+                    log.info("UnretrievedOrderDetection_Routine added");
                 }
             case SATURDAY:
                 //Saturday schedule not set
@@ -123,7 +123,7 @@ public class SchedulerService {
             if (e != null && e.getValue() <= applicationClock.instant().getEpochSecond()) {
                 e.getKey().execute();
                 if (this.scheduleExecutionPrint)
-                    log.error(ClassUtils.getUserClass(e.getKey().getClass()).getSimpleName() + " executed - End execution instant: " + applicationClock.instant().getEpochSecond() + " - " + LocalDateTime.now(applicationClock).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+                    log.info(ClassUtils.getUserClass(e.getKey().getClass()).getSimpleName() + " executed - End execution instant: " + applicationClock.instant().getEpochSecond() + " - " + LocalDateTime.now(applicationClock).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
                 schedule.remove(e);
             }
         } while (e != null && e.getValue() <= applicationClock.instant().getEpochSecond());
@@ -181,7 +181,7 @@ public class SchedulerService {
         //Finally, go to the final time destionation
         Duration offset = Duration.ofSeconds(timeDestination - applicationClock.instant().getEpochSecond());
         applicationClock = Clock.offset(applicationClock, offset).withZone(ZoneId.of(ZONE));
-        log.error("time travel at " + timeDestination);
+        log.info("time travel at " + timeDestination);
 
         //Unset semaphore variable
         timeTravelling = false;
