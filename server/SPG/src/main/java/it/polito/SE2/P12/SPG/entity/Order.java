@@ -112,7 +112,7 @@ public class Order {
 
     public boolean updateToClosedStatus(LocalDateTime date) {
         //Order must be in open status
-        if (!this.status.equals(ORDER_STATUS_OPEN)) {
+        if (!this.status.equals(ORDER_STATUS_PAID)) {
             return false;
         }
         //Update status and date

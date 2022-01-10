@@ -140,9 +140,10 @@ public class SpgOrderService {
 
     public Boolean deliverOrder(Long orderId, Instant currentSchedulerInstant) {
         Optional<Order> o = orderRepo.findById(orderId);
-        if (!o.isPresent())
+        if (o.isEmpty())
             return false;
         Order order = o.get();
+        /*
         OrderUserType user = (OrderUserType) order.getCust();
         if (user.getWallet() < order.getValue())
             return false;
@@ -150,8 +151,7 @@ public class SpgOrderService {
         if (user.getWallet() > order.getValue()) {
             //decrease the wallet amount
             user.setWallet(user.getWallet() - order.getValue());
-            //set status paid
-            order.updateToPaidStatus(LocalDateTime.ofInstant(currentSchedulerInstant, ZoneId.of(schedulerService.getZone())));
+            //set status closed
             //update db
             for (Map.Entry<Product, Double> set : order.getProds().entrySet()) {
                 set.getKey().setQuantityDelivered(set.getValue());
@@ -162,6 +162,8 @@ public class SpgOrderService {
             return true;
         }
         //Else leave open status and return true
+         */
+        setOrderStatus(order.getOrderId(), ORDER_STATUS_CLOSED, currentSchedulerInstant);
         return true;
     }
 
