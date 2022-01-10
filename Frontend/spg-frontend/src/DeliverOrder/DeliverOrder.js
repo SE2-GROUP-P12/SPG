@@ -347,7 +347,7 @@ function Orders(props) {
 
     if (props.orderList != null && props.orderList !== []) {
         for (let o of props.orderList) {
-            if (o.status === "CONFIRMED")
+            if (o.status === "PAID")
                 output.push(
                     <Alert variant="success">
                         <li className="list-group-item">

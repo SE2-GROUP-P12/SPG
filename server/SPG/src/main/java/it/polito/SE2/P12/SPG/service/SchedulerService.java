@@ -53,13 +53,13 @@ public class SchedulerService {
         this.mondayEveningRoutine = mondayEveningRoutine;
     }
 
-    public void resetTime(){
+    public void resetTime() {
         this.applicationClock = Clock.system(ZoneId.of(ZONE));
     }
 
     public void initScheduler() {
         if (!this.active) {
-            log.error("TESTING ENV DETECTED: NO SCHEDULE(s) WILL BE ADDED!\n");
+            log.info("TESTING ENV DETECTED: NO SCHEDULE(s) WILL BE ADDED!\n");
             return;
         }
         LocalDateTime rn = LocalDateTime.now(applicationClock);
@@ -71,12 +71,12 @@ public class SchedulerService {
                 if (rn.getHour() < 9) {
                     addToSchedule(mondayMorningRoutine,
                             rn.withHour(9).withMinute(0).toEpochSecond(ZoneOffset.ofHours(1)));
-                    log.error("MondayMorningRoutine added");
+                    log.info("MondayMorningRoutine added");
                 }
                 if (rn.getHour() < 23) {
                     addToSchedule(mondayEveningRoutine,
                             rn.withHour(23).withMinute(0).toEpochSecond(ZoneOffset.ofHours(1)));
-                    log.error("MondayEveningRoutine added");
+                    log.info("MondayEveningRoutine added");
 
                 }
             case TUESDAY:
@@ -90,7 +90,7 @@ public class SchedulerService {
                 if (((rn.getDayOfWeek() == DayOfWeek.FRIDAY) && (rn.getHour() < 20)) || (rn.getDayOfWeek() != DayOfWeek.FRIDAY)) {
                     addToSchedule(unRetrievedOrderDetectionRoutine,
                             rn.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY)).withHour(22).withMinute(0).toEpochSecond(ZoneOffset.ofHours(1)));
-                    log.error("UnretrievedOrderDetection_Routine added");
+                    log.info("UnretrievedOrderDetection_Routine added");
                 }
             case SATURDAY:
                 //Saturday schedule not set
@@ -98,7 +98,7 @@ public class SchedulerService {
                 //Set schedule for the next week
                 addToSchedule(schedulerSetterRoutine,
                         rn.with(TemporalAdjusters.next(DayOfWeek.MONDAY)).withHour(0).withMinute(0).toEpochSecond(ZoneOffset.ofHours(1)));
-                log.error("SchedulerSetter_Routine added");
+                log.info("SchedulerSetter_Routine added");
 
         }
     }
@@ -114,7 +114,7 @@ public class SchedulerService {
 
         this.iteration++;
         if (this.pollPrint)
-            log.error("application time: " + applicationClock.instant().atZone(ZoneId.of(ZONE)) + ", epoch time: " + applicationClock.instant().getEpochSecond() + ", iteration: " + this.iteration);
+            log.info("application time: " + applicationClock.instant().atZone(ZoneId.of(ZONE)) + ", epoch time: " + applicationClock.instant().getEpochSecond() + ", iteration: " + this.iteration);
 
         Entry<Schedulable, Long> e;
         do {
@@ -123,7 +123,7 @@ public class SchedulerService {
             if (e != null && e.getValue() <= applicationClock.instant().getEpochSecond()) {
                 e.getKey().execute();
                 if (this.scheduleExecutionPrint)
-                    log.error(ClassUtils.getUserClass(e.getKey().getClass()).getSimpleName() + " executed - End execution instant: " + applicationClock.instant().getEpochSecond() + " - " + LocalDateTime.now(applicationClock).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+                    log.info(ClassUtils.getUserClass(e.getKey().getClass()).getSimpleName() + " executed - End execution instant: " + applicationClock.instant().getEpochSecond() + " - " + LocalDateTime.now(applicationClock).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
                 schedule.remove(e);
             }
         } while (e != null && e.getValue() <= applicationClock.instant().getEpochSecond());
@@ -154,7 +154,7 @@ public class SchedulerService {
             return false;
 
         //Wait for the actual polling to finish
-        while (isPolling);
+        while (isPolling) ;
 
 
         //Set semaphore variable
@@ -172,7 +172,7 @@ public class SchedulerService {
                 applicationClock = Clock.offset(applicationClock, offset).withZone(ZoneId.of(ZONE));
                 e.getKey().execute();
                 if (this.scheduleExecutionPrint)
-                    log.error(ClassUtils.getUserClass(e.getKey().getClass()).getSimpleName() + " executed - End execution instant: " + applicationClock.instant().getEpochSecond() + " - " + LocalDateTime.now(applicationClock).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+                    log.info(ClassUtils.getUserClass(e.getKey().getClass()).getSimpleName() + " executed - End execution instant: " + applicationClock.instant().getEpochSecond() + " - " + LocalDateTime.now(applicationClock).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
                 schedule.remove(e);
             }
         } while (e != null && e.getValue() <= timeDestination);
@@ -181,7 +181,7 @@ public class SchedulerService {
         //Finally, go to the final time destionation
         Duration offset = Duration.ofSeconds(timeDestination - applicationClock.instant().getEpochSecond());
         applicationClock = Clock.offset(applicationClock, offset).withZone(ZoneId.of(ZONE));
-        log.error("time travel at " + timeDestination);
+        log.info("time travel at " + timeDestination + " - " + LocalDateTime.now(applicationClock).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
 
         //Unset semaphore variable
         timeTravelling = false;

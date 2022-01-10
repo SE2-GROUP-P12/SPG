@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.repository.*;
+import it.polito.SE2.P12.SPG.utils.OrderStatus;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static it.polito.SE2.P12.SPG.utils.OrderStatus.*;
 
@@ -139,9 +141,10 @@ public class SpgOrderService {
 
     public Boolean deliverOrder(Long orderId, Instant currentSchedulerInstant) {
         Optional<Order> o = orderRepo.findById(orderId);
-        if (!o.isPresent())
+        if (o.isEmpty())
             return false;
         Order order = o.get();
+        /*
         OrderUserType user = (OrderUserType) order.getCust();
         if (user.getWallet() < order.getValue())
             return false;
@@ -149,8 +152,7 @@ public class SpgOrderService {
         if (user.getWallet() > order.getValue()) {
             //decrease the wallet amount
             user.setWallet(user.getWallet() - order.getValue());
-            //set status paid
-            order.updateToPaidStatus(LocalDateTime.ofInstant(currentSchedulerInstant, ZoneId.of(schedulerService.getZone())));
+            //set status closed
             //update db
             for (Map.Entry<Product, Double> set : order.getProds().entrySet()) {
                 set.getKey().setQuantityDelivered(set.getValue());
@@ -161,6 +163,8 @@ public class SpgOrderService {
             return true;
         }
         //Else leave open status and return true
+         */
+        setOrderStatus(order.getOrderId(), ORDER_STATUS_CLOSED, currentSchedulerInstant);
         return true;
     }
 
@@ -222,24 +226,29 @@ public class SpgOrderService {
 
     public void updateConfirmedOrders() {
         for (Order order : orderRepo.findAll()) {
+            if (order.getStatus().equals(ORDER_STATUS_PAID) || order.getStatus().equals(ORDER_STATUS_CLOSED)
+                    || order.getStatus().equals(ORDER_STATUS_CANCELLED) || order.getStatus().equals(ORDER_STATUS_NOT_RETRIEVED))
+                continue;
             Customer cust = customerRepo.findCustomerByEmail(order.getCust().getEmail());
-            if (order.getStatus().equals(ORDER_STATUS_OPEN) || order.getStatus().equals(ORDER_STATUS_CANCELLED)) {
+            if (order.getStatus().equals(ORDER_STATUS_OPEN)) {
                 order.setStatus(ORDER_STATUS_CANCELLED);
                 orderRepo.save(order);
                 continue;
             }
             if (order.getValue() > cust.getWallet()) continue;
             Double price = 0.0;
-            for (Product product : order.getProductList()) {
-                double quantity = Math.min(order.getProds().get(product), product.getQuantityConfirmed());
-                Map<Product, Double> prods = order.getProds();
-                prods.remove(product);
-                prods.put(product, quantity);
-                order.setProds(prods);
-                price += product.getPrice() * quantity;
-                product.setQuantityConfirmed(product.getQuantityConfirmed() - quantity);
-                productRepo.save(product);
+            Map<Product, Double> prods = new HashMap<>();
+            for (Map.Entry<Product, Double> entry : order.getProds().entrySet()) {
+                double quantityRequested = order.getProds().entrySet().stream()
+                        .filter(x -> x.getKey().getProductId().equals(entry.getKey().getProductId()))
+                        .toList().get(0).getValue();
+                double quantity = Math.min(quantityRequested, entry.getKey().getQuantityConfirmed());
+                prods.put(entry.getKey(), quantity);
+                price += entry.getKey().getPrice() * quantity;
+                entry.getKey().setQuantityConfirmed(entry.getKey().getQuantityConfirmed() - quantity);
+                productRepo.save(entry.getKey());
             }
+            order.setProds(prods);
             cust.pay(price);
             if (price == 0.0)
                 order.setStatus(ORDER_STATUS_CANCELLED);

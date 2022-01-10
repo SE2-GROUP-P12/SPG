@@ -201,37 +201,7 @@ public class OrderServiceTest {
         for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
             Product p = productRepo.findProductByName(e.getKey().getName());
             Assertions.assertNotNull(p);
-            Assertions.assertEquals(0.0, p.getQuantityOrdered());
             //Assertions.assertTrue(p.getQuantityDelivered() > 0.0);
-        }
-    }
-
-    @Test
-    public void insufficientBalanceDeliverOrderTest() {
-        BasketUserType user = userService.getBasketUserTypeByEmail("customer2@foomail.com");
-        Basket b = user.getBasket();
-
-        Assertions.assertNotNull(user);
-
-        basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b, (long) System.currentTimeMillis(), null, "");
-
-        Order order = orderRepo.findAll().get(0);
-
-        for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
-            Product p = productRepo.findProductByName(e.getKey().getName());
-            Assertions.assertNotNull(p);
-            Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
-            Assertions.assertEquals(0.0, p.getQuantityDelivered());
-        }
-
-        Assertions.assertFalse(orderService.deliverOrder(order.getOrderId(),LocalDateTime.now().toInstant(ZoneOffset.UTC)));
-
-        for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
-            Product p = productRepo.findProductByName(e.getKey().getName());
-            Assertions.assertNotNull(p);
-            Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
-            Assertions.assertEquals(0.0, p.getQuantityDelivered());
         }
     }
 
