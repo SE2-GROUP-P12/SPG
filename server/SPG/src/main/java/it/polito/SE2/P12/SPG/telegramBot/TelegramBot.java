@@ -66,10 +66,10 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     }
 
-    public void notifyCustomers(){
+    public void notifyCustomers(String productName){
         for(User user:userService.findAllUsers()){
             if(!user.getChatId().equals("")&& user.getChatId()!=null){
-                this.sendMessage(user.getChatId(), "The product list has been updated!");
+                this.sendMessage(user.getChatId(), productName + " is now available! Go check it out!");
             }
         }
     }

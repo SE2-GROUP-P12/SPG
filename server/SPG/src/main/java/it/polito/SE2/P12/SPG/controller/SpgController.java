@@ -122,7 +122,7 @@ public class SpgController {
             String imageUrl = "";
             if (requestMap.containsKey("imageUrl"))
                 imageUrl = (String) requestMap.get("imageUrl");
-            telegramBot.notifyCustomers();
+            //telegramBot.notifyCustomers();
             return ResponseEntity.ok(productService.addProduct(productName, value, uom, imageUrl, farmer));
         }
         return ResponseEntity.badRequest().build();
@@ -405,7 +405,8 @@ public class SpgController {
         forecast = Double.valueOf(requestMap.get(Constants.JSON_QUANTITY).toString());
         if (!productService.setForecast(productId, forecast))
             return ResponseEntity.badRequest().build();
-        telegramBot.notifyCustomers();
+        if (forecast > 0.0)
+            telegramBot.notifyCustomers(productService.getProductById(productId).getName());
         return ResponseEntity.ok().build();
     }
 
