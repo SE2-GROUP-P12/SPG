@@ -1,6 +1,6 @@
 FROM openjdk:17
 
-WORKDIR /server/SPG
+WORKDIR /app
 
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
@@ -8,6 +8,6 @@ COPY mvnw pom.xml ./
 RUN ./mvnw dependency:go-offline
 
 COPY ./src/ ./src
-COPY ./resources ./resources
+COPY ./resources ./server/SPG/resources
 
 CMD ["./mvnw", "spring-boot:run"]
