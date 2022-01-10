@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static it.polito.SE2.P12.SPG.utils.OrderStatus.*;
 
@@ -236,16 +237,18 @@ public class SpgOrderService {
             }
             if (order.getValue() > cust.getWallet()) continue;
             Double price = 0.0;
-            for (Product product : order.getProds().keySet()) {
-                double quantity = Math.min(order.getProds().get(product), product.getQuantityConfirmed()); //TODO: recheck code crashes if there are two orders issued by same custgomer
-                Map<Product, Double> prods = order.getProds();
-                prods.remove(product);
-                prods.put(product, quantity);
-                order.setProds(prods);
-                price += product.getPrice() * quantity;
-                product.setQuantityConfirmed(product.getQuantityConfirmed() - quantity);
-                productRepo.save(product);
+            Map<Product, Double> prods = new HashMap<>();
+            for (Map.Entry<Product, Double> entry : order.getProds().entrySet()) {
+                double quantityRequested = order.getProds().entrySet().stream()
+                        .filter(x -> x.getKey().getProductId().equals(entry.getKey().getProductId()))
+                        .toList().get(0).getValue();
+                double quantity = Math.min(quantityRequested, entry.getKey().getQuantityConfirmed());
+                prods.put(entry.getKey(), quantity);
+                price += entry.getKey().getPrice() * quantity;
+                entry.getKey().setQuantityConfirmed(entry.getKey().getQuantityConfirmed() - quantity);
+                productRepo.save(entry.getKey());
             }
+            order.setProds(prods);
             cust.pay(price);
             if (price == 0.0)
                 order.setStatus(ORDER_STATUS_CANCELLED);
