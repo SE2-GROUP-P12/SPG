@@ -1,6 +1,6 @@
 FROM openjdk:17
 
-WORKDIR /app
+WORKDIR /server/SPG
 
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
