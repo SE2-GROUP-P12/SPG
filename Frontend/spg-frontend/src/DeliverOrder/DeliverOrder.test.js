@@ -34,7 +34,8 @@ test ("Deliver", async()=>{
             email: "mario.rossi@gmail.com",
             orderId: 51,
             productList: [],
-            status: "CONFIRMED",
+            //status: "CONFIRMED",
+            status: "PAID",
             value: 100},
             {creationDate: "2021-12-09T16:08:49.113832",
                 currentStatusDate: "2021-12-09T16:08:49.113832",
@@ -247,7 +248,8 @@ test ("Confirmed order", async()=>{
             email: "mario.rossi@gmail.com",
             orderId: 51,
             productList: [],
-            status: "CONFIRMED",
+            //status: "CONFIRMED",
+            status: "PAID",
             value: 100}]);
     mockDeliverOrder.mockResolvedValueOnce(true);
 
