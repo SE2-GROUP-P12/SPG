@@ -22,7 +22,7 @@ Definition of Done:
 ### Detailed statistics
 | Story      | #Task   | #Subtask | Points | Estimated time | Actual time    |
 | ---------- | ------  | -------  | ------ | --------- | --------- |
-| _SPG-40_   | \-      | \-       | \-     | \-        | \-        |
+| _SPG-40_   | 3       | \-       | \-     | \-        | \-        |
 | \-         | SPG-180 | 6        | \-     | 3d5h      | 5d7h10m   |
 | \-         | \-      | SPG-183  | \-     | 2d        | 2d6h30m   |
 | \-         | \-      | SPG-184  | \-     | 1h        | 2h30m     |
