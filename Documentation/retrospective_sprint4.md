@@ -11,7 +11,7 @@
 
 - 4 stories committed vs 4 stories done
 - 23 points committed vs 23 points done
-- 6d 2h 30m (= 50h 30m) Nr of hours planned vs spent (as a team) 12d 1h 02m (= 97h 02m including planning )
+- 6d 5h 30m (= 53h 30m) Nr of hours planned vs spent (as a team) 12d 3h 02m (= 99h 02m including planning )
 
 Definition of Done:
 - Unit Tests passing
@@ -74,9 +74,9 @@ Definition of Done:
 - SPG-117: issues from stakeholders
 - SPG-100: bugfix
 
-**Total est:** 6d 2h 30m (= 50h 30m)
+**Total est:** 6d 5h 30m (= 53h 30m)
 
-**Total actual:** 12d 1h 02m (= 97h 02m including planning )
+**Total actual:** 12d 3h 02m (= 99h 02m including planning )
 
 - Hours per task (average, standard deviation)
     - Average: 3h 36m
@@ -88,7 +88,7 @@ Definition of Done:
 
 - Unit Testing:
     - Total hours estimated:
-        - 20% of total task time ( ~10h 30m)
+        - 20% of total task time ( ~11h)
     - Total hours spent:
         - 10h 42m
     - Nr of automate unit test cases
@@ -103,12 +103,12 @@ Definition of Done:
           - FE: 80.1%
 - E2E testing:
     - Total hours estimated:
-        - 30% of total task time excluding learning ( ~ 17h 30m)
+        - 30% of total task time excluding learning ( ~ 18h)
     - Total hours spent
         - 19h 50m
 - Code review
     - Total hours estimated:
-        - 5% of total task time ( ~ 2h 50m)
+        - 5% of total task time ( ~ 3h 30m)
     - Total hours spent:
         - 7h 45m
 
