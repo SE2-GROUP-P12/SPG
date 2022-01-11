@@ -88,7 +88,7 @@ Definition of Done:
 
 - Unit Testing:
     - Total hours estimated:
-        - 20% of total task time ( ~10h)
+        - 20% of total task time ( ~10h 30m)
     - Total hours spent:
         - 10h 42m
     - Nr of automate unit test cases
@@ -103,12 +103,12 @@ Definition of Done:
           - FE: 80.1%
 - E2E testing:
     - Total hours estimated:
-        - 30% of total task time excluding learning ( ~ 17h)
+        - 30% of total task time excluding learning ( ~ 17h 30m)
     - Total hours spent
         - 19h 50m
 - Code review
     - Total hours estimated:
-        - 5% of total task time ( ~ 2h 20m)
+        - 5% of total task time ( ~ 2h 50m)
     - Total hours spent:
         - 7h 45m
 
