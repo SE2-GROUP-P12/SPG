@@ -3,6 +3,7 @@ package it.polito.SE2.P12.SPG.schedulables.scheduleRoutines;
 import it.polito.SE2.P12.SPG.entity.Customer;
 import it.polito.SE2.P12.SPG.entity.Order;
 import it.polito.SE2.P12.SPG.repository.OrderRepo;
+import it.polito.SE2.P12.SPG.repository.UserRepo;
 import it.polito.SE2.P12.SPG.schedulables.Schedulable;
 import it.polito.SE2.P12.SPG.service.SchedulerService;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
@@ -20,13 +21,15 @@ public class UnRetrievedOrderDetectionRoutine implements Schedulable {
     private SpgUserService userService;
     private SchedulerService schedulerService;
     private OrderRepo orderRepo;
+    private UserRepo userRepo;
 
     @Autowired
-    public UnRetrievedOrderDetectionRoutine(SpgUserService userService, SpgOrderService orderService, OrderRepo orderRepo, SchedulerService schedulerService) {
+    public UnRetrievedOrderDetectionRoutine(SpgUserService userService, SpgOrderService orderService, OrderRepo orderRepo, SchedulerService schedulerService, UserRepo userRepo) {
         this.schedulerService = schedulerService;
         this.orderService = orderService;
         this.userService = userService;
         this.orderRepo = orderRepo;
+        this.userRepo = userRepo;
     }
 
     @Override
@@ -43,6 +46,7 @@ public class UnRetrievedOrderDetectionRoutine implements Schedulable {
             //if missed pick up is 3 or 4 sent a mail (increment upper-bounded at 5 then user is blocked)
             if (tmpCustomer.incrementMissedPickUp() > 2)
                 userService.sentWarningPickUpAmountMail(tmpCustomer.getEmail());
+            userRepo.save(tmpCustomer);
         }
     }
 }
