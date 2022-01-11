@@ -20,69 +20,58 @@ Definition of Done:
 - End-to-End tests performed at least manually
 
 ### Detailed statistics
-| Story      | #Task  | #Subtask | Points | Estimated time | Actual time    |
-| ---------- | ------ | ------- | ------ | --------- | --------- |
-| _SPG-40_   | 8      | \-      | \-     | \-        | \-        |
-| \-         | SPG-122| 9      | \-      |2d 1h 50m  | 1d 2h 55m |
-| \-         | \-     | SPG-123 | \-     |1h 30m     | 0m        |
-| \-         | \-     | SPG-124 | \-     |20m        | 0m        |
-| \-         | \-     | SPG-130 | \-     |30m        | 0m        |
-| \-         | \-     | SPG-125 | \-     |2h         | 2h 45m    |
-| \-         | \-     | SPG-128 | \-     |2h         | 1h        |
-| \-         | \-     | SPG-129 | \-     |1h         | 1h        |
-| \-         | \-     | SPG-141 | \-     |1h 30m     | 1h 50m    |
-| \-         | \-     | SPG-145 | \-     |1d         | 2h 50m    |
-| \-         | \-     | SPG-127 | \-     |1h         | 1h 30m    |
-| \-         | SPG-113 | \-      | \-     | 30m       | 2h 20m    |
-| \-         | SPG-115 | \-      | \-     | 1d        | 2d 1h 30m |
-| \-         | SPG-133 | \-      | \-     | 2h        | 50m       |
-| \-         | SPG-136 | \-      | \-     | 4h        | 0m        |
-| \-         | SPG-148 | \-      | \-     | 0m        |  3d 1h    |
-| \-         | SPG-149 | \-      | \-     |  2h       |15m        |
-| \-         | SPG-150 | \-     | \-     |  4h       |  5h 05m    |
-| _SPG-117_  |5        | \-      | \-     | 7h        | 7h 50m     |
-| \-         |SPG-118  |         | \-     | 1h        | 1h 30m    |
-| \-         |SPG-119  |         | \-     | 2h        | 1h 45m    |
-| \-         |SPG-120  |         | \-     | 2h 30m    | 3h        |
-| \-         |SPG-126  |         | \-     | 30m       | 50m       |
-| \-         |SPG-143  |         | \-     | 1h        | 45m       |
-| _SPG-100_  | SPG-121 | \-     | \-     | 30m       | 35m       |
-| \-         | \       |        | \      |           |           |
-| SPG-10     | 3       | \-     | 5      |           |           |
-|            | SPG-131 | \-     | \-     |  3h       |  2h 30m   |
-|            | SPG-132 | \-     | \-     |  4h       |  1h 30m   |
-|            | SPG-137 | \-     | \-     |  3h  30m  |  1h 45m   |
-| SPG-11     |     3    | \-     | 2      |           |           |
-|            | SPG-138 | \-     | \-     |  1h      |  4h 30m      |
-|            | SPG-151 | \-     | \-     |  30m      |  20m      |
-|            | SPG-152 | \-     | \-     |  30m      |  1h 15m   |
-| SPG-12     |     2    | \-     | 3      |           |           |
-|            | SPG-134 | \-     | \-     |  1h       |  3h 15m   |
-|            | SPG-139 | \-     | \-     |  2h 30m   |  1h 05m   |
-| SPG-13     |     2    | \-     | 2      |           |           |
-|            | SPG-140 | \-     | \-     |  1h 30m   |  2h 30m   |
-|            | SPG-153 | \-     | \-     |  1h       |  1h       |
-| SPG-17     |      2  | \      | 8      |           |           |
-|            | SPG-135 | -      | \-     |  1h       |  1h 15m   |
-|            | SPG-142 |\-      | \-     |  2h       |  3h 10m   |
+| Story      | #Task   | #Subtask | Points | Estimated time | Actual time    |
+| ---------- | ------  | -------  | ------ | --------- | --------- |
+| _SPG-40_   | \-      | \-       | \-     | \-        | \-        |
+| \-         | SPG-180 | 6        | \-     | 3d5h      | 5d7h10m   |
+| \-         | \-      | SPG-183  | \-     | 2d        | 2d6h30m   |
+| \-         | \-      | SPG-184  | \-     | 1h        | 2h30m     |
+| \-         | \-      | SPG-186  | \-     | 2h        | 3h30m     |
+| \-         | \-      | SPG-188  | \-     | 4h        | 1d2h50m   |
+| \-         | \-      | SPG-194  | \-     | 5h        | 6h50m     |
+| \-         | \-      | SPG-196  | \-     | 1h        | 1h        |
+| \-         | SPG-149 | \-       | \-     | 2h        | 2h15m     |
+| \-         | SPG-191 | \-       | \-     | 1h30m     | 0m        |
+| _SPG-165_  | 2       | \-	      | \-     | \-        | \-        |
+| \-         | SPG-166 | \-       | \-     | 20m       | 20m       |
+| \-         | SPG-167 | \-       | \-     | 20m       | 20m       |
+| _SPG-100_  | 3       | \-       | \-     | \-        | \-        |
+| \-         | SPG-168 | \-       | \-     | 1h        | 1h        |
+| \-         | SPG-169 | \-       | \-     | 30m       | 20m       |
+| \-         | SPG-170 | \-       | \-     | 2h        | 2h        |
+| \-         | SPG-192 | \-       | \-     | 5m        | 5m        |
+| _SPG-187_  | \-      | \-       | \-     | \-        | 2d6h      |      
+| \-         | \-      | \-       | \-     | \-        | \-        |
+| SPG-154    | 2       | \-	      | 8      | \-        | \-        |
+| \-         | SPG-179 | \-       | \-     | 15m       | 12m       |
+| \-         | SPG-173 | \-       | \-     | 4h30m     | 6h20m     |
+| SPG-155    | 3       | \-	      | 5      | \-        | \-        |
+| \-         | SPG-172 | \-       | \-     | 2h30m     | 3h        |
+| \-         | SPG-176 | \-       | \-     | 3h        | 2h        |
+| \-         | SPG-190 | \-       | \-     | 1h30m     | 1h30m     |
+| SPG-156    | 1       | \-	      | 5      | \-        | \-        |
+| \-         | SPG-189 | \-       | \-     | 1h30m     | 6h        |
+| \-         | SPG-178 | \-       | \-     | 2h        | 2h30m     |
+| SPG-157    | 1       | \-	      | 5      | \-        | \-        |
+| \-         | SPG-177 | \-       | \-     | 1h30m     | 2h        |
 
 
 
 **Note:**
-- SPG-40: trasversal
-- SPG-74: technical debt
-- SPG-117: issues from stakeholders
-- SPG-100: bugfix
+- SPG-187: Planning
+- SPG-165: Github issues
+- SPG-100: Bugfix
+- SPG-40: Trasversal
 
 **Total est:** 6d 5h 30m (= 53h 30m)
 
 **Total actual:** 12d 3h 02m (= 99h 02m including planning )
 
 - Hours per task (average, standard deviation)
-    - Average: 3h 36m
-    - Standard deviation: 5h 9m
+    - Average: 5h 49m
+    - Standard deviation: 11h 15m
 - Total task estimation error ratio:
-  - sum of total hours estimation / sum of total hours spent from previous table: 67.33/90.33 = 0.74
+  - sum of total hours estimation / sum of total hours spent from previous table: 53.5/99.02 = 0.54
 
 ## QUALITY MEASURES
 
