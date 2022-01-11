@@ -23,6 +23,8 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import 'cypress-wait-until';
+
 Cypress.Commands.add('checkUrl', (url) => {
     const escapeRegExp = (string) => {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -44,6 +46,47 @@ Cypress.Commands.add('checkHomepage', () => {
     cy.get('[alt=italymap]').should('exist');
 });
 
+
+/**
+ * Perform a signUp of an user (he/she will remain logged in)
+ * (the page must be the registration page)
+ * @Param email
+ * @Param password
+ * @Param name
+ * @Param surname
+ * @Param address
+ * @Param ssn
+ * @Param phoneNumber (optional)
+ */
+ Cypress.Commands.add('signUp', (
+     email,
+     password,
+     name,
+     surname,
+     address,
+     ssn,
+     phoneNumber) => {
+
+    cy.get('#email').type(email);
+    cy.get('#password').type(password);
+    cy.get('#name').type(name);
+    cy.get('#surname').type(surname);
+    cy.get('#address').type(address);
+    cy.get('#ssn').type(ssn);
+    if (phoneNumber) {
+        cy.get('#phoneNumber').type(phoneNumber);
+    }
+    cy.get('#submit').click();
+    cy.wait(2000);
+    cy.contains('Creation successful').should('exist');
+    cy.get('#home').click();
+    
+})
+/**
+ * perform a login of an user
+ * @Param email
+ * @Param password
+ */
 Cypress.Commands.add('login', (email, password) => {
     cy.get('[id=login]').should('exist');
     cy.get('[id=login]').click();
@@ -59,8 +102,12 @@ Cypress.Commands.add('login', (email, password) => {
     cy.get('[type=submit]').click();
 
     cy.get('[id=logout]').should('exist');
+    cy.wait(1000);
 })
 
+/**
+ * perform a logout of an logged in user
+ */
 Cypress.Commands.add('logout', ()=> {
     cy.get('[id=logout').should('exist');
     cy.get('[id=logout').click();
@@ -68,6 +115,54 @@ Cypress.Commands.add('logout', ()=> {
     cy.get('[id=login').should('exist');
     cy.checkUrl("/");
 
+})
+/**
+ * perform a logout of an logged in user
+ */
+Cypress.Commands.add('topUp', (email,money,method)=> {
+    cy.get('#email').type(email);
+    cy.get('#button-Submit').click();
+    cy.contains('User correctly found').should('exist');
+    switch (method) {
+        case 'Cash':
+            cy.get('#button-Cash').should('be.visible');
+            cy.get('#button-Cash').click();
+            cy.get('#button-TopUp').should('be.visible');
+            break;
+
+        case 'GiftCard':
+            cy.get('#button-GiftCard').should('be.visible');
+            cy.get('#button-GiftCard').click();
+            cy.get('#button-TopUp').should('be.visible');
+            break;
+        
+        case 'CreditCard':
+            cy.get('#CreditCard').should('be.visible');
+            cy.get('#CreditCard').click();
+            cy.get('#button-TopUp').should('be.visible');
+            break;
+    
+        default:
+            cy.get('#button-Cash').should('be.visible');
+            cy.get('#button-Cash').click();
+            cy.get('#button-TopUp').should('be.visible');
+    }
+    
+    cy.get('#amount').type(money);
+    cy.get('#button-TopUp').click();
+    cy.contains('Top up correctly performed').should('be.visible');
+
+})
+
+Cypress.Commands.add('checkShopEmployee', () => {
+    cy.checkUrl('/Dashboard');
+    cy.contains('WELCOME BACK').should('exist');
+    cy.contains('Here you are your services').should('exist');
+    cy.contains('Browse Products').should('exist');
+    cy.contains('New Customer').should('exist');
+    cy.contains('Top Up').should('exist');
+    cy.contains('Handle Order').should('exist');
+    cy.contains('Settings').should('exist');
 })
 
 Cypress.Commands.add('checkCustomer', () => {
@@ -81,18 +176,114 @@ Cypress.Commands.add('checkCustomer', () => {
     cy.contains('Settings').should('exist');
 })
 
+Cypress.Commands.add('checkFarmer', () => {
+    cy.checkUrl('/Dashboard');
+    cy.contains('WELCOME BACK').should('exist');
+    cy.contains('Here you are your services').should('exist');
+    cy.contains('Forecast Product').should('exist');
+    cy.contains('Add Product').should('exist');
+    cy.contains('Confirm Availability').should('exist');
+    cy.contains('Settings').should('exist');
+})
+
 Cypress.Commands.add('checkBrowseProducts', () => {
     cy.checkUrl('/BrowseProducts')
     cy.contains('Products List').should('exist');
     
     //Spinner
-    cy.get('[role=status]').should('exist');
-    cy.get('[id=basket]').should('exist');
+    // cy.get('[role=status]').should('exist');
+    // cy.get('[id=button-basket]').should('exist');
     cy.contains('Back').should('exist');
 
-    //TODO: Gestire meglio la wait
-    cy.wait(1000);
-
     cy.get('[alt=fruit]').should('exist')
+})
+
+Cypress.Commands.add('checkPlaceOrder', () => {
+    cy.checkUrl('/PlaceOrder')
+    cy.contains('Place Order').should('exist');
+
+    cy.contains('Back').should('exist');
+    cy.contains('Delete order').should('exist');
+    cy.contains('Send order').should('exist');
+})
+
+Cypress.Commands.add('checkProductsForecast', () => {
+    cy.checkUrl('/ProductsForecast')
+    cy.contains('Products List').should('exist');
+    
+    //Spinner
+    cy.get('[role=status]').should('exist');
+    cy.contains('Back').should('exist');
+
+    cy.get('[alt=fruit]').should('exist');
+})
+
+Cypress.Commands.add('checkConfirmAvailability', () => {
+    cy.checkUrl('/ConfirmAvailability')
+    cy.contains('Confirm availabilities for the next week').should('exist');
+    
+    //Spinner
+    cy.get('[role=status]').should('exist');
+    cy.contains('Back').should('exist');
+
+    cy.get('[alt=fruit]').should('exist');
+})
+
+Cypress.Commands.add('modifyForecast', () => {
+    cy.get('#button-forecast-Carrots').should('be.visible').click({force:true});
+    cy.get('#amount').clear({force:true}).type('4');
+    cy.get('[id=button-modifyForecast]').should('be.visible').click({force:true});
+    cy.get('.modal-footer > .btn').should('be.visible').click({force:true});
+
+    cy.wait(2000);
+
+    cy.get('#button-forecast-Apples').should('be.visible').click({force:true});
+    cy.get('#amount').clear({force:true}).type('4');
+    cy.get('[id=button-modifyForecast]').should('be.visible').click({force:true});
+    cy.get('.modal-footer > .btn').should('be.visible').click({force:true});
+
+    cy.wait(2000);
+
+    cy.get('#button-forecast-Cauliflowers').should('be.visible').click({force:true});
+    cy.get('#amount').clear({force:true}).type('4');
+    cy.get('[id=button-modifyForecast]').should('be.visible').click({force:true});
+    cy.get('.modal-footer > .btn').should('be.visible').click({force:true});
+    
+    cy.wait(2000);
+    
+    cy.get('#button-forecast-Broccoli').should('be.visible').click({force:true});
+    cy.get('#amount').clear({force:true}).type('4');
+    cy.get('[id=button-modifyForecast]').should('be.visible').click({force:true});
+    cy.get('.modal-footer > .btn').should('be.visible').click({force:true});
+    
+    cy.wait(2000);
+
+    cy.get('#button-forecast-Pumpkin').should('be.visible').click({force:true});
+    cy.get('#amount').clear({force:true}).type('4');
+    cy.get('[id=button-modifyForecast]').should('be.visible').click({force:true});
+    cy.get('.modal-footer > .btn').should('be.visible').click({force:true});
+})
+
+/**
+ * dayOfweek = 0 sunday, 1 Monday, .... 6 saturday
+ * Hour of the day
+ */
+ Cypress.Commands.add('timeMachine', (dayOfWeek,hour) => {
+
+    var date = new Date();
+    date.setHours(hour);
+    cy.clock(date);
+    cy.contains('TIME MACHINE').should('exist');
+    cy.contains('TIME MACHINE').click();
+    
+    cy.get(':nth-child(2) > :nth-child('+(dayOfWeek+1)+') > .MuiButtonBase-root > .MuiIconButton-label > .MuiTypography-root')
+        .click();
+    
+    cy.contains('TIME TRAVEL!').click();
+    date.setDate(dayOfWeek);
+    date.setDate(date.getDate() + (dayOfWeek - date.getDay()));
+    cy.clock(date);
+    cy.wait(1000);
+    cy.reload();
 })
 

@@ -9,6 +9,7 @@ import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.testSecurityConfig.SpringSecurityTestConfig;
 import it.polito.SE2.P12.SPG.utils.API;
 import it.polito.SE2.P12.SPG.utils.DBUtilsService;
+import it.polito.SE2.P12.SPG.utils.OrderStatus;
 import it.polito.SE2.P12.SPG.utils.Utilities;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.lang.model.type.ReferenceType;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,17 +55,21 @@ public class OrderControllerApiTest {
     @Autowired
     private DBUtilsService dbUtilsService;
 
+
     @BeforeEach
     public void initContext() {
         dbUtilsService.dropAll();
         Customer customer1 = new Customer("customer1", "", "123450001", "", "customer1@test.com", "password", "", 1000.0);
         Customer customer2 = new Customer("customer2", "", "123450000", "", "customer2@test.com", "password", "", 1000.0);
         Customer customer3 = new Customer("customer3", "", "123450002", "", "customer3@test.com", "password", "", 0.00);
+        Customer customer4 = new Customer("customer4", "", "123450042", "", "customer4@test.com", "password", "", 0.00);
+
 
         ShopEmployee employee = new ShopEmployee("employee", "", "employee_123456", "", "employee@test.com", "password");
         customerRepo.save(customer1);
         customerRepo.save(customer2);
         customerRepo.save(customer3);
+        customerRepo.save(customer4);
         shopEmployeeRepo.save(employee);
         Farmer farmer = new Farmer("farmer_name", "farmer_surname", "ssn_faaaaaaarmer", "12345667", "far@mer.com", "password");
         farmerRepo.save(farmer);
@@ -86,9 +92,11 @@ public class OrderControllerApiTest {
         orderService.addNewOrderFromBasket(customer3.getBasket(), customer3, 0, null, null);
         basketService.addProductToBasket(prod1, 20.00, customer3);
         //orderService.addNewOrderFromBasket(customer3.getBasket(), customer3, 123);
-        //TODO extend cases
-
-
+        Map<Product, Double> prods = new HashMap<>();
+        prods.put(dbUtilsService.getProd1Object(), 3.00);
+        Order orderUnRetrieved = new Order(customer4, System.currentTimeMillis(), prods, null, "");
+        orderUnRetrieved.setStatus(OrderStatus.ORDER_STATUS_NOT_RETRIEVED);
+        dbUtilsService.saveOrder(orderUnRetrieved);
     }
 
     @Test
@@ -303,6 +311,18 @@ public class OrderControllerApiTest {
                 .andReturn();
         Map<String, List<Long>> response = new ObjectMapper().readValue(result.getResponse().getContentAsString(), Map.class);
         Assertions.assertTrue(response.containsKey("customer3@test.com"));
+    }
+
+    @WithUserDetails("tester@test.com")
+    @Test
+    public void getUnRetrievedOrderTest() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/manager/getUnRetrievedOrders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String jsonResult = result.getResponse().getContentAsString();
+        Assertions.assertNotEquals("[]", jsonResult);
     }
 
 }

@@ -52,6 +52,11 @@ jobs:
       # run cypress
       - name: cypress run
         uses: cypress-io/github-action@v2
+        env:
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}  
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}  
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}  
+          MYSQL_DB: ${{ secrets.MYSQL_DB }}  
         with:
           working-directory: Frontend/spg-frontend
           start: npm start

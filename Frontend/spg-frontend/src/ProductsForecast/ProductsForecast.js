@@ -25,11 +25,11 @@ function ProductsForecast(props) {
     const [products, setProducts] = useState([]);
     const [loadCompleted, setLoadCompleted] = useState(false);
     const [triggerError, setTriggerError] = useState(false);
-    const email = localStorage.getItem("username")
+    const email = localStorage.getItem("username");
+    const [forecastTime, setForecastTime] = useState(true);
 
     async function _browseProductsByFarmer() {
-        const data = await API.browseProductsByFarmer({'email': email}, props.setErrorMessage);
-        //console.log(data);
+        const data = await API.browseProductsByFarmer({'email': email}, props.setErrorMessage)
         if (data !== null) {
             setProducts(data['data']);
             setLoadCompleted(true);
@@ -37,20 +37,28 @@ function ProductsForecast(props) {
             console.log(data);
             setTriggerError(true);
         }
-        return;
     }
 
     useEffect(async () => {
         await _browseProductsByFarmer();
-    }, []);
+        let checkTime = (time, date) => {
+            console.log("CHECKTIME FORECAST TIME: " + time + " " + date);
+            if ((date === 'Sat' && time >= '09:00') ||  (date === 'Sun') || (date === 'Mon' && time < '09:00'))
+                setForecastTime(false);
+            else
+                setForecastTime(true);
+        }
+        checkTime(props.time, props.date);
+    }, [props.date, props.time]);
 
-
-    function ProductEntry(props) {
+    function ProductEntry(PEprops) {
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
         const [showSuccess, setShowSuccess] = useState(null);
         const [showError, setShowError] = useState(null)
+
+        let encodedImg = PEprops.product.base64Image
 
         return (
             <>
@@ -58,22 +66,22 @@ function ProductsForecast(props) {
                     <CardMedia
                         component="img"
                         height="140"
-                        image={props.product.imageUrl == null ? fruit : props.product.imageUrl}
+                        image={PEprops.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
                         alt="fruit"
                     />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
-                            {props.product.name}
+                            {PEprops.product.name}
                         </Typography>
                         <Typography variant="body">
-                            {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                            {PEprops.product.quantityForecast} {PEprops.product.unitOfMeasurement} currently
                             forecasted <br/>
-                            {props.product.price.toFixed(2)}€/{props.product.unitOfMeasurement}
+                            {PEprops.product.price.toFixed(2)}€/{PEprops.product.unitOfMeasurement}
                         </Typography>
                     </CardContent>
                     <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Modify
+                            <Grid item xs={12}> <Button id={`button-forecast-${PEprops.product.name}`} disabled={!forecastTime} variant="success" onClick={handleShow}> Modify
                                 Forecast </Button>
                             </Grid>
                         </Grid>
@@ -86,15 +94,16 @@ function ProductsForecast(props) {
                     setShowSuccess(null);
                 }}>
                     <Modal.Header>
-                        <Modal.Title>Modify Forecast for {props.product.name}</Modal.Title>
+                        <Modal.Title>Modify Forecast for {PEprops.product.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={props.product.imageUrl == null ? fruit : props.product.imageUrl} alt="fruit"
-                                 style={{width: '150px', height: '150px'}}/>
+                            <img src={PEprops.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
+                                 alt="fruit"
+                                 style={{height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
-                                    {props.product.quantityForecast} {props.product.unitOfMeasurement} currently
+                                    {PEprops.product.quantityForecast} {PEprops.product.unitOfMeasurement} currently
                                     forecasted
                                 </Col>
                             </Row>
@@ -103,11 +112,11 @@ function ProductsForecast(props) {
                                     initialValues={{amount: 0}}
                                     validationSchema={Yup.object({amount: Yup.number().min(0).required('Amount required!')})}
                                     onSubmit={async (values) => {
-                                        let outcome = await API.modifyForecast({
-                                            "productId": props.product.productId,
+                                        let data = {
+                                            "productId": PEprops.product.productId,
                                             "quantity": values.amount
-                                        });
-                                        console.log(outcome);
+                                        }
+                                        let outcome = await API.modifyForecast(data);
                                         if (outcome === true)
                                             setShowSuccess("Forecast successfully modified");
                                         else
@@ -119,10 +128,10 @@ function ProductsForecast(props) {
                                     {({values, errors, touched}) =>
                                         <Form>
                                             <label htmlFor='amount'>Amount:</label>
-                                            <Field type="number" id="amount" name="amount"
-                                                   min={0}/> {props.product.unitOfMeasurement}
+                                            <Field type="number" id="amount" name="amount" data-testid='amount'
+                                                   min={0}/> {PEprops.product.unitOfMeasurement}
                                             <br/>
-                                            <Button style={{margin: '20px'}} type="submit" variant="success">Modify
+                                            <Button id="button-modifyForecast" disabled={!forecastTime} style={{margin: '20px'}} type="submit" variant="success">Modify
                                                 Forecast</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
@@ -139,7 +148,6 @@ function ProductsForecast(props) {
                             handleClose();
                             setShowError(null);
                             setShowSuccess(null);
-                            //TODO: Check correctness
                             await _browseProductsByFarmer();
                         }}>
                             Close
@@ -157,6 +165,9 @@ function ProductsForecast(props) {
     return (
         <Container fluid>
             <h1>Products List</h1>
+            {forecastTime ? null :
+                <Alert variant='warning'> It's possible to do forecasts for products only from Monday at 9am to Saturday at
+                    9am</Alert>}
             <Grid container spacing={2}>
                 {
                     loadCompleted === true ?

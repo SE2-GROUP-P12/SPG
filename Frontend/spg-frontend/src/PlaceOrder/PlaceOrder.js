@@ -16,7 +16,6 @@ import {getAllShippingMode} from '../Utilities';
 
 function PlaceOrder(props) {
     /*LASTMINUTE*/ const [customer, setCustomer] = useState("");
-    //const [customer, setCustomer] = useState(null);
     const [order, setOrder] = useState([]);
     const [error, setError] = useState(false);
     const [customerError, setCustomerError] = useState(false);
@@ -29,7 +28,6 @@ function PlaceOrder(props) {
     const [modalShow, setModalShow] = useState(false);
     const [showEndRoutineModal, setShowEndRoutineModal] = useState(false);
     const [itsTime, setItsTime] = useState(false)
-
 
     async function _getCart() {
         const prod = await API.getCart({'email': localStorage.getItem("username")}, props.setErrorMessage);
@@ -86,7 +84,6 @@ function PlaceOrder(props) {
             /* NEW */
         } else
             setSendError(true);
-        //setModalShow(false);
     }
 
     const showModalHanlder = () => {
@@ -124,13 +121,10 @@ function PlaceOrder(props) {
 
     //MODAL REVIEW COMPONENT
 
-    const ReviewOrderComponent = (props) => {
-        const [showDate, setShowDate] = useState(true);
+    const ReviewOrderComponent = (reviewProps) => {
         const [pickUpDate, setPickUpDate] = useState(-1);
         const [pickUpTime, setPickUpTime] = useState("");
-        const [showShippingInfo, setShowShppingInfo] = useState("SKIP FOR NOW");
-        const [errorDate, setErrorDate] = useState(false);
-        const [showAddressForm, setShowAddressForm] = useState(false);
+        const [ , setErrorDate] = useState(false);
         const [checkBoxStatus, setChechBoxStatus] = useState([true, false]);
         const [customAddress, setCustomAddress] = useState("");
         const [enableButton, setEnableButton] = useState(false);
@@ -149,7 +143,6 @@ function PlaceOrder(props) {
                     return;
                 }
                 setEnableButton(true);
-                return;
             }
             //Delivery Selected
             else if (checkBoxStatus[1] === true) {
@@ -212,14 +205,14 @@ function PlaceOrder(props) {
                                 from 9:00
                                 to 18:00.
                             </Alert>
-                            <reactForm.Control className="mt-3" type="date" name="deliveryDate" label="date"
+                            <reactForm.Control id="date-field" className="mt-3" type="date" name="deliveryDate" label="date" data-testid="date"
                                                placeholder="delivery date"
                                                onChange={async (event) => {
                                                    await onChangeDateHandler(event.target.value);
                                                    await enableButtonHandler(new Date(event.target.value), pickUpTime, customAddress);
                                                }}
                             />
-                            <reactForm.Control className="mt-3" type="time" name="deliveryTime" label="time"
+                            <reactForm.Control id="time-field" className="mt-3" type="time" name="deliveryTime" label="time" data-testid="time"
                                                onChange={(event) => {
                                                    onChangeTimeHandler(event.target.value);
                                                    enableButtonHandler(pickUpDate, event.target.value, customAddress);
@@ -228,13 +221,14 @@ function PlaceOrder(props) {
                         <h6>Where deliver your order:</h6>
                         <Alert className="mt-3" variant={variant}>
                             {shippingMode.map((value, index) => <reactForm.Check key={index} label={value.name}
+                                                                                 data-testid={value.name}
                                                                                  onChange={() => {
                                                                                      shippingModeCheckHandler(index);
                                                                                      enableButtonHandler(pickUpDate, pickUpTime, customAddress)
                                                                                  }}
                                                                                  checked={checkBoxStatus[index]}/>)}
                         </Alert>
-                        <reactForm.Control type="text" name="deliveryDate" placeholder="delivery address" label="address"
+                        <reactForm.Control type="text" name="deliveryDate" placeholder="delivery address" label="address" data-testid="address"
                                            onChange={(event) => {
                                                setCustomAddress(event.target.value);
                                                enableButtonHandler(pickUpDate, pickUpTime, event.target.value);
@@ -245,41 +239,17 @@ function PlaceOrder(props) {
                     </div>
                 )
             }
-
-
-        /* LASTMINUTE
-        if (!errorDate) {
-                if (pickUpDate === "")
-                    return getAlertBasedPicker("")
-                else
-                    return getAlertBasedPicker("")
-            } else */
-                return getAlertBasedPicker("")
+            return getAlertBasedPicker("")
         }
-
-        //console.log(order)
 
         const getOrderTotalAmount = () => {
             let total = 0.00;
-            console.log('order ' + order);
             if (order === null)
                 return 0.00;
             for (let p of order) {
                 total += p.price * p.quantityAvailable;
             }
             return total.toFixed(2);
-        }
-
-
-        const changeCheckBoxHanlder = () => {
-            if (!showDate) {
-                setShowShppingInfo("SKIP FOR NOW");
-                //reset status
-                setErrorDate(false);
-                setPickUpDate(-1);
-            } else
-                setShowShppingInfo("SET SHIPPING INFO");
-            setShowDate(!showDate);
         }
 
         return (<Modal
@@ -297,43 +267,19 @@ function PlaceOrder(props) {
                     <br/>
                     <b>AMOUNT: </b> {getOrderTotalAmount()}
                     <br/><br/>
-                    <div>
-                        <Row>
-                            <Col>
-                                <h5 variant="success">SHIPPING INFO </h5>
-                            </Col>
-                            <Col>
-                                <reactForm.Check type="switch" label={showShippingInfo} claaName="success"
-                                                 onChange={() => changeCheckBoxHanlder()}
-                                                 checked={showDate}/>
-                            </Col>
-                        </Row>
-                    </div>
-                    {showDate === true ? selectAlertType() :
-                        <Alert variant="warning">Don't forget to set up your shipping info!</Alert>}
+                    {selectAlertType()}
 
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    {showShippingInfo === "SKIP FOR NOW" ? <Button variant="success" disabled={!enableButton}
-                                                                   onClick={() => {
-                                                                       placeOrder(pickUpDate, customAddress, pickUpTime);
-                                                                       setModalShow(false);
-                                                                       setShowEndRoutineModal(true);
-                                                                   }}>
-                            Place Order</Button>
-                        :
-                        <Button variant="success"
-                                onClick={() => {
-                                    //LASTMINUTE placeOrder(-1, "", "");
-                                    placeOrder(-1, "", "00:00");
-                                    setModalShow(false);
-                                    setShowEndRoutineModal(true)
-                                }}>
-                            Place Order</Button>}
-
+                    <Button id="button-place-order" variant="success" disabled={!enableButton} data-testid="placeorder"
+                            onClick={() => {
+                            placeOrder(pickUpDate, customAddress, pickUpTime);
+                            setModalShow(false);
+                            setShowEndRoutineModal(true);
+                            }}>Place Order</Button>
                 </Modal.Footer>
             </Modal>
         );
@@ -354,7 +300,9 @@ function PlaceOrder(props) {
                         <Alert variant="success">Congratulations, order placed correctly!</Alert>}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="success" onClick={() => {
+                    <Button
+                        id='button-closeOrderCompleted'
+                        variant="success" onClick={() => {
                         setError(false);
                         setShowEndRoutineModal(false);
                     }}>
@@ -383,11 +331,10 @@ function PlaceOrder(props) {
                             onSubmit={async (values) => {
                                 setCustomerSuccess(false);
                                 setCustomerError(false);
-                                setCustomer(null);
+                                setCustomer("");
                                 let presentEmail = await API.customerExistsByMail(values.email)
                                 setCustomerError(!presentEmail);
                                 if (presentEmail) {
-                                    //console.log("CHECKPOINT, EMAIL:" + values.email + " ORDER:" + JSON.stringify(order) + " itsTime:" + itsTime);
                                     setCustomer(values.email);
                                     setCustomerSuccess(true);
                                 }
@@ -397,8 +344,8 @@ function PlaceOrder(props) {
                         >
                             {({values, errors, touched}) =>
                                 <Form>
-                                    Email:<Field style={{margin: '20px'}} name="email" type="text"/>
-                                    <Button style={{margin: '20px'}} type="submit" variant="success">Submit
+                                    Email:<Field id="field-email" style={{margin: '20px'}} data-testid="email" name="email" type="text"/>
+                                    <Button id="button-submit" style={{margin: '20px'}} type="submit" variant="success">Submit
                                         customer</Button>
                                     {errors.email && touched.email ? errors.email : null}
                                     {customerError ?
@@ -424,10 +371,11 @@ function PlaceOrder(props) {
             <Row>
                 <Col xs={4}><Link to="/Dashboard"><Button
                     variant='secondary'>Back</Button></Link></Col>
-                <Col xs={4}><Button disabled={order.length === 0 || itsTime === false ? true : false && !itsTime()} variant='danger'
+                <Col xs={4}><Button disabled={order.length === 0 || !itsTime } variant='danger' //itsTime === false ? true : false && !itsTime()
                                     onClick={dropOrder}>Delete order</Button></Col>
                 <Col xs={4}><Button
-                    disabled={(!itsTime || order.length === 0 ) ? true : false}
+                    id="button-send-order"
+                    disabled={!itsTime || order.length === 0 || (customer === "" && localStorage.getItem("role")==="EMPLOYEE") }
                     variant='success' onClick={() => showModalHanlder()}>Send order</Button></Col>
             </Row>
         </>
@@ -440,7 +388,6 @@ function printOrder(prod) {
     if (prod.length === 0)
         return (<h2>The cart is empty </h2>);
     for (let p of prod) {
-        console.log("product-id: " + p.productId)
         output.push(<OrderEntry product={p} key={p.productId.toString()} value={p.productId}/>);
         total += p.price * p.quantityAvailable;
     }

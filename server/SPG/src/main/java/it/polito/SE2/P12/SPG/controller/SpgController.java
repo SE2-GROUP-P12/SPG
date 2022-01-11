@@ -5,9 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.auth.UserDetailsImpl;
 import it.polito.SE2.P12.SPG.entity.*;
-import it.polito.SE2.P12.SPG.interfaceEntity.*;
+import it.polito.SE2.P12.SPG.interfaceEntity.BasketUserType;
+import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
 import it.polito.SE2.P12.SPG.service.*;
-import it.polito.SE2.P12.SPG.utils.*;
+import it.polito.SE2.P12.SPG.telegramBot.TelegramBot;
+import it.polito.SE2.P12.SPG.utils.API;
+import it.polito.SE2.P12.SPG.utils.Constants;
+import it.polito.SE2.P12.SPG.utils.DBUtilsService;
+import it.polito.SE2.P12.SPG.utils.JWTProviderImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,16 +26,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * NOTE: in order to granted access to an api based on the user roles add roles into the 'PreAuthorization' annotation as follows:
@@ -48,20 +48,25 @@ public class SpgController {
     private final JWTUserHandlerService jwtUserHandlerService;
     private final DBUtilsService dbUtilsService;
     private final WalletOperationService walletOperationService;
-    private long timeOffset;
+    private final TelegramBot telegramBot;
+    //private final TelegramBotService telegramBotService;
+    private final SchedulerService schedulerService;
+    //private long timeOffset;
 
 
     @Autowired
-    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService) {
+    public SpgController(SpgProductService service, SpgUserService userService, SpgOrderService orderService, SpgBasketService basketService, JWTUserHandlerService jwtUserHandlerService1, DBUtilsService dbUtilsService, WalletOperationService walletOperationService, SchedulerService schedulerService, TelegramBot telegramBot) {
         this.productService = service;
         this.userService = userService;
         this.orderService = orderService;
         this.basketService = basketService;
         this.jwtUserHandlerService = jwtUserHandlerService1;
-        this.timeOffset = 0;
+        this.telegramBot = telegramBot;
         this.walletOperationService = walletOperationService;
         this.dbUtilsService = dbUtilsService;
         this.dbUtilsService.init();
+        this.schedulerService = schedulerService;
+        this.schedulerService.initScheduler();
     }
 
     @GetMapping("/")
@@ -117,6 +122,7 @@ public class SpgController {
             String imageUrl = "";
             if (requestMap.containsKey("imageUrl"))
                 imageUrl = (String) requestMap.get("imageUrl");
+            //telegramBot.notifyCustomers();
             return ResponseEntity.ok(productService.addProduct(productName, value, uom, imageUrl, farmer));
         }
         return ResponseEntity.badRequest().build();
@@ -215,13 +221,13 @@ public class SpgController {
                 BasketUserType user = userService.getBasketUserTypeByEmail(orderIssuer.getEmail());
                 Basket basket = user.getBasket();
                 basketService.dropBasket(basket);
-                return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer, (long) System.currentTimeMillis() + this.timeOffset, date, address));
+                return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer, schedulerService.getTime().toEpochMilli(), date, address));
             }
             //It's an order provided by the shopEmployee
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get(Constants.JSON_EMAIL));
             Basket basket = user.getBasket();
             basketService.dropBasket(basket);
-            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer, (long) System.currentTimeMillis() + this.timeOffset, date, address));
+            return ResponseEntity.ok(orderService.addNewOrderFromBasket(basket, (OrderUserType) orderIssuer, schedulerService.getTime().toEpochMilli(), date, address));
         }
         return ResponseEntity.badRequest().build();
     }
@@ -231,17 +237,22 @@ public class SpgController {
     public ResponseEntity<Map<String, String>> addToBasket(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
         Map<String, String> response = new HashMap<>();
-        if (requestMap.isEmpty())
+        if (requestMap.isEmpty()) {
+            log.error("empty request");
             return ResponseEntity.badRequest().build();
+        }
         if (requestMap.containsKey(Constants.JSON_PRODUCT_ID) && requestMap.containsKey(Constants.JSON_EMAIL) && requestMap.containsKey(Constants.JSON_QUANTITY)) {
             Product product = productService.getProductById(Long.valueOf((Integer) requestMap.get(Constants.JSON_PRODUCT_ID)));
             Double quantity = Double.valueOf(requestMap.get(Constants.JSON_QUANTITY).toString());
             BasketUserType user = userService.getBasketUserTypeByEmail((String) requestMap.get(Constants.JSON_EMAIL));
-            if (user == null || product == null || !basketService.addProductToBasket(product, quantity, user))
+            if (user == null || product == null || !basketService.addProductToBasket(product, quantity, user)) {
+                log.error("Something went wrong");
                 return ResponseEntity.badRequest().build();
+            }
             response.put("responseStatus", "200-OK");
             return ResponseEntity.ok(response);
         }
+        log.error("end statement");
         return ResponseEntity.badRequest().build();
     }
 
@@ -274,7 +285,7 @@ public class SpgController {
             Double value = Double.valueOf(requestMap.get("value").toString());
             if (!userService.checkPresenceOfMail(email) || value <= 0)
                 return ResponseEntity.badRequest().build();
-            if (!userService.topUp(email, value))
+            if (!userService.topUp(email, value, this.schedulerService.getTime()))
                 return ResponseEntity.badRequest().build();
             return ResponseEntity.ok(userService.getWallet(email));
         }
@@ -287,7 +298,7 @@ public class SpgController {
         //record payment
         walletOperationService.recordPayment(orderId);
         //Process order
-        return ResponseEntity.ok(orderService.deliverOrder(orderId));
+        return ResponseEntity.ok(orderService.deliverOrder(orderId, schedulerService.getTime()));
     }
 
     @DeleteMapping(API.DROP_ORDER)
@@ -332,7 +343,7 @@ public class SpgController {
 
     @GetMapping(API.GET_WALLET_OPERATIONS)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER','ROLE_EMPLOYEE')")
-    public ResponseEntity<Map<String,Object>> getWalletOperation(@RequestParam String email) {
+    public ResponseEntity<Map<String, Object>> getWalletOperation(@RequestParam String email) {
         Map<String, Object> responseMap = new HashMap<>();
         if (Boolean.FALSE.equals(userService.checkPresenceOfMail(email))) {
             responseMap.put(Constants.JSON_ERROR_MESSAGE, "Invalid email");
@@ -392,10 +403,10 @@ public class SpgController {
             return ResponseEntity.badRequest().build();
         Long productId = Long.parseLong(requestMap.get(Constants.JSON_PRODUCT_ID).toString());
         forecast = Double.valueOf(requestMap.get(Constants.JSON_QUANTITY).toString());
-        /*start = (Double) requestMap.get("quantityForecast");
-        end = (Double) requestMap.get("quantityForecast");*/
         if (!productService.setForecast(productId, forecast))
             return ResponseEntity.badRequest().build();
+        if (forecast > 0.0)
+            telegramBot.notifyCustomers(productService.getProductById(productId).getName());
         return ResponseEntity.ok().build();
     }
 
@@ -449,6 +460,12 @@ public class SpgController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping(API.GET_UNRETRIEVED_ORDERS)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<List<Order>> getUnRetrievedOrderList() {
+        return ResponseEntity.ok(orderService.getUnRetrievedOrders(schedulerService.getTime().getEpochSecond()));
+    }
+
     @GetMapping(API.REFRESH_TOKEN)
     public void getRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
@@ -464,7 +481,7 @@ public class SpgController {
                         accessToken, refreshToken);
                 new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
             } catch (Exception e) {
-                log.error("Error  refreshing token: " + e.getMessage());
+                log.error("Error refreshing token: " + e.getMessage());
                 response.setHeader(Constants.HEADER_ERROR, e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 response.setContentType(APPLICATION_JSON_VALUE);
@@ -479,54 +496,13 @@ public class SpgController {
 
 
     @PostMapping(API.TIME_TRAVEL)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER', 'ROLE_EMPLOYEE','ROLE_FARMER')")
     public ResponseEntity<Boolean> timeTravel(@RequestBody String jsonData) {
         Map<String, Object> requestMap = extractMapFromJsonString(jsonData);
-        if (requestMap == null ||
-                !requestMap.containsKey(Constants.JSON_DATE) ||
-                !requestMap.containsKey(Constants.JSON_TIME)
-        )
+        if (requestMap == null || !requestMap.containsKey(Constants.JSON_EPOCH_TIME))
             return ResponseEntity.badRequest().build();
-        String travelDayOfWeek = requestMap.get(Constants.JSON_DATE).toString();
-        String hhmm = requestMap.get(Constants.JSON_TIME).toString();
-        int hh = Integer.parseInt(hhmm.split(":")[0]);
-        int mm = Integer.parseInt(hhmm.split(":")[1]);
-        java.util.Date time = new java.util.Date((long) System.currentTimeMillis() + this.timeOffset);
-        Calendar c = Calendar.getInstance();
-        c.setTime(time);
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        int dayToTravel = 0;
-        switch (travelDayOfWeek) {
-            case "Sun":
-                dayToTravel = 1;
-                break;
-            case "Mon":
-                dayToTravel = 2;
-                break;
-            case "Tue":
-                dayToTravel = 3;
-                break;
-            case "Wed":
-                dayToTravel = 4;
-                break;
-            case "Thu":
-                dayToTravel = 5;
-                break;
-            case "Fri":
-                dayToTravel = 6;
-                break;
-            case "Sat":
-                dayToTravel = 7;
-                break;
-            default:
-                dayToTravel = 0;
-        }
-        timeOffset += ((7 + dayToTravel - dayOfWeek) % 7) * 24 * 60 * 60 * 1000;
-        int currentHH = c.get(Calendar.HOUR_OF_DAY);
-        int currentMM = c.get(Calendar.MINUTE);
-        timeOffset += (hh - currentHH) * 60 * 60 * 1000;
-        timeOffset += (mm - currentMM) * 60 * 1000;
-        return ResponseEntity.ok().build();
+        Long epochTime = Long.parseLong(requestMap.get(Constants.JSON_EPOCH_TIME).toString());
+        return ResponseEntity.ok(schedulerService.timeTravelAt(epochTime));
+
     }
 
     @GetMapping(API.LOGOUT)

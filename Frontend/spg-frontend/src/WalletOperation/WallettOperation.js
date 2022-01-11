@@ -1,7 +1,6 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import {API} from "./API/API";
-import DataGrid from '@mui/material/Grid';
+import {API} from "../API/API";
 import {useEffect, useState} from "react";
 import {Spinner, Table, Button} from "react-bootstrap";
 import {Link} from "react-router-dom";

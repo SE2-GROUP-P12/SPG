@@ -107,9 +107,9 @@ async function browseProducts(setErrorMessage) {
 
 async function browseProductsByFarmer(data, setErrorMessage) {
     try {
-        if(data.forecasted === null)
+        if (data.forecasted === null)
             data.forecasted = "none"
-        const response = await fetch("/api/product/?farmer=" + data.email + "&forecasted=" + data.forecasted , {
+        const response = await fetch("/api/product/?farmer=" + data.email + "&forecasted=" + data.forecasted, {
             method: 'GET',
             headers: getAuthenticationHeaders(),
         });
@@ -226,7 +226,6 @@ async function placeOrder(data) {
 }
 
 //DELETE: delete the order of a customer by his/her email (data.email), it returns a boolean
-//TODO: what happen if a customer has more than one order?
 async function dropOrder(data) {
     try {
         const response = await fetch("/api/customer/dropOrder", {
@@ -320,10 +319,10 @@ async function getWallet(email) {
     }
 }
 
-async function getWalletWarning(email){
+async function getWalletWarning(email) {
     try {
-        console.log("CHECKPOINT: "+email);
-        const response = await fetch("/api/customer/retrieveError?email="+email,{
+        console.log("CHECKPOINT: " + email);
+        const response = await fetch("/api/customer/retrieveError?email=" + email, {
             method: 'GET',
             headers: getAuthenticationHeaders()
         });
@@ -451,7 +450,10 @@ async function timeTravel(data) {
     try {
         const response = await fetch("/api/timeTravel", {
             method: 'POST',
-            headers: getAuthenticationHeaders(),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(data)
         });
         if (response.ok)
@@ -471,10 +473,27 @@ async function getWalletOperation(email) {
             headers: getAuthenticationHeaders(),
         });
         if (response.ok) {
-            const responseBody = await response.json();
-            return responseBody;
+            return await response.json();
         } else
             return undefined;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function getUnretrievedOrders() {
+    try {
+        const response = await fetch("api/manager/getUnRetrievedOrders", {
+            method: 'GET',
+            headers: getAuthenticationHeaders(),
+        });
+        const data = await response.json();
+        if (response.ok) {
+            console.log(data);
+            return data;
+        } else {
+            return null;
+        }
     } catch (error) {
         console.log(error);
     }
@@ -504,7 +523,8 @@ const API = {
     addProduct,
     getWalletWarning,
     timeTravel,
-    submitConfirmed
+    submitConfirmed,
+    getUnretrievedOrders
 };
-export { API }
+export {API}
 

@@ -632,3 +632,98 @@ test ("timeTravel catch", async() =>{
     const resp = await API.timeTravel();
     expect(resp).toBe(undefined);
 })
+
+test ("getUnretrievedOrders ok", async () => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => [{name: 'Apples'}]
+        })
+    )
+    const resp = await API.getUnretrievedOrders();
+    expect(resp).toStrictEqual([{"name": "Apples"}]);
+})
+
+test ("getUnretrievedOrders catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.getUnretrievedOrders();
+    expect(resp).toBe(undefined);
+})
+
+test ("getUnretrievedOrders err", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            json: () => null
+        })
+    )
+    const resp = await API.getUnretrievedOrders();
+    expect(resp).toBe(null);
+})
+
+test("submitConfirmed ok", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200
+        })
+    )
+    const resp = await API.submitConfirmed();
+    expect(resp).toBe(true);
+})
+
+test("submitConfirmed catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.submitConfirmed();
+    expect(resp).toBe(undefined);
+})
+
+test("submitConfirmed wrong", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 500
+        })
+    )
+    const resp = await API.submitConfirmed();
+    expect(resp).toBe(true);
+})
+
+test("getWalletOperation ok", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => [{
+                operations: [],
+                walletAmount: 95
+            }]
+        })
+    )
+    const resp = await API.getWalletOperation('mario.rossi@gmail.com');
+    expect(resp).toStrictEqual([{"operations": [], "walletAmount": 95}]);
+})
+
+test("getWalletOperation wrong", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 500
+        })
+    )
+    const resp = await API.getWalletOperation('mario.rossi@gmail.com');
+    expect(resp).toBe(undefined);
+})
+
+test("getWalletOperation catch", async() => {
+    fetch.mockImplementationOnce(()=>
+        Promise.reject()
+    )
+    const resp = await API.getWalletOperation('mario.rossi@gmail.com');
+    expect(resp).toBe(undefined);
+})

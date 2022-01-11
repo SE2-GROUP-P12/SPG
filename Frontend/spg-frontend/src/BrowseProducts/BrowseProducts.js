@@ -29,6 +29,7 @@ function BrowseProducts(props) {
     const [triggerError, setTriggerError] = useState(false);
     const [cart, setCart] = useState([]);
     const [error, setError] = useState(false);
+    const [sellTime, setSellTime] = useState(true);
 
     const history = useHistory();
 
@@ -45,11 +46,19 @@ function BrowseProducts(props) {
 
     useEffect(async () => {
         await _browseProducts();
-    }, []);
+        let checkTime = (time, date) => {
+            console.log("CHECKTIME SELL PRODUCTS: " + time + " " + date);
+            if ((date === 'Sun' && time >= '23:00') || (date === 'Mon' && time < '09:00'))
+                setSellTime(false);
+            else
+                setSellTime(true);
+        }
+        checkTime(props.time, props.date);
+    }, [props.date, props.time]);
 
     async function _getCart() {
         const prod = await API.getCart({'email': localStorage.getItem("username")}, props.setErrorMessage);
-        if (prod === undefined) {
+        if (prod === null) {
             setError(true);
             setCart([]);
         } else
@@ -57,7 +66,7 @@ function BrowseProducts(props) {
     }
 
     useEffect(async () => {
-        if (props.isLogged)
+        if (localStorage.getItem("username") != null)
             await _getCart();
     }, []);
 
@@ -68,13 +77,14 @@ function BrowseProducts(props) {
         const [showSuccess, setShowSuccess] = useState(null);
         const [showError, setShowError] = useState(null)
 
+        let encodedImg = pe_props.product.base64Image;
         return (
             <>
                 <Card sx={{maxWidth: 345}}>
                     <CardMedia
                         component="img"
                         height="140"
-                        image={pe_props.product.imageUrl == null ? fruit : pe_props.product.imageUrl}
+                        image={pe_props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
                         alt="fruit"
                     />
                     <CardContent>
@@ -88,7 +98,7 @@ function BrowseProducts(props) {
                     </CardContent>
                     {props.isLogged ? <CardActions>
                         <Grid container>
-                            <Grid item xs={12}> <Button variant="success" onClick={handleShow}> Add to cart </Button>
+                            <Grid item xs={12}> <Button id={`button-add-${pe_props.product.name}`} disabled={!sellTime} variant="success" onClick={handleShow}> Add to cart </Button>
                             </Grid>
                         </Grid>
                     </CardActions> : <></>}
@@ -104,8 +114,10 @@ function BrowseProducts(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <div id="container" className="pagecontent" align='center'>
-                            <img src={pe_props.product.imageUrl == null ? fruit : pe_props.product.imageUrl} alt="fruit"
-                                 style={{width: '150px', height: '150px'}}/>
+                            <img
+                                src={pe_props.product.imageUrl == null ? fruit : `data:image/png;base64, ${encodedImg}`}
+                                alt="fruit"
+                                style={{height: '150px'}}/>
                             <Row>
                                 <Col xs={12}>
                                     {pe_props.product.name} : {pe_props.product.quantityAvailable}{pe_props.product.unitOfMeasurement} available, {pe_props.product.price.toFixed(2)}€/{pe_props.product.unitOfMeasurement}
@@ -137,7 +149,7 @@ function BrowseProducts(props) {
                                                    max={pe_props.product.quantityAvailable}
                                                    min={0}/> {pe_props.product.unitOfMeasurement}
                                             <br/>
-                                            <Button style={{margin: '20px'}} type="submit" variant="success">Add to
+                                            <Button id="button-add-to-cart" disabled={!sellTime} style={{margin: '20px'}} type="submit" variant="success">Add to
                                                 cart</Button>
                                             {errors.amount && touched.amount ? errors.amount : null}
                                             {showSuccess !== null ?
@@ -150,7 +162,7 @@ function BrowseProducts(props) {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => {
+                        <Button id="button-close" variant="secondary" onClick={() => {
                             handleClose();
                             setShowError(null);
                             setShowSuccess(null);
@@ -174,16 +186,22 @@ function BrowseProducts(props) {
         const handleShow = () => setShow(true);
 
         return (<>
-            <Button id="basket" variant="success" size="lg" onClick={handleShow}
-                    style={{position: 'fixed', bottom: '10px', left: '10px'}}>
-                🛒 {cart.length} item(s)
-            </Button>
+            {error ?
+                <Button id="button-basket" variant="warning" size="lg" //onClick={handleShow}
+                        style={{position: 'fixed', bottom: '10px', left: '10px'}}>
+                    Error loading cart
+                </Button>
+                :
+                <Button id="button-basket" variant="success" size="lg" onClick={handleShow}
+                        style={{position: 'fixed', bottom: '10px', left: '10px'}}>
+                    🛒 {cart.length} item(s)
+                </Button>}
             <Offcanvas show={show} onHide={handleClose}>
                 <Offcanvas.Header><h2>Your Cart</h2></Offcanvas.Header>
                 <Offcanvas.Body>
                     {error === true ? <Alert variant='danger'>Something went wrong</Alert> : printOrder(cart)}
                     <Button style={{margin: '20px'}} variant="secondary" onClick={handleClose}>Close</Button>
-                    <Link to="/PlaceOrder"><Button style={{margin: '20px'}} variant="success">Check out</Button></Link>
+                    <Link to="/PlaceOrder"><Button id="button-checkout" style={{margin: '20px'}} variant="success">Check out</Button></Link>
                 </Offcanvas.Body>
             </Offcanvas>
         </>);
@@ -192,6 +210,8 @@ function BrowseProducts(props) {
     return (
         <Container fluid>
             <h1>Products List</h1>
+            {sellTime ? null :
+                <Alert variant='warning'> It's not possible to buy products from Sunday at 23pm to Monday at 9am</Alert>}
             <Grid container spacing={2}>
                 {
                     loadCompleted === true && products != undefined ?
@@ -213,7 +233,6 @@ function BrowseProducts(props) {
         </Container>
     );
 }
-
 
 
 export {BrowseProducts}

@@ -8,12 +8,13 @@ import * as Yup from 'yup';
 import {Link} from 'react-router-dom';
 import {API} from '../API/API.js';
 import {MailServerAPI} from '../MailServerAPI/MailServerAPI';
+import {printOrder} from "../Utilities";
 
 /*LOADING ALL ORDERS WHEN NO MAIL IS SET*/
 let statusByIndex = [];
 
 function DeliverOrder(props) {
-    const [customer, setCustomer] = useState(null);
+    const [ , setCustomer] = useState(null);
     const [orders, setOrders] = useState([]);
     const [errUser, setErrUser] = useState(false);
     const [show, setShow] = useState(false);
@@ -55,8 +56,7 @@ function DeliverOrder(props) {
     }
 
     async function _getAllOrders() {
-        const data = await API.getAllOrders();
-        return data;
+        return API.getAllOrders();
     }
 
     async function customerExistsByMail(email) {
@@ -87,8 +87,7 @@ function DeliverOrder(props) {
     const getPendingOrdersMail = async () => {
         const data = await MailServerAPI.getPendingOrdersMail();
         let parsedData = [];
-        const ret = await Object.keys(data).forEach((email) => parsedData.push({"email": email, "status": "LOADED"}));
-        //console.log(...mailList, parsedData);
+        await Object.keys(data).forEach((email) => parsedData.push({"email": email, "status": "LOADED"}));
         //Static array creation
         statusByIndex = [...parsedData];
         setMailLoadCompleted(true);
@@ -96,27 +95,27 @@ function DeliverOrder(props) {
         console.log(statusByIndex);
     }
 
-    function PendingOrdersMailAction(props) {
+    function PendingOrdersMailAction(mailProps) {
         const [checkBox, setCheckBox] = useState(true);
 
         const setOnChangeCheckBoxStatus = () => {
             const res = !checkBox;
             setCheckBox(res);
             if (res)
-                statusByIndex[props.index].status = "LOADED";
+                statusByIndex[mailProps.index].status = "LOADED";
             else
-                statusByIndex[props.index].status = "DISABLED";
+                statusByIndex[mailProps.index].status = "DISABLED";
 
         }
 
 
-        switch (props.value.status) {
+        switch (mailProps.value.status) {
             case 'SENT':
                 return (
                     <ul className="border-bottom">
-                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
+                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[mailProps.index].email}
                                          checked={checkBox} type='switch' isValid={true}
-                                         onChange={() => //LASTMINUTE setOnChangeCheckBoxStatus(props.index)
+                                         onChange={() =>
                                              setOnChangeCheckBoxStatus()}>
                         </reactForm.Check>
                     </ul>
@@ -125,20 +124,20 @@ function DeliverOrder(props) {
             case 'DISABLED':
                 return (
                     <ul className="border-bottom">
-                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
+                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[mailProps.index].email}
                                          checked={checkBox}
                                          type='switch' isValid={false}
-                                         onChange={() => //LASTMINUTE setOnChangeCheckBoxStatus(props.index)
+                                         onChange={() =>
                                              setOnChangeCheckBoxStatus() }>
                         </reactForm.Check>
                     </ul>);
             default:
                 return (
                     <ul className="border-bottom">
-                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[props.index].email}
+                        <reactForm.Check variant="danger" aria-label="option 1" label={statusByIndex[mailProps.index].email}
                                          checked={checkBox}
                                          type='switch'
-                                         onChange={() => //LASTMINUTE setOnChangeCheckBoxStatus(props.value)
+                                         onChange={() =>
                                              setOnChangeCheckBoxStatus() }>
                         </reactForm.Check>
                     </ul>
@@ -159,10 +158,8 @@ function DeliverOrder(props) {
 
 
         function CustomModalFooter() {
-            const [disabledButton, setDisabledButton] = useState(false);
 
             async function sendAllMailRoutine(event) {
-                setDisabledButton(true);
 
                 async function sendMail(index) {
                     const data = await MailServerAPI.solicitCustomerTopUp(localStorage.getItem("username"), statusByIndex[index].email);
@@ -197,12 +194,12 @@ function DeliverOrder(props) {
                     </Button>
                     {
                         mailSentAlert === true ?
-                            <Alert variant="success">ALL MAILs WERE SENT</Alert>
+                            <Alert variant="success">All mail was sent</Alert>
                             :
                             <Button variant="success" onClick={(event) => {
                                 sendAllMailRoutine(event)
                             }}>
-                                Send mail
+                                Send All Mail
                             </Button>
                     }
 
@@ -242,9 +239,9 @@ function DeliverOrder(props) {
                     11pm</Alert>}
             <div className="mt-5">
                 <h4>Send all pending orders reminder mail</h4>
-                <Button className="mt-3" variant="success" onClick={() => /*LASTMINUTE handleShow(getPendingOrdersMail())*/
+                <Button style={{padding: '1rem 10rem', fontSize: '1.5rem'}} size='lg' className="mt-3" variant="outline-success" onClick={() => /*LASTMINUTE handleShow(getPendingOrdersMail())*/
                 {getPendingOrdersMail(); handleShow();}}>
-                    Send Mail</Button>
+                    Send All Mail</Button>
             </div>
             <div id="container" className="pagecontent">
                 <Formik
@@ -268,7 +265,7 @@ function DeliverOrder(props) {
                             <label htmlFor='email'>Email:</label><Field id='email' style={{margin: '20px'}} name="email"
                                                                         type="text"/>
                             <Button style={{margin: '20px'}} type="submit" variant="success"
-                                    disabled={!itsTime ? false : true}>Submit customer</Button>
+                                    disabled={!itsTime}>Submit customer</Button>
                             {errors.email && touched.email ? errors.email : null}
                         </Form>}
                 </Formik>
@@ -276,13 +273,13 @@ function DeliverOrder(props) {
                 {orders != null && orders.length === 0 ? <h2>No orders to display yet</h2> :
                     <Orders itsTime={itsTime} orderList={orders}/>}
             </div>
-            <Link to='/Dashboard'><Button style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
+            <Link to='/Dashboard'><Button id='button-back' style={{margin: '20px'}} variant='secondary'>Back</Button></Link>
         </>
     );
 }
 
 function Orders(props) {
-    const [showAlert, setShowAlert] = useState(false);
+    const [showAlert] = useState(false);
     const [show, setShow] = useState(false);
     const [manageOrderCustmer, setManageOrderCustomer] = useState("");
 
@@ -296,33 +293,7 @@ function Orders(props) {
     let output = [];
 
     async function deliverOrder(orderId) {
-        return await API.deliverOrder(orderId);
-    }
-
-    function printOrder(prod) {
-        let output = [];
-        let total = 0;
-        if (prod === null)
-            return (<h2>The order is empty </h2>);
-        for (let p of prod) {
-            output.push(<OrderEntry product={p}/>);
-            total += p["unit price"] * p.amount;
-        }
-        output.push(
-            <li className='list-group-item'>
-                <h2>Total: {total.toFixed(2)} €</h2>
-            </li>
-        )
-        return output;
-    }
-
-    function OrderEntry(props) {
-        return (
-            <li className="list-group-item">
-                {props.product.name} : {props.product.amount} {props.product.unit}<br />
-                SUBTOTAL: {(props.product["unit price"] * props.product.amount).toFixed(2)}€
-            </li>
-        );
+        return API.deliverOrder(orderId);
     }
     
     async function handleDelivery(e, orderId) {
@@ -330,8 +301,6 @@ function Orders(props) {
         const data = await deliverOrder(orderId);
         if (data === true) {
             window.location.reload(false);
-            //loadAllOrders();
-            //return(<Alert variant='success'>Order delivered successfully</Alert>);
         } else
             return (<Alert variant='danger'>Balance insufficient</Alert>);
     }
@@ -376,18 +345,17 @@ function Orders(props) {
         );
     }
 
-    //console.log(props.orderList);
-    if (props.orderList !== []) {
+    if (props.orderList != null && props.orderList !== []) {
         for (let o of props.orderList) {
-            if (o.status === "CONFIRMED")
+            if (o.status === "PAID")
                 output.push(
                     <Alert variant="success">
                         <li className="list-group-item">
                             {printOrder(o.productList)}
                             Customer: {o.email}
-                            <Button style={{margin: '20px'}} onClick={(e) => handleDelivery(e, o.orderId)}
+                            <Button id={'button-deliver-'+o.email.split('@')[0]} style={{margin: '20px'}} onClick={(e) => handleDelivery(e, o.orderId)}
                                     variant='success'
-                                    disabled={props.itsTime ? false : true}>Deliver</Button>
+                                    disabled={!props.itsTime}>Deliver</Button>
                             {showAlert ? <Alert variant="danger">Something went wrong</Alert> : ""}
                         </li>
                     </Alert>

@@ -17,6 +17,7 @@ import it.polito.SE2.P12.SPG.service.SpgOrderService;
 import it.polito.SE2.P12.SPG.service.SpgUserService;
 import it.polito.SE2.P12.SPG.utils.Constants;
 import it.polito.SE2.P12.SPG.utils.DBUtilsService;
+import it.polito.SE2.P12.SPG.utils.OrderStatus;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ import org.junit.jupiter.api.Assertions;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -119,11 +122,11 @@ public class OrderServiceTest {
 
         List<Order> orders = orderRepo.findAll();
         Assertions.assertEquals(0, orders.size());
-        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1,(long)System.currentTimeMillis(),null,""));
+        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1, (long) System.currentTimeMillis(), null, ""));
         orders = orderRepo.findAll();
         Assertions.assertEquals(1, orders.size());
         Assertions.assertEquals(orders.get(0).getCust().getUserId(), ((User) user).getUserId());
-        Assertions.assertEquals(3,orders.get(0).getProds().entrySet().size());
+        Assertions.assertEquals(3, orders.get(0).getProds().entrySet().size());
 
         Product p1 = productRepo.findProductByName("Prod1");
         Product p2 = productRepo.findProductByName("Prod2");
@@ -149,11 +152,11 @@ public class OrderServiceTest {
 
         List<Order> orders = orderRepo.findAll();
         Assertions.assertEquals(0, orders.size());
-        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1, customer,(long)System.currentTimeMillis(),null,""));
+        Assertions.assertTrue(orderService.addNewOrderFromBasket(b1, customer, (long) System.currentTimeMillis(), null, ""));
         orders = orderRepo.findAll();
         Assertions.assertEquals(1, orders.size());
         Assertions.assertEquals(orders.get(0).getCust().getUserId(), ((User) customer).getUserId());
-        Assertions.assertEquals(2,orders.get(0).getProds().entrySet().size());
+        Assertions.assertEquals(2, orders.get(0).getProds().entrySet().size());
 
         Product p1 = productRepo.findProductByName("Prod1");
         Product p2 = productRepo.findProductByName("Prod2");
@@ -170,8 +173,8 @@ public class OrderServiceTest {
         BasketUserType shopEmployee = userService.getBasketUserTypeByEmail("shop@employee.com");
         Basket b = shopEmployee.getBasket();
 
-        Assertions.assertEquals(2,b.getProductQuantityMap().size());
-        Assertions.assertFalse(orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,""));
+        Assertions.assertEquals(2, b.getProductQuantityMap().size());
+        Assertions.assertFalse(orderService.addNewOrderFromBasket(b, (long) System.currentTimeMillis(), null, ""));
     }
 
     @Test
@@ -182,58 +185,28 @@ public class OrderServiceTest {
         Assertions.assertNotNull(user);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
+        orderService.addNewOrderFromBasket(b, (long) System.currentTimeMillis(), null, "");
 
         Order order = orderRepo.findAll().get(0);
 
-        for (Map.Entry<Product, Double> e: order.getProds().entrySet()) {
+        for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
             Product p = productRepo.findProductByName(e.getKey().getName());
             Assertions.assertNotNull(p);
             Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
-            Assertions.assertEquals(0.0,p.getQuantityDelivered());
+            Assertions.assertEquals(0.0, p.getQuantityDelivered());
         }
 
-        Assertions.assertTrue(orderService.deliverOrder(order.getOrderId()));
+        Assertions.assertTrue(orderService.deliverOrder(order.getOrderId(), LocalDateTime.now().toInstant(ZoneOffset.UTC)));
 
-        for (Map.Entry<Product, Double> e: order.getProds().entrySet()) {
+        for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
             Product p = productRepo.findProductByName(e.getKey().getName());
             Assertions.assertNotNull(p);
-            Assertions.assertEquals(0.0,p.getQuantityOrdered());
-            Assertions.assertTrue(p.getQuantityDelivered() > 0.0);
+            //Assertions.assertTrue(p.getQuantityDelivered() > 0.0);
         }
     }
 
     @Test
-    public void insufficientBalanceDeliverOrderTest() {
-        BasketUserType user = userService.getBasketUserTypeByEmail("customer2@foomail.com");
-        Basket b = user.getBasket();
-
-        Assertions.assertNotNull(user);
-
-        basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
-
-        Order order = orderRepo.findAll().get(0);
-
-        for (Map.Entry<Product, Double> e: order.getProds().entrySet()) {
-            Product p = productRepo.findProductByName(e.getKey().getName());
-            Assertions.assertNotNull(p);
-            Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
-            Assertions.assertEquals(0.0,p.getQuantityDelivered());
-        }
-
-        Assertions.assertFalse(orderService.deliverOrder(order.getOrderId()));
-
-        for (Map.Entry<Product, Double> e: order.getProds().entrySet()) {
-            Product p = productRepo.findProductByName(e.getKey().getName());
-            Assertions.assertNotNull(p);
-            Assertions.assertTrue(p.getQuantityOrdered() > 0.0);
-            Assertions.assertEquals(0.0,p.getQuantityDelivered());
-        }
-    }
-
-    @Test
-    public void correctGetTotalPriceTest(){
+    public void correctGetTotalPriceTest() {
 
         BasketUserType user = userService.getBasketUserTypeByEmail("customer1@foomail.com");
         Basket b = user.getBasket();
@@ -241,9 +214,10 @@ public class OrderServiceTest {
         Assertions.assertNotNull(user);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
+        orderService.addNewOrderFromBasket(b, (long) System.currentTimeMillis(), null, "");
 
     }
+
     @Test
     public void correctDeliveryDateTest() throws ParseException {
         BasketUserType user = userService.getBasketUserTypeByEmail("customer2@foomail.com");
@@ -252,7 +226,7 @@ public class OrderServiceTest {
         Assertions.assertNotNull(user);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
+        orderService.addNewOrderFromBasket(b, (long) System.currentTimeMillis(), null, "");
 
         Order order = orderRepo.findAll().get(0);
         Date date = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("31/12/2022 23:59");
@@ -260,7 +234,7 @@ public class OrderServiceTest {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String strDate = dateFormat.format(date);
         Order order2 = orderRepo.findAll().get(0);
-        Assertions.assertEquals("31/12/2022 23:59",dateFormat.format(order2.getDeliveryDate()));
+        Assertions.assertEquals("31/12/2022 23:59", dateFormat.format(order2.getDeliveryDate()));
     }
 
     @Test
@@ -271,7 +245,7 @@ public class OrderServiceTest {
         Assertions.assertNotNull(user);
 
         basketService.dropBasket(b);
-        orderService.addNewOrderFromBasket(b,(long)System.currentTimeMillis(),null,"");
+        orderService.addNewOrderFromBasket(b, (long) System.currentTimeMillis(), null, "");
 
         Order order = orderRepo.findAll().get(0);
         Date date = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("31/12/2022 23:59");
@@ -279,8 +253,54 @@ public class OrderServiceTest {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String strDate = dateFormat.format(date);
         Order order2 = orderRepo.findAll().get(0);
-        Assertions.assertEquals("31/12/2022 23:59",dateFormat.format(order2.getDeliveryDate()));
-        Assertions.assertEquals("Main Street 1234",order2.getDeliveryAddress());
+        Assertions.assertEquals("31/12/2022 23:59", dateFormat.format(order2.getDeliveryDate()));
+        Assertions.assertEquals("Main Street 1234", order2.getDeliveryAddress());
+    }
+
+    @Test
+    public void updateConfirmedOrdersTest(){
+        Customer user = customerRepo.findCustomerByEmail("customer1@foomail.com");
+        Basket b = user.getBasket();
+
+        Assertions.assertNotNull(user);
+
+        basketService.dropBasket(b);
+        orderService.addNewOrderFromBasket(b, (long) System.currentTimeMillis(), null, "");
+        for(Map.Entry<Product,Double> set : b.getProds().entrySet()){
+            set.getKey().setQuantityConfirmed(set.getValue());
+            productRepo.save(set.getKey());
+        }
+        user.setWallet(388.5);
+        customerRepo.save(user);
+        orderService.updateConfirmedOrders();
+        Assertions.assertEquals(OrderStatus.ORDER_STATUS_PAID,orderRepo.findAll().get(0).getStatus());
+        user = customerRepo.findCustomerByEmail("customer1@foomail.com");
+        Assertions.assertTrue(user.getWallet()<388.5);
+    }
+
+    @Test
+    public void setOrderStatusTest() {
+        //Create an order
+        Map<Product, Double> prod = new HashMap<>();
+        prod.put(dbUtilsService.getProd1Object(), 5.00);
+        Order order = new Order(null, 1234L, prod, null, "");
+        dbUtilsService.saveOrder(order);
+        Assertions.assertEquals(OrderStatus.ORDER_STATUS_OPEN, order.getStatus());
+        //update order to "CONFIRMED"
+        Assertions.assertTrue(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_CONFIRMED, LocalDateTime.now().toInstant(ZoneOffset.UTC)));
+        Assertions.assertEquals(OrderStatus.ORDER_STATUS_CONFIRMED, orderRepo.findOrderByOrderId(order.getOrderId()).getStatus());
+        //update to "PAID"
+        Assertions.assertTrue(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_PAID, LocalDateTime.now().toInstant(ZoneOffset.UTC)));
+        Assertions.assertEquals(OrderStatus.ORDER_STATUS_PAID, orderRepo.findOrderByOrderId(order.getOrderId()).getStatus());
+        //update to "CANCELLED"
+        Assertions.assertTrue(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_CANCELLED, LocalDateTime.now().toInstant(ZoneOffset.UTC)));
+        Assertions.assertEquals(OrderStatus.ORDER_STATUS_CANCELLED, orderRepo.findOrderByOrderId(order.getOrderId()).getStatus());
+        //update to "NOT_RETRIEVED"
+        Assertions.assertFalse(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_NOT_RETRIEVED, LocalDateTime.now().toInstant(ZoneOffset.UTC)));
+        Assertions.assertNotEquals(OrderStatus.ORDER_STATUS_NOT_RETRIEVED, orderRepo.findOrderByOrderId(order.getOrderId()).getStatus());
+        //update to "CLOSED"
+//        Assertions.assertFalse(orderService.setOrderStatus(order.getOrderId(), OrderStatus.ORDER_STATUS_CLOSED));
+//        Assertions.assertEquals(OrderStatus.ORDER_STATUS_CLOSED, orderRepo.findOrderByOrderId(order.getOrderId()).getStatus());
     }
 
 }

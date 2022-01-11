@@ -1,5 +1,8 @@
 package it.polito.SE2.P12.SPG.serviceTest;
 
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
+import com.icegreen.greenmail.junit5.GreenMailExtension;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.repository.*;
 import it.polito.SE2.P12.SPG.service.SpgOrderService;
@@ -9,8 +12,12 @@ import it.polito.SE2.P12.SPG.utils.DBUtilsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.mail.internet.MimeMessage;
+import java.time.Instant;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -36,6 +43,12 @@ public class UserServiceTest {
     private FarmerRepo farmerRepo;
     @Autowired
     private AdminRepo adminRepo;
+
+    /*Email mock initialization*/
+    @RegisterExtension
+    static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP) //set up mail server protocol
+            .withConfiguration(GreenMailConfiguration.aConfig().withUser("duke@test.com", "password")) //remember to set-up user in test properties
+            .withPerMethodLifecycle(false);//reload extension each test: false
 
 
     @BeforeEach
@@ -63,11 +76,11 @@ public class UserServiceTest {
         User user = userService.getUserByEmail("customer1@foomail.com");
         Assertions.assertNotNull(user);
 
-        Assertions.assertEquals("customer1",user.getName());
-        Assertions.assertEquals("surname1",user.getSurname());
-        Assertions.assertEquals("ssn_aaaaaaaaaaaa",user.getSsn());
-        Assertions.assertEquals("123456789",user.getPhoneNumber());
-        Assertions.assertEquals("password1223ABC",user.getPassword());
+        Assertions.assertEquals("customer1", user.getName());
+        Assertions.assertEquals("surname1", user.getSurname());
+        Assertions.assertEquals("ssn_aaaaaaaaaaaa", user.getSsn());
+        Assertions.assertEquals("123456789", user.getPhoneNumber());
+        Assertions.assertEquals("password1223ABC", user.getPassword());
 
     }
 
@@ -80,14 +93,14 @@ public class UserServiceTest {
         Customer fromRepo = customerRepo.findCustomerByEmail("customer3@foomail.com");
         Assertions.assertNotNull(fromRepo);
 
-        Assertions.assertEquals("customer3",fromRepo.getName());
-        Assertions.assertEquals("surname3",fromRepo.getSurname());
-        Assertions.assertEquals("ssn_ccccccccccc",fromRepo.getSsn());
-        Assertions.assertEquals("123456789",fromRepo.getPhoneNumber());
-        Assertions.assertEquals("customer3@foomail.com",fromRepo.getEmail());
-        Assertions.assertEquals("password1223ABC",fromRepo.getPassword());
-        Assertions.assertEquals("address3",fromRepo.getAddress());
-        Assertions.assertEquals(15.3,fromRepo.getWallet());
+        Assertions.assertEquals("customer3", fromRepo.getName());
+        Assertions.assertEquals("surname3", fromRepo.getSurname());
+        Assertions.assertEquals("ssn_ccccccccccc", fromRepo.getSsn());
+        Assertions.assertEquals("123456789", fromRepo.getPhoneNumber());
+        Assertions.assertEquals("customer3@foomail.com", fromRepo.getEmail());
+        Assertions.assertEquals("password1223ABC", fromRepo.getPassword());
+        Assertions.assertEquals("address3", fromRepo.getAddress());
+        Assertions.assertEquals(15.3, fromRepo.getWallet());
     }
 
     @Test
@@ -105,14 +118,14 @@ public class UserServiceTest {
         Customer fromRepo = customerRepo.findCustomerByEmail("customer3@foomail.com");
         Assertions.assertNotNull(fromRepo);
 
-        Assertions.assertEquals("customer3",fromRepo.getName());
-        Assertions.assertEquals("surname3",fromRepo.getSurname());
-        Assertions.assertEquals("ssn_ccccccccccc",fromRepo.getSsn());
-        Assertions.assertEquals("123456789",fromRepo.getPhoneNumber());
-        Assertions.assertEquals("customer3@foomail.com",fromRepo.getEmail());
-        Assertions.assertEquals("password1223ABC",fromRepo.getPassword());
-        Assertions.assertEquals("address3",fromRepo.getAddress());
-        Assertions.assertEquals(15.3,fromRepo.getWallet());
+        Assertions.assertEquals("customer3", fromRepo.getName());
+        Assertions.assertEquals("surname3", fromRepo.getSurname());
+        Assertions.assertEquals("ssn_ccccccccccc", fromRepo.getSsn());
+        Assertions.assertEquals("123456789", fromRepo.getPhoneNumber());
+        Assertions.assertEquals("customer3@foomail.com", fromRepo.getEmail());
+        Assertions.assertEquals("password1223ABC", fromRepo.getPassword());
+        Assertions.assertEquals("address3", fromRepo.getAddress());
+        Assertions.assertEquals(15.3, fromRepo.getWallet());
     }
 
     @Test
@@ -131,14 +144,14 @@ public class UserServiceTest {
         Assertions.assertNotNull(fromRepo);
 
 
-        Assertions.assertEquals("customer3",fromRepo.getName());
-        Assertions.assertEquals("surname3",fromRepo.getSurname());
-        Assertions.assertEquals("ssn_ccccccccccc",fromRepo.getSsn());
-        Assertions.assertEquals("123456789",fromRepo.getPhoneNumber());
-        Assertions.assertEquals("customer3@foomail.com",fromRepo.getEmail());
-        Assertions.assertEquals("password1223ABC",fromRepo.getPassword());
-        Assertions.assertEquals("address3",fromRepo.getAddress());
-        Assertions.assertEquals(15.3,fromRepo.getWallet());
+        Assertions.assertEquals("customer3", fromRepo.getName());
+        Assertions.assertEquals("surname3", fromRepo.getSurname());
+        Assertions.assertEquals("ssn_ccccccccccc", fromRepo.getSsn());
+        Assertions.assertEquals("123456789", fromRepo.getPhoneNumber());
+        Assertions.assertEquals("customer3@foomail.com", fromRepo.getEmail());
+        Assertions.assertEquals("password1223ABC", fromRepo.getPassword());
+        Assertions.assertEquals("address3", fromRepo.getAddress());
+        Assertions.assertEquals(15.3, fromRepo.getWallet());
     }
 
     @Test
@@ -156,14 +169,14 @@ public class UserServiceTest {
         Customer fromRepo = customerRepo.findCustomerByEmail("customer3@foomail.com");
         Assertions.assertNotNull(fromRepo);
 
-        Assertions.assertEquals("customer3",fromRepo.getName());
-        Assertions.assertEquals("surname3",fromRepo.getSurname());
-        Assertions.assertEquals("ssn_ccccccccccc",fromRepo.getSsn());
-        Assertions.assertEquals("123456789",fromRepo.getPhoneNumber());
-        Assertions.assertEquals("customer3@foomail.com",fromRepo.getEmail());
-        Assertions.assertEquals("password1223ABC",fromRepo.getPassword());
-        Assertions.assertEquals("address3",fromRepo.getAddress());
-        Assertions.assertEquals(15.3,fromRepo.getWallet());
+        Assertions.assertEquals("customer3", fromRepo.getName());
+        Assertions.assertEquals("surname3", fromRepo.getSurname());
+        Assertions.assertEquals("ssn_ccccccccccc", fromRepo.getSsn());
+        Assertions.assertEquals("123456789", fromRepo.getPhoneNumber());
+        Assertions.assertEquals("customer3@foomail.com", fromRepo.getEmail());
+        Assertions.assertEquals("password1223ABC", fromRepo.getPassword());
+        Assertions.assertEquals("address3", fromRepo.getAddress());
+        Assertions.assertEquals(15.3, fromRepo.getWallet());
     }
 
     @Test //Il test tenta di convertire il basket di un employee in un ordine per un farmer
@@ -192,44 +205,92 @@ public class UserServiceTest {
         Customer cust1 = customerRepo.findCustomerByEmail("customer1@foomail.com");
         Customer cust2 = customerRepo.findCustomerByEmail("customer2@foomail.com");
 
-        Assertions.assertEquals(92.5,cust1.getWallet());
-        Assertions.assertEquals(12.82,cust2.getWallet());
+        Assertions.assertEquals(92.5, cust1.getWallet());
+        Assertions.assertEquals(12.82, cust2.getWallet());
     }
 
     @Test
     public void correctTopUpTest() {
 
-        Assertions.assertTrue(userService.topUp("customer1@foomail.com", 10.0));
-        Assertions.assertTrue(userService.topUp("customer2@foomail.com", 15.5));
+        Assertions.assertTrue(userService.topUp("customer1@foomail.com", 10.0, Instant.now()));
+        Assertions.assertTrue(userService.topUp("customer2@foomail.com", 15.5, Instant.now()));
 
-        Assertions.assertEquals(102.5,userService.getWallet("customer1@foomail.com"));
-        Assertions.assertEquals(28.32,userService.getWallet("customer2@foomail.com"));
+        Assertions.assertEquals(102.5, userService.getWallet("customer1@foomail.com"));
+        Assertions.assertEquals(28.32, userService.getWallet("customer2@foomail.com"));
     }
 
     @Test
     public void zeroTopUpTest() {
-        Assertions.assertFalse(userService.topUp("customer1@foomail.com", 0.0));
-        Assertions.assertEquals(92.5,userService.getWallet("customer1@foomail.com"));
+        Assertions.assertFalse(userService.topUp("customer1@foomail.com", 0.0, Instant.now()));
+        Assertions.assertEquals(92.5, userService.getWallet("customer1@foomail.com"));
     }
 
     @Test
     public void negativeTopUpTest() {
-        Assertions.assertFalse(userService.topUp("customer1@foomail.com", -1.0));
-        Assertions.assertEquals(92.5,userService.getWallet("customer1@foomail.com"));
+        Assertions.assertFalse(userService.topUp("customer1@foomail.com", -1.0, Instant.now()));
+        Assertions.assertEquals(92.5, userService.getWallet("customer1@foomail.com"));
     }
 
     @Test
     public void infiniteTopUpTest() {
-        Assertions.assertFalse(userService.topUp("customer1@foomail.com", Double.POSITIVE_INFINITY));
-        Assertions.assertFalse(userService.topUp("customer2@foomail.com", Double.NEGATIVE_INFINITY));
-        Assertions.assertEquals(92.5,userService.getWallet("customer1@foomail.com"));
-        Assertions.assertEquals(12.82,userService.getWallet("customer2@foomail.com"));
+        Assertions.assertFalse(userService.topUp("customer1@foomail.com", Double.POSITIVE_INFINITY, Instant.now()));
+        Assertions.assertFalse(userService.topUp("customer2@foomail.com", Double.NEGATIVE_INFINITY, Instant.now()));
+        Assertions.assertEquals(92.5, userService.getWallet("customer1@foomail.com"));
+        Assertions.assertEquals(12.82, userService.getWallet("customer2@foomail.com"));
     }
 
     @Test
     public void nanTopUpTest() {
-        Assertions.assertFalse(userService.topUp("customer1@foomail.com", Double.NaN));
-        Assertions.assertEquals(92.5,userService.getWallet("customer1@foomail.com"));
+        Assertions.assertFalse(userService.topUp("customer1@foomail.com", Double.NaN, Instant.now()));
+        Assertions.assertEquals(92.5, userService.getWallet("customer1@foomail.com"));
     }
+
+    @Test
+    public void missedPickUpTest() {
+        Customer tmp = userService.getCustomerByEmail("customer1@foomail.com");
+        //Check that initial amount is 0
+        Assertions.assertEquals(0, tmp.getMissedPickUpAmount());
+        //Increment by one
+        tmp.incrementMissedPickUp();
+        Assertions.assertEquals(1, userService.incrementMissedPickUp(tmp.getEmail()));
+        //Decrement by 1
+        tmp.decrementMissedPickUp();
+        Assertions.assertEquals(0, userService.decrementMissedPickUp(tmp.getEmail()));
+        for (int i = 0; i < 5; i++) {
+            userService.incrementMissedPickUp(tmp.getEmail());
+        }
+        //user is banned
+        Assertions.assertTrue(userService.isCustomerBanned(tmp.getEmail()));
+        //decrement
+        userService.decrementMissedPickUp(tmp.getEmail());
+        Assertions.assertFalse(userService.isCustomerBanned(tmp.getEmail()));
+    }
+
+    @Test
+    public void missedPickUpTest_HandlingError() {
+        //invalid user are considered as banned
+        Assertions.assertTrue(userService.isCustomerBanned("invalid mail"));
+        //-1 if user is not valid
+        Assertions.assertEquals(-1, userService.decrementMissedPickUp("invalid mail"));
+        Assertions.assertEquals(-1, userService.incrementMissedPickUp("invalid mail"));
+        //Decrement on 0
+        Assertions.assertEquals(0, userService.decrementMissedPickUp("customer1@foomail.com"));
+        //increment on 5
+        for (int i = 0; i < 10; i++) {
+            userService.incrementMissedPickUp("customer1@foomail.com");
+        }
+        Assertions.assertEquals(5, userService.incrementMissedPickUp("customer1@foomail.com"));
+
+    }
+
+    @Test
+    public void sentWarningPickUpAmountMailTest() {
+        Assertions.assertTrue(userService.sentWarningPickUpAmountMail("customer1@foomail.com"));
+        MimeMessage[] receivedMessage = greenMail.getReceivedMessages();
+        Assertions.assertEquals(1, receivedMessage.length);
+        //error handling (invalid email)
+        Assertions.assertFalse(userService.sentWarningPickUpAmountMail("customer12344@foomail.com"));
+    }
+
 
 }

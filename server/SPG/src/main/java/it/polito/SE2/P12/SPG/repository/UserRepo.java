@@ -21,4 +21,5 @@ public interface UserRepo
     List<User> findAllByRoleIn(List<String> roles);
     List<User> findAllByRole(String role);
     User findByEmailAndRoleIn(String email, List<String> roles);
+    User findUserByChatId(String chatId);
 }

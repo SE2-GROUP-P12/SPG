@@ -1,5 +1,5 @@
 import * as React from "react";
-import {render, fireEvent, waitFor, getByText} from '@testing-library/react';
+import {render, fireEvent, waitFor} from '@testing-library/react';
 import {BrowserRouter as Router} from "react-router-dom";
 import "./NavbarApplication.css"
 
@@ -7,7 +7,7 @@ import {NavbarApplication} from "./NavbarApplication";
 
 test("Alert Balance insufficient", async () => {
 
-    const {getByText, getByAltText} = render(
+    const {getByText, getByTestId} = render(
         <Router>
             <NavbarApplication isLoggedFlag={true}
                                loggedUser={"mario.rossi@gmail.com"}
@@ -21,7 +21,7 @@ test("Alert Balance insufficient", async () => {
         </Router>
     );
 
-    let warning = getByAltText("warning");
+    let warning = getByTestId("topUpWarning");
     getByText("Log Out");
     fireEvent.mouseOver(warning);
     await waitFor(() => {
@@ -29,9 +29,35 @@ test("Alert Balance insufficient", async () => {
     });
 })
 
+test("Alert missed pickups", async () => {
+
+    localStorage.setItem("missedPickUp", '4');
+    const {getByText, getByTestId} = render(
+        <Router>
+            <NavbarApplication isLoggedFlag={true}
+                               loggedUser={"mario.rossi@gmail.com"}
+                               loggedUserRole={"CUSTOMER"}
+                               topUpWarning={
+                                   {
+                                       "exist": "true",
+                                       "message": "Balance insufficient, remember to top up!"
+                                   }}
+            />
+        </Router>
+    );
+    let warning = getByTestId("missedPickupWarning");
+    getByText("Log Out");
+    fireEvent.mouseOver(warning);
+    await waitFor(() => {
+        getByText(/There are/i);
+        getByText(/4/i);
+        getByText(/order\(s\) waiting for your pick up, please pick it up as soon as possible/i);
+    });
+})
+
 test("No balance insufficient", async () => {
 
-    const {getByText, getByAltText} = render(
+    const {getByText, getByTestId} = render(
         <Router>
             <NavbarApplication isLoggedFlag={true}
                                loggedUser={"mario.rossi@gmail.com"}
@@ -41,11 +67,11 @@ test("No balance insufficient", async () => {
         </Router>
     );
     getByText("Log Out");
-    expect(() => getByAltText('warning')).toThrow();
+    expect(() => getByTestId("topUpWarning")).toThrow();
 })
 
 test("No user logged in", async () => {
-    const {getByText, getByAltText} = render(
+    const {getByText, getByTestId} = render(
         <Router>
             <NavbarApplication isLoggedFlag={false}
                                loggedUser={""}
@@ -56,15 +82,14 @@ test("No user logged in", async () => {
     getByText("Browse Products")
     getByText("Log in");
     getByText("Sign up");
-    expect(() => getByAltText('warning')).toThrow();
-    expect(() => getByAltText('Dashboard')).toThrow();
+    expect(() => getByTestId("topUpWarning")).toThrow();
 })
 
 test("No user logged in Browse Product", async () => {
     delete window.location
     window.location = new URL("http://localhost:3000/BrowseProducts")
 
-    const {getByText, getByAltText} = render(
+    const {getByText, getByAltText, getByTestId} = render(
         <Router>
             <NavbarApplication isLoggedFlag={false}
                                loggedUser={""}
@@ -74,7 +99,7 @@ test("No user logged in Browse Product", async () => {
     );
     getByText("Log in");
     getByText("Sign up");
-    expect(() => getByAltText('warning')).toThrow();
+    expect(() => getByTestId('topUpWarning')).toThrow();
     expect(() => getByAltText('Dashboard')).toThrow();
     expect(() => getByAltText('Browse Products')).toThrow();
 })
@@ -83,7 +108,7 @@ test("Logged user in Browse Product", async () => {
     delete window.location
     window.location = new URL("http://localhost:3000/BrowseProducts")
 
-    const {getByText, getByAltText} = render(
+    const {getByText, getByAltText, getByTestId} = render(
         <Router>
             <NavbarApplication isLoggedFlag={true}
                                loggedUser={"mario.rossi@gmail.com"}
@@ -94,8 +119,103 @@ test("Logged user in Browse Product", async () => {
     );
     getByText("Log Out");
     getByText("Dashboard")
-    expect(() => getByAltText('warning')).toThrow();
+    expect(() => getByTestId('topUpWarning')).toThrow();
     expect(() => getByAltText('Browse Products')).toThrow();
     expect(() => getByAltText('Sign up')).toThrow();
     expect(() => getByAltText('Log In')).toThrow();
+})
+
+global.fetch = jest.fn();
+beforeEach(()=>fetch.mockClear() );
+
+test ("Log out - ok", async () => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: true,
+            status: 200
+        })
+    )
+    const {getByText} = render(
+        <Router>
+            <NavbarApplication isLoggedFlag={true}
+                               setLoggedFlag={x=>x}
+                               setLoggedUser={x=>x}
+                               setLoggedUserRole={x=>x}
+                               setAccessToken={x=>x}
+                               setTopUpWarning={x=>x}
+                               loggedUser={"mario.rossi@gmail.com"}
+                               loggedUserRole={"CUSTOMER"}
+                               topUpWarning={{"exist": "false"}}
+            />
+        </Router>
+    );
+    await waitFor(()=>{
+        getByText("Log Out");
+    })
+    fireEvent.click(getByText("Log Out"));
+})
+
+test ("Log out - fail", async () => {
+    fetch.mockImplementationOnce(()=>
+        Promise.resolve({
+            ok: false,
+            status: 400
+        })
+    )
+    const {getByText} = render(
+        <Router>
+            <NavbarApplication isLoggedFlag={true}
+                               setLoggedFlag={x=>x}
+                               setLoggedUser={x=>x}
+                               setLoggedUserRole={x=>x}
+                               setAccessToken={x=>x}
+                               setTopUpWarning={x=>x}
+                               loggedUser={"mario.rossi@gmail.com"}
+                               loggedUserRole={"CUSTOMER"}
+                               topUpWarning={{"exist": "false"}}
+            />
+        </Router>
+    );
+    await waitFor(()=>{
+        getByText("Log Out");
+    })
+    fireEvent.click(getByText("Log Out"));
+})
+
+test ("No signup in new customer", async() =>{
+    delete window.location
+    window.location = new URL("http://localhost:3000/NewCustomer")
+    const {getByText} = render(
+        <Router>
+            <NavbarApplication isLoggedFlag={true}
+                               loggedUser={"mario.rossi@gmail.com"}
+                               loggedUserRole={"CUSTOMER"}
+                               topUpWarning={{"exist": "false"}}
+            />
+        </Router>
+    );
+    await waitFor(()=>{
+        getByText("Log Out");
+        expect(()=>getByText("Sign up")).toThrow();
+    })
+
+})
+
+test ("No login in login", async() =>{
+    delete window.location
+    window.location = new URL("http://localhost:3000/LoginComponent")
+    const {getByText} = render(
+        <Router>
+            <NavbarApplication isLoggedFlag={false}
+                               loggedUser={""}
+                               loggedUserRole={""}
+                               topUpWarning={{"exist": "false"}}
+            />
+        </Router>
+    );
+    await waitFor(()=>{
+        getByText("Sign up");
+        expect(()=>getByText("Log in")).toThrow();
+    })
+
 })

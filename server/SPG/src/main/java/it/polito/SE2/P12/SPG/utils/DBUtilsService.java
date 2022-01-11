@@ -76,61 +76,69 @@ public class DBUtilsService {
         //Shop Employee
         ShopEmployee temp3 = new ShopEmployee("Francesco", "Conte", "CNTFRN00D12N376V", "01234567894",
                 Constants.EMAIL_FRANCESCO_CONTE, hashedPassword);
+        ShopEmployee temp4 = new ShopEmployee("Mario", "Bianchi", "BNCMRO00D12N376V", "01234567819",
+                Constants.EMAIL_MARIO_BIANCHI, hashedPassword);
         //Farmer
-        Farmer temp4 = new Farmer("Thomas", "Jefferson", "JFRTHM00D12N376V", "01234567895",
+        Farmer temp5 = new Farmer("Thomas", "Jefferson", "JFRTHM00D12N376V", "01234567895",
                 Constants.EMAIL_THOMAS_JEFFERSON, hashedPassword);
-        Farmer temp5 = new Farmer("Alexander", "Hamilton", "HMLLND00A11Z501E", "0123456743", Constants.EMAIL_ALEXANDER_HAMILTON, hashedPassword);
+        Farmer temp6 = new Farmer("Alexander", "Hamilton", "HMLLND00A11Z501E", "0123456743", Constants.EMAIL_ALEXANDER_HAMILTON, hashedPassword);
+        Farmer temp7 = new Farmer("Calvin", "Harris", "HRRCVN00A11Z501E", "0123456741", Constants.EMAIL_CALVIN_HARRIS, hashedPassword);
+
         if (userRepo.findUserByEmail(Constants.EMAIL_MARIO_ROSSI) == null) customerRepo.save(temp1);
         if (userRepo.findUserByEmail(Constants.EMAIL_PAOLO_BIANCHI) == null) customerRepo.save(temp2);
         if (userRepo.findUserByEmail(Constants.EMAIL_FRANCESCO_CONTE) == null) shopEmployeeRepo.save(temp3);
+        if (userRepo.findUserByEmail(Constants.EMAIL_MARIO_BIANCHI) == null) shopEmployeeRepo.save(temp4);
         if (userRepo.findUserByEmail(Constants.EMAIL_ADMIN) == null) adminRepo.save(admin);
-        if (userRepo.findUserByEmail(Constants.EMAIL_THOMAS_JEFFERSON) == null) farmerRepo.save(temp4);
-        if (userRepo.findUserByEmail(Constants.EMAIL_ALEXANDER_HAMILTON) == null) farmerRepo.save(temp5);
+        if (userRepo.findUserByEmail(Constants.EMAIL_THOMAS_JEFFERSON) == null) farmerRepo.save(temp5);
+        if (userRepo.findUserByEmail(Constants.EMAIL_ALEXANDER_HAMILTON) == null) farmerRepo.save(temp6);
+        if (userRepo.findUserByEmail(Constants.EMAIL_CALVIN_HARRIS) == null) farmerRepo.save(temp7);
     }
 
     private void populateProducts() {
         Farmer farmer1 = farmerRepo.findFarmerByEmail(Constants.EMAIL_THOMAS_JEFFERSON);
         Farmer farmer2 = farmerRepo.findFarmerByEmail(Constants.EMAIL_ALEXANDER_HAMILTON);
+        Farmer farmer3 = farmerRepo.findFarmerByEmail(Constants.EMAIL_CALVIN_HARRIS);
         List<Product> prodList = new ArrayList<Product>();
         //Product temp1 =
-        prodList.add(new Product("Apples", "Kg", 50.0, 2.50, "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6", farmer1));
-        prodList.add(new Product("Flour", "Kg", 10.0, 5.00, "https://images.unsplash.com/photo-1610725664285-7c57e6eeac3f", farmer2));
-        prodList.add(new Product("Eggs", "Units", 36.0, 6.25, "https://images.unsplash.com/photo-1498654077810-12c21d4d6dc3", farmer1));
-        prodList.add(new Product("Oranges", "Kg", 12.0, 2.10, "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b", farmer2));
-        prodList.add(new Product("Cherries", "Kg", 15.0, 4.00, "https://images.unsplash.com/photo-1611096265583-5d745206f2a0", farmer1));
-        prodList.add(new Product("Bananas", "Kg", 22.0, 6.25, "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e", farmer1));
-        prodList.add(new Product("Strawberries", "Kg", 13.0, 2.50, "https://images.unsplash.com/photo-1566804770468-867f6158bda5", farmer1));
-        prodList.add(new Product("Kiwi", "Kg", 17.0, 5.00, "https://images.unsplash.com/photo-1616684000067-36952fde56ec", farmer2));
-        prodList.add(new Product("Asparagus", "Kg", 95.0, 6.25, "https://images.unsplash.com/photo-1589928009551-e9bded9ee7eb", farmer1));
-        prodList.add(new Product("Lemons", "Kg", 37.0, 2.50, "https://images.unsplash.com/photo-1609639643505-3c158a56de42", farmer2));
-        prodList.add(new Product("Pears", "Kg", 12.0, 5.00, "https://images.unsplash.com/photo-1542820242-a3699d4f2bfe", farmer1));
-        prodList.add(new Product("Olives", "Kg", 46.0, 6.25, "https://images.unsplash.com/photo-1572777856134-4e658bbf3b78", farmer1));
-        prodList.add(new Product("Peaches", "Kg", 51.0, 2.50, "https://images.unsplash.com/photo-1532704868953-d85f24176d73", farmer2));
-        prodList.add(new Product("Grapes", "Kg", 11.0, 5.00, "https://images.unsplash.com/photo-1599819177626-b50f9dd21c9b", farmer1));
-        prodList.add(new Product("Cucumber", "Kg", 37.0, 6.25, "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6", farmer2));
-        prodList.add(new Product("Cauliflowers", "Kg", 43.0, 2.50, "https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3", farmer2));
-        prodList.add(new Product("Carrots", "Kg", 10.0, 5.00, "https://images.unsplash.com/photo-1447175008436-054170c2e979", farmer1));
-        prodList.add(new Product("Onions", "Kg", 12.0, 6.25, "https://images.unsplash.com/photo-1580201092675-a0a6a6cafbb1", farmer2));
-        prodList.add(new Product("Lettuce", "Kg", 19.0, 5.00, "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1", farmer1));
-        prodList.add(new Product("Potatoes", "Kg", 68.0, 6.25, "https://images.unsplash.com/photo-1518977676601-b53f82aba655", farmer2));
-        prodList.add(new Product("Leeks", "Kg", 54.0, 2.50, "https://images.unsplash.com/photo-1602769515559-e15133a7e992", farmer1));
-        prodList.add(new Product("Celery", "Kg", 6.0, 5.00, "https://images.unsplash.com/photo-1633653745758-7ef9d5b95f0f", farmer2));
-        prodList.add(new Product("Spinach", "Kg", 3.0, 6.25, "https://images.unsplash.com/photo-1576045057995-568f588f82fb", farmer1));
-        prodList.add(new Product("Peppers", "Kg", 5.0, 2.50, "https://images.unsplash.com/photo-1506365069540-904bcc762636", farmer2));
-        prodList.add(new Product("Tomatoes", "Kg", 1.0, 5.00, "https://images.unsplash.com/photo-1606588260160-0c4707ab7db5", farmer2));
-        prodList.add(new Product("Watermelon", "Kg", 65.0, 5.00, "https://images.unsplash.com/photo-1563015181-85d2e7c46e20", farmer2));
-        prodList.add(new Product("Turnips", "Kg", 61.0, 6.25, "https://images.unsplash.com/photo-1478900160460-2bfa23c92a4a", farmer1));
-        prodList.add(new Product("Chard", "Kg", 5.0, 2.50, "https://images.unsplash.com/photo-1593352769539-d7be34841f51", farmer2));
-        prodList.add(new Product("Radish", "Kg", 70.0, 5.00, "https://images.unsplash.com/photo-1593026122758-19bebc625104", farmer1));
-        prodList.add(new Product("Thistles", "Kg", 30.0, 6.25, "https://images.unsplash.com/photo-1592171403156-8bdf91b1d057", farmer1));
-        prodList.add(new Product("Broccoli", "Kg", 40.0, 2.50, "https://images.unsplash.com/photo-1614336215203-05a588f74627", farmer2));
-        prodList.add(new Product("Honey", "Kg", 13.0, 5.00, "https://images.unsplash.com/photo-1587049352895-5caf69ef3b6e", farmer2));
-        prodList.add(new Product("Milk", "L", 6.0, 6.25, "https://images.unsplash.com/photo-1523473827533-2a64d0d36748", farmer1));
-        prodList.add(new Product("Capers", "Kg", 5.0, 2.50, "https://images.unsplash.com/photo-1625009431843-18569fd7331b", farmer2));
-        prodList.add(new Product("Garlic", "Kg", 17.0, 5.00, "https://images.unsplash.com/photo-1588167109140-e81c3080d557", farmer1));
-        prodList.add(new Product("Salami", "Kg", 41.0, 6.25, "https://images.unsplash.com/photo-1620578504566-6d883f9aaddb", farmer2));
-        prodList.add(new Product("Ham", "Kg", 45.0, 2.50, "https://images.unsplash.com/photo-1607756794535-ba48a526b73a", farmer1));
-        prodList.add(new Product("Raw Ham", "Kg", 14.0, 5.00, "https://images.unsplash.com/photo-1609518317991-10acee259279", farmer2));
+        prodList.add(new Product("Flour", "Kg", 10.0, 5.00, "server/SPG/resources/images/Flour.jpg", farmer2));
+        prodList.add(new Product("Eggs", "Units", 36.0, 6.25, "server/SPG/resources/images/Eggs.jpg", farmer1));
+        prodList.add(new Product("Oranges", "Kg", 12.0, 2.10, "server/SPG/resources/images/Oranges.jpg", farmer2));
+        prodList.add(new Product("Cherries", "Kg", 15.0, 4.00, "server/SPG/resources/images/Cherries.jpg", farmer1));
+        prodList.add(new Product("Bananas", "Kg", 22.0, 6.25, "server/SPG/resources/images/Bananas.jpg", farmer1));
+        prodList.add(new Product("Strawberries", "Kg", 13.0, 2.50, "server/SPG/resources/images/Strawberries.jpg", farmer1));
+        prodList.add(new Product("Kiwi", "Kg", 17.0, 5.00, "server/SPG/resources/images/Kiwi.jpg", farmer2));
+        prodList.add(new Product("Asparagus", "Kg", 95.0, 6.25, "server/SPG/resources/images/Asparagus.jpg", farmer1));
+        prodList.add(new Product("Lemons", "Kg", 37.0, 2.50, "server/SPG/resources/images/Lemons.jpg", farmer2));
+        prodList.add(new Product("Pears", "Kg", 12.0, 5.00, "server/SPG/resources/images/Pears.jpg", farmer1));
+        prodList.add(new Product("Olives", "Kg", 46.0, 6.25, "server/SPG/resources/images/Olives.jpg", farmer1));
+        prodList.add(new Product("Peaches", "Kg", 51.0, 2.50, "server/SPG/resources/images/Peaches.jpg", farmer2));
+        prodList.add(new Product("Grapes", "Kg", 11.0, 5.00, "server/SPG/resources/images/Grapes.jpg", farmer1));
+        prodList.add(new Product("Cucumber", "Kg", 37.0, 6.25, "server/SPG/resources/images/Cucumber.jpg", farmer2));
+        prodList.add(new Product("Onions", "Kg", 12.0, 6.25, "server/SPG/resources/images/Onions.jpg", farmer2));
+        prodList.add(new Product("Lettuce", "Kg", 19.0, 5.00, "server/SPG/resources/images/Lettuce.jpg", farmer1));
+        prodList.add(new Product("Potatoes", "Kg", 68.0, 6.25, "server/SPG/resources/images/Potatoes.jpg", farmer2));
+        prodList.add(new Product("Leeks", "Kg", 54.0, 2.50, "server/SPG/resources/images/Leek.jpg", farmer1));
+        prodList.add(new Product("Celery", "Kg", 6.0, 5.00, "server/SPG/resources/images/Celery.jpg", farmer2));
+        prodList.add(new Product("Spinach", "Kg", 3.0, 6.25, "server/SPG/resources/images/Spinach.jpg", farmer1));
+        prodList.add(new Product("Peppers", "Kg", 5.0, 2.50, "server/SPG/resources/images/Peppers.jpg", farmer2));
+        prodList.add(new Product("Tomatoes", "Kg", 1.0, 5.00, "server/SPG/resources/images/Tomatoes.jpg", farmer2));
+        prodList.add(new Product("Watermelon", "Kg", 65.0, 5.00, "server/SPG/resources/images/Watermelon.jpg", farmer2));
+        prodList.add(new Product("Chard", "Kg", 5.0, 2.50, "server/SPG/resources/images/Chard.jpg", farmer2));
+        prodList.add(new Product("Radish", "Kg", 70.0, 5.00, "server/SPG/resources/images/Radish.jpg", farmer1));
+        prodList.add(new Product("Thistles", "Kg", 30.0, 6.25, "server/SPG/resources/images/Thistles.jpg", farmer1));
+        prodList.add(new Product("Honey", "Kg", 13.0, 5.00, "server/SPG/resources/images/Honey.jpg", farmer2));
+        prodList.add(new Product("Milk", "L", 6.0, 6.25, "server/SPG/resources/images/Milk.jpg", farmer1));
+        prodList.add(new Product("Capers", "Kg", 5.0, 2.50, "server/SPG/resources/images/Capers.jpg", farmer2));
+        prodList.add(new Product("Garlic", "Kg", 17.0, 5.00, "server/SPG/resources/images/Garlic.jpg", farmer1));
+        prodList.add(new Product("Salami", "Kg", 41.0, 6.25, "server/SPG/resources/images/Salami.jpg", farmer2));
+        prodList.add(new Product("Ham", "Kg", 45.0, 2.50, "server/SPG/resources/images/Ham.jpg", farmer1));
+        prodList.add(new Product("Raw Ham", "Kg", 14.0, 5.00, "server/SPG/resources/images/Raw Ham.jpg", farmer2));
+        prodList.add(new Product("Pumpkin", "Kg", 12.0, 3.00, "server/SPG/resources/images/Pumpkin.jpg", farmer3));
+        prodList.add(new Product("Broccoli", "Kg", 40.0, 2.50, "server/SPG/resources/images/Broccoli.jpg", farmer3));
+        prodList.add(new Product("Carrots", "Kg", 10.0, 5.00, "server/SPG/resources/images/Carrots.jpg", farmer3));
+        prodList.add(new Product("Cauliflowers", "Kg", 43.0, 2.50, "server/SPG/resources/images/Cauliflowers.jpg", farmer3));
+        prodList.add(new Product("Apples", "Kg", 50.0, 2.50, "server/SPG/resources/images/Apples.jpg", farmer3));
+
         /*
         Product temp43 = new Product("Fassona Burger", "Kg", 52.0, 2.50, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZTbfh7Rsc6-xzK1oS5c1lHoNl3ARS4Xjnm0zPwTfu12mqK9fHqCw9w-anhwHFfX2TE-k&usqp=CAU", farmer2);
         Product temp44 = new Product("Fresh sausage", "Kg", 13.0, 5.00, "https://www.intavoliamo.it/Info/media/k2/items/cache/79e08f32fa8a036f84441baab7b7a7ff_XL.jpg?t=20210715_100607", farmer2);
@@ -143,7 +151,8 @@ public class DBUtilsService {
 */
         for (Product prod : prodList
         ) {
-            if (productRepo.findProductByName(prod.getName()) == null) productRepo.save(prod);
+            if (productRepo.findProductByName(prod.getName()) == null)
+                productRepo.save(prod);
         }
         /*
         if (productRepo.findProductByName("Fassona Burger") == null) productRepo.save(temp43);

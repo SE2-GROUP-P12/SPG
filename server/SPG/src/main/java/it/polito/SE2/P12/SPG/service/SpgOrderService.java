@@ -5,18 +5,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.SE2.P12.SPG.entity.*;
 import it.polito.SE2.P12.SPG.interfaceEntity.OrderUserType;
-import it.polito.SE2.P12.SPG.repository.BasketRepo;
-import it.polito.SE2.P12.SPG.repository.OrderRepo;
-import it.polito.SE2.P12.SPG.repository.ProductRepo;
-import it.polito.SE2.P12.SPG.repository.UserRepo;
+import it.polito.SE2.P12.SPG.repository.*;
+import it.polito.SE2.P12.SPG.utils.OrderStatus;
 import it.polito.SE2.P12.SPG.utils.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.*;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static it.polito.SE2.P12.SPG.utils.OrderStatus.ORDER_STATUS_OPEN;
+import static it.polito.SE2.P12.SPG.utils.OrderStatus.*;
 
 
 @Service
@@ -26,14 +30,18 @@ public class SpgOrderService {
     private SpgUserService spgUserService;
     private ProductRepo productRepo;
     private UserRepo userRepo;
+    private CustomerRepo customerRepo;
+    private SchedulerService schedulerService;
 
 
     @Autowired
-    public SpgOrderService(OrderRepo orderRepo, BasketRepo basketRepo, SpgUserService spgUserService, ProductRepo productRepo, UserRepo userRepo) {
+    public SpgOrderService(OrderRepo orderRepo, SpgUserService spgUserService, ProductRepo productRepo, UserRepo userRepo, CustomerRepo customerRepo, SchedulerService schedulerService) {
         this.orderRepo = orderRepo;
         this.spgUserService = spgUserService;
         this.productRepo = productRepo;
         this.userRepo = userRepo;
+        this.customerRepo = customerRepo;
+        this.schedulerService = schedulerService;
     }
 
     public Map<String, List<Long>> getPendingOrdersMail() {
@@ -64,33 +72,36 @@ public class SpgOrderService {
         //check if customer exists
         if (orderIssuer == null)
             return false;
-        Double currentAmount = order.getValue();
+        Double currentAmount = 0.00;
         //case: empty order list -> just check the wallet
         if (getOrdersByUserId(userId).isEmpty()) {
             //check wallet availability for orders paying
-            if (orderIssuer.getWallet() >= currentAmount) {
+            if (orderIssuer.getWallet() >= order.getValue()) {
                 //Set order as confirmed (payable)
-                order.updateToConfirmedStatus();
+                order.updateToConfirmedStatus(LocalDateTime.ofInstant(order.getDate().toInstant(), ZoneId.systemDefault()));
                 orderRepo.save(order);
                 return true;
             }
             orderRepo.save(order);
             return true;
         }
-        //case: we have some other order issued by this user, so we evaluate the total amount
-        for (Order o : getOrdersByUserId(userId)) {
+        //case: we have some other order issued by this user, so we evaluate the total amount of OPEN order
+        //Optimal function: sort order based on value in order to pay more order
+        for (Order o : getOrdersByUserId(userId).stream()
+                .filter(ord -> ord.getStatus().equals(ORDER_STATUS_CONFIRMED))
+                .sorted(Comparator.comparingDouble(Order::getValue))
+                .toList()) {
             //add current order value
             currentAmount += o.getValue();
-            //check if with new order value the current amount overflowed the wallet value
-            if (currentAmount > orderIssuer.getWallet()) {
-                //leave the state on open then return true
-                orderRepo.save(order);
-                return true;
-            }
         }
-        //if we exit the for loop we assume to have sufficient amount in the wallet
-        order.updateToConfirmedStatus();
-
+        //check if with new order value the current amount overflowed the wallet value
+        if (currentAmount + order.getValue() > orderIssuer.getWallet()) {
+            //leave the state on open then return true
+            orderRepo.save(order);
+            return true;
+        }
+        //the order can be paid correctly
+        order.updateToConfirmedStatus(LocalDateTime.ofInstant(order.getDate().toInstant(), ZoneId.systemDefault()));
         orderRepo.save(order);
         return true;
     }
@@ -116,7 +127,7 @@ public class SpgOrderService {
             p.moveFromAvailableToOrdered(q);
             productRepo.save(p);
         }
-        Order order = new Order((OrderUserType) user, epoch, basket.getProductQuantityMap(), deliveryDate, deliveryAddress);
+        Order order = new Order(user, epoch, basket.getProductQuantityMap(), deliveryDate, deliveryAddress);
         boolean result = addNewOrder(order);
         if (result) {
             user.getOrders().add(order);
@@ -128,33 +139,32 @@ public class SpgOrderService {
         return result;
     }
 
-    public Boolean deliverOrder(Long orderId) {
+    public Boolean deliverOrder(Long orderId, Instant currentSchedulerInstant) {
         Optional<Order> o = orderRepo.findById(orderId);
-        if (!o.isPresent())
+        if (o.isEmpty())
             return false;
         Order order = o.get();
+        /*
         OrderUserType user = (OrderUserType) order.getCust();
         if (user.getWallet() < order.getValue())
             return false;
-        //Controlla se la quantità ordinata è disponibile
-        for (Map.Entry<Product, Double> e : order.getProds().entrySet()) {
-            Product p = e.getKey();
-            Double q = e.getValue();
-            if (!p.moveFromOrderedToDelivered(q))
-                return false;
-            productRepo.save(p);
-        }
         //Check if the customer wallet has available amount
         if (user.getWallet() > order.getValue()) {
             //decrease the wallet amount
             user.setWallet(user.getWallet() - order.getValue());
-            //set status paid
-            order.updateToPaidStatus();
+            //set status closed
             //update db
+            for (Map.Entry<Product, Double> set : order.getProds().entrySet()) {
+                set.getKey().setQuantityDelivered(set.getValue());
+                set.getKey().setQuantityOrdered(set.getKey().getQuantityOrdered() - set.getValue());
+                productRepo.save(set.getKey());
+            }
             orderRepo.save(order);
             return true;
         }
         //Else leave open status and return true
+         */
+        setOrderStatus(order.getOrderId(), ORDER_STATUS_CLOSED, currentSchedulerInstant);
         return true;
     }
 
@@ -212,6 +222,72 @@ public class SpgOrderService {
         order.setDeliveryAddress(address);
         orderRepo.save(order);
         return true;
+    }
+
+    public void updateConfirmedOrders() {
+        for (Order order : orderRepo.findAll()) {
+            if (order.getStatus().equals(ORDER_STATUS_PAID) || order.getStatus().equals(ORDER_STATUS_CLOSED)
+                    || order.getStatus().equals(ORDER_STATUS_CANCELLED) || order.getStatus().equals(ORDER_STATUS_NOT_RETRIEVED))
+                continue;
+            Customer cust = customerRepo.findCustomerByEmail(order.getCust().getEmail());
+            if (order.getStatus().equals(ORDER_STATUS_OPEN)) {
+                order.setStatus(ORDER_STATUS_CANCELLED);
+                orderRepo.save(order);
+                continue;
+            }
+            if (order.getValue() > cust.getWallet()) continue;
+            Double price = 0.0;
+            Map<Product, Double> prods = new HashMap<>();
+            for (Map.Entry<Product, Double> entry : order.getProds().entrySet()) {
+                double quantityRequested = order.getProds().entrySet().stream()
+                        .filter(x -> x.getKey().getProductId().equals(entry.getKey().getProductId()))
+                        .toList().get(0).getValue();
+                double quantity = Math.min(quantityRequested, entry.getKey().getQuantityConfirmed());
+                prods.put(entry.getKey(), quantity);
+                price += entry.getKey().getPrice() * quantity;
+                entry.getKey().setQuantityConfirmed(entry.getKey().getQuantityConfirmed() - quantity);
+                productRepo.save(entry.getKey());
+            }
+            order.setProds(prods);
+            cust.pay(price);
+            if (price == 0.0)
+                order.setStatus(ORDER_STATUS_CANCELLED);
+            else
+                order.setStatus(ORDER_STATUS_PAID);
+            customerRepo.save(cust);
+            orderRepo.save(order);
+        }
+    }
+
+    public boolean setOrderStatus(Long orderId, String orderStatus, Instant schedulerCurrentInstant) {
+        boolean res = false;
+        Order order = orderRepo.findOrderByOrderId(orderId);
+        if (order == null)
+            return false;
+        switch (orderStatus) {
+            case ORDER_STATUS_CONFIRMED -> res = order.updateToConfirmedStatus(LocalDateTime.ofInstant(schedulerCurrentInstant, ZoneId.systemDefault()));
+            case ORDER_STATUS_PAID -> res = order.updateToPaidStatus(LocalDateTime.ofInstant(schedulerCurrentInstant, ZoneId.systemDefault()));
+            case ORDER_STATUS_CLOSED -> res = order.updateToClosedStatus(LocalDateTime.ofInstant(schedulerCurrentInstant, ZoneId.systemDefault()));
+            case ORDER_STATUS_CANCELLED -> res = order.updateToCancelledStatus(LocalDateTime.ofInstant(schedulerCurrentInstant, ZoneId.systemDefault()));
+            case ORDER_STATUS_NOT_RETRIEVED -> res = order.updateToNotRetrievedStatus(LocalDateTime.ofInstant(schedulerCurrentInstant, ZoneId.systemDefault()));
+        }
+        orderRepo.save(order);
+        return res;
+    }
+
+
+    public List<Order> getUnRetrievedOrders(long currentTime) {
+        return orderRepo.findAll()
+                .stream()
+                .filter(order -> {
+                    //check order status
+                    if (!order.getStatus().equals(ORDER_STATUS_NOT_RETRIEVED))
+                        return false;
+                    //check date range
+                    return order.getCurrent_status_date().toEpochSecond(ZoneOffset.UTC) > (currentTime - 2592000L);
+                })
+                .sorted(Comparator.comparingLong(ord -> ord.getCurrent_status_date().toEpochSecond(ZoneOffset.UTC)))
+                .toList();
     }
 }
 

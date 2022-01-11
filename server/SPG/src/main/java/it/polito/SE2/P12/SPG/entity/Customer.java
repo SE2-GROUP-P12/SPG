@@ -22,6 +22,8 @@ public class Customer extends User implements BasketUserType, OrderUserType, Wal
     private String address;
     @Column(name = "wallet")
     private Double wallet = 0.00;
+    @Column(name = "missed_pick_up")
+    private int missedPickUpAmount = 0;
     @OneToOne(mappedBy = "cust")
     private Basket basket;
     @OneToMany(mappedBy = "cust", fetch = FetchType.EAGER)
@@ -78,11 +80,26 @@ public class Customer extends User implements BasketUserType, OrderUserType, Wal
                 ", wallet=" + wallet +
                 ", basket=" + (basket == null ? "null" : basket.getBasketId()) +
                 ", orders=" + (orders == null ? "null" : orders.stream().mapToLong(o -> o.getOrderId()).toString()) +
+                ", missedPickUp=" + missedPickUpAmount +
                 '}';
     }
 
     public void pay(Double amount) {
         this.wallet -= amount;
+    }
+
+    public int incrementMissedPickUp() {
+        //Increment then return
+        if (missedPickUpAmount == 5)
+            return 5;
+        return ++this.missedPickUpAmount;
+    }
+
+    public int decrementMissedPickUp() {
+        //decrement if current is > 0
+        if (missedPickUpAmount == 0)
+            return 0;
+        return --this.missedPickUpAmount;
     }
 
 
