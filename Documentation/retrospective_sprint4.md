@@ -9,9 +9,9 @@
 
 ### Macro statistics
 
-- 5 stories committed vs 5 stories done
-- 20 points committed vs 20 points done
-- 8d 3h 20m (= 67h 20m) Nr of hours planned vs spent (as a team) 11d 6h 50m (= 94h 50m including planning )
+- 4 stories committed vs 4 stories done
+- 23 points committed vs 23 points done
+- 6d 2h 30m (= 50h 30m) Nr of hours planned vs spent (as a team) 12d 1h 02m (= 97h 02m including planning )
 
 Definition of Done:
 - Unit Tests passing
@@ -74,9 +74,9 @@ Definition of Done:
 - SPG-117: issues from stakeholders
 - SPG-100: bugfix
 
-**Total est:** 8d 3h 20m (= 67h 20m)
+**Total est:** 6d 2h 30m (= 50h 30m)
 
-**Total actual:** 11d 6h 50m (= 94h 50m including planning )
+**Total actual:** 12d 1h 02m (= 97h 02m including planning )
 
 - Hours per task (average, standard deviation)
     - Average: 3h 36m
